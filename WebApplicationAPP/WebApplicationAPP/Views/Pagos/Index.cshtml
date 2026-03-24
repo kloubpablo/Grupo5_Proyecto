@@ -1,0 +1,25 @@
+﻿@model List<dynamic>
+
+<h2>Pagos</h2>
+
+<a href="/Pagos/Registrar">Registrar Pago</a>
+<a href="/Pagos/Cierre">Cierre de Caja</a>
+
+<table border="1">
+    <tr>
+        <th>Cliente</th>
+        <th>Monto</th>
+        <th>Método</th>
+        <th>Fecha</th>
+    </tr>
+
+    @foreach (var p in Model)
+    {
+        <tr>
+            <td>@p.cliente</td>
+            <td>@p.monto</td>
+            <td>@p.metodo</td>
+            <td>@p.fecha</td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,24 @@
+﻿<h2>Dashboard</h2>
+
+<h3>Resumen del día</h3>
+
+<p>Citas del día: @ViewBag.CitasHoy</p>
+<p>Ingresos del día: ₡@ViewBag.IngresosHoy</p>
+<p>Clientes atendidos: @ViewBag.ClientesAtendidos</p>
+
+<h3>Estado de barberos</h3>
+
+<table border="1">
+    <tr>
+        <th>Barbero</th>
+        <th>Estado</th>
+    </tr>
+
+    @foreach (var b in ViewBag.Barberos)
+    {
+        <tr>
+            <td>@b.nombre</td>
+            <td>@b.estado</td>
+        </tr>
+    }
+</table>

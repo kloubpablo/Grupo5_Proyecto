@@ -1,17 +1,14 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>@ViewData["Title"] - WebApplicationAPP</title>
+    <title>@ViewData["Title"] - Barbería App</title>
 
-    <!-- CSS del template TXT -->
+    <!-- CSS -->
     <link rel="stylesheet" href="~/assets/css/main.css" />
-
-    <!-- Bootstrap (si aún lo necesitas) -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 
@@ -24,11 +21,11 @@
             <div class="logo container">
                 <div>
                     <h1>
-                        <a asp-controller="Home" asp-action="Index" id="logo">
-                            BancoLindo
+                        <a asp-controller="Dashboard" asp-action="Index" id="logo">
+                            💈 Barbería App
                         </a>
                     </h1>
-                    <p>Sistema bancario</p>
+                    <p>Sistema de gestión de barbería</p>
                 </div>
             </div>
         </header>
@@ -37,31 +34,44 @@
         <nav id="nav">
             <ul>
                 <li>
-                    <a asp-controller="Home" asp-action="Index">Home</a>
+                    <a asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                 </li>
 
                 <li>
-                    <a asp-controller="Caja" asp-action="Index">Cajas</a>
+                    <a asp-controller="Clientes" asp-action="Index">Clientes</a>
                 </li>
 
                 <li>
-                    <a asp-controller="Comercio" asp-action="Index">Comercios</a>
+                    <a asp-controller="Usuarios" asp-action="Index">Usuarios</a>
                 </li>
 
                 <li>
-                    <a asp-controller="Sinpe" asp-action="Create">SINPE</a>
+                    <a asp-controller="Roles" asp-action="Index">Roles</a>
                 </li>
 
                 <li>
-                    <a asp-controller="Bitacora" asp-action="Index">Bitácora</a>
+                    <a asp-controller="Citas" asp-action="Index">Citas</a>
                 </li>
+
                 <li>
-                    <a asp-controller="Login" asp-action="Logout">Cerrar Sesión</a>
+                    <a asp-controller="Atencion" asp-action="Index">Atención</a>
+                </li>
+
+                <li>
+                    <a asp-controller="Pagos" asp-action="Index">Pagos</a>
+                </li>
+
+                <li>
+                    <a asp-controller="Reportes" asp-action="Index">Reportes</a>
+                </li>
+
+                <li>
+                    <a asp-controller="Seguridad" asp-action="Logout">Cerrar Sesión</a>
                 </li>
             </ul>
         </nav>
 
-        <!-- CONTENIDO DE LAS VISTAS -->
+        <!-- CONTENIDO -->
         <section id="main">
             <div class="container">
 
@@ -75,16 +85,16 @@
             <div class="container">
 
                 <section>
-                    <h2 class="major"><span>BancoLindo</span></h2>
+                    <h2 class="major"><span>Barbería App</span></h2>
                     <p>
-                        Sistema de gestión bancaria para manejo de cajas, comercios y
-                        transferencias SINPE.
+                        Sistema de gestión para control de clientes, citas,
+                        atención de servicios, pagos y reportes.
                     </p>
                 </section>
 
                 <div id="copyright">
                     <ul class="menu">
-                        <li>&copy; 2026 BancoLindo</li>
+                        <li>&copy; 2026 Barbería App</li>
                     </ul>
                 </div>
 
@@ -93,7 +103,7 @@
 
     </div>
 
-    <!-- JS del template -->
+    <!-- JS -->
     <script src="~/assets/js/jquery.min.js"></script>
     <script src="~/assets/js/jquery.dropotron.min.js"></script>
     <script src="~/assets/js/jquery.scrolly.min.js"></script>
@@ -102,7 +112,6 @@
     <script src="~/assets/js/util.js"></script>
     <script src="~/assets/js/main.js"></script>
 
-    <!-- Bootstrap -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)

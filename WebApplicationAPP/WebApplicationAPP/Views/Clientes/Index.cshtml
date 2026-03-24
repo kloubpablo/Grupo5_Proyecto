@@ -1,0 +1,29 @@
+﻿@model List<dynamic>
+
+<h2>Clientes</h2>
+
+<form method="get">
+    <input type="text" name="buscar" placeholder="Buscar cliente" />
+    <button type="submit">Buscar</button>
+</form>
+
+<a href="/Clientes/Crear">Nuevo Cliente</a>
+
+<table border="1">
+    <tr>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+        <th>Acciones</th>
+    </tr>
+
+    @foreach (var c in Model)
+    {
+        <tr>
+            <td>@c.nombre</td>
+            <td>@c.telefono</td>
+            <td>
+                <a href="/Clientes/Editar/@c.id">Editar</a>
+            </td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,38 @@
+﻿@model List<dynamic>
+
+<h2>Atención / Turnos</h2>
+
+<form method="get" action="/Atencion/Agregar">
+    <input type="text" name="nombre" placeholder="Nombre del cliente" />
+    <button type="submit">Agregar a lista</button>
+</form>
+
+<h3>Lista de espera</h3>
+
+<table border="1">
+    <tr>
+        <th>Cliente</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+
+    @foreach (var c in Model)
+    {
+        <tr>
+            <td>@c.nombre</td>
+            <td>@c.estado</td>
+            <td>
+                @if (c.estado == "En espera")
+                {
+                    <a href="/Atencion/Iniciar/@c.id">Iniciar</a>
+                }
+                else
+                {
+                    <a href="/Atencion/Finalizar/@c.id">Finalizar</a>
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+<p>Tiempo estimado: @Model.Count * 10 minutos</p>

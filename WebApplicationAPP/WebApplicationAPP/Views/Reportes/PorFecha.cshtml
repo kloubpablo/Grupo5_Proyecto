@@ -1,0 +1,16 @@
+﻿<h2>Reporte por Fecha</h2>
+
+<form method="post">
+    <label>Seleccione fecha</label>
+    <input type="date" name="fecha" />
+
+    <button type="submit">Generar</button>
+</form>
+
+<p style="color:red">@ViewBag.Error</p>
+
+@if (ViewBag.Resultado != null)
+{
+    <p>@ViewBag.Resultado</p>
+    <p>Total: ₡@ViewBag.Total</p>
+}

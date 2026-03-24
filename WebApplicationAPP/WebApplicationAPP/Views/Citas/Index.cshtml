@@ -1,0 +1,30 @@
+﻿@model List<dynamic>
+
+<h2>Citas</h2>
+
+<a href="/Citas/Crear">Nueva Cita</a>
+
+<table border="1">
+    <tr>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Barbero</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+
+    @foreach (var c in Model)
+    {
+        <tr>
+            <td>@c.cliente</td>
+            <td>@c.fecha</td>
+            <td>@c.hora</td>
+            <td>@c.barbero</td>
+            <td>@c.estado</td>
+            <td>
+                <a href="/Citas/Cancelar/@c.id">Cancelar</a>
+            </td>
+        </tr>
+    }
+</table>

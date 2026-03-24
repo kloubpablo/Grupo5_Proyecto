@@ -1,0 +1,25 @@
+﻿@model List<dynamic>
+
+<h2>Roles</h2>
+
+<a href="/Roles/Crear">Nuevo Rol</a>
+
+<table border="1">
+    <tr>
+        <th>Nombre</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+
+    @foreach (var r in Model)
+    {
+        <tr>
+            <td>@r.nombre</td>
+            <td>@(r.activo ? "Activo" : "Inactivo")</td>
+            <td>
+                <a href="/Roles/Toggle/@r.id">Activar/Desactivar</a>
+                <a href="/Roles/Eliminar/@r.id">Eliminar</a>
+            </td>
+        </tr>
+    }
+</table>

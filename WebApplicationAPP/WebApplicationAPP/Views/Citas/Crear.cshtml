@@ -1,0 +1,23 @@
+﻿<h2>Crear Cita</h2>
+
+<form method="post">
+    <label>Cliente</label>
+    <input type="text" name="cliente" />
+
+    <label>Fecha</label>
+    <input type="date" name="fecha" />
+
+    <label>Hora</label>
+    <input type="time" name="hora" />
+
+    <label>Barbero</label>
+    <select name="barbero">
+        <option>Juan</option>
+        <option>Pedro</option>
+        <option>Carlos</option>
+    </select>
+
+    <button type="submit">Guardar</button>
+</form>
+
+<p style="color:red">@ViewBag.Error</p>
