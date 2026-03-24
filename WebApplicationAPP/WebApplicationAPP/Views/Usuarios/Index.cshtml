@@ -1,16 +1,16 @@
 ﻿@model List<dynamic>
-
+ 
 <h2>Usuarios</h2>
-
+ 
 <a href="/Usuarios/Crear">Nuevo Usuario</a>
-
+ 
 <table border="1">
     <tr>
         <th>Nombre</th>
         <th>Email</th>
         <th>Acciones</th>
     </tr>
-
+ 
     @foreach (var u in Model)
     {
         <tr>
@@ -22,3 +22,4 @@
         </tr>
     }
 </table>
+ 

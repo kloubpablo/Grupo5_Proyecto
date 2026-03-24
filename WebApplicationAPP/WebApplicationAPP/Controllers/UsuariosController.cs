@@ -23,21 +23,18 @@ namespace WebApplicationAPP.Controllers
         [HttpPost]
         public IActionResult Crear(string nombre, string email)
         {
-            // 🔴 Validación HU
             if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(email))
             {
                 ViewBag.Error = "Debe completar todos los campos";
                 return View();
             }
 
-            // 🔴 Duplicado
-            if (usuarios.Any(u => u.email == email))
+            usuarios.Add(new
             {
-                ViewBag.Error = "Usuario duplicado";
-                return View();
-            }
-
-            usuarios.Add(new { id = usuarios.Count + 1, nombre, email });
+                id = usuarios.Count + 1,
+                nombre,
+                email
+            });
 
             return RedirectToAction("Index");
         }
