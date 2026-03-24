@@ -1,0 +1,43 @@
+﻿@model IEnumerable<WebApplicationAPP.Models.Comercio>
+
+<h2>Lista de Comercios</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Nuevo Comercio</a>
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Identificación</th>
+            <th>Tipo ID</th>
+            <th>Nombre</th>
+            <th>Tipo Comercio</th>
+            <th>Teléfono</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.IdComercio</td>
+                <td>@item.Identificacion</td>
+                <td>@item.TipoIdentificacion</td>
+                <td>@item.Nombre</td>
+                <td>@item.TipoDeComercio</td>
+                <td>@item.Telefono</td>
+                <td>
+                    @(item.Estado ? "Activo" : "Inactivo")
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.IdComercio" class="btn btn-info btn-sm">Detalles</a>
+                    <a asp-action="Edit" asp-route-id="@item.IdComercio" class="btn btn-warning btn-sm">Editar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

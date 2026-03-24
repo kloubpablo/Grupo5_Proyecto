@@ -1,0 +1,63 @@
+﻿@model IEnumerable<WebApplicationAPP.Models.Cajas>
+
+@{
+    ViewBag.Title = "Listado de Cajas";
+}
+
+<h2>Listado de Cajas</h2>
+
+<a class="btn btn-primary mb-3"
+   asp-action="Create"
+   role="button">
+    Crear Caja
+</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Fecha de Registro</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var caja in Model)
+        {
+            <tr>
+                <td>@caja.Nombre</td>
+
+                <td>
+                    @caja.FechaDeRegistro.ToString("dd/MM/yyyy")
+                </td>
+
+                <td>
+                    @(caja.Estado ? "Activo" : "Inactivo")
+                </td>
+
+                <td>
+                    <a class="btn btn-warning btn-sm"
+                       asp-action="Edit"
+                       asp-route-id="@caja.Id">
+                        Editar
+                    </a>
+
+                    <a class="btn btn-info btn-sm"
+                       asp-action="VerSINPE"
+                       asp-route-id="@caja.Id">
+                        Ver SINPE
+                    </a>
+                    <a class="btn btn-danger btn-sm"
+                       asp-action="Delete"
+                       asp-route-id="@caja.Id">
+                        Eliminar
+                    </a>
+                </td>
+            </tr>
+        }
+        @* <a asp-action="Details" asp-route-id="@persona.Id">Detalles</a> | *@
+        @* <a asp-action="Edit" asp-route-id="@persona.Id">Editar</a> | *@
+        @* <a asp-action="Delete" asp-route-id="@persona.Id">Eliminar</a> *@
+    </tbody>
+</table>

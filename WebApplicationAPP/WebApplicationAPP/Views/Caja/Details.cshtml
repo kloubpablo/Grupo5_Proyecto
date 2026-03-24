@@ -1,0 +1,57 @@
+﻿@model WebApplicationAPP.Models.Cajas
+
+@{
+    ViewBag.Title = "Eliminar Caja";
+}
+
+<h2>Eliminar Caja</h2>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+
+    <!-- IdCaja oculto para el POST -->
+    <input type="hidden" asp-for="Id" />
+
+    <!-- Nombre -->
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input asp-for="Nombre"
+               class="form-control"
+               disabled />
+    </div>
+
+    <!-- Descripción -->
+    <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <input asp-for="Descripcion"
+               class="form-control"
+               disabled />
+    </div>
+
+    <!-- Teléfono SINPE -->
+    <div class="mb-3">
+        <label class="form-label">Teléfono SINPE</label>
+        <input asp-for="TelefonoSINPE"
+               class="form-control"
+               disabled />
+    </div>
+
+    <!-- Estado -->
+    <div class="mb-3">
+        <label class="form-label">Estado</label>
+        <input class="form-control"
+               value="@(Model.Estado ? "Activo" : "Inactivo")"
+               disabled />
+    </div>
+
+    <!-- Botones -->
+    <div class="mb-3">
+        <button type="submit" class="btn btn-danger">
+            Eliminar
+        </button>
+
+        <a asp-action="Index" class="btn btn-light">
+            Cancelar
+        </a>
+    </div>
+</form>

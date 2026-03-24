@@ -1,0 +1,20 @@
+﻿@model WebApplicationAPP.Models.Comercio
+
+<h2>Detalles del Comercio</h2>
+
+<div class="card p-3">
+    <p><strong>Identificación:</strong> @Model.Identificacion</p>
+    <p><strong>Tipo Identificación:</strong> @Model.TipoIdentificacion</p>
+    <p><strong>Nombre:</strong> @Model.Nombre</p>
+    <p><strong>Tipo de Comercio:</strong> @Model.TipoDeComercio</p>
+    <p><strong>Teléfono:</strong> @Model.Telefono</p>
+    <p><strong>Correo:</strong> @Model.CorreoElectronico</p>
+    <p><strong>Dirección:</strong> @Model.Direccion</p>
+    <p><strong>Fecha Registro:</strong> @Model.FechaDeRegistro</p>
+    <p><strong>Fecha Modificación:</strong> @Model.FechaDeModificacion</p>
+    <p><strong>Estado:</strong> @(Model.Estado ? "Activo" : "Inactivo")</p>
+</div>
+
+<br />
+
+<a asp-action="Index" class="btn btn-secondary">Volver</a>

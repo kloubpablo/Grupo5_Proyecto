@@ -1,0 +1,41 @@
+﻿@model IEnumerable<WebApplicationAPP.Models.Sinpe>
+
+@{
+    ViewBag.Title = "SINPE de la Caja";
+}
+
+<h2>SINPE - @ViewBag.NombreCaja</h2>
+<p><strong>Teléfono:</strong> @ViewBag.TelefonoCaja</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tel. Origen</th>
+            <th>Nombre Origen</th>
+            <th>Tel. Destino</th>
+            <th>Nombre Destino</th>
+            <th>Monto</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.TelefonoOrigen</td>
+                <td>@s.NombreOrigen</td>
+                <td>@s.TelefonoDestinatario</td>
+                <td>@s.NombreDestinatario</td>
+                <td>₡ @s.Monto</td>
+                <td>@s.Descripcion</td>
+                <td>@s.FechaDeRegistro.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>
+                    @(s.Estado ? "Sincronizado" : "No sincronizado")
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

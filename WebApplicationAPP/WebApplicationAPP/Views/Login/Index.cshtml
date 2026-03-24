@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Login</title>
+
+    <link rel="stylesheet" href="~/assets/css/main.css" />
+</head>
+
+<body>
+
+    <div style="width:400px;margin:auto;margin-top:150px;">
+
+        <section class="box">
+
+            <header>
+                <h2 class="major">
+                    <span>Inicio de Sesión</span>
+                </h2>
+            </header>
+
+            @if (ViewBag.Error != null)
+            {
+                <p style="color:red">@ViewBag.Error</p>
+            }
+
+            <form asp-controller="Login" asp-action="Index" method="post">
+
+                <div>
+                    <label>Usuario</label>
+                    <input type="text" name="usuario" required />
+                </div>
+
+                <div>
+                    <label>Contraseña</label>
+                    <input type="password" name="password" required />
+                </div>
+
+                <br />
+
+                <button type="submit" class="button primary">
+                    Ingresar
+                </button>
+
+            </form>
+
+        </section>
+
+    </div>
+
+</body>
+</html>
+

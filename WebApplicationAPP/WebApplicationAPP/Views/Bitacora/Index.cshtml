@@ -1,0 +1,33 @@
+﻿@model IEnumerable<WebApplicationAPP.Models.BitacoraEvento>
+
+<h2>Bitácora de Eventos</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Tabla</th>
+            <th>Tipo</th>
+            <th>Fecha</th>
+            <th>Descripción</th>
+            <th>StackTrace</th>
+            <th>Datos Anteriores</th>
+            <th>Datos Posteriores</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.IdEvento</td>
+                <td>@item.TablaDeEvento</td>
+                <td>@item.TipoDeEvento</td>
+                <td>@item.FechaDeEvento</td>
+                <td>@item.DescripcionDeEvento</td>
+                <td>@item.StackTrace</td>
+                <td>@item.DatosAnteriores</td>
+                <td>@item.DatosPosteriores</td>
+            </tr>
+        }
+    </tbody>
+</table>

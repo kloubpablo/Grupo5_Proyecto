@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - WebApplicationAPP</title>
+
+    <!-- CSS del template TXT -->
+    <link rel="stylesheet" href="~/assets/css/main.css" />
+
+    <!-- Bootstrap (si aún lo necesitas) -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+
+<body class="is-preload">
+
+    <div id="page-wrapper">
+
+        <!-- HEADER -->
+        <header id="header">
+            <div class="logo container">
+                <div>
+                    <h1>
+                        <a asp-controller="Home" asp-action="Index" id="logo">
+                            BancoLindo
+                        </a>
+                    </h1>
+                    <p>Sistema bancario</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- NAV -->
+        <nav id="nav">
+            <ul>
+                <li>
+                    <a asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+
+                <li>
+                    <a asp-controller="Caja" asp-action="Index">Cajas</a>
+                </li>
+
+                <li>
+                    <a asp-controller="Comercio" asp-action="Index">Comercios</a>
+                </li>
+
+                <li>
+                    <a asp-controller="Sinpe" asp-action="Create">SINPE</a>
+                </li>
+
+                <li>
+                    <a asp-controller="Bitacora" asp-action="Index">Bitácora</a>
+                </li>
+                <li>
+                    <a asp-controller="Login" asp-action="Logout">Cerrar Sesión</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- CONTENIDO DE LAS VISTAS -->
+        <section id="main">
+            <div class="container">
+
+                @RenderBody()
+
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer id="footer">
+            <div class="container">
+
+                <section>
+                    <h2 class="major"><span>BancoLindo</span></h2>
+                    <p>
+                        Sistema de gestión bancaria para manejo de cajas, comercios y
+                        transferencias SINPE.
+                    </p>
+                </section>
+
+                <div id="copyright">
+                    <ul class="menu">
+                        <li>&copy; 2026 BancoLindo</li>
+                    </ul>
+                </div>
+
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- JS del template -->
+    <script src="~/assets/js/jquery.min.js"></script>
+    <script src="~/assets/js/jquery.dropotron.min.js"></script>
+    <script src="~/assets/js/jquery.scrolly.min.js"></script>
+    <script src="~/assets/js/browser.min.js"></script>
+    <script src="~/assets/js/breakpoints.min.js"></script>
+    <script src="~/assets/js/util.js"></script>
+    <script src="~/assets/js/main.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

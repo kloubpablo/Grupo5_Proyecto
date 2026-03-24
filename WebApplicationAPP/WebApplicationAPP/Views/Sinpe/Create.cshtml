@@ -1,0 +1,49 @@
+﻿@model WebApplicationAPP.Models.Sinpe
+
+
+<h2>Registrar Pago SINPE</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Mensaje"]
+    </div>
+}
+
+<form asp-action="Create" method="post">
+
+    <div class="form-group">
+        <label>Teléfono Origen</label>
+        <input asp-for="TelefonoOrigen" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Nombre Origen</label>
+        <input asp-for="NombreOrigen" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Teléfono Destinatario</label>
+        <input asp-for="TelefonoDestinatario" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Nombre Destinatario</label>
+        <input asp-for="NombreDestinatario" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Monto</label>
+        <input asp-for="Monto" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Descripción</label>
+        <input asp-for="Descripcion" class="form-control" />
+    </div>
+
+    <br />
+    <div class="mb-3">
+    <button type="submit" class="btn btn-primary">Registrar</button>
+    </div>
+</form>

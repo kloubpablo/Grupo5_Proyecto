@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="row">
+    <div class="col-12">
+
+        <section class="box">
+
+            <header>
+                <h2 class="major">
+                    <span>Bienvenido a BancoLindo</span>
+                </h2>
+            </header>
+
+            <p>
+                Este sistema permite administrar las operaciones principales del banco,
+                incluyendo gestión de <strong>Cajas</strong>, <strong>Comercios</strong>,
+                transferencias <strong>SINPE</strong> y la <strong>Bitácora de eventos</strong>.
+            </p>
+
+            <p>
+                Utiliza el menú superior para navegar entre los diferentes módulos del sistema.
+            </p>
+
+            <ul class="actions">
+                <li>
+                    <a asp-controller="Caja" asp-action="Index" class="button primary">
+                        Ver Cajas
+                    </a>
+                </li>
+
+                <li>
+                    <a asp-controller="Comercio" asp-action="Index" class="button alt">
+                        Ver Comercios
+                    </a>
+                </li>
+            </ul>
+
+        </section>
+
+    </div>
+</div>

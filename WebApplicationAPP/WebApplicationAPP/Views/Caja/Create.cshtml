@@ -1,0 +1,41 @@
+﻿@model WebApplicationAPP.Models.Cajas
+
+@{
+    ViewBag.Title = "Registrar Caja";
+}
+
+<h2>Registrar Cajas</h2>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Nombre" class="form-label"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Descripcion" class="form-label"></label>
+        <textarea asp-for="Descripcion" class="form-control"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TelefonoSINPE" class="form-label"></label>
+        <input asp-for="TelefonoSINPE" class="form-control" />
+        <span asp-validation-for="TelefonoSINPE" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 form-check">
+        <input asp-for="Estado" class="form-check-input" />
+        <label asp-for="Estado" class="form-check-label">Caja activa</label>
+    </div>
+
+    <div class="mb-3">
+        <a asp-action="Index" class="btn btn-danger">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>
