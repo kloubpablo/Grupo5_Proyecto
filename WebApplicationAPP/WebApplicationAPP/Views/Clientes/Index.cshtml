@@ -1,29 +1,59 @@
 ﻿@model List<dynamic>
 
-<h2>Clientes</h2>
+<h2 class="mb-4">👤 Clientes</h2>
 
-<form method="get">
-    <input type="text" name="buscar" placeholder="Buscar cliente" />
-    <button type="submit">Buscar</button>
-</form>
+<!-- 🔹 BUSCADOR -->
+<div class="card p-3 mb-3">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-md-9">
+            <input class="form-control" type="text" name="buscar" placeholder="🔍 Buscar cliente..." />
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-primary w-100" type="submit">Buscar</button>
+        </div>
+    </form>
+</div>
 
-<a href="/Clientes/Crear">Nuevo Cliente</a>
+<!-- 🔹 BOTÓN NUEVO -->
+<div class="mb-3">
+    <a class="btn btn-primary" href="/Clientes/Crear">➕ Nuevo Cliente</a>
+</div>
 
-<table border="1">
-    <tr>
-        <th>Nombre</th>
-        <th>Teléfono</th>
-        <th>Acciones</th>
-    </tr>
-
-    @foreach (var c in Model)
-    {
+<!-- 🔹 TABLA -->
+<table class="table table-bordered table-striped text-center align-middle">
+    <thead>
         <tr>
-            <td>@c.nombre</td>
-            <td>@c.telefono</td>
-            <td>
-                <a href="/Clientes/Editar/@c.id">Editar</a>
-            </td>
+            <th style="width:40%;">Nombre</th>
+            <th style="width:30%;">Teléfono</th>
+            <th style="width:30%;">Acciones</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+
+        @if (Model == null || Model.Count == 0)
+        {
+            <tr>
+                <td colspan="3">No hay clientes registrados</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                var c = (dynamic)item;
+
+                <tr>
+                    <td>@c.nombre</td>
+                    <td>@c.telefono</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning text-dark"
+                           href="/Clientes/Editar/@c.id">
+                            ✏️ Editar
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
 </table>

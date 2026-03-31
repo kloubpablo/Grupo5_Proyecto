@@ -10,41 +10,65 @@
     <title>Login</title>
 
     <link rel="stylesheet" href="~/assets/css/main.css" />
+
+    <style>
+        body {
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+
+        .login-box {
+            width: 400px;
+        }
+
+        input {
+            background-color: #020617 !important;
+            color: white !important;
+            border: 1px solid #334155 !important;
+        }
+    </style>
 </head>
 
 <body>
 
-    <div style="width:400px;margin:auto;margin-top:150px;">
+    <div class="login-box">
 
         <section class="box">
 
-            <header>
+            <header class="text-center">
                 <h2 class="major">
-                    <span>Inicio de Sesión</span>
+                    <span>💈 YAMPI BARBERSHOP</span>
                 </h2>
+                <p style="color:#cbd5f5;">Inicio de sesión</p>
             </header>
 
             @if (ViewBag.Error != null)
             {
-                <p style="color:red">@ViewBag.Error</p>
+                <div class="alert alert-danger text-center">
+                    @ViewBag.Error
+                </div>
             }
 
             <form asp-controller="Seguridad" asp-action="Index" method="post">
 
-                <div>
+                <div class="mb-3">
                     <label>Usuario</label>
-                    <input type="text" name="usuario" required />
+                    <input class="form-control" type="text" name="usuario" required />
                 </div>
 
-                <div>
+                <div class="mb-3">
                     <label>Contraseña</label>
-                    <input type="password" name="password" required />
+                    <input class="form-control" type="password" name="password" required />
                 </div>
 
                 <br />
 
-                <button type="submit" class="button primary">
-                    Ingresar
+                <button type="submit" class="button primary w-100">
+                    🔐 Ingresar
                 </button>
 
             </form>
@@ -55,4 +79,3 @@
 
 </body>
 </html>
-

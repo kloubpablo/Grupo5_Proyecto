@@ -1,25 +1,65 @@
 ﻿@model List<dynamic>
 
-<h2>Roles</h2>
+<h2 class="mb-4">🛡️ Roles</h2>
 
-<a href="/Roles/Crear">Nuevo Rol</a>
+<!-- 🔹 BOTÓN -->
+<div class="mb-3">
+    <a class="btn btn-primary" href="/Roles/Crear">➕ Nuevo Rol</a>
+</div>
 
-<table border="1">
-    <tr>
-        <th>Nombre</th>
-        <th>Estado</th>
-        <th>Acciones</th>
-    </tr>
-
-    @foreach (var r in Model)
-    {
+<!-- 🔹 TABLA -->
+<table class="table table-bordered text-center">
+    <thead>
         <tr>
-            <td>@r.nombre</td>
-            <td>@(r.activo ? "Activo" : "Inactivo")</td>
-            <td>
-                <a href="/Roles/Toggle/@r.id">Activar/Desactivar</a>
-                <a href="/Roles/Eliminar/@r.id">Eliminar</a>
-            </td>
+            <th>Nombre</th>
+            <th>Estado</th>
+            <th>Acciones</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+
+        @if (Model.Count == 0)
+        {
+            <tr>
+                <td colspan="3">No hay roles registrados</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@r.nombre</td>
+
+                    <!-- 🔸 ESTADO -->
+                    <td>
+                        @if (r.activo)
+                        {
+                            <span class="badge bg-success">Activo</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Inactivo</span>
+                        }
+                    </td>
+
+                    <!-- 🔸 ACCIONES -->
+                    <td class="d-flex justify-content-center gap-2">
+
+                        <a class="btn btn-sm btn-warning text-dark"
+                           href="/Roles/Toggle/@r.id">
+                            🔄 Estado
+                        </a>
+
+                        <a class="btn btn-sm btn-danger"
+                           href="/Roles/Eliminar/@r.id">
+                            🗑 Eliminar
+                        </a>
+
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
 </table>

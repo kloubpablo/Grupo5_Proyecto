@@ -1,30 +1,63 @@
 ﻿@model List<dynamic>
 
-<h2>Citas</h2>
+<h2 class="mb-4">📅 Citas</h2>
 
-<a href="/Citas/Crear">Nueva Cita</a>
+<!-- 🔹 BOTÓN -->
+<div class="mb-3">
+    <a class="btn btn-primary" href="/Citas/Crear">➕ Nueva Cita</a>
+</div>
 
-<table border="1">
-    <tr>
-        <th>Cliente</th>
-        <th>Fecha</th>
-        <th>Hora</th>
-        <th>Barbero</th>
-        <th>Estado</th>
-        <th>Acciones</th>
-    </tr>
-
-    @foreach (var c in Model)
-    {
+<!-- 🔹 TABLA -->
+<table class="table table-bordered text-center">
+    <thead>
         <tr>
-            <td>@c.cliente</td>
-            <td>@c.fecha</td>
-            <td>@c.hora</td>
-            <td>@c.barbero</td>
-            <td>@c.estado</td>
-            <td>
-                <a href="/Citas/Cancelar/@c.id">Cancelar</a>
-            </td>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Barbero</th>
+            <th>Estado</th>
+            <th>Acciones</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+
+        @if (Model.Count == 0)
+        {
+            <tr>
+                <td colspan="6">No hay citas registradas</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.cliente</td>
+                    <td>@c.fecha</td>
+                    <td>@c.hora</td>
+                    <td>@c.barbero</td>
+
+                    <!-- 🔸 ESTADO CON COLOR -->
+                    <td>
+                        @if (c.estado == "Activa")
+                        {
+                            <span class="badge bg-success">Activa</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Cancelada</span>
+                        }
+                    </td>
+
+                    <!-- 🔸 ACCIONES -->
+                    <td>
+                        <a class="btn btn-sm btn-danger" href="/Citas/Cancelar/@c.id">
+                            ❌ Cancelar
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
 </table>

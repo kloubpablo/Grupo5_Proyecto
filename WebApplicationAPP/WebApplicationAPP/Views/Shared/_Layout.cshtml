@@ -2,119 +2,107 @@
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Yampi Barbershop</title>
 
-    <title>@ViewData["Title"] - Barbería App</title>
-
-    <!-- CSS -->
     <link rel="stylesheet" href="~/assets/css/main.css" />
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <!-- 🔥 ESTILO BARBERÍA -->
+    <style>
+        body {
+            background-color: #0f172a !important;
+            color: white;
+        }
+
+        /* HEADER */
+        #header {
+            background: #020617 !important;
+            border-bottom: 3px solid #facc15;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+            #header h1 a {
+                color: #facc15 !important;
+                font-weight: bold;
+                font-size: 24px;
+                text-decoration: none;
+            }
+
+        /* NAVBAR */
+        #nav {
+            background-color: #020617 !important;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+            #nav ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+                #nav ul li {
+                    display: inline-block;
+                    margin: 0 10px;
+                }
+
+                    #nav ul li a {
+                        color: #facc15 !important;
+                        font-weight: 500;
+                        text-decoration: none;
+                        padding: 8px 12px;
+                        transition: 0.3s;
+                    }
+
+                        #nav ul li a:hover {
+                            background-color: #facc15;
+                            color: black !important;
+                            border-radius: 5px;
+                        }
+
+        /* CONTENIDO */
+        #main .container {
+            background-color: #1e293b;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 
-<body class="is-preload">
+<body>
 
-    <div id="page-wrapper">
+    <!-- HEADER -->
+    <header id="header">
+        <h1>
+            <a asp-controller="Dashboard" asp-action="Index">
+                💈 Yampi Barbershop
+            </a>
+        </h1>
+    </header>
 
-        <!-- HEADER -->
-        <header id="header">
-            <div class="logo container">
-                <div>
-                    <h1>
-                        <a asp-controller="Dashboard" asp-action="Index" id="logo">
-                            💈 Barbería App
-                        </a>
-                    </h1>
-                    <p>Sistema de gestión de barbería</p>
-                </div>
-            </div>
-        </header>
+    <!-- NAV COMPLETO -->
+    <nav id="nav">
+        <ul>
+            <li><a asp-controller="Dashboard" asp-action="Index">📊 Dashboard</a></li>
+            <li><a asp-controller="Clientes" asp-action="Index">👤 Clientes</a></li>
+            <li><a asp-controller="Citas" asp-action="Index">📅 Citas</a></li>
+            <li><a asp-controller="Atencion" asp-action="Index">💈 Atención</a></li>
+            <li><a asp-controller="Pagos" asp-action="Index">💰 Pagos</a></li>
+            <li><a asp-controller="Reportes" asp-action="Index">📊 Reportes</a></li>
+            <li><a asp-controller="Roles" asp-action="Index">🛡️ Roles</a></li>
+            <li><a asp-controller="Seguridad" asp-action="Logout">🚪 Salir</a></li>
+        </ul>
+    </nav>
 
-        <!-- NAV -->
-        <nav id="nav">
-            <ul>
-                <li>
-                    <a asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-                </li>
+    <!-- CONTENIDO -->
+    <section id="main">
+        <div class="container">
 
-                <li>
-                    <a asp-controller="Clientes" asp-action="Index">Clientes</a>
-                </li>
+            @RenderBody()
 
-                <li>
-                    <a asp-controller="Usuarios" asp-action="Index">Usuarios</a>
-                </li>
-
-                <li>
-                    <a asp-controller="Roles" asp-action="Index">Roles</a>
-                </li>
-
-                <li>
-                    <a asp-controller="Citas" asp-action="Index">Citas</a>
-                </li>
-
-                <li>
-                    <a asp-controller="Atencion" asp-action="Index">Atención</a>
-                </li>
-
-                <li>
-                    <a asp-controller="Pagos" asp-action="Index">Pagos</a>
-                </li>
-
-                <li>
-                    <a asp-controller="Reportes" asp-action="Index">Reportes</a>
-                </li>
-
-                <li>
-                    <a asp-controller="Seguridad" asp-action="Logout">Cerrar Sesión</a>
-                </li>
-            </ul>
-        </nav>
-
-        <!-- CONTENIDO -->
-        <section id="main">
-            <div class="container">
-
-                @RenderBody()
-
-            </div>
-        </section>
-
-        <!-- FOOTER -->
-        <footer id="footer">
-            <div class="container">
-
-                <section>
-                    <h2 class="major"><span>Barbería App</span></h2>
-                    <p>
-                        Sistema de gestión para control de clientes, citas,
-                        atención de servicios, pagos y reportes.
-                    </p>
-                </section>
-
-                <div id="copyright">
-                    <ul class="menu">
-                        <li>&copy; 2026 Barbería App</li>
-                    </ul>
-                </div>
-
-            </div>
-        </footer>
-
-    </div>
-
-    <!-- JS -->
-    <script src="~/assets/js/jquery.min.js"></script>
-    <script src="~/assets/js/jquery.dropotron.min.js"></script>
-    <script src="~/assets/js/jquery.scrolly.min.js"></script>
-    <script src="~/assets/js/browser.min.js"></script>
-    <script src="~/assets/js/breakpoints.min.js"></script>
-    <script src="~/assets/js/util.js"></script>
-    <script src="~/assets/js/main.js"></script>
-
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-    @await RenderSectionAsync("Scripts", required: false)
+        </div>
+    </section>
 
 </body>
 </html>

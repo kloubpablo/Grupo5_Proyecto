@@ -1,16 +1,44 @@
-﻿<h2>Reporte por Fecha</h2>
+﻿<h2 class="mb-4">📅 Reporte por Fecha</h2>
 
-<form method="post">
-    <label>Seleccione fecha</label>
-    <input type="date" name="fecha" />
+<!-- 🔹 FORMULARIO -->
+<div class="card p-4 mb-4">
 
-    <button type="submit">Generar</button>
-</form>
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger text-center">
+            @ViewBag.Error
+        </div>
+    }
 
-<p style="color:red">@ViewBag.Error</p>
+    <form method="post" class="row g-2 align-items-end">
 
+        <div class="col-md-8">
+            <label class="form-label">Seleccione fecha</label>
+            <input class="form-control" type="date" name="fecha" />
+        </div>
+
+        <div class="col-md-4">
+            <button class="btn btn-primary w-100" type="submit">
+                📊 Generar
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+<!-- 🔹 RESULTADO -->
 @if (ViewBag.Resultado != null)
 {
-    <p>@ViewBag.Resultado</p>
-    <p>Total: ₡@ViewBag.Total</p>
+    <div class="card p-4 text-center">
+
+        <h5>Resultado del reporte</h5>
+
+        <p>@ViewBag.Resultado</p>
+
+        <h3 style="color:#facc15;">
+            💰 Total: ₡@ViewBag.Total
+        </h3>
+
+    </div>
 }

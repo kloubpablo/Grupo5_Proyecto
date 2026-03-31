@@ -1,24 +1,59 @@
-﻿<h2>Dashboard</h2>
+﻿<h2 class="mb-4">📊 Dashboard</h2>
 
-<h3>Resumen del día</h3>
+<!-- 🔹 RESUMEN -->
+<div class="row text-center">
 
-<p>Citas del día: @ViewBag.CitasHoy</p>
-<p>Ingresos del día: ₡@ViewBag.IngresosHoy</p>
-<p>Clientes atendidos: @ViewBag.ClientesAtendidos</p>
+    <div class="col-md-4 mb-3">
+        <div class="card p-3">
+            <h5>📅 Citas del día</h5>
+            <h2>@ViewBag.CitasHoy</h2>
+        </div>
+    </div>
 
-<h3>Estado de barberos</h3>
+    <div class="col-md-4 mb-3">
+        <div class="card p-3">
+            <h5>💰 Ingresos</h5>
+            <h2>₡@ViewBag.IngresosHoy</h2>
+        </div>
+    </div>
 
-<table border="1">
-    <tr>
-        <th>Barbero</th>
-        <th>Estado</th>
-    </tr>
+    <div class="col-md-4 mb-3">
+        <div class="card p-3">
+            <h5>👤 Clientes atendidos</h5>
+            <h2>@ViewBag.ClientesAtendidos</h2>
+        </div>
+    </div>
 
-    @foreach (var b in ViewBag.Barberos)
-    {
+</div>
+
+<hr />
+
+<!-- 🔹 BARBEROS -->
+<h3 class="mb-3">💈 Estado de barberos</h3>
+
+<table class="table table-bordered text-center">
+    <thead>
         <tr>
-            <td>@b.nombre</td>
-            <td>@b.estado</td>
+            <th>Barbero</th>
+            <th>Estado</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var b in ViewBag.Barberos)
+        {
+            <tr>
+                <td>@b.nombre</td>
+                <td>
+                    @if (b.estado == "Disponible")
+                    {
+                        <span class="badge bg-success">Disponible</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Ocupado</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>

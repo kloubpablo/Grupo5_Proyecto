@@ -1,20 +1,45 @@
-﻿<h2>Registrar Pago</h2>
+﻿<h2 class="mb-4">💳 Registrar Pago</h2>
 
-<form method="post">
-    <label>Cliente</label>
-    <input type="text" name="cliente" />
+<div class="card p-4">
 
-    <label>Monto</label>
-    <input type="number" name="monto" />
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger text-center">
+            @ViewBag.Error
+        </div>
+    }
 
-    <label>Método</label>
-    <select name="metodo">
-        <option value="">Seleccione</option>
-        <option>Efectivo</option>
-        <option>Tarjeta</option>
-    </select>
+    <form method="post">
 
-    <button type="submit">Pagar</button>
-</form>
+        <div class="mb-3">
+            <label class="form-label">Cliente</label>
+            <input class="form-control" type="text" name="cliente" placeholder="Nombre del cliente" />
+        </div>
 
-<p style="color:red">@ViewBag.Error</p>
+        <div class="mb-3">
+            <label class="form-label">Monto</label>
+            <input class="form-control" type="number" name="monto" placeholder="Ingrese el monto" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Método de pago</label>
+            <select class="form-select" name="metodo">
+                <option value="">Seleccione</option>
+                <option>Efectivo</option>
+                <option>Tarjeta</option>
+            </select>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-primary" type="submit">
+                💾 Registrar Pago
+            </button>
+
+            <a class="btn btn-secondary" href="/Pagos">
+                Cancelar
+            </a>
+        </div>
+
+    </form>
+
+</div>

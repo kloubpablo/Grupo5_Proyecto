@@ -1,7 +1,36 @@
-﻿<h2>Reportes</h2>
+﻿<h2 class="mb-4">📊 Reportes</h2>
 
-<p>Citas del día: @ViewBag.CitasHoy</p>
-<p>Ingresos del día: ₡@ViewBag.IngresosHoy</p>
-<p>Clientes frecuentes: @ViewBag.ClientesFrecuentes</p>
+<!-- 🔹 RESUMEN -->
+<div class="row text-center">
 
-<a href="/Reportes/PorFecha">Ver reporte por fecha</a>
+    <div class="col-md-4 mb-3">
+        <div class="card p-3">
+            <h5>📅 Citas del día</h5>
+            <h2>@ViewBag.CitasHoy</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card p-3">
+            <h5>💰 Ingresos del día</h5>
+            <h2>₡@ViewBag.IngresosHoy</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card p-3">
+            <h5>⭐ Clientes frecuentes</h5>
+            <h2>@ViewBag.ClientesFrecuentes</h2>
+        </div>
+    </div>
+
+</div>
+
+<hr />
+
+<!-- 🔹 ACCIONES -->
+<div class="text-center mt-4">
+    <a class="btn btn-primary" href="/Reportes/PorFecha">
+        📅 Ver reporte por fecha
+    </a>
+</div>

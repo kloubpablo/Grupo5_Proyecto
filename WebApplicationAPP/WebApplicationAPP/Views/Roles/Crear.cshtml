@@ -1,10 +1,31 @@
-﻿<h2>Crear Rol</h2>
+﻿<h2 class="mb-4">🛡️ Crear Rol</h2>
 
-<form method="post">
-    <label>Nombre del rol</label>
-    <input type="text" name="nombre" />
+<div class="card p-4">
 
-    <button type="submit">Guardar</button>
-</form>
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger text-center">
+            @ViewBag.Error
+        </div>
+    }
 
-<p style="color:red">@ViewBag.Error</p>
+    <form method="post">
+
+        <div class="mb-3">
+            <label class="form-label">Nombre del rol</label>
+            <input class="form-control" type="text" name="nombre" placeholder="Ej: Administrador, Barbero..." />
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-primary" type="submit">
+                💾 Guardar Rol
+            </button>
+
+            <a class="btn btn-secondary" href="/Roles">
+                Cancelar
+            </a>
+        </div>
+
+    </form>
+
+</div>

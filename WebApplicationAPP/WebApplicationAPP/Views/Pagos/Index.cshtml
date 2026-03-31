@@ -1,25 +1,64 @@
 ﻿@model List<dynamic>
 
-<h2>Pagos</h2>
+<h2 class="mb-4">💰 Pagos</h2>
 
-<a href="/Pagos/Registrar">Registrar Pago</a>
-<a href="/Pagos/Cierre">Cierre de Caja</a>
+<!-- 🔹 BOTONES -->
+<div class="mb-3 d-flex gap-2">
+    <a class="btn btn-primary" href="/Pagos/Registrar">
+        ➕ Registrar Pago
+    </a>
 
-<table border="1">
-    <tr>
-        <th>Cliente</th>
-        <th>Monto</th>
-        <th>Método</th>
-        <th>Fecha</th>
-    </tr>
+    <a class="btn btn-warning text-dark" href="/Pagos/Cierre">
+        📊 Cierre de Caja
+    </a>
+</div>
 
-    @foreach (var p in Model)
-    {
+<!-- 🔹 TABLA -->
+<table class="table table-bordered text-center">
+    <thead>
         <tr>
-            <td>@p.cliente</td>
-            <td>@p.monto</td>
-            <td>@p.metodo</td>
-            <td>@p.fecha</td>
+            <th>Cliente</th>
+            <th>Monto</th>
+            <th>Método</th>
+            <th>Fecha</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+
+        @if (Model.Count == 0)
+        {
+            <tr>
+                <td colspan="4">No hay pagos registrados</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>@p.cliente</td>
+
+                    <!-- 💰 MONTO DESTACADO -->
+                    <td style="font-weight:bold; color:#facc15;">
+                        ₡@p.monto
+                    </td>
+
+                    <!-- 💳 MÉTODO -->
+                    <td>
+                        @if (p.metodo == "Efectivo")
+                        {
+                            <span class="badge bg-success">Efectivo</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-primary">Tarjeta</span>
+                        }
+                    </td>
+
+                    <td>@p.fecha</td>
+                </tr>
+            }
+        }
+
+    </tbody>
 </table>

@@ -1,23 +1,41 @@
 ﻿@model dynamic
 
-<h2>Editar Cliente</h2>
+<h2 class="mb-4">✏️ Editar Cliente</h2>
 
-<form method="post">
-    <!-- ID oculto -->
-    <input type="hidden" name="id" value="@Model.id" />
+<div class="card p-4">
 
-    <label>Nombre</label>
-    <input type="text" name="nombre" value="@Model.nombre" />
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger text-center">
+            @ViewBag.Error
+        </div>
+    }
 
-    <br />
+    <form method="post">
 
-    <label>Teléfono</label>
-    <input type="text" name="telefono" value="@Model.telefono" />
+        <!-- ID oculto -->
+        <input type="hidden" name="id" value="@Model.id" />
 
-    <br /><br />
+        <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input class="form-control" type="text" name="nombre" value="@Model.nombre" />
+        </div>
 
-    <button type="submit">Guardar Cambios</button>
-    <a href="/Clientes">Cancelar</a>
-</form>
+        <div class="mb-3">
+            <label class="form-label">Teléfono</label>
+            <input class="form-control" type="text" name="telefono" value="@Model.telefono" />
+        </div>
 
-<p style="color:red">@ViewBag.Error</p>
+        <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-primary" type="submit">
+                💾 Guardar Cambios
+            </button>
+
+            <a class="btn btn-secondary" href="/Clientes">
+                Cancelar
+            </a>
+        </div>
+
+    </form>
+
+</div>

@@ -7,47 +7,58 @@
 
         <section class="box">
 
-            <header>
+            <header class="text-center">
                 <h2 class="major">
-                    <span>Bienvenido a Barbería App</span>
+                    <span>💈 Bienvenido a Barbería App</span>
                 </h2>
+                <p style="color:#cbd5f5;">
+                    Sistema de gestión profesional para barberías
+                </p>
             </header>
 
-            <p>
-                Este sistema permite administrar las operaciones principales de la barbería,
-                incluyendo gestión de <strong>Clientes</strong>, <strong>Citas</strong>,
-                atención de <strong>Turnos</strong> y control de <strong>Pagos</strong>.
+            <p class="text-center">
+                Administra de forma eficiente los módulos principales:
+                <strong>Clientes</strong>, <strong>Citas</strong>,
+                <strong>Turnos</strong> y <strong>Pagos</strong>.
             </p>
 
-            <p>
-                Utiliza el menú superior para navegar entre los diferentes módulos del sistema.
+            <hr />
+
+            <!-- 🔹 ACCESOS -->
+            <div class="row text-center">
+
+                <div class="col-md-3 mb-3">
+                    <a asp-controller="Clientes" asp-action="Index" class="button primary w-100">
+                        👤 Clientes
+                    </a>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <a asp-controller="Citas" asp-action="Index" class="button alt w-100">
+                        📅 Citas
+                    </a>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <a asp-controller="Atencion" asp-action="Index" class="button alt w-100">
+                        💈 Turnos
+                    </a>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <a asp-controller="Pagos" asp-action="Index" class="button alt w-100">
+                        💰 Pagos
+                    </a>
+                </div>
+
+            </div>
+
+            <hr />
+
+            <!-- 🔹 MENSAJE FINAL -->
+            <p class="text-center" style="color:#94a3b8;">
+                Usa el menú superior para acceder a todas las funcionalidades del sistema.
             </p>
-
-            <ul class="actions">
-                <li>
-                    <a asp-controller="Clientes" asp-action="Index" class="button primary">
-                        Ver Clientes
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-controller="Citas" asp-action="Index" class="button alt">
-                        Ver Citas
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-controller="Atencion" asp-action="Index" class="button alt">
-                        Turnos
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-controller="Pagos" asp-action="Index" class="button alt">
-                        Pagos
-                    </a>
-                </li>
-            </ul>
 
         </section>
 

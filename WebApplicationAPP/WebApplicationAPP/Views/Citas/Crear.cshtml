@@ -1,23 +1,44 @@
-﻿<h2>Crear Cita</h2>
+﻿<h2 class="mb-4">📅 Crear Cita</h2>
 
-<form method="post">
-    <label>Cliente</label>
-    <input type="text" name="cliente" />
+<div class="card p-4">
 
-    <label>Fecha</label>
-    <input type="date" name="fecha" />
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger text-center">
+            @ViewBag.Error
+        </div>
+    }
 
-    <label>Hora</label>
-    <input type="time" name="hora" />
+    <form method="post">
 
-    <label>Barbero</label>
-    <select name="barbero">
-        <option>Juan</option>
-        <option>Pedro</option>
-        <option>Carlos</option>
-    </select>
+        <div class="mb-3">
+            <label class="form-label">Cliente</label>
+            <input class="form-control" type="text" name="cliente" placeholder="Nombre del cliente" />
+        </div>
 
-    <button type="submit">Guardar</button>
-</form>
+        <div class="mb-3">
+            <label class="form-label">Fecha</label>
+            <input class="form-control" type="date" name="fecha" />
+        </div>
 
-<p style="color:red">@ViewBag.Error</p>
+        <div class="mb-3">
+            <label class="form-label">Hora</label>
+            <input class="form-control" type="time" name="hora" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Barbero</label>
+            <select class="form-select" name="barbero">
+                <option>Juan</option>
+                <option>Pedro</option>
+                <option>Carlos</option>
+            </select>
+        </div>
+
+        <button class="btn btn-primary w-100 mt-2" type="submit">
+            💾 Guardar Cita
+        </button>
+
+    </form>
+
+</div>
