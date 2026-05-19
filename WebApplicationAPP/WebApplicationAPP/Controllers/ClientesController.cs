@@ -1,24 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApplicationAPP.Models;
 
 namespace WebApplicationAPP.Controllers
 {
     public class ClientesController : Controller
     {
-        // Lista simulada
-        static List<dynamic> clientes = new List<dynamic>();
+        private readonly YampiBarbershopContext _context;
+
+        public ClientesController(YampiBarbershopContext context)
+        {
+            _context = context;
+        }
 
         // LISTA
         public IActionResult Index(string buscar)
         {
-            var lista = clientes;
+            var clientes = _context.Clientes.AsQueryable();
 
-            // 🔍 Buscar cliente
+            // BUSCAR CLIENTE
             if (!string.IsNullOrEmpty(buscar))
             {
-                lista = clientes.Where(c => c.nombre.Contains(buscar)).ToList();
+                clientes = clientes.Where(c =>
+                    c.Nombre.Contains(buscar));
             }
 
-            return View(lista);
+            return View(clientes.ToList());
         }
 
         // CREAR (GET)
@@ -31,26 +37,34 @@ namespace WebApplicationAPP.Controllers
         [HttpPost]
         public IActionResult Crear(string nombre, string telefono)
         {
-            // 🔴 Validación
-            if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(telefono))
+            // VALIDAR CAMPOS
+            if (string.IsNullOrEmpty(nombre) ||
+                string.IsNullOrEmpty(telefono))
             {
                 ViewBag.Error = "Debe completar todos los campos";
                 return View();
             }
 
-            // 🔴 Duplicado
-            if (clientes.Any(c => c.nombre == nombre))
+            // VALIDAR DUPLICADO
+            bool existe = _context.Clientes
+                .Any(c => c.Nombre == nombre);
+
+            if (existe)
             {
                 ViewBag.Error = "El cliente ya existe";
                 return View();
             }
 
-            clientes.Add(new
+            // CREAR CLIENTE
+            var cliente = new Cliente
             {
-                id = clientes.Count + 1,
-                nombre,
-                telefono
-            });
+                Nombre = nombre,
+                Telefono = telefono,
+                FechaRegistro = DateTime.Now
+            };
+
+            _context.Clientes.Add(cliente);
+            _context.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -58,7 +72,14 @@ namespace WebApplicationAPP.Controllers
         // EDITAR (GET)
         public IActionResult Editar(int id)
         {
-            var cliente = clientes.FirstOrDefault(c => c.id == id);
+            var cliente = _context.Clientes
+                .FirstOrDefault(c => c.IdCliente == id);
+
+            if (cliente == null)
+            {
+                return RedirectToAction("Index");
+            }
+
             return View(cliente);
         }
 
@@ -66,18 +87,15 @@ namespace WebApplicationAPP.Controllers
         [HttpPost]
         public IActionResult Editar(int id, string nombre, string telefono)
         {
-            var cliente = clientes.FirstOrDefault(c => c.id == id);
+            var cliente = _context.Clientes
+                .FirstOrDefault(c => c.IdCliente == id);
 
             if (cliente != null)
             {
-                clientes.Remove(cliente);
+                cliente.Nombre = nombre;
+                cliente.Telefono = telefono;
 
-                clientes.Add(new
-                {
-                    id,
-                    nombre,
-                    telefono
-                });
+                _context.SaveChanges();
             }
 
             return RedirectToAction("Index");

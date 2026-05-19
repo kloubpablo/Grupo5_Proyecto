@@ -1,4 +1,6 @@
-﻿<h2 class="mb-4">📊 Dashboard</h2>
+﻿@model List<WebApplicationAPP.Models.Usuario>
+
+<h2 class="mb-4">📊 Dashboard</h2>
 
 <!-- 🔹 RESUMEN -->
 <div class="row text-center">
@@ -29,31 +31,25 @@
 <hr />
 
 <!-- 🔹 BARBEROS -->
-<h3 class="mb-3">💈 Estado de barberos</h3>
+<h3 class="mb-3">💈 Barberos</h3>
 
 <table class="table table-bordered text-center">
-    <thead>
+
+    <thead class="table-dark">
         <tr>
-            <th>Barbero</th>
-            <th>Estado</th>
+            <th>Nombre</th>
+            <th>Usuario</th>
         </tr>
     </thead>
+
     <tbody>
-        @foreach (var b in ViewBag.Barberos)
+        @foreach (var b in Model)
         {
             <tr>
-                <td>@b.nombre</td>
-                <td>
-                    @if (b.estado == "Disponible")
-                    {
-                        <span class="badge bg-success">Disponible</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-danger">Ocupado</span>
-                    }
-                </td>
+                <td>@b.Nombre</td>
+                <td>@b.Username</td>
             </tr>
         }
     </tbody>
+
 </table>

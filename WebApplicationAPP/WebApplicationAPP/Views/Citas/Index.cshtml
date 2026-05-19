@@ -1,15 +1,19 @@
-﻿@model List<dynamic>
+﻿@model List<WebApplicationAPP.Models.Cita>
 
 <h2 class="mb-4">📅 Citas</h2>
 
 <!-- 🔹 BOTÓN -->
 <div class="mb-3">
-    <a class="btn btn-primary" href="/Citas/Crear">➕ Nueva Cita</a>
+    <a class="btn btn-primary"
+           href="/Citas/Crear">
+        ➕ Nueva Cita
+    </a>
 </div>
 
 <!-- 🔹 TABLA -->
 <table class="table table-bordered text-center">
-    <thead>
+
+    <thead class="table-dark">
         <tr>
             <th>Cliente</th>
             <th>Fecha</th>
@@ -19,12 +23,15 @@
             <th>Acciones</th>
         </tr>
     </thead>
+
     <tbody>
 
-        @if (Model.Count == 0)
+        @if (Model == null || Model.Count == 0)
         {
             <tr>
-                <td colspan="6">No hay citas registradas</td>
+                <td colspan="6">
+                    No hay citas registradas
+                </td>
             </tr>
         }
         else
@@ -32,26 +39,34 @@
             @foreach (var c in Model)
             {
                 <tr>
-                    <td>@c.cliente</td>
-                    <td>@c.fecha</td>
-                    <td>@c.hora</td>
-                    <td>@c.barbero</td>
+                    <td>@c.IdClienteNavigation.Nombre</td>
 
-                    <!-- 🔸 ESTADO CON COLOR -->
+                    <td>@c.Fecha</td>
+
+                    <td>@c.Hora</td>
+
+                    <td>@c.Barbero</td>
+
+                    <!-- 🔸 ESTADO -->
                     <td>
-                        @if (c.estado == "Activa")
+                        @if (c.Estado == "Activa")
                         {
-                            <span class="badge bg-success">Activa</span>
+                            <span class="badge bg-success">
+                                Activa
+                            </span>
                         }
                         else
                         {
-                            <span class="badge bg-danger">Cancelada</span>
+                            <span class="badge bg-danger">
+                                Cancelada
+                            </span>
                         }
                     </td>
 
                     <!-- 🔸 ACCIONES -->
                     <td>
-                        <a class="btn btn-sm btn-danger" href="/Citas/Cancelar/@c.id">
+                        <a class="btn btn-sm btn-danger"
+                               href="/Citas/Cancelar/@c.IdCita">
                             ❌ Cancelar
                         </a>
                     </td>
@@ -60,4 +75,5 @@
         }
 
     </tbody>
+
 </table>

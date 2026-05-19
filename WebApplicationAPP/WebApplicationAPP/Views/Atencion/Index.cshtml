@@ -1,36 +1,52 @@
-﻿@model List<dynamic>
+﻿@model List<WebApplicationAPP.Models.Atencion>
 
 <h2 class="mb-4">💈 Atención / Turnos</h2>
 
 <!-- 🔹 FORMULARIO -->
 <div class="card p-3 mb-4">
-    <form method="get" action="/Atencion/Agregar" class="row g-2">
+
+    <form method="post"
+          action="/Atencion/Agregar"
+          class="row g-2">
+
         <div class="col-md-8">
-            <input class="form-control" type="text" name="nombre" placeholder="Nombre del cliente" />
+            <input class="form-control"
+                   type="text"
+                   name="nombre"
+                   placeholder="Nombre del cliente" />
         </div>
+
         <div class="col-md-4">
-            <button class="btn btn-primary w-100">Agregar a lista</button>
+            <button class="btn btn-primary w-100">
+                Agregar a lista
+            </button>
         </div>
+
     </form>
+
 </div>
 
 <!-- 🔹 LISTA -->
 <h4 class="mb-3">📋 Lista de espera</h4>
 
 <table class="table table-bordered text-center">
-    <thead>
+
+    <thead class="table-dark">
         <tr>
             <th>Cliente</th>
             <th>Estado</th>
             <th>Acciones</th>
         </tr>
     </thead>
+
     <tbody>
 
-        @if (Model.Count == 0)
+        @if (Model == null || Model.Count == 0)
         {
             <tr>
-                <td colspan="3">No hay clientes en espera</td>
+                <td colspan="3">
+                    No hay clientes en espera
+                </td>
             </tr>
         }
         else
@@ -38,44 +54,72 @@
             @foreach (var c in Model)
             {
                 <tr>
-                    <td>@c.nombre</td>
 
-                    <!-- 🔸 ESTADO BONITO -->
+                    <td>@c.IdClienteNavigation.Nombre</td>
+
+                    <!-- 🔸 ESTADO -->
                     <td>
-                        @if (c.estado == "En espera")
+                        @if (c.Estado == "En espera")
                         {
-                            <span class="badge bg-warning text-dark">En espera</span>
+                            <span class="badge bg-warning text-dark">
+                                En espera
+                            </span>
+                        }
+                        else if (c.Estado == "En servicio")
+                        {
+                            <span class="badge bg-success">
+                                Atendiendo
+                            </span>
                         }
                         else
                         {
-                            <span class="badge bg-success">Atendiendo</span>
+                            <span class="badge bg-secondary">
+                                Finalizado
+                            </span>
                         }
                     </td>
 
                     <!-- 🔸 BOTONES -->
                     <td>
-                        @if (c.estado == "En espera")
+
+                        @if (c.Estado == "En espera")
                         {
-                            <a class="btn btn-sm btn-primary" href="/Atencion/Iniciar/@c.id">
+                            <a class="btn btn-sm btn-primary"
+                                   href="/Atencion/Iniciar/@c.IdAtencion">
                                 Iniciar
+                            </a>
+                        }
+                        else if (c.Estado == "En servicio")
+                        {
+                            <a class="btn btn-sm btn-danger"
+                                   href="/Atencion/Finalizar/@c.IdAtencion">
+                                Finalizar
                             </a>
                         }
                         else
                         {
-                            <a class="btn btn-sm btn-danger" href="/Atencion/Finalizar/@c.id">
-                                Finalizar
-                            </a>
+                            <span class="text-muted">
+                                Completado
+                            </span>
                         }
+
                     </td>
+
                 </tr>
             }
         }
 
     </tbody>
+
 </table>
 
 <!-- 🔹 TIEMPO -->
 <div class="card p-3 mt-4 text-center">
+
     <h5>⏱ Tiempo estimado</h5>
-    <h3>@(Model.Count * 10) minutos</h3>
+
+    <h3>
+        @(Model.Count(c => c.Estado != "Finalizado") * 10) minutos
+    </h3>
+
 </div>

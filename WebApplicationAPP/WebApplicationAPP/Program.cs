@@ -1,6 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using WebApplicationAPP.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Servicios básicos MVC
+// Conexión SQL Server
+builder.Services.AddDbContext<YampiBarbershopContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("SqlConnection")));
+
+// Servicios MVC
 builder.Services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
 
@@ -20,7 +28,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-// 👉 Ruta inicial (IMPORTANTE)
+// Ruta inicial
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Seguridad}/{action=Index}/{id?}");

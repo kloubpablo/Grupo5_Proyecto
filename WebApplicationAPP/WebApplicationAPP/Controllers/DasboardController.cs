@@ -1,25 +1,48 @@
 using Microsoft.AspNetCore.Mvc;
+using WebApplicationAPP.Models;
 
 namespace WebApplicationAPP.Controllers
 {
     public class DashboardController : Controller
     {
+        private readonly YampiBarbershopContext _context;
+
+        public DashboardController(YampiBarbershopContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
-            // 🔹 Datos simulados (luego podrían venir de BD)
-            ViewBag.CitasHoy = 12;
-            ViewBag.IngresosHoy = 75000;
-            ViewBag.ClientesAtendidos = 9;
+            // 📅 Citas de hoy
+            var citasHoy = _context.Citas
+                .Count(c => c.Fecha == DateOnly.FromDateTime(DateTime.Now));
 
-            // Estado de barberos (simulado)
-            ViewBag.Barberos = new List<dynamic>
+            // 👤 Clientes atendidos
+            var clientesAtendidos = _context.Atencions
+                .Count(a => a.Estado == "Finalizado");
+
+            // 💰 Ingresos de hoy
+            decimal ingresosHoy = 0;
+
+            if (_context.Pagos.Any())
             {
-                new { nombre = "Juan", estado = "Disponible" },
-                new { nombre = "Pedro", estado = "Ocupado" },
-                new { nombre = "Carlos", estado = "Disponible" }
-            };
+                ingresosHoy = _context.Pagos
+                    .Where(p => p.Fecha == DateOnly.FromDateTime(DateTime.Now))
+                    .Sum(p => (decimal?)p.Monto) ?? 0;
+            }
 
-            return View();
+            // ViewBag dinámico
+            ViewBag.CitasHoy = citasHoy;
+            ViewBag.IngresosHoy = ingresosHoy;
+            ViewBag.ClientesAtendidos = clientesAtendidos;
+
+            // 💈 Barberos reales desde SQL Server
+            var barberos = _context.Usuarios
+                .Where(u => u.IdRol == 2)
+                .ToList();
+
+            return View(barberos);
         }
     }
 }

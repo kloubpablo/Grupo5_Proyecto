@@ -1,53 +1,72 @@
-﻿@model List<dynamic>
+﻿@model List<WebApplicationAPP.Models.Cliente>
 
 <h2 class="mb-4">👤 Clientes</h2>
 
 <!-- 🔹 BUSCADOR -->
 <div class="card p-3 mb-3">
     <form method="get" class="row g-2 align-items-center">
+
         <div class="col-md-9">
-            <input class="form-control" type="text" name="buscar" placeholder="🔍 Buscar cliente..." />
+            <input class="form-control"
+                   type="text"
+                   name="buscar"
+                   placeholder="🔍 Buscar cliente..." />
         </div>
+
         <div class="col-md-3">
-            <button class="btn btn-primary w-100" type="submit">Buscar</button>
+            <button class="btn btn-primary w-100"
+                    type="submit">
+                Buscar
+            </button>
         </div>
+
     </form>
 </div>
 
 <!-- 🔹 BOTÓN NUEVO -->
 <div class="mb-3">
-    <a class="btn btn-primary" href="/Clientes/Crear">➕ Nuevo Cliente</a>
+    <a class="btn btn-primary"
+           href="/Clientes/Crear">
+        ➕ Nuevo Cliente
+    </a>
 </div>
 
 <!-- 🔹 TABLA -->
 <table class="table table-bordered table-striped text-center align-middle">
-    <thead>
+
+    <thead class="table-dark">
         <tr>
+            <th style="width:10%;">ID</th>
             <th style="width:40%;">Nombre</th>
             <th style="width:30%;">Teléfono</th>
-            <th style="width:30%;">Acciones</th>
+            <th style="width:20%;">Acciones</th>
         </tr>
     </thead>
+
     <tbody>
 
         @if (Model == null || Model.Count == 0)
         {
             <tr>
-                <td colspan="3">No hay clientes registrados</td>
+                <td colspan="4">
+                    No hay clientes registrados
+                </td>
             </tr>
         }
         else
         {
-            @foreach (var item in Model)
+            @foreach (var c in Model)
             {
-                var c = (dynamic)item;
-
                 <tr>
-                    <td>@c.nombre</td>
-                    <td>@c.telefono</td>
+                    <td>@c.IdCliente</td>
+
+                    <td>@c.Nombre</td>
+
+                    <td>@c.Telefono</td>
+
                     <td>
                         <a class="btn btn-sm btn-warning text-dark"
-                           href="/Clientes/Editar/@c.id">
+                               href="/Clientes/Editar/@c.IdCliente">
                             ✏️ Editar
                         </a>
                     </td>
@@ -56,4 +75,5 @@
         }
 
     </tbody>
+
 </table>

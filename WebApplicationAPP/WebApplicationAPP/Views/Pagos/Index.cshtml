@@ -1,21 +1,26 @@
-﻿@model List<dynamic>
+﻿@model List<WebApplicationAPP.Models.Pago>
 
 <h2 class="mb-4">💰 Pagos</h2>
 
 <!-- 🔹 BOTONES -->
 <div class="mb-3 d-flex gap-2">
-    <a class="btn btn-primary" href="/Pagos/Registrar">
+
+    <a class="btn btn-primary"
+           href="/Pagos/Registrar">
         ➕ Registrar Pago
     </a>
 
-    <a class="btn btn-warning text-dark" href="/Pagos/Cierre">
+    <a class="btn btn-warning text-dark"
+           href="/Pagos/Cierre">
         📊 Cierre de Caja
     </a>
+
 </div>
 
 <!-- 🔹 TABLA -->
 <table class="table table-bordered text-center">
-    <thead>
+
+    <thead class="table-dark">
         <tr>
             <th>Cliente</th>
             <th>Monto</th>
@@ -23,12 +28,15 @@
             <th>Fecha</th>
         </tr>
     </thead>
+
     <tbody>
 
-        @if (Model.Count == 0)
+        @if (Model == null || Model.Count == 0)
         {
             <tr>
-                <td colspan="4">No hay pagos registrados</td>
+                <td colspan="4">
+                    No hay pagos registrados
+                </td>
             </tr>
         }
         else
@@ -36,29 +44,38 @@
             @foreach (var p in Model)
             {
                 <tr>
-                    <td>@p.cliente</td>
 
-                    <!-- 💰 MONTO DESTACADO -->
+                    <td>@p.IdClienteNavigation.Nombre</td>
+
+                    <!-- 💰 MONTO -->
                     <td style="font-weight:bold; color:#facc15;">
-                        ₡@p.monto
+                        ₡@p.Monto
                     </td>
 
                     <!-- 💳 MÉTODO -->
                     <td>
-                        @if (p.metodo == "Efectivo")
+
+                        @if (p.Metodo == "Efectivo")
                         {
-                            <span class="badge bg-success">Efectivo</span>
+                            <span class="badge bg-success">
+                                Efectivo
+                            </span>
                         }
                         else
                         {
-                            <span class="badge bg-primary">Tarjeta</span>
+                            <span class="badge bg-primary">
+                                Tarjeta
+                            </span>
                         }
+
                     </td>
 
-                    <td>@p.fecha</td>
+                    <td>@p.Fecha</td>
+
                 </tr>
             }
         }
 
     </tbody>
+
 </table>

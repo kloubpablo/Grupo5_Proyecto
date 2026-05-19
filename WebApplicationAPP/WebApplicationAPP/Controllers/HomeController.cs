@@ -5,27 +5,25 @@ namespace WebApplicationAPP.Controllers
 {
     public class HomeController : Controller
     {
-        // Página principal (puedes redirigir al dashboard)
+        // Página principal
         public IActionResult Index()
         {
             return RedirectToAction("Index", "Dashboard");
         }
 
-        // Vista de privacidad (opcional)
+        // Privacidad
         public IActionResult Privacy()
         {
             return View();
         }
 
-        // Manejo de errores
+        // Errores
         public IActionResult Error()
         {
-            var model = new ErrorViewModel
+            return View(new ErrorViewModel
             {
                 RequestId = HttpContext.TraceIdentifier
-            };
-
-            return View(model);
+            });
         }
     }
 }

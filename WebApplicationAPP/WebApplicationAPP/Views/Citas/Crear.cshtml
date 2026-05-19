@@ -11,31 +11,55 @@
 
     <form method="post">
 
+        <!-- CLIENTE -->
         <div class="mb-3">
             <label class="form-label">Cliente</label>
-            <input class="form-control" type="text" name="cliente" placeholder="Nombre del cliente" />
+
+            <input class="form-control"
+                   type="text"
+                   name="cliente"
+                   placeholder="Nombre del cliente" />
         </div>
 
+        <!-- FECHA -->
         <div class="mb-3">
             <label class="form-label">Fecha</label>
-            <input class="form-control" type="date" name="fecha" />
+
+            <input class="form-control"
+                   type="date"
+                   name="fecha" />
         </div>
 
+        <!-- HORA -->
         <div class="mb-3">
             <label class="form-label">Hora</label>
-            <input class="form-control" type="time" name="hora" />
+
+            <input class="form-control"
+                   type="time"
+                   name="hora" />
         </div>
 
+        <!-- BARBERO -->
         <div class="mb-3">
+
             <label class="form-label">Barbero</label>
+
             <select class="form-select" name="barbero">
-                <option>Juan</option>
-                <option>Pedro</option>
-                <option>Carlos</option>
+
+                @foreach (var b in ViewBag.Barberos)
+                {
+                    <option value="@b.Nombre">
+                        @b.Nombre
+                    </option>
+                }
+
             </select>
+
         </div>
 
-        <button class="btn btn-primary w-100 mt-2" type="submit">
+        <!-- BOTÓN -->
+        <button class="btn btn-primary w-100 mt-2"
+                type="submit">
             💾 Guardar Cita
         </button>
 

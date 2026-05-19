@@ -1,15 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApplicationAPP.Models;
 
 namespace WebApplicationAPP.Controllers
 {
     public class RolesController : Controller
     {
-        // Lista simulada
-        static List<dynamic> roles = new List<dynamic>();
+        private readonly YampiBarbershopContext _context;
 
-        // LISTA
+        public RolesController(YampiBarbershopContext context)
+        {
+            _context = context;
+        }
+
+        // LISTA DE ROLES
         public IActionResult Index()
         {
+            var roles = _context.Roles.ToList();
+
             return View(roles);
         }
 
@@ -23,26 +30,32 @@ namespace WebApplicationAPP.Controllers
         [HttpPost]
         public IActionResult Crear(string nombre)
         {
-            // 🔴 Validación
+            // VALIDAR CAMPO
             if (string.IsNullOrEmpty(nombre))
             {
                 ViewBag.Error = "Debe ingresar el nombre del rol";
                 return View();
             }
 
-            // 🔴 Duplicado
-            if (roles.Any(r => r.nombre == nombre))
+            // VALIDAR DUPLICADO
+            bool existe = _context.Roles
+                .Any(r => r.Nombre == nombre);
+
+            if (existe)
             {
                 ViewBag.Error = "El rol ya existe";
                 return View();
             }
 
-            roles.Add(new
+            // CREAR ROL
+            var rol = new Role
             {
-                id = roles.Count + 1,
-                nombre = nombre,
-                activo = true
-            });
+                Nombre = nombre,
+                Estado = true
+            };
+
+            _context.Roles.Add(rol);
+            _context.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -50,18 +63,14 @@ namespace WebApplicationAPP.Controllers
         // ACTIVAR / DESACTIVAR
         public IActionResult Toggle(int id)
         {
-            var rol = roles.FirstOrDefault(r => r.id == id);
+            var rol = _context.Roles
+                .FirstOrDefault(r => r.IdRol == id);
 
             if (rol != null)
             {
-                roles.Remove(rol);
+                rol.Estado = !rol.Estado;
 
-                roles.Add(new
-                {
-                    id = rol.id,
-                    nombre = rol.nombre,
-                    activo = !rol.activo
-                });
+                _context.SaveChanges();
             }
 
             return RedirectToAction("Index");
@@ -70,11 +79,14 @@ namespace WebApplicationAPP.Controllers
         // ELIMINAR
         public IActionResult Eliminar(int id)
         {
-            var rol = roles.FirstOrDefault(r => r.id == id);
+            var rol = _context.Roles
+                .FirstOrDefault(r => r.IdRol == id);
 
             if (rol != null)
             {
-                roles.Remove(rol);
+                _context.Roles.Remove(rol);
+
+                _context.SaveChanges();
             }
 
             return RedirectToAction("Index");

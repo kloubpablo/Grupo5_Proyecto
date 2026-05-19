@@ -1,34 +1,48 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApplicationAPP.Models;
+using System.Linq;
 
 namespace WebApplicationAPP.Controllers
 {
     public class SeguridadController : Controller
     {
-        // GET: Login
+        private readonly YampiBarbershopContext _context;
+
+        public SeguridadController(YampiBarbershopContext context)
+        {
+            _context = context;
+        }
+
+        // GET
         public IActionResult Index()
         {
             return View();
         }
 
-        // POST: Login
+        // POST
         [HttpPost]
         public IActionResult Index(string usuario, string password)
         {
-            // 🔴 Validación de campos vacíos
+            // Validar campos vacíos
             if (string.IsNullOrEmpty(usuario) || string.IsNullOrEmpty(password))
             {
                 ViewBag.Error = "Debe completar todos los campos";
                 return View();
             }
 
-            // 🟢 Validación de credenciales
-            if (usuario == "admin" && password == "123")
+            // Buscar usuario en la BD
+            var user = _context.Usuarios
+                .FirstOrDefault(u =>
+                    u.Username == usuario &&
+                    u.PasswordHash == password);
+
+            // Si existe
+            if (user != null)
             {
-                // 👉 Redirige al Dashboard
                 return RedirectToAction("Index", "Dashboard");
             }
 
-            // 🔴 Error de login
+            // Error login
             ViewBag.Error = "Usuario o contraseña incorrectos";
             return View();
         }
@@ -36,7 +50,6 @@ namespace WebApplicationAPP.Controllers
         // Logout
         public IActionResult Logout()
         {
-            // (Luego podemos agregar sesión aquí)
             return RedirectToAction("Index", "Seguridad");
         }
     }

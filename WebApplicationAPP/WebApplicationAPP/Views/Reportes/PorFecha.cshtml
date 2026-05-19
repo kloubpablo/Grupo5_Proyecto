@@ -10,17 +10,28 @@
         </div>
     }
 
-    <form method="post" class="row g-2 align-items-end">
+    <form method="post"
+          class="row g-2 align-items-end">
 
         <div class="col-md-8">
-            <label class="form-label">Seleccione fecha</label>
-            <input class="form-control" type="date" name="fecha" />
+
+            <label class="form-label">
+                Seleccione fecha
+            </label>
+
+            <input class="form-control"
+                   type="date"
+                   name="fecha" />
+
         </div>
 
         <div class="col-md-4">
-            <button class="btn btn-primary w-100" type="submit">
+
+            <button class="btn btn-primary w-100"
+                    type="submit">
                 📊 Generar
             </button>
+
         </div>
 
     </form>
@@ -28,17 +39,33 @@
 </div>
 
 <!-- 🔹 RESULTADO -->
-@if (ViewBag.Resultado != null)
+@if (ViewBag.Fecha != null)
 {
     <div class="card p-4 text-center">
 
-        <h5>Resultado del reporte</h5>
+        <h4 class="mb-3">
+            📅 Reporte del día @ViewBag.Fecha
+        </h4>
 
-        <p>@ViewBag.Resultado</p>
+        <hr />
 
-        <h3 style="color:#facc15;">
-            💰 Total: ₡@ViewBag.Total
+        <h5>
+            📌 Cantidad de citas:
+        </h5>
+
+        <h3>
+            @ViewBag.Citas
         </h3>
+
+        <br />
+
+        <h5>
+            💰 Total generado:
+        </h5>
+
+        <h2 style="color:#facc15;">
+            ₡@ViewBag.Total
+        </h2>
 
     </div>
 }

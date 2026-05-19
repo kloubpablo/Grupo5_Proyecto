@@ -1,19 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebApplicationAPP.Models;
 
 namespace WebApplicationAPP.Controllers
 {
     public class AtencionController : Controller
     {
-        // Lista de espera
-        static List<dynamic> listaEspera = new List<dynamic>();
+        private readonly YampiBarbershopContext _context;
 
-        // Vista principal
-        public IActionResult Index()
+        public AtencionController(YampiBarbershopContext context)
         {
-            return View(listaEspera);
+            _context = context;
         }
 
-        // AGREGAR A LISTA (cliente sin cita)
+        // LISTA DE ATENCIONES
+        public IActionResult Index()
+        {
+            var atenciones = _context.Atencions
+                .Include(a => a.IdClienteNavigation)
+                .ToList();
+
+            return View(atenciones);
+        }
+
+        // AGREGAR CLIENTE A LISTA
+        [HttpPost]
         public IActionResult Agregar(string nombre)
         {
             if (string.IsNullOrEmpty(nombre))
@@ -21,12 +32,33 @@ namespace WebApplicationAPP.Controllers
                 return RedirectToAction("Index");
             }
 
-            listaEspera.Add(new
+            // Buscar cliente existente
+            var cliente = _context.Clientes
+                .FirstOrDefault(c => c.Nombre == nombre);
+
+            // Si no existe, crearlo
+            if (cliente == null)
             {
-                id = listaEspera.Count + 1,
-                nombre = nombre,
-                estado = "En espera"
-            });
+                cliente = new Cliente
+                {
+                    Nombre = nombre,
+                    Telefono = "00000000",
+                    FechaRegistro = DateTime.Now
+                };
+
+                _context.Clientes.Add(cliente);
+                _context.SaveChanges();
+            }
+
+            // Crear atención
+            var atencion = new Atencion
+            {
+                IdCliente = cliente.IdCliente,
+                Estado = "En espera"
+            };
+
+            _context.Atencions.Add(atencion);
+            _context.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -34,18 +66,15 @@ namespace WebApplicationAPP.Controllers
         // INICIAR SERVICIO
         public IActionResult Iniciar(int id)
         {
-            var cliente = listaEspera.FirstOrDefault(c => c.id == id);
+            var atencion = _context.Atencions
+                .FirstOrDefault(a => a.IdAtencion == id);
 
-            if (cliente != null)
+            if (atencion != null)
             {
-                listaEspera.Remove(cliente);
+                atencion.Estado = "En servicio";
+                atencion.HoraInicio = TimeOnly.FromDateTime(DateTime.Now);
 
-                listaEspera.Add(new
-                {
-                    id = cliente.id,
-                    nombre = cliente.nombre,
-                    estado = "En servicio"
-                });
+                _context.SaveChanges();
             }
 
             return RedirectToAction("Index");
@@ -54,11 +83,15 @@ namespace WebApplicationAPP.Controllers
         // FINALIZAR SERVICIO
         public IActionResult Finalizar(int id)
         {
-            var cliente = listaEspera.FirstOrDefault(c => c.id == id);
+            var atencion = _context.Atencions
+                .FirstOrDefault(a => a.IdAtencion == id);
 
-            if (cliente != null)
+            if (atencion != null)
             {
-                listaEspera.Remove(cliente);
+                atencion.Estado = "Finalizado";
+                atencion.HoraFin = TimeOnly.FromDateTime(DateTime.Now);
+
+                _context.SaveChanges();
             }
 
             return RedirectToAction("Index");
