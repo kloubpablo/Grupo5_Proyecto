@@ -36,12 +36,15 @@ namespace WebApplicationAPP.Controllers
         public IActionResult Crear(
             string nombre,
             string username,
+            string correoElectronico,
             string password,
+            string confirmarContraseña,
             int idRol)
         {
             // VALIDAR CAMPOS
             if (string.IsNullOrEmpty(nombre) ||
                 string.IsNullOrEmpty(username) ||
+                string.IsNullOrEmpty(correoElectronico) ||
                 string.IsNullOrEmpty(password))
             {
                 ViewBag.Error = "Debe completar todos los campos";
@@ -50,13 +53,33 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            // VALIDAR DUPLICADO
-            bool existe = _context.Usuarios
+            if (password != confirmarContraseña)
+            {
+                ViewBag.Error = "Las contraseñas deben coincidir";
+                ViewBag.Roles = _context.Roles.ToList();
+
+                return View();
+            }
+
+            // VALIDAR USUARIO DUPLICADO
+            bool existeUsuario = _context.Usuarios
                 .Any(u => u.Username == username);
 
-            if (existe)
+            if (existeUsuario)
             {
                 ViewBag.Error = "El usuario ya existe";
+                ViewBag.Roles = _context.Roles.ToList();
+
+                return View();
+            }
+
+            // VALIDAR CORREO DUPLICADO
+            bool existeCorreo = _context.Usuarios
+                .Any(u => u.CorreoElectronico == correoElectronico);
+
+            if (existeCorreo)
+            {
+                ViewBag.Error = "El correo ya está registrado";
                 ViewBag.Roles = _context.Roles.ToList();
 
                 return View();
@@ -67,6 +90,7 @@ namespace WebApplicationAPP.Controllers
             {
                 Nombre = nombre,
                 Username = username,
+                CorreoElectronico = correoElectronico,
                 PasswordHash = password,
                 IdRol = idRol
             };
@@ -75,7 +99,7 @@ namespace WebApplicationAPP.Controllers
 
             _context.SaveChanges();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Seguridad");
         }
 
         // ELIMINAR

@@ -1,13 +1,79 @@
-﻿<h2>Crear Usuario</h2>
+﻿@{
+    ViewData["Title"] = "Crear";
+}
 
-<form method="post">
-    <label>Nombre</label>
-    <input type="text" name="nombre" />
 
-    <label>Email</label>
-    <input type="text" name="email" />
 
-    <button type="submit">Guardar</button>
+<form asp-action="Crear" method="post">
+
+    <h2 style="text-align:center;">Registro</h2>
+
+    <div class="mb-3">
+        <label>Nombre</label>
+    <input type="text"
+           name="nombre"
+           class="form-control mb-2"
+           placeholder="Nombre"
+           required />
+    </div>
+    <div class="mb-3">
+        <label>Usuario</label>
+    <input type="text"
+           name="username"
+           class="form-control mb-2"
+           placeholder="Usuario"
+           required />
+
+    </div>
+    <div class="mb-3">
+        <label>Correo</label>
+    <input type="email"
+           name="correoElectronico"
+           class="form-control mb-2"
+           placeholder="Correo"
+           required />
+    </div>
+    <div class="mb-3">
+        <label>Contraseña</label>
+    <input type="password"
+           name="password"
+           class="form-control mb-2"
+           placeholder="Contraseña"
+           required />
+    </div>
+    <div class="mb-3">
+        <label>Confirmar Contraseña</label>
+    <input type="password"
+           name="confirmarContraseña"
+           class="form-control mb-2"
+           placeholder="Confirmar Contraseña"
+           required />
+    </div>
+    <div class="mb-3">
+        <label>Rol</label>
+    <select name="idRol" class="form-control mb-3" required>
+        <option value="">Seleccione un rol</option>
+
+        @foreach (var rol in ViewBag.Roles)
+        {
+            <option value="@rol.IdRol">
+                @rol.Nombre
+            </option>
+        }
+    </select>
+    </div>
+
+    <div class="mb-3">
+        <label></label>
+    <button type="submit" class="btn btn-success w-100">
+        Registrar
+    </button>
+    </div>
+    @if (ViewBag.Error != null)
+    {
+        <p style="color:red; text-align:center; margin-top:10px;">
+            @ViewBag.Error
+        </p>
+    }
+
 </form>
-
-<p style="color:red">@ViewBag.Error</p>

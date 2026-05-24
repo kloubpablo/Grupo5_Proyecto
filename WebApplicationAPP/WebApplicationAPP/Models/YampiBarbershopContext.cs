@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using WebApplicationAPP.Data;
 
 namespace WebApplicationAPP.Models;
 
@@ -334,4 +335,9 @@ public partial class YampiBarbershopContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    public static implicit operator YampiBarbershopContext(AppDbContext v)
+    {
+        throw new NotImplementedException();
+    }
 }

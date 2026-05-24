@@ -15,5 +15,9 @@ public partial class Usuario
 
     public int IdRol { get; set; }
 
+    public string CorreoElectronico { get; set; } = null!;
+
+    public bool ContraTemp { get; set; }
+
     public virtual Role IdRolNavigation { get; set; } = null!;
 }

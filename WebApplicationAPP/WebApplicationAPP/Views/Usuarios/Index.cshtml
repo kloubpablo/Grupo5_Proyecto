@@ -1,4 +1,4 @@
-﻿@model List<dynamic>
+﻿@model IEnumerable<WebApplicationAPP.Models.Usuario>
  
 <h2>Usuarios</h2>
  
@@ -14,10 +14,10 @@
     @foreach (var u in Model)
     {
         <tr>
-            <td>@u.nombre</td>
-            <td>@u.email</td>
+            <td>@u.Nombre</td>
+            <td>@u.CorreoElectronico</td>
             <td>
-                <a href="/Usuarios/Eliminar/@u.id">Eliminar</a>
+                <a href="/Usuarios/Eliminar/@u.IdUsuario">Eliminar</a>
             </td>
         </tr>
     }

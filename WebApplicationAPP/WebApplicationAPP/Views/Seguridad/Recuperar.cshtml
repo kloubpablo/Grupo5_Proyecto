@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Recuperar";
+}
+
+
+
+<h2>Recuperar Contraseña</h2>
+
+<form asp-action="Recuperar" method="post">
+
+    <input type="email"
+           name="correo"
+           class="form-control mb-3"
+           placeholder="Ingrese su correo"
+           required />
+
+    <button type="submit" class="btn btn-warning">
+        Recuperar
+    </button>
+
+    @if (ViewBag.Mensaje != null)
+    {
+        <p style="color:lime;">
+            @ViewBag.Mensaje
+        </p>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <p style="color:red;">
+            @ViewBag.Error
+        </p>
+    }
+
+</form>
