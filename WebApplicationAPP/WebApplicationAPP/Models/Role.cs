@@ -11,5 +11,9 @@ public partial class Role
 
     public bool Estado { get; set; }
 
+    public string? Descripcion { get; set; }
+
     public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
+
+    public virtual ICollection<Privilegio> IdPrivilegios { get; set; } = new List<Privilegio>();
 }

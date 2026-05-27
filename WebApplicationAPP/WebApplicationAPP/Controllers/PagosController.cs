@@ -13,9 +13,21 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // LISTA DE PAGOS
+        private bool EsRecepcionista()
+        {
+            return HttpContext.Session
+                .GetString("Rol") == "Recepcionista";
+        }
+
         public IActionResult Index()
         {
+            if (!EsRecepcionista())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             var pagos = _context.Pagos
                 .Include(p => p.IdClienteNavigation)
                 .ToList();
@@ -23,30 +35,45 @@ namespace WebApplicationAPP.Controllers
             return View(pagos);
         }
 
-        // REGISTRAR PAGO (GET)
         public IActionResult Registrar()
         {
+            if (!EsRecepcionista())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             return View();
         }
 
-        // REGISTRAR PAGO (POST)
         [HttpPost]
-        public IActionResult Registrar(string cliente, decimal monto, string metodo)
+        public IActionResult Registrar(
+            string cliente,
+            decimal monto,
+            string metodo)
         {
-            // VALIDAR DATOS
+            if (!EsRecepcionista())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             if (string.IsNullOrEmpty(cliente) ||
                 monto <= 0 ||
                 string.IsNullOrEmpty(metodo))
             {
-                ViewBag.Error = "Debe completar todos los datos correctamente";
+                ViewBag.Error =
+                    "Debe completar todos los datos correctamente";
+
                 return View();
             }
 
-            // BUSCAR CLIENTE
             var clienteExistente = _context.Clientes
-                .FirstOrDefault(c => c.Nombre == cliente);
+                .FirstOrDefault(c =>
+                    c.Nombre == cliente);
 
-            // CREAR CLIENTE SI NO EXISTE
             if (clienteExistente == null)
             {
                 clienteExistente = new Cliente
@@ -57,10 +84,10 @@ namespace WebApplicationAPP.Controllers
                 };
 
                 _context.Clientes.Add(clienteExistente);
+
                 _context.SaveChanges();
             }
 
-            // CREAR PAGO
             var pago = new Pago
             {
                 IdCliente = clienteExistente.IdCliente,
@@ -70,16 +97,25 @@ namespace WebApplicationAPP.Controllers
             };
 
             _context.Pagos.Add(pago);
+
             _context.SaveChanges();
 
             return RedirectToAction("Index");
         }
 
-        // CIERRE DE CAJA
         public IActionResult Cierre()
         {
+            if (!EsRecepcionista())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             decimal total = _context.Pagos
-                .Where(p => p.Fecha == DateOnly.FromDateTime(DateTime.Now))
+                .Where(p =>
+                    p.Fecha ==
+                    DateOnly.FromDateTime(DateTime.Now))
                 .Sum(p => (decimal?)p.Monto) ?? 0;
 
             ViewBag.Total = total;

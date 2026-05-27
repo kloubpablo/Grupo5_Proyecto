@@ -12,14 +12,14 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // VALIDAR ADMIN
+        // 🔥 VALIDAR SI ES ADMINISTRADOR
         private bool EsAdmin()
         {
             return HttpContext.Session
                 .GetString("Rol") == "Administrador";
         }
 
-        // INDEX
+        // 🔥 INDEX
         public IActionResult Index()
         {
             if (!EsAdmin())
@@ -34,7 +34,7 @@ namespace WebApplicationAPP.Controllers
             return View(roles);
         }
 
-        // CREAR GET
+        // 🔥 CREAR GET
         public IActionResult Crear()
         {
             if (!EsAdmin())
@@ -47,9 +47,9 @@ namespace WebApplicationAPP.Controllers
             return View();
         }
 
-        // CREAR POST
+        // 🔥 CREAR POST
         [HttpPost]
-        public IActionResult Crear(string nombre)
+        public IActionResult Crear(string nombre, string descripcion)
         {
             if (!EsAdmin())
             {
@@ -58,7 +58,7 @@ namespace WebApplicationAPP.Controllers
                     "Dashboard");
             }
 
-            // VALIDAR
+            // VALIDAR CAMPOS
             if (string.IsNullOrEmpty(nombre))
             {
                 ViewBag.Error =
@@ -67,7 +67,7 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            // DUPLICADO
+            // VALIDAR DUPLICADO
             bool existe = _context.Roles
                 .Any(r => r.Nombre == nombre);
 
@@ -79,10 +79,11 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            // CREAR
+            // CREAR ROL
             var rol = new Role
             {
                 Nombre = nombre,
+                Descripcion = descripcion,
                 Estado = true
             };
 
@@ -93,7 +94,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("Index");
         }
 
-        // ACTIVAR / DESACTIVAR
+        // 🔥 ACTIVAR / DESACTIVAR
         public IActionResult Toggle(int id)
         {
             if (!EsAdmin())
@@ -117,7 +118,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("Index");
         }
 
-        // ELIMINAR
+        // 🔥 ELIMINAR
         public IActionResult Eliminar(int id)
         {
             if (!EsAdmin())

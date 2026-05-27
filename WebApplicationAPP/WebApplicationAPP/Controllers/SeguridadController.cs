@@ -73,7 +73,16 @@ namespace WebApplicationAPP.Controllers
                     return RedirectToAction("CambiarContrasena");
                 }
 
-                return RedirectToAction("Index", "Dashboard");
+                if (user.IdRolNavigation.Nombre == "Cliente")
+                {
+                    return RedirectToAction(
+                        "MisCitas",
+                        "Citas");
+                }
+
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
             }
 
             // ERROR

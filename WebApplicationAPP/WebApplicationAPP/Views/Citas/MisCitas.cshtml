@@ -1,0 +1,65 @@
+﻿@model IEnumerable<WebApplicationAPP.Models.Cita>
+
+@{
+    ViewData["Title"] = "Mis Citas";
+}
+
+<h2 class="mb-4">
+    📅 Mis Citas
+</h2>
+
+<table class="table table-dark table-hover">
+
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Barbero</th>
+            <th>Estado</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @item.Fecha
+                </td>
+
+                <td>
+                    @item.Hora
+                </td>
+
+                <td>
+                    @item.Barbero
+                </td>
+
+                <td>
+                    @item.Estado
+                </td>
+
+                <td>
+
+                    @if (item.Estado == "Activa")
+                    {
+                        <a asp-action="Cancelar"
+                               asp-route-id="@item.IdCita"
+                               class="btn btn-danger btn-sm">
+
+                            Cancelar
+
+                        </a>
+                    }
+
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+
+</table>

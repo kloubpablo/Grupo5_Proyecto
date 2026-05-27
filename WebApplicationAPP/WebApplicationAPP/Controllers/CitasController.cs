@@ -13,9 +13,32 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // LISTA DE CITAS
+        // 🔥 ADMIN O BARBERO
+        private bool EsAdminOBarbero()
+        {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            return rol == "Administrador"
+                || rol == "Barbero";
+        }
+
+        // 🔥 CLIENTE
+        private bool EsCliente()
+        {
+            return HttpContext.Session
+                .GetString("Rol") == "Cliente";
+        }
+
+        // 🔥 LISTA GENERAL DE CITAS
         public IActionResult Index()
         {
+            if (!EsAdminOBarbero())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             var citas = _context.Citas
                 .Include(c => c.IdClienteNavigation)
                 .ToList();
@@ -23,24 +46,74 @@ namespace WebApplicationAPP.Controllers
             return View(citas);
         }
 
-        // CREAR (GET)
+        // 🔥 MIS CITAS
+        public IActionResult MisCitas()
+        {
+            if (!EsCliente())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
+            var usuario = HttpContext.Session
+                .GetString("NombreUsuario");
+
+            var citas = _context.Citas
+                .Include(c => c.IdClienteNavigation)
+                .Where(c =>
+                    c.IdClienteNavigation.Nombre == usuario)
+                .ToList();
+
+            return View(citas);
+        }
+
+        // 🔥 CREAR CITA (GET)
         public IActionResult Crear()
         {
+            if (!EsAdminOBarbero() && !EsCliente())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
+            // 🔥 LISTA DE BARBEROS
+            ViewBag.Barberos = _context.Usuarios
+                .Where(u => u.IdRol == 2)
+                .ToList();
+
             return View();
         }
 
-        // CREAR (POST)
+        // 🔥 CREAR CITA (POST)
         [HttpPost]
-        public IActionResult Crear(string cliente, DateOnly fecha, TimeOnly hora, string barbero)
+        public IActionResult Crear(
+            DateOnly fecha,
+            TimeOnly hora,
+            string barbero)
         {
-            // Validar campos
-            if (string.IsNullOrEmpty(cliente) || string.IsNullOrEmpty(barbero))
+            if (!EsAdminOBarbero() && !EsCliente())
             {
-                ViewBag.Error = "Debe completar todos los campos";
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
+            // 🔥 VALIDAR CAMPOS
+            if (string.IsNullOrEmpty(barbero))
+            {
+                ViewBag.Error =
+                    "Debe completar todos los campos";
+
+                ViewBag.Barberos = _context.Usuarios
+                    .Where(u => u.IdRol == 2)
+                    .ToList();
+
                 return View();
             }
 
-            // Validar horario ocupado
+            // 🔥 VALIDAR HORARIO
             bool ocupado = _context.Citas.Any(c =>
                 c.Fecha == fecha &&
                 c.Hora == hora &&
@@ -48,29 +121,41 @@ namespace WebApplicationAPP.Controllers
 
             if (ocupado)
             {
-                ViewBag.Error = "Horario no disponible";
+                ViewBag.Error =
+                    "Horario no disponible";
+
+                ViewBag.Barberos = _context.Usuarios
+                    .Where(u => u.IdRol == 2)
+                    .ToList();
+
                 return View();
             }
 
-            // Buscar cliente
-            var clienteExistente = _context.Clientes
-                .FirstOrDefault(c => c.Nombre == cliente);
+            // 🔥 CLIENTE DESDE SESSION
+            var nombreCliente = HttpContext.Session
+                .GetString("NombreUsuario");
 
-            // Crear cliente si no existe
+            // 🔍 BUSCAR CLIENTE
+            var clienteExistente = _context.Clientes
+                .FirstOrDefault(c =>
+                    c.Nombre == nombreCliente);
+
+            // 🔥 CREAR CLIENTE SI NO EXISTE
             if (clienteExistente == null)
             {
                 clienteExistente = new Cliente
                 {
-                    Nombre = cliente,
+                    Nombre = nombreCliente,
                     Telefono = "00000000",
                     FechaRegistro = DateTime.Now
                 };
 
                 _context.Clientes.Add(clienteExistente);
+
                 _context.SaveChanges();
             }
 
-            // Crear cita
+            // 🔥 CREAR CITA
             var nuevaCita = new Cita
             {
                 IdCliente = clienteExistente.IdCliente,
@@ -81,21 +166,56 @@ namespace WebApplicationAPP.Controllers
             };
 
             _context.Citas.Add(nuevaCita);
+
             _context.SaveChanges();
+
+            // 🔥 REDIRECCIONES
+            if (EsCliente())
+            {
+                return RedirectToAction("MisCitas");
+            }
 
             return RedirectToAction("Index");
         }
 
-        // CANCELAR CITA
+        // 🔥 CANCELAR CITA
         public IActionResult Cancelar(int id)
         {
+            if (!EsAdminOBarbero() && !EsCliente())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             var cita = _context.Citas
-                .FirstOrDefault(c => c.IdCita == id);
+                .Include(c => c.IdClienteNavigation)
+                .FirstOrDefault(c =>
+                    c.IdCita == id);
 
             if (cita != null)
             {
+                // 🔥 CLIENTE SOLO CANCELA SUS CITAS
+                if (EsCliente())
+                {
+                    var usuario = HttpContext.Session
+                        .GetString("NombreUsuario");
+
+                    if (cita.IdClienteNavigation.Nombre != usuario)
+                    {
+                        return RedirectToAction("MisCitas");
+                    }
+                }
+
                 cita.Estado = "Cancelada";
+
                 _context.SaveChanges();
+            }
+
+            // 🔥 REDIRECCIONES
+            if (EsCliente())
+            {
+                return RedirectToAction("MisCitas");
             }
 
             return RedirectToAction("Index");

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using WebApplicationAPP.Data;
 
 namespace WebApplicationAPP.Models;
 
@@ -28,6 +27,8 @@ public partial class YampiBarbershopContext : DbContext
 
     public virtual DbSet<Pago> Pagos { get; set; }
 
+    public virtual DbSet<Privilegio> Privilegios { get; set; }
+
     public virtual DbSet<Reporte> Reportes { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
@@ -42,12 +43,13 @@ public partial class YampiBarbershopContext : DbContext
 
     public virtual DbSet<VwPagosRealizado> VwPagosRealizados { get; set; }
 
+    public virtual DbSet<VwRolesPrivilegio> VwRolesPrivilegios { get; set; }
+
     public virtual DbSet<VwUsuariosRole> VwUsuariosRoles { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost;Database=YampiBarbershop;Trusted_Connection=True;TrustServerCertificate=True;");
+    
 
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Atencion>(entity =>
@@ -186,6 +188,21 @@ public partial class YampiBarbershopContext : DbContext
                 .HasConstraintName("FK_Pagos_Clientes");
         });
 
+        modelBuilder.Entity<Privilegio>(entity =>
+        {
+            entity.HasKey(e => e.IdPrivilegio).HasName("PK__Privileg__7CE03A1CC5AB2111");
+
+            entity.Property(e => e.IdPrivilegio).HasColumnName("id_privilegio");
+            entity.Property(e => e.Descripcion)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("descripcion");
+            entity.Property(e => e.Nombre)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("nombre");
+        });
+
         modelBuilder.Entity<Reporte>(entity =>
         {
             entity.HasKey(e => e.IdReporte).HasName("PK__Reportes__87E4F5CBDF3BECA3");
@@ -203,14 +220,57 @@ public partial class YampiBarbershopContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.IdRol).HasName("PK__Roles__6ABCB5E0200EB176");
+            entity.HasKey(e => e.IdRol)
+                .HasName("PK__Roles__6ABCB5E0200EB176");
 
-            entity.Property(e => e.IdRol).HasColumnName("id_rol");
-            entity.Property(e => e.Estado).HasColumnName("estado");
+            entity.ToTable("Roles");
+
+            entity.Property(e => e.IdRol)
+                .HasColumnName("id_rol");
+
+            entity.Property(e => e.Descripcion)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("descripcion");
+
+            entity.Property(e => e.Estado)
+                .HasColumnName("estado");
+
             entity.Property(e => e.Nombre)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("nombre");
+
+            entity.HasMany(d => d.IdPrivilegios)
+                .WithMany(p => p.IdRols)
+                .UsingEntity<Dictionary<string, object>>(
+                    "RolesPrivilegio",
+
+                    r => r.HasOne<Privilegio>()
+                          .WithMany()
+                          .HasForeignKey("IdPrivilegio")
+                          .OnDelete(DeleteBehavior.ClientSetNull)
+                          .HasConstraintName("FK_RolesPrivilegios_Privilegios"),
+
+                    l => l.HasOne<Role>()
+                          .WithMany()
+                          .HasForeignKey("IdRol")
+                          .OnDelete(DeleteBehavior.ClientSetNull)
+                          .HasConstraintName("FK_RolesPrivilegios_Roles"),
+
+                    j =>
+                    {
+                        j.HasKey("IdRol", "IdPrivilegio")
+                         .HasName("PK__RolesPri__BD72B641FCABBDE1");
+
+                        j.ToTable("RolesPrivilegios");
+
+                        j.IndexerProperty<int>("IdRol")
+                         .HasColumnName("id_rol");
+
+                        j.IndexerProperty<int>("IdPrivilegio")
+                         .HasColumnName("id_privilegio");
+                    });
         });
 
         modelBuilder.Entity<Usuario>(entity =>
@@ -220,6 +280,11 @@ public partial class YampiBarbershopContext : DbContext
             entity.HasIndex(e => e.Username, "UQ__Usuarios__F3DBC572E9920D8E").IsUnique();
 
             entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
+            entity.Property(e => e.CorreoElectronico)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("correoElectronico");
             entity.Property(e => e.IdRol).HasColumnName("id_rol");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(100)
@@ -312,6 +377,24 @@ public partial class YampiBarbershopContext : DbContext
                 .HasColumnName("monto");
         });
 
+        modelBuilder.Entity<VwRolesPrivilegio>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vw_RolesPrivilegios");
+
+            entity.Property(e => e.Descripcion)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("descripcion");
+            entity.Property(e => e.Privilegio)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Rol)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+        });
+
         modelBuilder.Entity<VwUsuariosRole>(entity =>
         {
             entity
@@ -335,9 +418,4 @@ public partial class YampiBarbershopContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-    public static implicit operator YampiBarbershopContext(AppDbContext v)
-    {
-        throw new NotImplementedException();
-    }
 }

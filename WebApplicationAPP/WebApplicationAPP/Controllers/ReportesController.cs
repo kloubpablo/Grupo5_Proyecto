@@ -12,19 +12,34 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // REPORTE GENERAL
+        private bool EsAdmin()
+        {
+            return HttpContext.Session
+                .GetString("Rol") == "Administrador";
+        }
+
+       
         public IActionResult Index()
         {
-            // 📅 Citas de hoy
-            int citasHoy = _context.Citas
-                .Count(c => c.Fecha == DateOnly.FromDateTime(DateTime.Now));
+            if (!EsAdmin())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
 
-            // 💰 Ingresos de hoy
+            int citasHoy = _context.Citas
+                .Count(c =>
+                    c.Fecha ==
+                    DateOnly.FromDateTime(DateTime.Now));
+
             decimal ingresosHoy = _context.Pagos
-                .Where(p => p.Fecha == DateOnly.FromDateTime(DateTime.Now))
+                .Where(p =>
+                    p.Fecha ==
+                    DateOnly.FromDateTime(DateTime.Now))
                 .Sum(p => (decimal?)p.Monto) ?? 0;
 
-            // 👤 Clientes frecuentes
+            
             int clientesFrecuentes = _context.Clientes
                 .Count();
 
@@ -35,22 +50,36 @@ namespace WebApplicationAPP.Controllers
             return View();
         }
 
-        // REPORTE POR FECHA (GET)
+        
         public IActionResult PorFecha()
         {
+            if (!EsAdmin())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             return View();
         }
 
-        // REPORTE POR FECHA (POST)
+      
         [HttpPost]
         public IActionResult PorFecha(DateOnly fecha)
         {
-            // Total pagos del día
+            if (!EsAdmin())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
+            
             decimal total = _context.Pagos
                 .Where(p => p.Fecha == fecha)
                 .Sum(p => (decimal?)p.Monto) ?? 0;
 
-            // Cantidad de citas
+           
             int citas = _context.Citas
                 .Count(c => c.Fecha == fecha);
 

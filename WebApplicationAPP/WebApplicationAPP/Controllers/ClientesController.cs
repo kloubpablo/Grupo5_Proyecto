@@ -12,12 +12,29 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // LISTA
+        // 🔥 ADMIN Y RECEPCIONISTA
+        private bool TieneAcceso()
+        {
+            var rol = HttpContext.Session
+                .GetString("Rol");
+
+            return rol == "Administrador"
+                || rol == "Recepcionista";
+        }
+
+        // 🔥 LISTA DE CLIENTES
         public IActionResult Index(string buscar)
         {
+            if (!TieneAcceso())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             var clientes = _context.Clientes.AsQueryable();
 
-            // BUSCAR CLIENTE
+            // 🔍 BUSCAR CLIENTE
             if (!string.IsNullOrEmpty(buscar))
             {
                 clientes = clientes.Where(c =>
@@ -27,35 +44,55 @@ namespace WebApplicationAPP.Controllers
             return View(clientes.ToList());
         }
 
-        // CREAR (GET)
+        // 🔥 CREAR CLIENTE (GET)
         public IActionResult Crear()
         {
+            if (!TieneAcceso())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             return View();
         }
 
-        // CREAR (POST)
+        // 🔥 CREAR CLIENTE (POST)
         [HttpPost]
-        public IActionResult Crear(string nombre, string telefono)
+        public IActionResult Crear(
+            string nombre,
+            string telefono)
         {
-            // VALIDAR CAMPOS
+            if (!TieneAcceso())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
+            // 🔥 VALIDAR CAMPOS
             if (string.IsNullOrEmpty(nombre) ||
                 string.IsNullOrEmpty(telefono))
             {
-                ViewBag.Error = "Debe completar todos los campos";
+                ViewBag.Error =
+                    "Debe completar todos los campos";
+
                 return View();
             }
 
-            // VALIDAR DUPLICADO
+            // 🔥 VALIDAR DUPLICADO
             bool existe = _context.Clientes
                 .Any(c => c.Nombre == nombre);
 
             if (existe)
             {
-                ViewBag.Error = "El cliente ya existe";
+                ViewBag.Error =
+                    "El cliente ya existe";
+
                 return View();
             }
 
-            // CREAR CLIENTE
+            // 🔥 CREAR CLIENTE
             var cliente = new Cliente
             {
                 Nombre = nombre,
@@ -64,16 +101,25 @@ namespace WebApplicationAPP.Controllers
             };
 
             _context.Clientes.Add(cliente);
+
             _context.SaveChanges();
 
             return RedirectToAction("Index");
         }
 
-        // EDITAR (GET)
+        // 🔥 EDITAR CLIENTE (GET)
         public IActionResult Editar(int id)
         {
+            if (!TieneAcceso())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             var cliente = _context.Clientes
-                .FirstOrDefault(c => c.IdCliente == id);
+                .FirstOrDefault(c =>
+                    c.IdCliente == id);
 
             if (cliente == null)
             {
@@ -83,12 +129,23 @@ namespace WebApplicationAPP.Controllers
             return View(cliente);
         }
 
-        // EDITAR (POST)
+        // 🔥 EDITAR CLIENTE (POST)
         [HttpPost]
-        public IActionResult Editar(int id, string nombre, string telefono)
+        public IActionResult Editar(
+            int id,
+            string nombre,
+            string telefono)
         {
+            if (!TieneAcceso())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             var cliente = _context.Clientes
-                .FirstOrDefault(c => c.IdCliente == id);
+                .FirstOrDefault(c =>
+                    c.IdCliente == id);
 
             if (cliente != null)
             {

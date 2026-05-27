@@ -20,7 +20,7 @@ namespace WebApplicationAPP.Repositories
         public Usuario Obtener(int id)
         {
             return _context.Usuarios
-                .FirstOrDefault(x => x.IdUsuario == id);
+           .FirstOrDefault(x => x.IdUsuario == id)!;
         }
 
         public void Insertar(Usuario u)

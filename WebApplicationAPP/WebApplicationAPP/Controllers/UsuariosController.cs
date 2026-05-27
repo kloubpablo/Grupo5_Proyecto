@@ -13,14 +13,14 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // VALIDAR ADMIN
+        // 🔥 VALIDAR ADMINISTRADOR
         private bool EsAdmin()
         {
             return HttpContext.Session
                 .GetString("Rol") == "Administrador";
         }
 
-        // LISTA
+        // 🔥 LISTA
         public IActionResult Index()
         {
             if (!EsAdmin())
@@ -37,7 +37,7 @@ namespace WebApplicationAPP.Controllers
             return View(usuarios);
         }
 
-        // CREAR GET
+        // 🔥 CREAR GET
         public IActionResult Crear()
         {
             if (!EsAdmin())
@@ -54,7 +54,7 @@ namespace WebApplicationAPP.Controllers
             return View();
         }
 
-        // CREAR POST
+        // 🔥 CREAR POST
         [HttpPost]
         public IActionResult Crear(
             string nombre,
@@ -71,7 +71,7 @@ namespace WebApplicationAPP.Controllers
                     "Dashboard");
             }
 
-            // VALIDAR CAMPOS
+            // 🔥 VALIDAR CAMPOS
             if (string.IsNullOrEmpty(nombre) ||
                 string.IsNullOrEmpty(username) ||
                 string.IsNullOrEmpty(correoElectronico) ||
@@ -87,7 +87,7 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            // VALIDAR CONTRASEÑAS
+            // 🔥 VALIDAR CONTRASEÑAS
             if (password != confirmarContraseña)
             {
                 ViewBag.Error =
@@ -100,7 +100,7 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            // VALIDAR USUARIO
+            // 🔥 VALIDAR USUARIO DUPLICADO
             bool existeUsuario = _context.Usuarios
                 .Any(u => u.Username == username);
 
@@ -116,7 +116,7 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            // VALIDAR CORREO
+            // 🔥 VALIDAR CORREO DUPLICADO
             bool existeCorreo = _context.Usuarios
                 .Any(u =>
                     u.CorreoElectronico ==
@@ -134,7 +134,7 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            // CREAR USUARIO
+            // 🔥 CREAR USUARIO
             var usuario = new Usuario
             {
                 Nombre = nombre,
@@ -152,7 +152,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("Index");
         }
 
-        // ELIMINAR
+        // 🔥 ELIMINAR
         public IActionResult Eliminar(int id)
         {
             if (!EsAdmin())

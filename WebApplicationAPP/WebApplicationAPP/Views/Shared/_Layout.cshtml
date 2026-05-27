@@ -8,6 +8,7 @@
 
     <!-- 🔥 ESTILO BARBERÍA -->
     <style>
+
             body {
                 background-color: #0f172a !important;
                 color: white;
@@ -67,6 +68,7 @@
                 border-radius: 15px;
                 margin-top: 20px;
             }
+
     </style>
 </head>
 
@@ -81,20 +83,59 @@
         </h1>
     </header>
 
-    <!-- NAV COMPLETO -->
+    <!-- NAVBAR -->
     <nav id="nav">
         <ul>
 
-            <li>
-                <a asp-controller="Dashboard"
-                       asp-action="Index">
-                    📊 Dashboard
-                </a>
-            </li>
+            <!-- DASHBOARD -->
+            @if (Context.Session.GetString("Rol") != "Cliente")
+            {
+                <li>
+                    <a asp-controller="Dashboard"
+                           asp-action="Index">
+                        📊 Dashboard
+                    </a>
+                </li>
+            }
 
-            <!-- SOLO ADMIN -->
+            <!-- 🔥 ADMINISTRADOR -->
             @if (Context.Session.GetString("Rol") == "Administrador")
             {
+                <li>
+                    <a asp-controller="Clientes"
+                           asp-action="Index">
+                        👤 Clientes
+                    </a>
+                </li>
+
+                <li>
+                    <a asp-controller="Citas"
+                           asp-action="Index">
+                        📅 Citas
+                    </a>
+                </li>
+
+                <li>
+                    <a asp-controller="Atencion"
+                           asp-action="Index">
+                        💈 Atención
+                    </a>
+                </li>
+
+                <li>
+                    <a asp-controller="Pagos"
+                           asp-action="Index">
+                        💰 Pagos
+                    </a>
+                </li>
+
+                <li>
+                    <a asp-controller="Reportes"
+                           asp-action="Index">
+                        📊 Reportes
+                    </a>
+                </li>
+
                 <li>
                     <a asp-controller="Roles"
                            asp-action="Index">
@@ -110,41 +151,59 @@
                 </li>
             }
 
-            <li>
-                <a asp-controller="Clientes"
-                       asp-action="Index">
-                    👤 Clientes
-                </a>
-            </li>
+            <!-- 🔥 BARBERO -->
+            @if (Context.Session.GetString("Rol") == "Barbero")
+            {
+                <li>
+                    <a asp-controller="Citas"
+                           asp-action="Index">
+                        📅 Citas
+                    </a>
+                </li>
 
-            <li>
-                <a asp-controller="Citas"
-                       asp-action="Index">
-                    📅 Citas
-                </a>
-            </li>
+                <li>
+                    <a asp-controller="Atencion"
+                           asp-action="Index">
+                        💈 Atención
+                    </a>
+                </li>
+            }
 
-            <li>
-                <a asp-controller="Atencion"
-                       asp-action="Index">
-                    💈 Atención
-                </a>
-            </li>
+            <!-- 🔥 RECEPCIONISTA -->
+            @if (Context.Session.GetString("Rol") == "Recepcionista")
+            {
+                <li>
+                    <a asp-controller="Clientes"
+                           asp-action="Index">
+                        👤 Clientes
+                    </a>
+                </li>
 
-            <li>
-                <a asp-controller="Pagos"
-                       asp-action="Index">
-                    💰 Pagos
-                </a>
-            </li>
+                <li>
+                    <a asp-controller="Pagos"
+                           asp-action="Index">
+                        💰 Pagos
+                    </a>
+                </li>
+            }
+            @if (Context.Session.GetString("Rol") == "Cliente")
+            {
+                <li>
+                    <a asp-controller="Citas"
+                           asp-action="MisCitas">
+                        📅 Mis Citas
+                    </a>
+                </li>
 
-            <li>
-                <a asp-controller="Reportes"
-                       asp-action="Index">
-                    📊 Reportes
-                </a>
-            </li>
+                <li>
+                    <a asp-controller="Citas"
+                           asp-action="Crear">
+                        ➕ Agendar Cita
+                    </a>
+                </li>
+            }
 
+            <!-- CERRAR SESIÓN -->
             <li>
                 <a asp-controller="Seguridad"
                        asp-action="Logout">

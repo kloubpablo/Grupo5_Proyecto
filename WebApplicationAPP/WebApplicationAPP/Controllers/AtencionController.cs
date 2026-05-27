@@ -13,9 +13,21 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // LISTA DE ATENCIONES
+        private bool EsBarbero()
+        {
+            return HttpContext.Session
+                .GetString("Rol") == "Barbero";
+        }
+
         public IActionResult Index()
         {
+            if (!EsBarbero())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             var atenciones = _context.Atencions
                 .Include(a => a.IdClienteNavigation)
                 .ToList();
@@ -23,20 +35,25 @@ namespace WebApplicationAPP.Controllers
             return View(atenciones);
         }
 
-        // AGREGAR CLIENTE A LISTA
         [HttpPost]
         public IActionResult Agregar(string nombre)
         {
+            if (!EsBarbero())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             if (string.IsNullOrEmpty(nombre))
             {
                 return RedirectToAction("Index");
             }
 
-            // Buscar cliente existente
             var cliente = _context.Clientes
-                .FirstOrDefault(c => c.Nombre == nombre);
+                .FirstOrDefault(c =>
+                    c.Nombre == nombre);
 
-            // Si no existe, crearlo
             if (cliente == null)
             {
                 cliente = new Cliente
@@ -47,10 +64,10 @@ namespace WebApplicationAPP.Controllers
                 };
 
                 _context.Clientes.Add(cliente);
+
                 _context.SaveChanges();
             }
 
-            // Crear atención
             var atencion = new Atencion
             {
                 IdCliente = cliente.IdCliente,
@@ -58,21 +75,31 @@ namespace WebApplicationAPP.Controllers
             };
 
             _context.Atencions.Add(atencion);
+
             _context.SaveChanges();
 
             return RedirectToAction("Index");
         }
 
-        // INICIAR SERVICIO
         public IActionResult Iniciar(int id)
         {
+            if (!EsBarbero())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             var atencion = _context.Atencions
-                .FirstOrDefault(a => a.IdAtencion == id);
+                .FirstOrDefault(a =>
+                    a.IdAtencion == id);
 
             if (atencion != null)
             {
                 atencion.Estado = "En servicio";
-                atencion.HoraInicio = TimeOnly.FromDateTime(DateTime.Now);
+
+                atencion.HoraInicio =
+                    TimeOnly.FromDateTime(DateTime.Now);
 
                 _context.SaveChanges();
             }
@@ -80,16 +107,25 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("Index");
         }
 
-        // FINALIZAR SERVICIO
         public IActionResult Finalizar(int id)
         {
+            if (!EsBarbero())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             var atencion = _context.Atencions
-                .FirstOrDefault(a => a.IdAtencion == id);
+                .FirstOrDefault(a =>
+                    a.IdAtencion == id);
 
             if (atencion != null)
             {
                 atencion.Estado = "Finalizado";
-                atencion.HoraFin = TimeOnly.FromDateTime(DateTime.Now);
+
+                atencion.HoraFin =
+                    TimeOnly.FromDateTime(DateTime.Now);
 
                 _context.SaveChanges();
             }

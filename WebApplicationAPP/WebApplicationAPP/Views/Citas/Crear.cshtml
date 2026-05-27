@@ -1,6 +1,12 @@
-﻿<h2 class="mb-4">📅 Crear Cita</h2>
+﻿@{
+    ViewData["Title"] = "Crear Cita";
+}
 
-<div class="card p-4">
+<h2 class="mb-4">
+    📅 Crear Cita
+</h2>
+
+<div class="card p-4 bg-dark text-white shadow">
 
     @if (ViewBag.Error != null)
     {
@@ -11,40 +17,43 @@
 
     <form method="post">
 
-        <!-- CLIENTE -->
-        <div class="mb-3">
-            <label class="form-label">Cliente</label>
-
-            <input class="form-control"
-                   type="text"
-                   name="cliente"
-                   placeholder="Nombre del cliente" />
-        </div>
-
         <!-- FECHA -->
         <div class="mb-3">
-            <label class="form-label">Fecha</label>
+
+            <label class="form-label">
+                Fecha
+            </label>
 
             <input class="form-control"
                    type="date"
-                   name="fecha" />
+                   name="fecha"
+                   required />
+
         </div>
 
         <!-- HORA -->
         <div class="mb-3">
-            <label class="form-label">Hora</label>
+
+            <label class="form-label">
+                Hora
+            </label>
 
             <input class="form-control"
                    type="time"
-                   name="hora" />
+                   name="hora"
+                   required />
+
         </div>
 
         <!-- BARBERO -->
         <div class="mb-3">
 
-            <label class="form-label">Barbero</label>
+            <label class="form-label">
+                Barbero
+            </label>
 
-            <select class="form-select" name="barbero">
+            <select class="form-select"
+                    name="barbero">
 
                 @foreach (var b in ViewBag.Barberos)
                 {
@@ -58,9 +67,11 @@
         </div>
 
         <!-- BOTÓN -->
-        <button class="btn btn-primary w-100 mt-2"
+        <button class="btn btn-warning text-dark fw-bold w-100 mt-3"
                 type="submit">
+
             💾 Guardar Cita
+
         </button>
 
     </form>

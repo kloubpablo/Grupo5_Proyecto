@@ -2,7 +2,7 @@
 
 <h2 class="mb-4">💈 Atención / Turnos</h2>
 
-<!-- 🔹 FORMULARIO -->
+
 <div class="card p-3 mb-4">
 
     <form method="post"
@@ -26,7 +26,6 @@
 
 </div>
 
-<!-- 🔹 LISTA -->
 <h4 class="mb-3">📋 Lista de espera</h4>
 
 <table class="table table-bordered text-center">
@@ -57,7 +56,6 @@
 
                     <td>@c.IdClienteNavigation.Nombre</td>
 
-                    <!-- 🔸 ESTADO -->
                     <td>
                         @if (c.Estado == "En espera")
                         {
@@ -79,7 +77,7 @@
                         }
                     </td>
 
-                    <!-- 🔸 BOTONES -->
+                   
                     <td>
 
                         @if (c.Estado == "En espera")
@@ -113,13 +111,13 @@
 
 </table>
 
-<!-- 🔹 TIEMPO -->
+
 <div class="card p-3 mt-4 text-center">
 
     <h5>⏱ Tiempo estimado</h5>
 
     <h3>
-        @(Model.Count(c => c.Estado != "Finalizado") * 10) minutos
+        @((Model?.Count(c => c.Estado != "Finalizado") ?? 0) * 10) minutos
     </h3>
 
 </div>
