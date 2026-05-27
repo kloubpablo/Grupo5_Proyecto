@@ -1,8 +1,8 @@
 ﻿@model List<WebApplicationAPP.Models.Role>
 
-<h2 class="mb-4">🛡️ Roles</h2>
+<h2 class="mb-4">🛡️ Gestión de Roles</h2>
 
-<!-- 🔹 BOTÓN -->
+<!-- BOTÓN -->
 <div class="mb-3">
 
     <a class="btn btn-primary"
@@ -12,15 +12,25 @@
 
 </div>
 
-<!-- 🔹 TABLA -->
-<table class="table table-bordered text-center">
+<!-- TABLA -->
+<table class="table table-bordered table-striped text-center align-middle">
 
     <thead class="table-dark">
+
         <tr>
-            <th>Nombre</th>
-            <th>Estado</th>
-            <th>Acciones</th>
+            <th style="width:40%;">
+                Nombre
+            </th>
+
+            <th style="width:25%;">
+                Estado
+            </th>
+
+            <th style="width:35%;">
+                Acciones
+            </th>
         </tr>
+
     </thead>
 
     <tbody>
@@ -39,9 +49,12 @@
             {
                 <tr>
 
-                    <td>@r.Nombre</td>
+                    <!-- NOMBRE -->
+                    <td>
+                        @r.Nombre
+                    </td>
 
-                    <!-- 🔸 ESTADO -->
+                    <!-- ESTADO -->
                     <td>
 
                         @if (r.Estado)
@@ -52,25 +65,29 @@
                         }
                         else
                         {
-                            <span class="badge bg-secondary">
+                            <span class="badge bg-danger">
                                 Inactivo
                             </span>
                         }
 
                     </td>
 
-                    <!-- 🔸 ACCIONES -->
-                    <td class="d-flex justify-content-center gap-2">
+                    <!-- ACCIONES -->
+                    <td>
 
-                        <a class="btn btn-sm btn-warning text-dark"
-                               href="/Roles/Toggle/@r.IdRol">
-                            🔄 Estado
-                        </a>
+                        <div class="d-flex justify-content-center gap-2">
 
-                        <a class="btn btn-sm btn-danger"
-                               href="/Roles/Eliminar/@r.IdRol">
-                            🗑 Eliminar
-                        </a>
+                            <a class="btn btn-warning btn-sm text-dark"
+                                   href="/Roles/Toggle/@r.IdRol">
+                                🔄 Estado
+                            </a>
+
+                            <a class="btn btn-danger btn-sm"
+                                   href="/Roles/Eliminar/@r.IdRol">
+                                🗑 Eliminar
+                            </a>
+
+                        </div>
 
                     </td>
 
