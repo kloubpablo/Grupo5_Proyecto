@@ -13,9 +13,23 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // LISTA DE USUARIOS
+        // VALIDAR ADMIN
+        private bool EsAdmin()
+        {
+            return HttpContext.Session
+                .GetString("Rol") == "Administrador";
+        }
+
+        // LISTA
         public IActionResult Index()
         {
+            if (!EsAdmin())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             var usuarios = _context.Usuarios
                 .Include(u => u.IdRolNavigation)
                 .ToList();
@@ -23,15 +37,24 @@ namespace WebApplicationAPP.Controllers
             return View(usuarios);
         }
 
-        // CREAR (GET)
+        // CREAR GET
         public IActionResult Crear()
         {
-            ViewBag.Roles = _context.Roles.ToList();
+            if (!EsAdmin())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
+            ViewBag.Roles = _context.Roles
+                .Where(r => r.Estado == true)
+                .ToList();
 
             return View();
         }
 
-        // CREAR (POST)
+        // CREAR POST
         [HttpPost]
         public IActionResult Crear(
             string nombre,
@@ -41,46 +64,72 @@ namespace WebApplicationAPP.Controllers
             string confirmarContraseña,
             int idRol)
         {
+            if (!EsAdmin())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             // VALIDAR CAMPOS
             if (string.IsNullOrEmpty(nombre) ||
                 string.IsNullOrEmpty(username) ||
                 string.IsNullOrEmpty(correoElectronico) ||
                 string.IsNullOrEmpty(password))
             {
-                ViewBag.Error = "Debe completar todos los campos";
-                ViewBag.Roles = _context.Roles.ToList();
+                ViewBag.Error =
+                    "Debe completar todos los campos";
+
+                ViewBag.Roles = _context.Roles
+                    .Where(r => r.Estado == true)
+                    .ToList();
 
                 return View();
             }
 
+            // VALIDAR CONTRASEÑAS
             if (password != confirmarContraseña)
             {
-                ViewBag.Error = "Las contraseñas deben coincidir";
-                ViewBag.Roles = _context.Roles.ToList();
+                ViewBag.Error =
+                    "Las contraseñas deben coincidir";
+
+                ViewBag.Roles = _context.Roles
+                    .Where(r => r.Estado == true)
+                    .ToList();
 
                 return View();
             }
 
-            // VALIDAR USUARIO DUPLICADO
+            // VALIDAR USUARIO
             bool existeUsuario = _context.Usuarios
                 .Any(u => u.Username == username);
 
             if (existeUsuario)
             {
-                ViewBag.Error = "El usuario ya existe";
-                ViewBag.Roles = _context.Roles.ToList();
+                ViewBag.Error =
+                    "El usuario ya existe";
+
+                ViewBag.Roles = _context.Roles
+                    .Where(r => r.Estado == true)
+                    .ToList();
 
                 return View();
             }
 
-            // VALIDAR CORREO DUPLICADO
+            // VALIDAR CORREO
             bool existeCorreo = _context.Usuarios
-                .Any(u => u.CorreoElectronico == correoElectronico);
+                .Any(u =>
+                    u.CorreoElectronico ==
+                    correoElectronico);
 
             if (existeCorreo)
             {
-                ViewBag.Error = "El correo ya está registrado";
-                ViewBag.Roles = _context.Roles.ToList();
+                ViewBag.Error =
+                    "El correo ya está registrado";
+
+                ViewBag.Roles = _context.Roles
+                    .Where(r => r.Estado == true)
+                    .ToList();
 
                 return View();
             }
@@ -92,21 +141,30 @@ namespace WebApplicationAPP.Controllers
                 Username = username,
                 CorreoElectronico = correoElectronico,
                 PasswordHash = password,
-                IdRol = idRol
+                IdRol = idRol,
+                ContraTemp = false
             };
 
             _context.Usuarios.Add(usuario);
 
             _context.SaveChanges();
 
-            return RedirectToAction("Index", "Seguridad");
+            return RedirectToAction("Index");
         }
 
         // ELIMINAR
         public IActionResult Eliminar(int id)
         {
+            if (!EsAdmin())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             var usuario = _context.Usuarios
-                .FirstOrDefault(u => u.IdUsuario == id);
+                .FirstOrDefault(u =>
+                    u.IdUsuario == id);
 
             if (usuario != null)
             {

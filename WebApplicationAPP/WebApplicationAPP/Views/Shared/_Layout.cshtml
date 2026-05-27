@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
@@ -9,65 +8,65 @@
 
     <!-- 🔥 ESTILO BARBERÍA -->
     <style>
-        body {
-            background-color: #0f172a !important;
-            color: white;
-        }
-
-        /* HEADER */
-        #header {
-            background: #020617 !important;
-            border-bottom: 3px solid #facc15;
-            text-align: center;
-            padding: 15px 0;
-        }
-
-            #header h1 a {
-                color: #facc15 !important;
-                font-weight: bold;
-                font-size: 24px;
-                text-decoration: none;
+            body {
+                background-color: #0f172a !important;
+                color: white;
             }
 
-        /* NAVBAR */
-        #nav {
-            background-color: #020617 !important;
-            text-align: center;
-            padding: 10px 0;
-        }
-
-            #nav ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
+            /* HEADER */
+            #header {
+                background: #020617 !important;
+                border-bottom: 3px solid #facc15;
+                text-align: center;
+                padding: 15px 0;
             }
 
-                #nav ul li {
-                    display: inline-block;
-                    margin: 0 10px;
+                #header h1 a {
+                    color: #facc15 !important;
+                    font-weight: bold;
+                    font-size: 24px;
+                    text-decoration: none;
                 }
 
-                    #nav ul li a {
-                        color: #facc15 !important;
-                        font-weight: 500;
-                        text-decoration: none;
-                        padding: 8px 12px;
-                        transition: 0.3s;
+            /* NAVBAR */
+            #nav {
+                background-color: #020617 !important;
+                text-align: center;
+                padding: 10px 0;
+            }
+
+                #nav ul {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                }
+
+                    #nav ul li {
+                        display: inline-block;
+                        margin: 0 10px;
                     }
 
-                        #nav ul li a:hover {
-                            background-color: #facc15;
-                            color: black !important;
-                            border-radius: 5px;
+                        #nav ul li a {
+                            color: #facc15 !important;
+                            font-weight: 500;
+                            text-decoration: none;
+                            padding: 8px 12px;
+                            transition: 0.3s;
                         }
 
-        /* CONTENIDO */
-        #main .container {
-            background-color: #1e293b;
-            padding: 25px;
-            border-radius: 15px;
-            margin-top: 20px;
-        }
+                            #nav ul li a:hover {
+                                background-color: #facc15;
+                                color: black !important;
+                                border-radius: 5px;
+                            }
+
+            /* CONTENIDO */
+            #main .container {
+                background-color: #1e293b;
+                padding: 25px;
+                border-radius: 15px;
+                margin-top: 20px;
+            }
     </style>
 </head>
 
@@ -85,14 +84,74 @@
     <!-- NAV COMPLETO -->
     <nav id="nav">
         <ul>
-            <li><a asp-controller="Dashboard" asp-action="Index">📊 Dashboard</a></li>
-            <li><a asp-controller="Clientes" asp-action="Index">👤 Clientes</a></li>
-            <li><a asp-controller="Citas" asp-action="Index">📅 Citas</a></li>
-            <li><a asp-controller="Atencion" asp-action="Index">💈 Atención</a></li>
-            <li><a asp-controller="Pagos" asp-action="Index">💰 Pagos</a></li>
-            <li><a asp-controller="Reportes" asp-action="Index">📊 Reportes</a></li>
-            <li><a asp-controller="Roles" asp-action="Index">🛡️ Roles</a></li>
-            <li><a asp-controller="Seguridad" asp-action="Logout">🚪 Salir</a></li>
+
+            <li>
+                <a asp-controller="Dashboard"
+                       asp-action="Index">
+                    📊 Dashboard
+                </a>
+            </li>
+
+            <!-- SOLO ADMIN -->
+            @if (Context.Session.GetString("Rol") == "Administrador")
+            {
+                <li>
+                    <a asp-controller="Roles"
+                           asp-action="Index">
+                        🛡️ Roles
+                    </a>
+                </li>
+
+                <li>
+                    <a asp-controller="Usuarios"
+                           asp-action="Index">
+                        👤 Usuarios
+                    </a>
+                </li>
+            }
+
+            <li>
+                <a asp-controller="Clientes"
+                       asp-action="Index">
+                    👤 Clientes
+                </a>
+            </li>
+
+            <li>
+                <a asp-controller="Citas"
+                       asp-action="Index">
+                    📅 Citas
+                </a>
+            </li>
+
+            <li>
+                <a asp-controller="Atencion"
+                       asp-action="Index">
+                    💈 Atención
+                </a>
+            </li>
+
+            <li>
+                <a asp-controller="Pagos"
+                       asp-action="Index">
+                    💰 Pagos
+                </a>
+            </li>
+
+            <li>
+                <a asp-controller="Reportes"
+                       asp-action="Index">
+                    📊 Reportes
+                </a>
+            </li>
+
+            <li>
+                <a asp-controller="Seguridad"
+                       asp-action="Logout">
+                    🚪 Salir
+                </a>
+            </li>
+
         </ul>
     </nav>
 

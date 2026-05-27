@@ -12,42 +12,74 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // LISTA DE ROLES
+        // VALIDAR ADMIN
+        private bool EsAdmin()
+        {
+            return HttpContext.Session
+                .GetString("Rol") == "Administrador";
+        }
+
+        // INDEX
         public IActionResult Index()
         {
+            if (!EsAdmin())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             var roles = _context.Roles.ToList();
 
             return View(roles);
         }
 
-        // CREAR (GET)
+        // CREAR GET
         public IActionResult Crear()
         {
+            if (!EsAdmin())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             return View();
         }
 
-        // CREAR (POST)
+        // CREAR POST
         [HttpPost]
         public IActionResult Crear(string nombre)
         {
-            // VALIDAR CAMPO
+            if (!EsAdmin())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
+            // VALIDAR
             if (string.IsNullOrEmpty(nombre))
             {
-                ViewBag.Error = "Debe ingresar el nombre del rol";
+                ViewBag.Error =
+                    "Debe ingresar el nombre del rol";
+
                 return View();
             }
 
-            // VALIDAR DUPLICADO
+            // DUPLICADO
             bool existe = _context.Roles
                 .Any(r => r.Nombre == nombre);
 
             if (existe)
             {
-                ViewBag.Error = "El rol ya existe";
+                ViewBag.Error =
+                    "El rol ya existe";
+
                 return View();
             }
 
-            // CREAR ROL
+            // CREAR
             var rol = new Role
             {
                 Nombre = nombre,
@@ -55,6 +87,7 @@ namespace WebApplicationAPP.Controllers
             };
 
             _context.Roles.Add(rol);
+
             _context.SaveChanges();
 
             return RedirectToAction("Index");
@@ -63,8 +96,16 @@ namespace WebApplicationAPP.Controllers
         // ACTIVAR / DESACTIVAR
         public IActionResult Toggle(int id)
         {
+            if (!EsAdmin())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             var rol = _context.Roles
-                .FirstOrDefault(r => r.IdRol == id);
+                .FirstOrDefault(r =>
+                    r.IdRol == id);
 
             if (rol != null)
             {
@@ -79,8 +120,16 @@ namespace WebApplicationAPP.Controllers
         // ELIMINAR
         public IActionResult Eliminar(int id)
         {
+            if (!EsAdmin())
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+            }
+
             var rol = _context.Roles
-                .FirstOrDefault(r => r.IdRol == id);
+                .FirstOrDefault(r =>
+                    r.IdRol == id);
 
             if (rol != null)
             {

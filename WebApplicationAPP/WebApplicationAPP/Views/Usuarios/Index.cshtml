@@ -1,25 +1,67 @@
 ﻿@model IEnumerable<WebApplicationAPP.Models.Usuario>
- 
-<h2>Usuarios</h2>
- 
-<a href="/Usuarios/Crear">Nuevo Usuario</a>
- 
-<table border="1">
-    <tr>
-        <th>Nombre</th>
-        <th>Email</th>
-        <th>Acciones</th>
-    </tr>
- 
-    @foreach (var u in Model)
-    {
+
+<h2 class="mb-4">👤 Usuarios</h2>
+
+<div class="mb-3">
+    <a class="btn btn-primary"
+           href="/Usuarios/Crear">
+        ➕ Nuevo Usuario
+    </a>
+</div>
+
+<table class="table table-bordered text-center">
+
+    <thead class="table-dark">
         <tr>
-            <td>@u.Nombre</td>
-            <td>@u.CorreoElectronico</td>
-            <td>
-                <a href="/Usuarios/Eliminar/@u.IdUsuario">Eliminar</a>
-            </td>
+            <th>Nombre</th>
+            <th>Usuario</th>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Acciones</th>
         </tr>
-    }
+    </thead>
+
+    <tbody>
+
+        @if (Model == null || !Model.Any())
+        {
+            <tr>
+                <td colspan="5">
+                    No hay usuarios registrados
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var u in Model)
+            {
+                <tr>
+
+                    <td>@u.Nombre</td>
+
+                    <td>@u.Username</td>
+
+                    <td>@u.CorreoElectronico</td>
+
+                    <td>
+                        @u.IdRolNavigation.Nombre
+                    </td>
+
+                    <td>
+
+                        <a class="btn btn-sm btn-danger"
+                               href="/Usuarios/Eliminar/@u.IdUsuario">
+
+                            🗑 Eliminar
+
+                        </a>
+
+                    </td>
+
+                </tr>
+            }
+        }
+
+    </tbody>
+
 </table>
- 
