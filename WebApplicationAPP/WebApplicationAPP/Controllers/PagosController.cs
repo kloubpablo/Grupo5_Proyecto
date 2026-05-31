@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationAPP.Models;
+using WebApplicationAPP.Helpers;
 
 namespace WebApplicationAPP.Controllers
 {
@@ -13,20 +14,21 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        private bool EsRecepcionista()
+        private bool TienePermiso(string permiso)
         {
-            return HttpContext.Session
-                .GetString("Rol") == "Recepcionista";
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol))
+                return false;
+
+            return PermisosHelper.TienePermiso(_context, rol, permiso);
         }
 
+        // 🔥 LISTA DE PAGOS
         public IActionResult Index()
         {
-            if (!EsRecepcionista())
-            {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
-            }
+            if (!TienePermiso("Pagos/Index"))
+                return RedirectToAction("Index", "Dashboard");
 
             var pagos = _context.Pagos
                 .Include(p => p.IdClienteNavigation)
@@ -35,44 +37,32 @@ namespace WebApplicationAPP.Controllers
             return View(pagos);
         }
 
+        // 🔥 REGISTRAR (GET)
         public IActionResult Registrar()
         {
-            if (!EsRecepcionista())
-            {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
-            }
+            if (!TienePermiso("Pagos/Crear"))
+                return RedirectToAction("Index", "Dashboard");
 
             return View();
         }
 
+        // 🔥 REGISTRAR (POST)
         [HttpPost]
-        public IActionResult Registrar(
-            string cliente,
-            decimal monto,
-            string metodo)
+        public IActionResult Registrar(string cliente, decimal monto, string metodo)
         {
-            if (!EsRecepcionista())
-            {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
-            }
+            if (!TienePermiso("Pagos/Crear"))
+                return RedirectToAction("Index", "Dashboard");
 
             if (string.IsNullOrEmpty(cliente) ||
                 monto <= 0 ||
                 string.IsNullOrEmpty(metodo))
             {
-                ViewBag.Error =
-                    "Debe completar todos los datos correctamente";
-
+                ViewBag.Error = "Debe completar todos los datos correctamente";
                 return View();
             }
 
             var clienteExistente = _context.Clientes
-                .FirstOrDefault(c =>
-                    c.Nombre == cliente);
+                .FirstOrDefault(c => c.Nombre == cliente);
 
             if (clienteExistente == null)
             {
@@ -84,7 +74,6 @@ namespace WebApplicationAPP.Controllers
                 };
 
                 _context.Clientes.Add(clienteExistente);
-
                 _context.SaveChanges();
             }
 
@@ -97,25 +86,19 @@ namespace WebApplicationAPP.Controllers
             };
 
             _context.Pagos.Add(pago);
-
             _context.SaveChanges();
 
             return RedirectToAction("Index");
         }
 
+        // 🔥 CIERRE DE CAJA
         public IActionResult Cierre()
         {
-            if (!EsRecepcionista())
-            {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
-            }
+            if (!TienePermiso("Pagos/Index"))
+                return RedirectToAction("Index", "Dashboard");
 
             decimal total = _context.Pagos
-                .Where(p =>
-                    p.Fecha ==
-                    DateOnly.FromDateTime(DateTime.Now))
+                .Where(p => p.Fecha == DateOnly.FromDateTime(DateTime.Now))
                 .Sum(p => (decimal?)p.Monto) ?? 0;
 
             ViewBag.Total = total;

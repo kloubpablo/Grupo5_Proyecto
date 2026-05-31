@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationAPP.Models;
+using WebApplicationAPP.Helpers;
 
 namespace WebApplicationAPP.Controllers
 {
@@ -13,30 +14,20 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // 🔥 ADMIN O BARBERO
-        private bool EsAdminOBarbero()
+        // 🔥 PERMISOS CENTRALIZADO
+        private bool TienePermiso(string permiso)
         {
-            var rol = HttpContext.Session.GetString("Rol");
+            var rol = HttpContext.Session.GetString("Rol") ?? "";
 
-            return rol == "Administrador"
-                || rol == "Barbero";
-        }
-
-        // 🔥 CLIENTE
-        private bool EsCliente()
-        {
-            return HttpContext.Session
-                .GetString("Rol") == "Cliente";
+            return PermisosHelper.TienePermiso(_context, rol, permiso);
         }
 
         // 🔥 LISTA GENERAL DE CITAS
         public IActionResult Index()
         {
-            if (!EsAdminOBarbero())
+            if (!TienePermiso("Citas/Index"))
             {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
+                return RedirectToAction("Index", "Dashboard");
             }
 
             var citas = _context.Citas
@@ -49,20 +40,16 @@ namespace WebApplicationAPP.Controllers
         // 🔥 MIS CITAS
         public IActionResult MisCitas()
         {
-            if (!EsCliente())
+            if (!TienePermiso("Citas/MisCitas"))
             {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
+                return RedirectToAction("Index", "Dashboard");
             }
 
-            var usuario = HttpContext.Session
-                .GetString("NombreUsuario");
+            var usuario = HttpContext.Session.GetString("NombreUsuario") ?? "";
 
             var citas = _context.Citas
                 .Include(c => c.IdClienteNavigation)
-                .Where(c =>
-                    c.IdClienteNavigation.Nombre == usuario)
+                .Where(c => c.IdClienteNavigation.Nombre == usuario)
                 .ToList();
 
             return View(citas);
@@ -71,14 +58,11 @@ namespace WebApplicationAPP.Controllers
         // 🔥 CREAR CITA (GET)
         public IActionResult Crear()
         {
-            if (!EsAdminOBarbero() && !EsCliente())
+            if (!TienePermiso("Citas/Crear"))
             {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
+                return RedirectToAction("Index", "Dashboard");
             }
 
-            // 🔥 LISTA DE BARBEROS
             ViewBag.Barberos = _context.Usuarios
                 .Where(u => u.IdRol == 2)
                 .ToList();
@@ -88,23 +72,16 @@ namespace WebApplicationAPP.Controllers
 
         // 🔥 CREAR CITA (POST)
         [HttpPost]
-        public IActionResult Crear(
-            DateOnly fecha,
-            TimeOnly hora,
-            string barbero)
+        public IActionResult Crear(DateOnly fecha, TimeOnly hora, string barbero)
         {
-            if (!EsAdminOBarbero() && !EsCliente())
+            if (!TienePermiso("Citas/Crear"))
             {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
+                return RedirectToAction("Index", "Dashboard");
             }
 
-            // 🔥 VALIDAR CAMPOS
-            if (string.IsNullOrEmpty(barbero))
+            if (string.IsNullOrWhiteSpace(barbero))
             {
-                ViewBag.Error =
-                    "Debe completar todos los campos";
+                ViewBag.Error = "Debe completar todos los campos";
 
                 ViewBag.Barberos = _context.Usuarios
                     .Where(u => u.IdRol == 2)
@@ -113,7 +90,6 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            // 🔥 VALIDAR HORARIO
             bool ocupado = _context.Citas.Any(c =>
                 c.Fecha == fecha &&
                 c.Hora == hora &&
@@ -121,8 +97,7 @@ namespace WebApplicationAPP.Controllers
 
             if (ocupado)
             {
-                ViewBag.Error =
-                    "Horario no disponible";
+                ViewBag.Error = "Horario no disponible";
 
                 ViewBag.Barberos = _context.Usuarios
                     .Where(u => u.IdRol == 2)
@@ -131,16 +106,16 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            // 🔥 CLIENTE DESDE SESSION
-            var nombreCliente = HttpContext.Session
-                .GetString("NombreUsuario");
+            var nombreCliente = HttpContext.Session.GetString("NombreUsuario") ?? "";
 
-            // 🔍 BUSCAR CLIENTE
+            if (string.IsNullOrWhiteSpace(nombreCliente))
+            {
+                return RedirectToAction("Index", "Seguridad");
+            }
+
             var clienteExistente = _context.Clientes
-                .FirstOrDefault(c =>
-                    c.Nombre == nombreCliente);
+                .FirstOrDefault(c => c.Nombre == nombreCliente);
 
-            // 🔥 CREAR CLIENTE SI NO EXISTE
             if (clienteExistente == null)
             {
                 clienteExistente = new Cliente
@@ -151,11 +126,9 @@ namespace WebApplicationAPP.Controllers
                 };
 
                 _context.Clientes.Add(clienteExistente);
-
                 _context.SaveChanges();
             }
 
-            // 🔥 CREAR CITA
             var nuevaCita = new Cita
             {
                 IdCliente = clienteExistente.IdCliente,
@@ -166,41 +139,30 @@ namespace WebApplicationAPP.Controllers
             };
 
             _context.Citas.Add(nuevaCita);
-
             _context.SaveChanges();
 
-            // 🔥 REDIRECCIONES
-            if (EsCliente())
-            {
-                return RedirectToAction("MisCitas");
-            }
-
-            return RedirectToAction("Index");
+            return RedirectToAction("MisCitas");
         }
 
         // 🔥 CANCELAR CITA
         public IActionResult Cancelar(int id)
         {
-            if (!EsAdminOBarbero() && !EsCliente())
+            if (!TienePermiso("Citas/Index"))
             {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
+                return RedirectToAction("Index", "Dashboard");
             }
 
             var cita = _context.Citas
                 .Include(c => c.IdClienteNavigation)
-                .FirstOrDefault(c =>
-                    c.IdCita == id);
+                .FirstOrDefault(c => c.IdCita == id);
 
             if (cita != null)
             {
-                // 🔥 CLIENTE SOLO CANCELA SUS CITAS
-                if (EsCliente())
-                {
-                    var usuario = HttpContext.Session
-                        .GetString("NombreUsuario");
+                var usuario = HttpContext.Session.GetString("NombreUsuario") ?? "";
 
+                if (TienePermiso("Citas/MisCitas") &&
+                    !TienePermiso("Citas/Index"))
+                {
                     if (cita.IdClienteNavigation.Nombre != usuario)
                     {
                         return RedirectToAction("MisCitas");
@@ -208,14 +170,7 @@ namespace WebApplicationAPP.Controllers
                 }
 
                 cita.Estado = "Cancelada";
-
                 _context.SaveChanges();
-            }
-
-            // 🔥 REDIRECCIONES
-            if (EsCliente())
-            {
-                return RedirectToAction("MisCitas");
             }
 
             return RedirectToAction("Index");

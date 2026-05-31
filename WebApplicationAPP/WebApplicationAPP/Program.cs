@@ -10,16 +10,14 @@ builder.Services.AddDbContext<YampiBarbershopContext>(options =>
 
 // Servicios MVC
 builder.Services.AddControllersWithViews()
-                .AddRazorRuntimeCompilation();
+.AddRazorRuntimeCompilation();
 
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
-
     options.Cookie.HttpOnly = true;
-
     options.Cookie.IsEssential = true;
 });
 
@@ -40,7 +38,6 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthorization();
 
-// Ruta inicial
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Seguridad}/{action=Index}/{id?}");

@@ -47,9 +47,6 @@ public partial class YampiBarbershopContext : DbContext
 
     public virtual DbSet<VwUsuariosRole> VwUsuariosRoles { get; set; }
 
-    
-
-    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Atencion>(entity =>
