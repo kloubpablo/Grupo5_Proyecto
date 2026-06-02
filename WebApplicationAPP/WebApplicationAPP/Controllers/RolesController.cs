@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApplicationAPP.Models;
+using WebApplicationAPP.Helpers;
 
 namespace WebApplicationAPP.Controllers
 {
@@ -12,74 +14,56 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // 🔥 VALIDAR SI ES ADMINISTRADOR
-        private bool EsAdmin()
+        private bool TienePermiso(string permiso)
         {
-            return HttpContext.Session
-                .GetString("Rol") == "Administrador";
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(rol))
+                return false;
+
+            return PermisosHelper.TienePermiso(_context, rol, permiso);
         }
 
-        // 🔥 INDEX
+        // 🔥 LISTA DE ROLES
         public IActionResult Index()
         {
-            if (!EsAdmin())
-            {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
-            }
+            if (!TienePermiso("Roles/Index"))
+                return RedirectToAction("Index", "Dashboard");
 
             var roles = _context.Roles.ToList();
-
             return View(roles);
         }
 
-        // 🔥 CREAR GET
+        // 🔥 CREAR (GET)
         public IActionResult Crear()
         {
-            if (!EsAdmin())
-            {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
-            }
+            if (!TienePermiso("Roles/Crear"))
+                return RedirectToAction("Index", "Dashboard");
 
             return View();
         }
 
-        // 🔥 CREAR POST
+        // 🔥 CREAR (POST)
         [HttpPost]
         public IActionResult Crear(string nombre, string descripcion)
         {
-            if (!EsAdmin())
-            {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
-            }
+            if (!TienePermiso("Roles/Crear"))
+                return RedirectToAction("Index", "Dashboard");
 
-            // VALIDAR CAMPOS
-            if (string.IsNullOrEmpty(nombre))
+            if (string.IsNullOrWhiteSpace(nombre))
             {
-                ViewBag.Error =
-                    "Debe ingresar el nombre del rol";
-
+                ViewBag.Error = "Debe ingresar el nombre del rol";
                 return View();
             }
 
-            // VALIDAR DUPLICADO
-            bool existe = _context.Roles
-                .Any(r => r.Nombre == nombre);
+            bool existe = _context.Roles.Any(r => r.Nombre == nombre);
 
             if (existe)
             {
-                ViewBag.Error =
-                    "El rol ya existe";
-
+                ViewBag.Error = "El rol ya existe";
                 return View();
             }
 
-            // CREAR ROL
             var rol = new Role
             {
                 Nombre = nombre,
@@ -88,58 +72,107 @@ namespace WebApplicationAPP.Controllers
             };
 
             _context.Roles.Add(rol);
-
             _context.SaveChanges();
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         // 🔥 ACTIVAR / DESACTIVAR
         public IActionResult Toggle(int id)
         {
-            if (!EsAdmin())
-            {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
-            }
+            if (!TienePermiso("Roles/Index"))
+                return RedirectToAction("Index", "Dashboard");
 
-            var rol = _context.Roles
-                .FirstOrDefault(r =>
-                    r.IdRol == id);
+            var rol = _context.Roles.FirstOrDefault(r => r.IdRol == id);
 
             if (rol != null)
             {
                 rol.Estado = !rol.Estado;
-
                 _context.SaveChanges();
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         // 🔥 ELIMINAR
         public IActionResult Eliminar(int id)
         {
-            if (!EsAdmin())
-            {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
-            }
+            if (!TienePermiso("Roles/Index"))
+                return RedirectToAction("Index", "Dashboard");
 
-            var rol = _context.Roles
-                .FirstOrDefault(r =>
-                    r.IdRol == id);
+            var rol = _context.Roles.FirstOrDefault(r => r.IdRol == id);
 
             if (rol != null)
             {
                 _context.Roles.Remove(rol);
-
                 _context.SaveChanges();
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
+        }
+
+        // 🔥 PERMISOS (GET)
+        public IActionResult Permisos(int id)
+        {
+            if (!TienePermiso("Roles/Permisos"))
+                return RedirectToAction("Index", "Dashboard");
+
+            var rol = _context.Roles
+                .Include(r => r.IdPrivilegios)
+                .FirstOrDefault(r => r.IdRol == id);
+
+            if (rol == null)
+                return RedirectToAction(nameof(Index));
+
+            var vm = new PermisosRolVM
+            {
+                IdRol = rol.IdRol,
+                NombreRol = rol.Nombre,
+
+                Permisos = _context.Privilegios
+                    .ToList()
+                    .Select(p => new PermisoCheckVM
+                    {
+                        IdPrivilegio = p.IdPrivilegio,
+                        Nombre = p.Nombre,
+                        Descripcion = p.Descripcion ?? "",
+                        Seleccionado = rol.IdPrivilegios
+                            .Any(x => x.IdPrivilegio == p.IdPrivilegio)
+                    })
+                    .ToList()
+            };
+
+            return View(vm);
+        }
+
+        // 🔥 TOGGLE PERMISO
+        [HttpPost]
+        public IActionResult TogglePermiso(int idRol, int idPrivilegio)
+        {
+            if (!TienePermiso("Roles/Permisos"))
+                return RedirectToAction("Index", "Dashboard");
+
+            var rol = _context.Roles
+                .Include(r => r.IdPrivilegios)
+                .FirstOrDefault(r => r.IdRol == idRol);
+
+            if (rol == null)
+                return RedirectToAction("Index");
+
+            var permiso = _context.Privilegios
+                .FirstOrDefault(p => p.IdPrivilegio == idPrivilegio);
+
+            if (permiso == null)
+                return RedirectToAction("Permisos", new { id = idRol });
+
+            if (rol.IdPrivilegios.Any(p => p.IdPrivilegio == idPrivilegio))
+                rol.IdPrivilegios.Remove(permiso);
+            else
+                rol.IdPrivilegios.Add(permiso);
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Permisos", new { id = idRol });
         }
     }
 }

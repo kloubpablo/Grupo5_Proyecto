@@ -1,0 +1,73 @@
+@model WebApplicationAPP.Models.PermisosRolVM
+
+<h2>Permisos de @Model.NombreRol</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Permiso</th>
+            <th>Estado</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var permiso in Model.Permisos)
+        {
+            <tr>
+
+                <td>@permiso.Nombre</td>
+
+                <td>
+                    @if (permiso.Seleccionado)
+                    {
+                        <span>Activo</span>
+                    }
+                    else
+                    {
+                        <span>Inactivo</span>
+                    }
+                </td>
+
+                <td>
+
+                    <form asp-action="TogglePermiso"
+                          method="post">
+
+                        <input type="hidden"
+                               name="idRol"
+                               value="@Model.IdRol" />
+
+                        <input type="hidden"
+                               name="idPrivilegio"
+                               value="@permiso.IdPrivilegio" />
+
+                        @if (permiso.Seleccionado)
+                        {
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm">
+                                Desactivar
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="submit"
+                                    class="btn btn-success btn-sm">
+                                Activar
+                            </button>
+                        }
+
+                    </form>
+
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<a asp-action="Index"
+   class="btn btn-secondary">
+    Volver
+</a>

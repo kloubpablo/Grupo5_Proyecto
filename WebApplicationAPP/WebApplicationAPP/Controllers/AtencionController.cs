@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationAPP.Models;
+using WebApplicationAPP.Helpers;
 
 namespace WebApplicationAPP.Controllers
 {
@@ -13,20 +14,17 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        private bool EsBarbero()
+        // 🔥 SISTEMA DE PERMISOS
+        private bool TienePermiso(string permiso)
         {
-            return HttpContext.Session
-                .GetString("Rol") == "Barbero";
+            var rol = HttpContext.Session.GetString("Rol") ?? "";
+            return PermisosHelper.TienePermiso(_context, rol, permiso);
         }
 
         public IActionResult Index()
         {
-            if (!EsBarbero())
-            {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
-            }
+            if (!TienePermiso("Atencion/Index"))
+                return RedirectToAction("Index", "Dashboard");
 
             var atenciones = _context.Atencions
                 .Include(a => a.IdClienteNavigation)
@@ -38,21 +36,14 @@ namespace WebApplicationAPP.Controllers
         [HttpPost]
         public IActionResult Agregar(string nombre)
         {
-            if (!EsBarbero())
-            {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
-            }
+            if (!TienePermiso("Atencion/Index"))
+                return RedirectToAction("Index", "Dashboard");
 
-            if (string.IsNullOrEmpty(nombre))
-            {
+            if (string.IsNullOrWhiteSpace(nombre))
                 return RedirectToAction("Index");
-            }
 
             var cliente = _context.Clientes
-                .FirstOrDefault(c =>
-                    c.Nombre == nombre);
+                .FirstOrDefault(c => c.Nombre == nombre);
 
             if (cliente == null)
             {
@@ -64,7 +55,6 @@ namespace WebApplicationAPP.Controllers
                 };
 
                 _context.Clientes.Add(cliente);
-
                 _context.SaveChanges();
             }
 
@@ -75,7 +65,6 @@ namespace WebApplicationAPP.Controllers
             };
 
             _context.Atencions.Add(atencion);
-
             _context.SaveChanges();
 
             return RedirectToAction("Index");
@@ -83,24 +72,16 @@ namespace WebApplicationAPP.Controllers
 
         public IActionResult Iniciar(int id)
         {
-            if (!EsBarbero())
-            {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
-            }
+            if (!TienePermiso("Atencion/Index"))
+                return RedirectToAction("Index", "Dashboard");
 
             var atencion = _context.Atencions
-                .FirstOrDefault(a =>
-                    a.IdAtencion == id);
+                .FirstOrDefault(a => a.IdAtencion == id);
 
             if (atencion != null)
             {
                 atencion.Estado = "En servicio";
-
-                atencion.HoraInicio =
-                    TimeOnly.FromDateTime(DateTime.Now);
-
+                atencion.HoraInicio = TimeOnly.FromDateTime(DateTime.Now);
                 _context.SaveChanges();
             }
 
@@ -109,24 +90,16 @@ namespace WebApplicationAPP.Controllers
 
         public IActionResult Finalizar(int id)
         {
-            if (!EsBarbero())
-            {
-                return RedirectToAction(
-                    "Index",
-                    "Dashboard");
-            }
+            if (!TienePermiso("Atencion/Index"))
+                return RedirectToAction("Index", "Dashboard");
 
             var atencion = _context.Atencions
-                .FirstOrDefault(a =>
-                    a.IdAtencion == id);
+                .FirstOrDefault(a => a.IdAtencion == id);
 
             if (atencion != null)
             {
                 atencion.Estado = "Finalizado";
-
-                atencion.HoraFin =
-                    TimeOnly.FromDateTime(DateTime.Now);
-
+                atencion.HoraFin = TimeOnly.FromDateTime(DateTime.Now);
                 _context.SaveChanges();
             }
 
