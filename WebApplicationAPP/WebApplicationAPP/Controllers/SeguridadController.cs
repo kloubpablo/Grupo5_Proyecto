@@ -26,6 +26,85 @@ namespace WebApplicationAPP.Controllers
         {
             return View();
         }
+        // REGISTRO CLIENTE
+        public IActionResult Registrar()
+        {
+            return View();
+            ViewBag.Error = "Entró al POST";
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Registrar(
+     string nombre,
+     string username,
+     string correo,
+     string password)
+        {
+            if (string.IsNullOrEmpty(nombre) ||
+                string.IsNullOrEmpty(username) ||
+                string.IsNullOrEmpty(correo) ||
+                string.IsNullOrEmpty(password))
+            {
+                ViewBag.Error =
+                    "Debe completar todos los campos";
+
+                return View();
+            }
+
+            bool existeUsuario = _context.Usuarios
+                .Any(u => u.Username == username);
+
+            if (existeUsuario)
+            {
+                ViewBag.Error =
+                    "El usuario ya existe";
+
+                return View();
+            }
+
+            bool existeCorreo = _context.Usuarios
+                .Any(u => u.CorreoElectronico == correo);
+
+            if (existeCorreo)
+            {
+                ViewBag.Error =
+                    "El correo ya está registrado";
+
+                return View();
+            }
+
+            // CREAR USUARIO
+            var usuario = new Usuario
+            {
+                Nombre = nombre,
+                Username = username,
+                PasswordHash = password,
+                CorreoElectronico = correo,
+                IdRol = 4, 
+                ContraTemp = false
+            };
+
+            _context.Usuarios.Add(usuario);
+
+            // CREAR CLIENTE
+            var cliente = new Cliente
+            {
+                Nombre = nombre,
+                Telefono = "00000000",
+                Email = correo,
+                FechaRegistro = DateTime.Now
+            };
+
+            _context.Clientes.Add(cliente);
+
+            _context.SaveChanges();
+
+            TempData["Mensaje"] =
+                "Cuenta creada correctamente";
+
+            return RedirectToAction("Index");
+        }
 
         // CAMBIAR CONTRASEÑA
         public IActionResult CambiarContrasena()

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Recuperar Contraseña";
+    ViewData["Title"] = "Registro";
     Layout = null;
 }
 
@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Recuperar Contraseña</title>
+    <title>Registro</title>
 
     <link rel="stylesheet" href="~/assets/css/main.css" />
 
@@ -21,8 +21,8 @@
                 color: white;
             }
 
-            .recuperar-box {
-                width: 500px;
+            .registro-box {
+                width: 450px;
             }
 
             input {
@@ -35,75 +35,80 @@
                 margin-top: 15px;
                 text-align: center;
             }
-
-            .mensaje-exito {
-                color: #22c55e;
-                text-align: center;
-                margin-top: 15px;
-            }
-
-            .mensaje-error {
-                color: #ef4444;
-                text-align: center;
-                margin-top: 15px;
-            }
     </style>
 </head>
 
 <body>
 
-    <div class="recuperar-box">
+    <div class="registro-box">
 
         <section class="box">
 
             <header class="text-center">
                 <h2 class="major">
-                    🔑 Recuperar Contraseña
+                    <span>💈 Registro de Cliente</span>
                 </h2>
 
                 <p style="color:#cbd5f5;">
-                    Ingrese el correo asociado a su cuenta
+                    Cree su cuenta para agendar citas
                 </p>
             </header>
 
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger text-center">
+                    @ViewBag.Error
+                </div>
+            }
+
             <form asp-controller="Seguridad"
-                  asp-action="Recuperar"
+                  asp-action="Registrar"
                   method="post">
 
                 <div class="mb-3">
+                    <label>Nombre Completo</label>
 
+                    <input class="form-control"
+                           type="text"
+                           name="nombre"
+                           required />
+                </div>
+
+                <div class="mb-3">
+                    <label>Nombre de Usuario</label>
+
+                    <input class="form-control"
+                           type="text"
+                           name="username"
+                           required />
+                </div>
+
+                <div class="mb-3">
                     <label>Correo Electrónico</label>
 
                     <input class="form-control"
                            type="email"
                            name="correo"
-                           placeholder="correo@ejemplo.com"
                            required />
+                </div>
 
+                <div class="mb-3">
+                    <label>Contraseña</label>
+
+                    <input class="form-control"
+                           type="password"
+                           name="password"
+                           required />
                 </div>
 
                 <br />
 
                 <button type="submit"
                         class="button primary w-100">
-                    📧 Recuperar
+                    📝 Crear Cuenta
                 </button>
 
             </form>
-
-            @if (ViewBag.Mensaje != null)
-            {
-                <p class="mensaje-exito">
-                    @ViewBag.Mensaje
-                </p>
-            }
-
-            @if (ViewBag.Error != null)
-            {
-                <p class="mensaje-error">
-                    @ViewBag.Error
-                </p>
-            }
 
             <div class="links">
 

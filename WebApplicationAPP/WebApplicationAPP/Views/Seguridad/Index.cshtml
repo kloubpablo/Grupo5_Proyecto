@@ -12,24 +12,34 @@
     <link rel="stylesheet" href="~/assets/css/main.css" />
 
     <style>
-        body {
-            background-color: #0f172a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: white;
-        }
+            body {
+                background-color: #0f172a;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                color: white;
+            }
 
-        .login-box {
-            width: 400px;
-        }
+            .login-box {
+                width: 400px;
+            }
 
-        input {
-            background-color: #020617 !important;
-            color: white !important;
-            border: 1px solid #334155 !important;
-        }
+            input {
+                background-color: #020617 !important;
+                color: white !important;
+                border: 1px solid #334155 !important;
+            }
+
+            .links {
+                margin-top: 15px;
+                text-align: center;
+            }
+
+                .links a {
+                    display: block;
+                    margin-top: 10px;
+                }
     </style>
 </head>
 
@@ -43,7 +53,10 @@
                 <h2 class="major">
                     <span>💈 YAMPI BARBERSHOP</span>
                 </h2>
-                <p style="color:#cbd5f5;">Inicio de sesión</p>
+
+                <p style="color:#cbd5f5;">
+                    Inicio de sesión
+                </p>
             </header>
 
             @if (ViewBag.Error != null)
@@ -53,27 +66,53 @@
                 </div>
             }
 
-            <form asp-controller="Seguridad" asp-action="Index" method="post">
+            <form asp-controller="Seguridad"
+                  asp-action="Index"
+                  method="post">
 
                 <div class="mb-3">
                     <label>Usuario</label>
-                    <input class="form-control" type="text" name="usuario" required />
+
+                    <input class="form-control"
+                           type="text"
+                           name="usuario"
+                           required />
                 </div>
 
                 <div class="mb-3">
                     <label>Contraseña</label>
-                    <input class="form-control" type="password" name="password" required />
+
+                    <input class="form-control"
+                           type="password"
+                           name="password"
+                           required />
                 </div>
 
                 <br />
 
-                <button type="submit" class="button primary w-100">
+                <button type="submit"
+                        class="button primary w-100">
                     🔐 Ingresar
-                </button> 
+                </button>
+
             </form>
-            
-            <a asp-controller="Seguridad" asp-action="Recuperar" class="link-underline-primary">¿Olvidaste tu contraseña?</a>
-            <p><a href="/Usuarios/Crear" class="link-underline-primary">Registrarse</a></></p>
+
+            <div class="links">
+
+                <a asp-controller="Seguridad"
+                       asp-action="Recuperar"
+                       class="link-underline-primary">
+                    ¿Olvidaste tu contraseña?
+                </a>
+
+                <a asp-controller="Seguridad"
+                       asp-action="Registrar"
+                       class="link-underline-primary">
+                    Registrarse
+                </a>
+
+            </div>
+
         </section>
 
     </div>
