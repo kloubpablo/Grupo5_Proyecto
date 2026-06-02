@@ -28,8 +28,7 @@ namespace WebApplicationAPP.Controllers
         public IActionResult Registrar()
         {
             return View();
-            ViewBag.Error = "Entró al POST";
-            return View();
+          
         }
 
         [HttpPost]
@@ -40,9 +39,9 @@ namespace WebApplicationAPP.Controllers
      string password)
         {
             if (string.IsNullOrEmpty(nombre) ||
-                string.IsNullOrEmpty(username) ||
-                string.IsNullOrEmpty(correo) ||
-                string.IsNullOrEmpty(password))
+       string.IsNullOrEmpty(username) ||
+       string.IsNullOrEmpty(correo) ||
+       string.IsNullOrEmpty(password))
             {
                 ViewBag.Error =
                     "Debe completar todos los campos";
