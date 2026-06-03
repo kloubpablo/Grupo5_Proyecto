@@ -3,15 +3,16 @@ using WebApplicationAPP.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Conexión SQL Server
+// SQL SERVER
 builder.Services.AddDbContext<YampiBarbershopContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("SqlConnection")));
 
-// Servicios MVC
+// MVC
 builder.Services.AddControllersWithViews()
-.AddRazorRuntimeCompilation();
+    .AddRazorRuntimeCompilation();
 
+// SESIONES
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
@@ -23,7 +24,7 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Manejo de errores
+// ERRORES
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -31,11 +32,13 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseSession();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(

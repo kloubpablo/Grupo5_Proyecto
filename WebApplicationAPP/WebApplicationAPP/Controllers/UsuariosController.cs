@@ -13,22 +13,21 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // 🔥 VALIDAR ADMINISTRADOR
         private bool EsAdmin()
         {
-            return HttpContext.Session
-                .GetString("Rol") == "Administrador";
+            return HttpContext.Session.GetString("Rol")
+                == "Administrador";
         }
 
-        // 🔥 LISTA
+       
+        // LISTA
+     
         public IActionResult Index()
         {
             if (!EsAdmin())
-            {
                 return RedirectToAction(
                     "Index",
                     "Dashboard");
-            }
 
             var usuarios = _context.Usuarios
                 .Include(u => u.IdRolNavigation)
@@ -37,24 +36,22 @@ namespace WebApplicationAPP.Controllers
             return View(usuarios);
         }
 
-        // 🔥 CREAR GET
+        // CREAR
+      
         public IActionResult Crear()
         {
             if (!EsAdmin())
-            {
                 return RedirectToAction(
                     "Index",
                     "Dashboard");
-            }
 
             ViewBag.Roles = _context.Roles
-                .Where(r => r.Estado == true)
+                .Where(r => r.Estado)
                 .ToList();
 
             return View();
         }
 
-        // 🔥 CREAR POST
         [HttpPost]
         public IActionResult Crear(
             string nombre,
@@ -65,13 +62,10 @@ namespace WebApplicationAPP.Controllers
             int idRol)
         {
             if (!EsAdmin())
-            {
                 return RedirectToAction(
                     "Index",
                     "Dashboard");
-            }
 
-            // 🔥 VALIDAR CAMPOS
             if (string.IsNullOrEmpty(nombre) ||
                 string.IsNullOrEmpty(username) ||
                 string.IsNullOrEmpty(correoElectronico) ||
@@ -81,86 +75,126 @@ namespace WebApplicationAPP.Controllers
                     "Debe completar todos los campos";
 
                 ViewBag.Roles = _context.Roles
-                    .Where(r => r.Estado == true)
+                    .Where(r => r.Estado)
                     .ToList();
 
                 return View();
             }
 
-            // 🔥 VALIDAR CONTRASEÑAS
             if (password != confirmarContraseña)
             {
                 ViewBag.Error =
-                    "Las contraseñas deben coincidir";
+                    "Las contraseñas no coinciden";
 
                 ViewBag.Roles = _context.Roles
-                    .Where(r => r.Estado == true)
+                    .Where(r => r.Estado)
                     .ToList();
 
                 return View();
             }
 
-            // 🔥 VALIDAR USUARIO DUPLICADO
-            bool existeUsuario = _context.Usuarios
-                .Any(u => u.Username == username);
-
-            if (existeUsuario)
+            if (_context.Usuarios.Any(u =>
+                u.Username == username))
             {
                 ViewBag.Error =
                     "El usuario ya existe";
 
                 ViewBag.Roles = _context.Roles
-                    .Where(r => r.Estado == true)
+                    .Where(r => r.Estado)
                     .ToList();
 
                 return View();
             }
 
-            // 🔥 VALIDAR CORREO DUPLICADO
-            bool existeCorreo = _context.Usuarios
-                .Any(u =>
-                    u.CorreoElectronico ==
-                    correoElectronico);
-
-            if (existeCorreo)
+            if (_context.Usuarios.Any(u =>
+                u.CorreoElectronico ==
+                correoElectronico))
             {
                 ViewBag.Error =
-                    "El correo ya está registrado";
+                    "El correo ya existe";
 
                 ViewBag.Roles = _context.Roles
-                    .Where(r => r.Estado == true)
+                    .Where(r => r.Estado)
                     .ToList();
 
                 return View();
             }
 
-            // 🔥 CREAR USUARIO
-            var usuario = new Usuario
-            {
-                Nombre = nombre,
-                Username = username,
-                CorreoElectronico = correoElectronico,
-                PasswordHash = password,
-                IdRol = idRol,
-                ContraTemp = false
-            };
+            Usuario usuario = new Usuario();
+
+            usuario.Nombre = nombre;
+            usuario.Username = username;
+            usuario.CorreoElectronico =
+                correoElectronico;
+            usuario.PasswordHash = password;
+            usuario.IdRol = idRol;
+            usuario.ContraTemp = false;
 
             _context.Usuarios.Add(usuario);
-
             _context.SaveChanges();
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
-        // 🔥 ELIMINAR
-        public IActionResult Eliminar(int id)
+        
+        // CAMBIAR ROL
+      
+        public IActionResult CambiarRol(int id)
         {
             if (!EsAdmin())
-            {
                 return RedirectToAction(
                     "Index",
                     "Dashboard");
-            }
+
+            var usuario = _context.Usuarios
+                .Include(u => u.IdRolNavigation)
+                .FirstOrDefault(u =>
+                    u.IdUsuario == id);
+
+            if (usuario == null)
+                return RedirectToAction(nameof(Index));
+
+            ViewBag.Usuario = usuario;
+
+            ViewBag.Roles = _context.Roles
+                .Where(r => r.Estado)
+                .ToList();
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CambiarRol(
+            int idUsuario,
+            int idRol)
+        {
+            if (!EsAdmin())
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
+
+            var usuario = _context.Usuarios
+                .FirstOrDefault(u =>
+                    u.IdUsuario == idUsuario);
+
+            if (usuario == null)
+                return RedirectToAction(nameof(Index));
+
+            usuario.IdRol = idRol;
+
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // ELIMINAR
+        
+        public IActionResult Eliminar(int id)
+        {
+            if (!EsAdmin())
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard");
 
             var usuario = _context.Usuarios
                 .FirstOrDefault(u =>
@@ -169,11 +203,10 @@ namespace WebApplicationAPP.Controllers
             if (usuario != null)
             {
                 _context.Usuarios.Remove(usuario);
-
                 _context.SaveChanges();
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 }
