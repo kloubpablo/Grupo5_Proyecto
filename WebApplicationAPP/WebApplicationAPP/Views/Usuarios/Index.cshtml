@@ -17,7 +17,9 @@
             <th>Usuario</th>
             <th>Correo</th>
             <th>Rol</th>
+            <th>Estado</th> 
             <th>Acciones</th>
+
         </tr>
     </thead>
 
@@ -46,19 +48,18 @@
                     <td>
                         @u.IdRolNavigation.Nombre
                     </td>
-
+                    
+                    <td>@(u.Estado ? "Activo" : "Inactivo")</td>
                     <td>
 
                         <a class="btn btn-warning btn-sm"
                                href="/Usuarios/CambiarRol/@u.IdUsuario">
-                            🔄 Cambiar Rol
-                        </a>
-
+                            🔄 Cambiar Rol y Estado
+                            </a> /
                         <a class="btn btn-danger btn-sm"
                                href="/Usuarios/Eliminar/@u.IdUsuario">
                             🗑 Eliminar
                         </a>
-
                     </td>
 
                 </tr>

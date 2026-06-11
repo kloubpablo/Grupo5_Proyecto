@@ -55,7 +55,30 @@
             </select>
 
         </div>
+        <div class="mb-3">
 
+            <label class="form-label">
+                Estado
+            </label>
+
+            <select class="form-select" name="estado">
+
+                @if (ViewBag.Usuario.Estado)
+                {
+                    <option value="true" selected>Activo</option>
+                    <option value="false">Inactivo</option>
+                }
+                else
+                {
+                    <option value="true">Activo</option>
+                    <option value="false" selected>Inactivo</option>
+                }
+
+            </select>
+
+        </div>
+
+        <br>
         <div class="d-flex justify-content-between">
 
             <button type="submit"
@@ -69,7 +92,7 @@
             </a>
 
         </div>
-
+        </br>
     </form>
 
 </div>
