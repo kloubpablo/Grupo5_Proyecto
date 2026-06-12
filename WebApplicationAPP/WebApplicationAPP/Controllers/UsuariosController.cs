@@ -160,13 +160,15 @@ namespace WebApplicationAPP.Controllers
                 .Where(r => r.Estado)
                 .ToList();
 
+
             return View();
         }
 
         [HttpPost]
         public IActionResult CambiarRol(
-            int idUsuario,
-            int idRol)
+        int idUsuario,
+        int idRol,
+        bool estado)
         {
             if (!EsAdmin())
                 return RedirectToAction(
@@ -181,6 +183,7 @@ namespace WebApplicationAPP.Controllers
                 return RedirectToAction(nameof(Index));
 
             usuario.IdRol = idRol;
+            usuario.Estado = estado;
 
             _context.SaveChanges();
 
@@ -188,7 +191,7 @@ namespace WebApplicationAPP.Controllers
         }
 
         // ELIMINAR
-        
+
         public IActionResult Eliminar(int id)
         {
             if (!EsAdmin())

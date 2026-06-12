@@ -19,5 +19,8 @@ public partial class Usuario
 
     public bool ContraTemp { get; set; }
 
+    public bool Estado { get; set; }
+
     public virtual Role IdRolNavigation { get; set; } = null!;
+
 }
