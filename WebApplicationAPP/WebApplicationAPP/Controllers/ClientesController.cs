@@ -14,14 +14,14 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // 🔥 PERMISOS CENTRALIZADO
+        //PERMISOS CENTRALIZADO
         private bool TienePermiso(string permiso)
         {
             var rol = HttpContext.Session.GetString("Rol") ?? "";
             return PermisosHelper.TienePermiso(_context, rol, permiso);
         }
 
-        // 🔥 LISTA DE CLIENTES
+        //LISTA DE CLIENTES
         public IActionResult Index(string buscar)
         {
             if (!TienePermiso("Clientes/Index"))
@@ -31,13 +31,15 @@ namespace WebApplicationAPP.Controllers
 
             if (!string.IsNullOrWhiteSpace(buscar))
             {
-                clientes = clientes.Where(c => c.Nombre.Contains(buscar));
+                clientes = clientes.Where(c =>
+                    c.Nombre.Contains(buscar) ||
+                    c.Telefono.Contains(buscar));
             }
 
             return View(clientes.ToList());
         }
 
-        // 🔥 CREAR CLIENTE (GET)
+        //CREAR CLIENTE 
         public IActionResult Crear()
         {
             if (!TienePermiso("Clientes/Crear"))
@@ -46,7 +48,7 @@ namespace WebApplicationAPP.Controllers
             return View();
         }
 
-        // 🔥 CREAR CLIENTE (POST)
+        // CREAR CLIENTE///
         [HttpPost]
         public IActionResult Crear(string nombre, string telefono)
         {
@@ -82,7 +84,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("Index");
         }
 
-        // 🔥 EDITAR CLIENTE (GET)
+        ///EDITAR CLIENTE////
         public IActionResult Editar(int id)
         {
             if (!TienePermiso("Clientes/Editar"))
@@ -97,7 +99,7 @@ namespace WebApplicationAPP.Controllers
             return View(cliente);
         }
 
-        // 🔥 EDITAR CLIENTE (POST)
+        ///EDITAR CLIENTE///////
         [HttpPost]
         public IActionResult Editar(int id, string nombre, string telefono)
         {
@@ -111,6 +113,7 @@ namespace WebApplicationAPP.Controllers
             {
                 cliente.Nombre = nombre;
                 cliente.Telefono = telefono;
+
                 _context.SaveChanges();
             }
 
