@@ -14,15 +14,15 @@ namespace WebApplicationAPP.Controllers
 
         public IActionResult Index()
         {
-            // 📅 Citas de hoy
+            //Citas de hoy
             var citasHoy = _context.Citas
                 .Count(c => c.Fecha == DateOnly.FromDateTime(DateTime.Now));
 
-            // 👤 Clientes atendidos
+            //Clientes atendidos
             var clientesAtendidos = _context.Atencions
                 .Count(a => a.Estado == "Finalizado");
 
-            // 💰 Ingresos de hoy
+            //Ingresos de hoy
             decimal ingresosHoy = 0;
 
             if (_context.Pagos.Any())
@@ -32,12 +32,33 @@ namespace WebApplicationAPP.Controllers
                     .Sum(p => (decimal?)p.Monto) ?? 0;
             }
 
-            // ViewBag dinámico
+
+
+
+            //Citas programadas para hoy
+            var citasProgramadas = _context.Citas
+                .Where(c => c.Fecha == DateOnly.FromDateTime(DateTime.Now))
+                .ToList();
+
+            //Resumen General
+            var totalClientes = _context.Clientes.Count();
+
+            var totalBarberos = _context.Usuarios
+                .Count(u => u.IdRol == 2);
+
+            var totalUsuarios = _context.Usuarios.Count();
+
+            /////////ViewBag dinámico
             ViewBag.CitasHoy = citasHoy;
             ViewBag.IngresosHoy = ingresosHoy;
             ViewBag.ClientesAtendidos = clientesAtendidos;
+            ViewBag.CitasProgramadas = citasProgramadas;
 
-            // 💈 Barberos reales desde SQL Server
+            ViewBag.TotalClientes = totalClientes;
+            ViewBag.TotalBarberos = totalBarberos;
+            ViewBag.TotalUsuarios = totalUsuarios;
+
+            //////////Barberos reales desde SQL Server
             var barberos = _context.Usuarios
                 .Where(u => u.IdRol == 2)
                 .ToList();
