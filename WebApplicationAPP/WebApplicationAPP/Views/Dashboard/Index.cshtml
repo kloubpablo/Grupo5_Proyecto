@@ -1,52 +1,13 @@
 ﻿@model List<WebApplicationAPP.Models.Usuario>
 
-<div class="col-md-4 mb-3">
-    <div class="card p-3">
-        <h5>📅 Citas del día</h5>
-        <h2>@ViewBag.CitasHoy</h2>
-    </div>
-</div>
+<h3>💈 Estado de Barberos</h3>
 
-<div class="col-md-4 mb-3">
-    <div class="card p-3">
-        <h5>💰 Ingresos</h5>
-        <h2>₡@ViewBag.IngresosHoy</h2>
-    </div>
-</div>
-
-<div class="col-md-4 mb-3">
-    <div class="card p-3">
-        <h5>👤 Clientes atendidos</h5>
-        <h2>@ViewBag.ClientesAtendidos</h2>
-    </div>
-</div>
-
-<div class="col-md-4 mb-3">
-    <div class="card p-3">
-        <h5>🧑 Clientes Registrados</h5>
-        <h2>@ViewBag.TotalClientes</h2>
-    </div>
-</div>
-
-<div class="col-md-4 mb-3">
-    <div class="card p-3">
-        <h5>💈 Barberos Activos</h5>
-        <h2>@ViewBag.TotalBarberos</h2>
-    </div>
-</div>
-
-<div class="col-md-4 mb-3">
-    <div class="card p-3">
-        <h5>👥 Usuarios del Sistema</h5>
-        <h2>@ViewBag.TotalUsuarios</h2>
-    </div>
-</div>
-
-<table class="table">
+<table class="table table-striped">
     <thead class="table-dark">
         <tr>
             <th>Nombre</th>
             <th>Usuario</th>
+            <th>Estado</th>
         </tr>
     </thead>
 
@@ -56,15 +17,26 @@
             <tr>
                 <td>@b.Nombre</td>
                 <td>@b.Username</td>
+
+                <td>
+                    @if (b.Estado)
+                    {
+                        <span class="badge bg-success">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Inactivo</span>
+                    }
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
 @if (ViewBag.CitasProgramadas != null &&
-    ((List<WebApplicationAPP.Models.Cita>)ViewBag.CitasProgramadas).Count > 0)
+((List<WebApplicationAPP.Models.Cita>)ViewBag.CitasProgramadas).Count > 0)
 {
-    <h3>Citas Programadas de Hoy</h3>
+    <h3>📅 Citas Programadas de Hoy</h3>
 
     <table class="table table-striped">
         <thead class="table-dark">

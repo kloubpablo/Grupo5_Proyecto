@@ -14,7 +14,7 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // 🔥 PERMISOS CENTRALIZADO
+        //PERMISOS CENTRALIZADO
         private bool TienePermiso(string permiso)
         {
             var rol = HttpContext.Session.GetString("Rol") ?? "";
@@ -22,7 +22,7 @@ namespace WebApplicationAPP.Controllers
             return PermisosHelper.TienePermiso(_context, rol, permiso);
         }
 
-        // 🔥 LISTA GENERAL DE CITAS
+        //LISTA GENERAL DE CITAS
         public IActionResult Index()
         {
             if (!TienePermiso("Citas/Index"))
@@ -37,7 +37,7 @@ namespace WebApplicationAPP.Controllers
             return View(citas);
         }
 
-        // 🔥 MIS CITAS
+        //MIS CITAS
         public IActionResult MisCitas()
         {
             if (!TienePermiso("Citas/MisCitas"))
@@ -55,7 +55,28 @@ namespace WebApplicationAPP.Controllers
             return View(citas);
         }
 
-        // 🔥 CREAR CITA (GET)
+
+        //HISTORIAL DE CITAS
+        public IActionResult Historial()
+        {
+            if (!TienePermiso("Citas/MisCitas"))
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            var usuario = HttpContext.Session.GetString("NombreUsuario") ?? "";
+
+            var historial = _context.Citas
+                .Include(c => c.IdClienteNavigation)
+                .Where(c => c.IdClienteNavigation.Nombre == usuario)
+                .OrderByDescending(c => c.Fecha)
+                .ThenByDescending(c => c.Hora)
+                .ToList();
+
+            return View(historial);
+        }
+
+        //CREAR CITA (GET)
         public IActionResult Crear()
         {
             if (!TienePermiso("Citas/Crear"))
@@ -70,7 +91,7 @@ namespace WebApplicationAPP.Controllers
             return View();
         }
 
-        // 🔥 CREAR CITA (POST)
+        // CREAR CITA (POST)
         [HttpPost]
         public IActionResult Crear(DateOnly fecha, TimeOnly hora, string barbero)
         {
