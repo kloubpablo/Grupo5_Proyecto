@@ -150,6 +150,7 @@ namespace WebApplicationAPP.Controllers
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Index");
+            HttpContext.Session.Remove("Rol");
         }
 
         // 🔥 CAMBIO CONTRASEÑA
