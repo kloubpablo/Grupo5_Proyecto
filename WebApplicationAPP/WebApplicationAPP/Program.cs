@@ -43,6 +43,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=YampiBarbershop}/{action=Index}/{id?}");
+    pattern: "{controller=YampiBarberShop}/{action=Index}/{id?}");
 
 app.Run();
