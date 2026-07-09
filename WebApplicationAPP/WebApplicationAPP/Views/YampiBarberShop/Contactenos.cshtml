@@ -1,0 +1,185 @@
+﻿@{
+    ViewData["Title"] = "Contáctenos";
+    Layout = "~/Views/Shared/_LayoutPublico.cshtml";
+}
+
+<style>
+    .contacto-section {
+        min-height: 100vh;
+        background: linear-gradient( rgba(2, 6, 23, 0.85), rgba(15, 23, 42, 0.90) );
+        background-size: cover;
+        background-position: center;
+        padding: 80px 20px;
+    }
+
+    .titulo-principal {
+        text-align: center;
+        color: #facc15;
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .subtitulo {
+        text-align: center;
+        color: #cbd5e1;
+        margin-bottom: 50px;
+    }
+
+    .contacto-container {
+        max-width: 1400px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    .info-card,
+    .mapa-card {
+        background: rgba(30, 41, 59, 0.95);
+        border: 2px solid #334155;
+        border-radius: 15px;
+        padding: 35px;
+    }
+
+        .info-card h3,
+        .mapa-card h3 {
+            color: #facc15;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+    .info-item {
+        margin-bottom: 25px;
+    }
+
+        .info-item h5 {
+            color: #facc15;
+            margin-bottom: 8px;
+        }
+
+        .info-item p,
+        .info-item a {
+            color: #e2e8f0;
+            text-decoration: none;
+            margin: 0;
+        }
+
+            .info-item a:hover {
+                color: #facc15;
+            }
+
+    .mapa-container {
+        overflow: hidden;
+        border-radius: 10px;
+        border: 2px solid #334155;
+    }
+
+        .mapa-container iframe {
+            width: 100%;
+            height: 500px;
+            border: 0;
+        }
+
+    @@media(max-width: 992px) {
+        .contacto-container {
+            grid-template-columns: 1fr;
+        }
+
+        .mapa-container iframe {
+            height: 400px;
+        }
+    }
+
+    @@media(max-width: 768px) {
+        .titulo-principal {
+            font-size: 2.2rem;
+        }
+    }
+</style>
+
+<section class="contacto-section">
+
+    <h1 class="titulo-principal">
+        Contáctenos
+    </h1>
+
+    <p class="subtitulo">
+        Estamos listos para atenderte. Ponte en contacto con nosotros o visítanos en nuestra barbería.
+    </p>
+
+    <div class="contacto-container">
+
+        <!-- INFORMACIÓN -->
+        <div class="info-card">
+
+            <h3>Información de Contacto</h3>
+
+            <div class="info-item">
+                <h5>📍 Dirección</h5>
+                <p>
+                    Avenida Central, 200 metros norte del Parque Central,
+                    San José, Costa Rica.
+                </p>
+            </div>
+
+            <div class="info-item">
+                <h5>📞 Teléfono Principal</h5>
+                <p>+506 2222-5555</p>
+            </div>
+
+            <div class="info-item">
+                <h5>📱 WhatsApp</h5>
+                <p>+506 8888-9999</p>
+            </div>
+
+            <div class="info-item">
+                <h5>✉️ Correo Electrónico</h5>
+                <p>contacto@yampibarbershop.com</p>
+            </div>
+
+            <div class="info-item">
+                <h5>🕒 Horario</h5>
+                <p>Lunes a Viernes: 9:00 AM - 8:00 PM</p>
+                <p>Sábados: 9:00 AM - 6:00 PM</p>
+                <p>Domingos: Cerrado</p>
+            </div>
+
+            <div class="info-item">
+                <h5>📸 Instagram</h5>
+                <a href="#">@@YampiBarberShop</a>
+            </div>
+
+            <div class="info-item">
+                <h5>📘 Facebook</h5>
+                <a href="#">Yampi BarberShop</a>
+            </div>
+
+            <div class="info-item">
+                <h5>🎵 TikTok</h5>
+                <a href="#">@@YampiBarberShopCR</a>
+            </div>
+
+        </div>
+
+        <!-- MAPA -->
+        <div class="mapa-card">
+
+            <h3>Ubicación</h3>
+
+            <div class="mapa-container">
+
+                <!-- Reemplaza el src con la ubicación real de tu barbería -->
+
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3930.234046765762!2d-84.04055792411464!3d9.914455390186633!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa0e3bf8aed5a2b%3A0x395463551de8a4de!2sParque%20Central%20de%20Curridabat%2C%20C089%2C%20San%20Jos%C3%A9%2C%20Curridabat%2C%2011801!5e0!3m2!1ses-419!2scr!4v1783578075835!5m2!1ses-419!2scr"
+                        allowfullscreen=""
+                        loading="lazy">
+                </iframe>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

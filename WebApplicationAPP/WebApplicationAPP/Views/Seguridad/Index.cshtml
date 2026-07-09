@@ -3,60 +3,81 @@
     Layout = "~/Views/Shared/_LayoutPublico.cshtml";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>Login</title>
+<style>
+    .login-container {
+        min-height: calc(100vh - 250px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+    }
 
-    <link rel="stylesheet" href="~/assets/css/main.css" />
+    .login-box {
+        width: 100%;
+        max-width: 450px;
+    }
 
-    <style>
-            body {
-                background-color: #0f172a;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                color: white;
+    .login-card {
+        background-color: #1e293b;
+        border-radius: 15px;
+        padding: 35px;
+        box-shadow: 0 0 25px rgba(0,0,0,0.3);
+    }
+
+        .login-card h2 span {
+            color: #facc15;
+        }
+
+        .login-card p {
+            color: #cbd5e1;
+        }
+
+        .login-card label {
+            color: white;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .login-card input {
+            background-color: #020617 !important;
+            color: white !important;
+            border: 1px solid #334155 !important;
+        }
+
+            .login-card input:focus {
+                border-color: #facc15 !important;
+                box-shadow: none !important;
             }
 
-            .login-box {
-                width: 400px;
+    .links {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+        .links a {
+            display: block;
+            margin-top: 10px;
+            color: #facc15;
+            text-decoration: none;
+        }
+
+            .links a:hover {
+                text-decoration: underline;
             }
+</style>
 
-            input {
-                background-color: #020617 !important;
-                color: white !important;
-                border: 1px solid #334155 !important;
-            }
-
-            .links {
-                margin-top: 15px;
-                text-align: center;
-            }
-
-                .links a {
-                    display: block;
-                    margin-top: 10px;
-                }
-    </style>
-</head>
-
-<body>
-
-
+<div class="login-container">
 
     <div class="login-box">
 
-        <section class="box">
+        <div class="login-card">
 
-            <header class="text-center">
+            <header class="text-center mb-4">
                 <h2 class="major">
                     <span>💈 YAMPI BARBERSHOP</span>
                 </h2>
 
-                <p style="color:#cbd5f5;">
+                <p>
                     Inicio de sesión
                 </p>
             </header>
@@ -90,8 +111,6 @@
                            required />
                 </div>
 
-                <br />
-
                 <button type="submit"
                         class="button primary w-100">
                     🔐 Ingresar
@@ -102,21 +121,19 @@
             <div class="links">
 
                 <a asp-controller="Seguridad"
-                       asp-action="Recuperar"
-                       class="link-underline-primary">
+                   asp-action="Recuperar">
                     ¿Olvidaste tu contraseña?
                 </a>
 
                 <a asp-controller="Seguridad"
-                       asp-action="Registrar"
-                       class="link-underline-primary">
+                   asp-action="Registrar">
                     Registrarse
                 </a>
 
             </div>
 
-        </section>
+        </div>
+
     </div>
 
-</body>
-</html>
+</div>

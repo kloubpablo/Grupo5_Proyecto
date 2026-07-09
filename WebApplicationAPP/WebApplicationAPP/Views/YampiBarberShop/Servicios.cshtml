@@ -1,0 +1,158 @@
+﻿@{
+    ViewData["Title"] = "Servicios";
+    Layout = "~/Views/Shared/_LayoutPublico.cshtml";
+}
+
+<style>
+    .servicios-section {
+        min-height: 100vh;
+        background: linear-gradient( rgba(2, 6, 23, 0.85), rgba(15, 23, 42, 0.90) ), url(https://images.unsplash.com/photo-1759134248487-e8baaf31e33e?q=80&w=2113&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+        background-size: cover;
+        background-position: center;
+        padding: 80px 20px;
+    }
+
+    .titulo-principal {
+        text-align: center;
+        color: #facc15;
+        font-size: 3rem;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+
+    .subtitulo {
+        text-align: center;
+        color: #cbd5e1;
+        margin-bottom: 50px;
+        font-size: 1.1rem;
+    }
+
+    .servicios-grid {
+        max-width: 1200px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+
+    .servicio-card {
+        background: rgba(30, 41, 59, 0.95);
+        border: 2px solid #334155;
+        border-radius: 15px;
+        padding: 30px;
+        transition: 0.3s;
+        text-align: center;
+    }
+
+        .servicio-card:hover {
+            transform: translateY(-8px);
+            border-color: #facc15;
+        }
+
+    .servicio-icono {
+        font-size: 3rem;
+        margin-bottom: 15px;
+    }
+
+    .servicio-card h3 {
+        color: #facc15;
+        margin-bottom: 15px;
+    }
+
+    .servicio-card p {
+        color: #e2e8f0;
+        margin-bottom: 15px;
+    }
+
+    .precio {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #facc15;
+    }
+
+    @@media(max-width: 992px) {
+        .servicios-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media(max-width: 768px) {
+        .servicios-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .titulo-principal {
+            font-size: 2.2rem;
+        }
+    }
+</style>
+
+<section class="servicios-section">
+
+    <h1 class="titulo-principal">
+        Nuestros Servicios
+    </h1>
+
+    <p class="subtitulo">
+        Calidad, estilo y atención profesional para que siempre luzcas tu mejor versión.
+    </p>
+
+    <div class="servicios-grid">
+
+        <div class="servicio-card">
+            <div class="servicio-icono">✂️</div>
+            <h3>Corte Clásico</h3>
+            <p>
+                Corte tradicional realizado con precisión y adaptado a tu estilo personal.
+            </p>
+            <div class="precio">₡5,000</div>
+        </div>
+
+        <div class="servicio-card">
+            <div class="servicio-icono">🔥</div>
+            <h3>Fade Premium</h3>
+            <p>
+                Degradado moderno con acabados profesionales y máxima definición.
+            </p>
+            <div class="precio">₡7,000</div>
+        </div>
+
+        <div class="servicio-card">
+            <div class="servicio-icono">🧔</div>
+            <h3>Perfilado de Barba</h3>
+            <p>
+                Diseño, recorte y perfilado para mantener una barba impecable.
+            </p>
+            <div class="precio">₡4,000</div>
+        </div>
+
+        <div class="servicio-card">
+            <div class="servicio-icono">💈</div>
+            <h3>Corte + Barba</h3>
+            <p>
+                Nuestro servicio más solicitado, combinando corte y arreglo de barba.
+            </p>
+            <div class="precio">₡9,000</div>
+        </div>
+
+        <div class="servicio-card">
+            <div class="servicio-icono">👦</div>
+            <h3>Corte Infantil</h3>
+            <p>
+                Atención especializada para niños en un ambiente cómodo y seguro.
+            </p>
+            <div class="precio">₡4,500</div>
+        </div>
+
+        <div class="servicio-card">
+            <div class="servicio-icono">⭐</div>
+            <h3>Experiencia VIP</h3>
+            <p>
+                Corte premium, barba, lavado y tratamiento capilar completo.
+            </p>
+            <div class="precio">₡12,000</div>
+        </div>
+
+    </div>
+
+</section>

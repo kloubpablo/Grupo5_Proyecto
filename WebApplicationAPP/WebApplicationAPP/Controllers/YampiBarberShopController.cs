@@ -29,5 +29,21 @@ namespace WebApplicationAPP.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        public IActionResult Galeria()
+        {
+            return View();
+        }
+        public IActionResult Nosotros()
+        {
+            return View();
+        }
+        public IActionResult Servicios()
+        {
+            return View();
+        }
+        public IActionResult Contactenos()
+        {
+            return View();
+        }
     }
 }

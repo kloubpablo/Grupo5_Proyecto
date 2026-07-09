@@ -1,0 +1,128 @@
+﻿@{
+    ViewData["Title"] = "Nosotros";
+    Layout = "~/Views/Shared/_LayoutPublico.cshtml";
+}
+
+<style>
+    .nosotros-section {
+        min-height: 100vh;
+        background: linear-gradient( rgba(2, 6, 23, 0.85), rgba(15, 23, 42, 0.90) );
+        background-position: center;
+        background-attachment: fixed;
+        padding: 80px 20px;
+    }
+
+    .nosotros-card {
+        max-width: 1000px;
+        margin: auto;
+        background: rgba(30, 41, 59, 0.90);
+        border: 1px solid #334155;
+        border-radius: 15px;
+        padding: 50px;
+        backdrop-filter: blur(5px);
+    }
+
+    .titulo-principal {
+        text-align: center;
+        color: #facc15;
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .subtitulo {
+        text-align: center;
+        color: #cbd5e1;
+        margin-bottom: 40px;
+        font-size: 1.1rem;
+    }
+
+    .titulo-historia {
+        color: #facc15;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2rem;
+    }
+
+    .nosotros-card p {
+        color: #e2e8f0;
+        text-align: justify;
+        line-height: 1.9;
+        margin-bottom: 20px;
+        font-size: 1.05rem;
+    }
+
+    @@media(max-width: 768px) {
+
+        .nosotros-card {
+            padding: 25px;
+        }
+
+        .titulo-principal {
+            font-size: 2.2rem;
+        }
+
+        .titulo-historia {
+            font-size: 1.6rem;
+        }
+    }
+</style>
+
+<section class="nosotros-section">
+
+    <div class="nosotros-card">
+
+        <h1 class="titulo-principal">
+            Nosotros
+        </h1>
+
+        <p class="subtitulo">
+            Conoce un poco más sobre nuestra historia y nuestra pasión por el estilo.
+        </p>
+
+        <h2 class="titulo-historia">
+            Nuestra Historia
+        </h2>
+
+        <p>
+            Yampi BarberShop nació de una idea sencilla: crear un espacio donde cada
+            persona pudiera sentirse cómoda, relajada y con la confianza de recibir
+            un servicio de calidad. Aunque nuestra historia es ficticia, representa
+            los valores que nos identifican como barbería.
+        </p>
+
+        <p>
+            Todo comenzó cuando un grupo de amigos apasionados por el arte del barbering
+            decidió abrir un pequeño local en su comunidad. Lo que inició con una sola
+            silla y muchas ganas de trabajar, poco a poco se fue convirtiendo en un punto
+            de encuentro para clientes de todas las edades.
+        </p>
+
+        <p>
+            Gracias al esfuerzo constante, la atención personalizada y el compromiso con
+            cada corte, la barbería empezó a ganarse la confianza de quienes buscaban mucho
+            más que un simple servicio.
+        </p>
+
+        <p>
+            Con el paso de los años, Yampi BarberShop fue creciendo e incorporando nuevas
+            técnicas, estilos modernos y servicios especializados, siempre manteniendo la
+            esencia que la vio nacer: brindar una experiencia única a cada cliente.
+        </p>
+
+        <p>
+            Nuestra visión siempre ha sido combinar tradición y modernidad para ofrecer
+            resultados que reflejen la personalidad y el estilo de cada persona. Por eso,
+            nos esforzamos en mantener un ambiente amigable, profesional y acogedor para
+            todos nuestros visitantes.
+        </p>
+
+        <p>
+            Hoy seguimos trabajando con la misma dedicación del primer día, buscando que
+            cada visita sea una experiencia agradable y que nuestros clientes salgan
+            satisfechos, renovados y con la confianza que un buen corte puede transmitir.
+        </p>
+
+    </div>
+
+</section>

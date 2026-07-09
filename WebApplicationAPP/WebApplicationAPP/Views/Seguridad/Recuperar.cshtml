@@ -3,65 +3,91 @@
     Layout = "~/Views/Shared/_LayoutPublico.cshtml";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>Recuperar Contraseña</title>
+<style>
+    .recuperar-container {
+        min-height: calc(100vh - 250px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+    }
 
-    <link rel="stylesheet" href="~/assets/css/main.css" />
+    .recuperar-box {
+        width: 100%;
+        max-width: 500px;
+    }
 
-    <style>
-            body {
-                background-color: #0f172a;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                min-height: 100vh;
-                color: white;
+    .recuperar-card {
+        background-color: #1e293b;
+        border-radius: 15px;
+        padding: 35px;
+        box-shadow: 0 0 25px rgba(0,0,0,0.3);
+    }
+
+        .recuperar-card h2 {
+            color: #facc15;
+        }
+
+        .recuperar-card p {
+            color: #cbd5e1;
+        }
+
+        .recuperar-card label {
+            color: white;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .recuperar-card input {
+            background-color: #020617 !important;
+            color: white !important;
+            border: 1px solid #334155 !important;
+        }
+
+            .recuperar-card input:focus {
+                border-color: #facc15 !important;
+                box-shadow: none !important;
             }
 
-            .recuperar-box {
-                width: 500px;
-            }
+    .mensaje-exito {
+        color: #22c55e;
+        text-align: center;
+        margin-top: 15px;
+    }
 
-            input {
-                background-color: #020617 !important;
-                color: white !important;
-                border: 1px solid #334155 !important;
-            }
+    .mensaje-error {
+        color: #ef4444;
+        text-align: center;
+        margin-top: 15px;
+    }
 
-            .links {
-                margin-top: 15px;
-                text-align: center;
-            }
+    .links {
+        margin-top: 20px;
+        text-align: center;
+    }
 
-            .mensaje-exito {
-                color: #22c55e;
-                text-align: center;
-                margin-top: 15px;
-            }
+        .links a {
+            color: #facc15;
+            text-decoration: none;
+        }
 
-            .mensaje-error {
-                color: #ef4444;
-                text-align: center;
-                margin-top: 15px;
+            .links a:hover {
+                text-decoration: underline;
             }
-    </style>
-</head>
+</style>
 
-<body>
+<div class="recuperar-container">
 
     <div class="recuperar-box">
 
-        <section class="box">
+        <div class="recuperar-card">
 
-            <header class="text-center">
+            <header class="text-center mb-4">
                 <h2 class="major">
                     🔑 Recuperar Contraseña
                 </h2>
 
-                <p style="color:#cbd5f5;">
+                <p>
                     Ingrese el correo asociado a su cuenta
                 </p>
             </header>
@@ -81,8 +107,6 @@
                            required />
 
                 </div>
-
-                <br />
 
                 <button type="submit"
                         class="button primary w-100">
@@ -108,15 +132,14 @@
             <div class="links">
 
                 <a asp-controller="Seguridad"
-                       asp-action="Index">
+                   asp-action="Index">
                     ← Volver al Login
                 </a>
 
             </div>
 
-        </section>
+        </div>
 
     </div>
 
-</body>
-</html>
+</div>
