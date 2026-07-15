@@ -4,24 +4,16 @@
     ViewData["Title"] = "Mis Citas";
 }
 
-<h2 class="mb-4">
-    📅 Mis Citas
-</h2>
+<h2 class="mb-4">📅 Mis Citas</h2>
 
 <div class="mb-3">
 
-    <a asp-action="Crear"
-           class="btn btn-success">
-
+    <a href="/Citas/Crear" class="btn btn-success">
         ➕ Nueva Cita
-
     </a>
 
-    <a asp-action="Historial"
-           class="btn btn-primary">
-
-        📖 Historial
-
+    <a href="/Citas/Historial" class="btn btn-primary">
+        📖 Historial de Citas
     </a>
 
 </div>
@@ -64,27 +56,19 @@
 
                         @if (item.Estado == "Activa")
                         {
-                            <span class="badge bg-success">
-                                Activa
-                            </span>
+                            <span class="badge bg-success">Activa</span>
                         }
                         else if (item.Estado == "Cancelada")
                         {
-                            <span class="badge bg-danger">
-                                Cancelada
-                            </span>
+                            <span class="badge bg-danger">Cancelada</span>
                         }
                         else if (item.Estado == "Finalizada")
                         {
-                            <span class="badge bg-primary">
-                                Finalizada
-                            </span>
+                            <span class="badge bg-primary">Finalizada</span>
                         }
                         else
                         {
-                            <span class="badge bg-secondary">
-                                @item.Estado
-                            </span>
+                            <span class="badge bg-secondary">@item.Estado</span>
                         }
 
                     </td>
@@ -93,12 +77,9 @@
 
                         @if (item.Estado == "Activa")
                         {
-                            <a asp-action="Cancelar"
-                                   asp-route-id="@item.IdCita"
+                            <a href="/Citas/Cancelar/@item.IdCita"
                                    class="btn btn-danger btn-sm">
-
                                 Cancelar
-
                             </a>
                         }
 
