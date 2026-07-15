@@ -1,79 +1,69 @@
-﻿@model List<WebApplicationAPP.Models.Cita>
+﻿@model List<WebApplicationAPP.Models.Usuario>
 
-<h2 class="mb-4">📅 Citas</h2>
+<h3>💈 Estado de Barberos</h3>
 
-<!-- 🔹 BOTÓN -->
-<div class="mb-3">
-    <a class="btn btn-primary"
-           href="/Citas/Crear">
-        ➕ Nueva Cita
-    </a>
-</div>
-
-<!-- 🔹 TABLA -->
-<table class="table table-bordered text-center">
-
+<table class="table table-striped">
     <thead class="table-dark">
         <tr>
-            <th>Cliente</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Barbero</th>
+            <th>Nombre</th>
+            <th>Usuario</th>
             <th>Estado</th>
-            <th>Acciones</th>
         </tr>
     </thead>
 
     <tbody>
-
-        @if (Model == null || Model.Count == 0)
+        @foreach (var b in Model)
         {
             <tr>
-                <td colspan="6">
-                    No hay citas registradas
+                <td>@b.Nombre</td>
+                <td>@b.Username</td>
+
+                <td>
+                    @if (b.Estado)
+                    {
+                        <span class="badge bg-success">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Inactivo</span>
+                    }
                 </td>
             </tr>
         }
-        else
-        {
-            @foreach (var c in Model)
+    </tbody>
+</table>
+
+@if (ViewBag.CitasProgramadas != null &&
+((List<WebApplicationAPP.Models.Cita>)ViewBag.CitasProgramadas).Count > 0)
+{
+    <h3>📅 Citas Programadas de Hoy</h3>
+
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID Cita</th>
+                <th>ID Cliente</th>
+                <th>Hora</th>
+                <th>Barbero</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var cita in (List<WebApplicationAPP.Models.Cita>)ViewBag.CitasProgramadas)
             {
                 <tr>
-                    <td>@c.IdClienteNavigation.Nombre</td>
-
-                    <td>@c.Fecha</td>
-
-                    <td>@c.Hora</td>
-
-                    <td>@c.Barbero</td>
-
-                    <!-- 🔸 ESTADO -->
-                    <td>
-                        @if (c.Estado == "Activa")
-                        {
-                            <span class="badge bg-success">
-                                Activa
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-danger">
-                                Cancelada
-                            </span>
-                        }
-                    </td>
-
-                    <!-- 🔸 ACCIONES -->
-                    <td>
-                        <a class="btn btn-sm btn-danger"
-                               href="/Citas/Cancelar/@c.IdCita">
-                            ❌ Cancelar
-                        </a>
-                    </td>
+                    <td>@cita.IdCita</td>
+                    <td>@cita.IdCliente</td>
+                    <td>@cita.Hora</td>
+                    <td>@cita.Barbero</td>
+                    <td>@cita.Estado</td>
                 </tr>
             }
-        }
-
-    </tbody>
-
-</table>
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No hay citas programadas para hoy.</p>
+}
