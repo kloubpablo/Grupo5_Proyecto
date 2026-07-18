@@ -1,8 +1,17 @@
 ﻿@model List<WebApplicationAPP.Models.Pago>
 
+@{
+    decimal totalGeneral = 0;
+
+    if (Model != null)
+    {
+        totalGeneral = Model.Sum(p => p.Monto);
+    }
+}
+
 <h2 class="mb-4">💰 Pagos</h2>
 
-<!-- 🔹 BOTONES -->
+<!-- BOTONES -->
 <div class="mb-3 d-flex gap-2">
 
     <a class="btn btn-primary"
@@ -17,15 +26,43 @@
 
 </div>
 
-<!-- 🔹 TABLA -->
+<!-- TARJETA CALCULO TOTAL -->
+<div class="card border-success mb-4">
+
+    <div class="card-header bg-success text-white">
+
+        <h5 class="mb-0">
+            💵 Cálculo de Total
+        </h5>
+
+    </div>
+
+    <div class="card-body text-center">
+
+        <h2 style="color:#198754; font-weight:bold;">
+            ₡@totalGeneral
+        </h2>
+
+        <p class="text-muted mb-0">
+            Total acumulado de todos los pagos registrados.
+        </p>
+
+    </div>
+
+</div>
+
+<!-- TABLA -->
+
 <table class="table table-bordered text-center">
 
     <thead class="table-dark">
         <tr>
+
             <th>Cliente</th>
             <th>Monto</th>
             <th>Método</th>
             <th>Fecha</th>
+
         </tr>
     </thead>
 
@@ -34,25 +71,28 @@
         @if (Model == null || Model.Count == 0)
         {
             <tr>
+
                 <td colspan="4">
+
                     No hay pagos registrados
+
                 </td>
+
             </tr>
         }
         else
         {
             @foreach (var p in Model)
             {
+
                 <tr>
 
                     <td>@p.IdClienteNavigation.Nombre</td>
 
-                    <!-- 💰 MONTO -->
                     <td style="font-weight:bold; color:#facc15;">
                         ₡@p.Monto
                     </td>
 
-                    <!-- 💳 MÉTODO -->
                     <td>
 
                         @if (p.Metodo == "Efectivo")
@@ -73,6 +113,7 @@
                     <td>@p.Fecha</td>
 
                 </tr>
+
             }
         }
 

@@ -1,0 +1,65 @@
+﻿@model List<WebApplicationAPP.Models.VwClientesFrecuente>
+
+@{
+    ViewData["Title"] = "Clientes Frecuentes";
+}
+
+<h2 class="mb-4">
+    ⭐ Clientes Frecuentes
+</h2>
+
+<div class="card p-4">
+
+    <table class="table table-bordered table-hover">
+
+        <thead class="table-dark">
+            <tr>
+                <th>Cliente</th>
+                <th>Total de Citas</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @if (Model == null || !Model.Any())
+            {
+                <tr>
+                    <td colspan="2" class="text-center">
+                        No existen clientes registrados.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var cliente in Model)
+                {
+                    <tr>
+
+                        <td>
+                            @cliente.Nombre
+                        </td>
+
+                        <td>
+
+                            <span class="badge bg-success">
+                                @cliente.TotalCitas
+                            </span>
+
+                        </td>
+
+                    </tr>
+                }
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<a href="/Reportes"
+       class="btn btn-secondary">
+
+    ← Volver
+
+</a>

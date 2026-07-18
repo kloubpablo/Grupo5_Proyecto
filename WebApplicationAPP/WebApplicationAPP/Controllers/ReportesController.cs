@@ -74,5 +74,20 @@ namespace WebApplicationAPP.Controllers
 
             return View();
         }
+
+
+        // 🔥 CLIENTES FRECUENTES
+        public IActionResult ClientesFrecuentes()
+        {
+            if (!TienePermiso("Reportes/Index"))
+                return RedirectToAction("Index", "Dashboard");
+
+            var clientes = _context.VwClientesFrecuentes
+                .OrderByDescending(c => c.TotalCitas)
+                .ToList();
+
+            return View(clientes);
+        }
+
     }
 }

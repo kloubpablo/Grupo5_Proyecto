@@ -1,6 +1,5 @@
-﻿<h2 class="mb-4">📅 Reporte por Fecha</h2>
+﻿<h2 class="mb-4">📅 Consulta de Ingresos</h2>
 
-<!-- 🔹 FORMULARIO -->
 <div class="card p-4 mb-4">
 
     @if (ViewBag.Error != null)
@@ -10,13 +9,12 @@
         </div>
     }
 
-    <form method="post"
-          class="row g-2 align-items-end">
+    <form method="post" class="row g-2 align-items-end">
 
         <div class="col-md-8">
 
             <label class="form-label">
-                Seleccione fecha
+                Seleccione una fecha
             </label>
 
             <input class="form-control"
@@ -29,7 +27,9 @@
 
             <button class="btn btn-primary w-100"
                     type="submit">
-                📊 Generar
+
+                🔍 Consultar
+
             </button>
 
         </div>
@@ -38,34 +38,58 @@
 
 </div>
 
-<!-- 🔹 RESULTADO -->
 @if (ViewBag.Fecha != null)
 {
-    <div class="card p-4 text-center">
 
-        <h4 class="mb-3">
-            📅 Reporte del día @ViewBag.Fecha
-        </h4>
+    <div class="card p-4 mb-4">
+
+        <h3 class="text-center">
+            📅 Consulta de ingresos del @ViewBag.Fecha
+        </h3>
 
         <hr />
 
-        <h5>
-            📌 Cantidad de citas:
-        </h5>
+        <div class="row text-center">
 
-        <h3>
-            @ViewBag.Citas
-        </h3>
+            <div class="col-md-4">
 
-        <br />
+                <h5>Citas registradas</h5>
 
-        <h5>
-            💰 Total generado:
-        </h5>
+                <h2>@ViewBag.Citas</h2>
 
-        <h2 style="color:#facc15;">
-            ₡@ViewBag.Total
-        </h2>
+            </div>
+
+            <div class="col-md-4">
+
+                <h5>Ingresos del día</h5>
+
+                <h2 style="color:#198754;">
+                    ₡@ViewBag.Total
+                </h2>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <h5>Estado</h5>
+
+                @if ((decimal)ViewBag.Total > 0)
+                {
+                    <span class="badge bg-success fs-6">
+                        Con ingresos
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-danger fs-6">
+                        Sin ingresos
+                    </span>
+                }
+
+            </div>
+
+        </div>
 
     </div>
+
 }
