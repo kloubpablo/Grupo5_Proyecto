@@ -194,6 +194,84 @@ namespace WebApplicationAPP.Controllers
                 _context.SaveChanges();
             }
 
+
+
+            return RedirectToAction("Index");
+        }
+
+        // 🔥 EDITAR CITA (GET)
+        public IActionResult Editar(int id)
+        {
+            if (!TienePermiso("Citas/Crear"))
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            var cita = _context.Citas
+                .FirstOrDefault(c => c.IdCita == id);
+
+            if (cita == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Barberos = _context.Usuarios
+                .Where(u => u.IdRol == 2)
+                .ToList();
+
+            return View(cita);
+        }
+
+
+        // 🔥 EDITAR CITA (POST)
+        [HttpPost]
+        public IActionResult Editar(Cita cita)
+        {
+            if (!TienePermiso("Citas/Crear"))
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            if (string.IsNullOrWhiteSpace(cita.Barbero))
+            {
+                ViewBag.Error = "Debe completar todos los campos";
+
+                ViewBag.Barberos = _context.Usuarios
+                    .Where(u => u.IdRol == 2)
+                    .ToList();
+
+                return View(cita);
+            }
+
+            bool ocupado = _context.Citas.Any(c =>
+                c.IdCita != cita.IdCita &&
+                c.Fecha == cita.Fecha &&
+                c.Hora == cita.Hora &&
+                c.Barbero == cita.Barbero);
+
+            if (ocupado)
+            {
+                ViewBag.Error = "Ese horario ya está ocupado.";
+
+                ViewBag.Barberos = _context.Usuarios
+                    .Where(u => u.IdRol == 2)
+                    .ToList();
+
+                return View(cita);
+            }
+
+            var citaDB = _context.Citas
+                .FirstOrDefault(c => c.IdCita == cita.IdCita);
+
+            if (citaDB != null)
+            {
+                citaDB.Fecha = cita.Fecha;
+                citaDB.Hora = cita.Hora;
+                citaDB.Barbero = cita.Barbero;
+
+                _context.SaveChanges();
+            }
+
             return RedirectToAction("Index");
         }
     }

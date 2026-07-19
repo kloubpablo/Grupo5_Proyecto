@@ -1,47 +1,45 @@
-﻿<h2 class="mb-4">📅 Consulta de Ingresos</h2>
+﻿@using WebApplicationAPP.Models
 
-<div class="card p-4 mb-4">
+<h2 class="mb-4">📅 Reporte por Fecha</h2>
 
-    @if (ViewBag.Error != null)
-    {
-        <div class="alert alert-danger text-center">
-            @ViewBag.Error
-        </div>
-    }
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger text-center">
+        @ViewBag.Error
+    </div>
+}
 
-    <form method="post" class="row g-2 align-items-end">
+<form method="post" class="row g-2 align-items-end">
 
-        <div class="col-md-8">
+    <div class="col-md-8">
 
-            <label class="form-label">
-                Seleccione una fecha
-            </label>
+        <label class="form-label">
+            Seleccione una fecha
+        </label>
 
-            <input class="form-control"
-                   type="date"
-                   name="fecha" />
+        <input class="form-control"
+               type="date"
+               name="fecha" />
 
-        </div>
+    </div>
 
-        <div class="col-md-4">
+    <div class="col-md-4">
 
-            <button class="btn btn-primary w-100"
-                    type="submit">
+        <button class="btn btn-primary w-100"
+                type="submit">
 
-                🔍 Consultar
+            🔍 Consultar
 
-            </button>
+        </button>
 
-        </div>
+    </div>
 
-    </form>
-
-</div>
+</form>
 
 @if (ViewBag.Fecha != null)
 {
 
-    <div class="card p-4 mb-4">
+    <div class="card p-4 mb-4 mt-4">
 
         <h3 class="text-center">
             📅 Consulta de ingresos del @ViewBag.Fecha
@@ -89,6 +87,93 @@
             </div>
 
         </div>
+
+    </div>
+
+    <div class="card p-4">
+
+        <h4 class="mb-3">
+            💳 Pagos registrados
+        </h4>
+
+        <table class="table table-bordered table-hover">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>Cliente</th>
+                    <th>Monto</th>
+                    <th>Método</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @{
+                    var pagos = ViewBag.Pagos as List<Pago>;
+                }
+
+                @if (pagos == null || pagos.Count == 0)
+                {
+                    <tr>
+
+                        <td colspan="3" class="text-center">
+
+                            No existen pagos registrados para esta fecha.
+
+                        </td>
+
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var pago in pagos)
+                    {
+                        <tr>
+
+                            <td>
+
+                                @pago.IdClienteNavigation?.Nombre
+
+                            </td>
+
+                            <td style="font-weight:bold; color:#198754;">
+
+                                ₡@pago.Monto
+
+                            </td>
+
+                            <td>
+
+                                @if (pago.Metodo == "Efectivo")
+                                {
+                                    <span class="badge bg-success">
+
+                                        Efectivo
+
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-primary">
+
+                                        Tarjeta
+
+                                    </span>
+                                }
+
+                            </td>
+
+                        </tr>
+                    }
+                }
+
+            </tbody>
+
+        </table>
 
     </div>
 

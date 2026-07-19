@@ -86,6 +86,11 @@
 
                         @if (c.Estado == "Activa")
                         {
+                            <a class="btn btn-sm btn-warning text-dark"
+                                   href="/Citas/Editar/@c.IdCita">
+                                ✏️ Editar
+                            </a>
+
                             <a class="btn btn-sm btn-danger"
                                    href="/Citas/Cancelar/@c.IdCita">
                                 ❌ Cancelar
@@ -93,7 +98,9 @@
                         }
                         else
                         {
-                            <span class="text-muted">Sin acciones</span>
+                            <span class="text-muted">
+                                Sin acciones
+                            </span>
                         }
 
                     </td>

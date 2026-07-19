@@ -1,17 +1,95 @@
-﻿<h2 class="mb-4">💰 Cierre de Caja</h2>
+﻿@{
+    ViewData["Title"] = "Cierre de Caja";
+}
 
-<div class="card p-4 text-center">
+<h2 class="mb-4">
+    📊 Cierre de Caja
+</h2>
 
-    <h5>Total generado hoy</h5>
+<div class="card shadow p-4">
 
-    <h1 style="font-size: 40px; color:#facc15;">
-        ₡@ViewBag.Total
-    </h1>
+    <div class="row text-center">
+
+        <div class="col-md-3 mb-3">
+
+            <h6 class="text-muted">
+                📅 Fecha
+            </h6>
+
+            <h4>
+                @ViewBag.Fecha
+            </h4>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <h6 class="text-muted">
+                💰 Total del día
+            </h6>
+
+            <h3 style="color:#facc15;">
+                ₡@ViewBag.Total
+            </h3>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <h6 class="text-muted">
+                🧾 Pagos registrados
+            </h6>
+
+            <h3 class="text-primary">
+                @ViewBag.CantidadPagos
+            </h3>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <h6 class="text-muted">
+                💳 Método más utilizado
+            </h6>
+
+            @if (ViewBag.MetodoMasUsado == "Efectivo")
+            {
+                <span class="badge bg-success fs-6">
+                    Efectivo
+                </span>
+            }
+            else if (ViewBag.MetodoMasUsado == "Tarjeta")
+            {
+                <span class="badge bg-primary fs-6">
+                    Tarjeta
+                </span>
+            }
+            else
+            {
+                <span class="badge bg-secondary fs-6">
+                    Sin registros
+                </span>
+            }
+
+        </div>
+
+    </div>
 
     <hr />
 
-    <p style="color:#94a3b8;">
-        Este monto representa el total de ingresos registrados en el día.
+    <p class="text-muted text-center mb-0">
+        Este cierre resume la actividad registrada durante el día actual.
     </p>
+
+</div>
+
+<div class="mt-4">
+
+    <a href="/Pagos"
+           class="btn btn-secondary">
+
+        ← Volver a Pagos
+
+    </a>
 
 </div>

@@ -68,9 +68,15 @@ namespace WebApplicationAPP.Controllers
             int citas = _context.Citas
                 .Count(c => c.Fecha == fecha);
 
+            var pagos = _context.Pagos
+                .Where(p => p.Fecha == fecha)
+                .OrderByDescending(p => p.IdPago)
+                .ToList();
+
             ViewBag.Fecha = fecha;
             ViewBag.Total = total;
             ViewBag.Citas = citas;
+            ViewBag.Pagos = pagos;
 
             return View();
         }
