@@ -1,39 +1,39 @@
 ﻿@model List<WebApplicationAPP.Models.Atencion>
 
-<h2 class="mb-4">💈 Atención / Turnos</h2>
+@{
+    ViewData["Title"] = "Registro de Atención";
+}
 
+<h2 class="mb-4">🪑 Registro de Atención</h2>
 
-<div class="card p-3 mb-4">
+<form method="post"
+      action="/Atencion/Agregar"
+      class="row g-2 mb-4">
 
-    <form method="post"
-          action="/Atencion/Agregar"
-          class="row g-2">
+    <div class="col-md-8">
+        <input class="form-control"
+               type="text"
+               name="nombre"
+               placeholder="Nombre del cliente" />
+    </div>
 
-        <div class="col-md-8">
-            <input class="form-control"
-                   type="text"
-                   name="nombre"
-                   placeholder="Nombre del cliente" />
-        </div>
+    <div class="col-md-4">
+        <button class="btn btn-primary w-100">
+            Agregar a lista
+        </button>
+    </div>
 
-        <div class="col-md-4">
-            <button class="btn btn-primary w-100">
-                Agregar a lista
-            </button>
-        </div>
+</form>
 
-    </form>
-
-</div>
-
-<h4 class="mb-3">📋 Lista de espera</h4>
-
-<table class="table table-bordered text-center">
+<table class="table table-bordered table-hover">
 
     <thead class="table-dark">
         <tr>
             <th>Cliente</th>
+            <th>Cita</th>
             <th>Estado</th>
+            <th>Hora Inicio</th>
+            <th>Hora Fin</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -43,8 +43,8 @@
         @if (Model == null || Model.Count == 0)
         {
             <tr>
-                <td colspan="3">
-                    No hay clientes en espera
+                <td colspan="6" class="text-center">
+                    No hay clientes en espera.
                 </td>
             </tr>
         }
@@ -54,9 +54,29 @@
             {
                 <tr>
 
-                    <td>@c.IdClienteNavigation.Nombre</td>
+                    <td>
+                        @c.IdClienteNavigation.Nombre
+                    </td>
 
                     <td>
+
+                        @if (c.IdCita != null)
+                        {
+                            <span class="badge bg-info">
+                                Cita #@c.IdCita
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                Sin cita
+                            </span>
+                        }
+
+                    </td>
+
+                    <td>
+
                         @if (c.Estado == "En espera")
                         {
                             <span class="badge bg-warning text-dark">
@@ -75,23 +95,31 @@
                                 Finalizado
                             </span>
                         }
+
                     </td>
 
-                   
+                    <td>
+                        @(c.HoraInicio?.ToString() ?? "--")
+                    </td>
+
+                    <td>
+                        @(c.HoraFin?.ToString() ?? "--")
+                    </td>
+
                     <td>
 
                         @if (c.Estado == "En espera")
                         {
                             <a class="btn btn-sm btn-primary"
                                    href="/Atencion/Iniciar/@c.IdAtencion">
-                                Iniciar
+                                ▶️ Iniciar
                             </a>
                         }
                         else if (c.Estado == "En servicio")
                         {
                             <a class="btn btn-sm btn-danger"
                                    href="/Atencion/Finalizar/@c.IdAtencion">
-                                Finalizar
+                                ⏹️ Finalizar
                             </a>
                         }
                         else
@@ -111,13 +139,38 @@
 
 </table>
 
+<div class="row mt-4">
 
-<div class="card p-3 mt-4 text-center">
+    <div class="col-md-6">
 
-    <h5>⏱ Tiempo estimado</h5>
+        <div class="card p-3 text-center">
 
-    <h3>
-        @((Model?.Count(c => c.Estado != "Finalizado") ?? 0) * 10) minutos
-    </h3>
+            <h5>
+                ⏱ Tiempo estimado
+            </h5>
+
+            <h3>
+                @((Model?.Count(c => c.Estado != "Finalizado") ?? 0) * 10) minutos
+            </h3>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <div class="card p-3 text-center">
+
+            <h5>
+                👥 Clientes en atención
+            </h5>
+
+            <h3>
+                @(Model?.Count(c => c.Estado != "Finalizado") ?? 0)
+            </h3>
+
+        </div>
+
+    </div>
 
 </div>

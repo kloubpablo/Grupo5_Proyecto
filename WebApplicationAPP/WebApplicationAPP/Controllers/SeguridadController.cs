@@ -71,7 +71,7 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            // CREAR USUARIO
+            //CREAR USUARIO
             var usuario = new Usuario
             {
                 Nombre = nombre,
@@ -84,7 +84,7 @@ namespace WebApplicationAPP.Controllers
 
             _context.Usuarios.Add(usuario);
 
-            // CREAR CLIENTE
+            //CREAR CLIENTE
             var cliente = new Cliente
             {
                 Nombre = nombre,
@@ -108,7 +108,7 @@ namespace WebApplicationAPP.Controllers
             return View();
         }
 
-        // 🔥 LOGIN
+        //LOGIN
         [HttpPost]
         public IActionResult Index(string usuario, string password)
         {
@@ -130,14 +130,12 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            // 🔥 SESIÓN BÁSICA
+            //SESIÓN BÁSICA
             HttpContext.Session.SetInt32("IdUsuario", user.IdUsuario);
             HttpContext.Session.SetString("Rol", user.IdRolNavigation.Nombre);
             HttpContext.Session.SetString("NombreUsuario", user.Nombre);
 
-            // ⚠️ IMPORTANTE:
-            // Ya NO dependes de permisos en sesión
-            // porque cambian dinámicamente en BD
+            
 
             if (user.ContraTemp)
                 return RedirectToAction("CambiarContrasena");
@@ -145,7 +143,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
-        // 🔥 LOGOUT
+        //LOGOUT
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
@@ -153,7 +151,7 @@ namespace WebApplicationAPP.Controllers
             HttpContext.Session.Remove("Rol");
         }
 
-        // 🔥 CAMBIO CONTRASEÑA
+        //CAMBIO CONTRASEÑA
         [HttpPost]
         public IActionResult CambiarContrasena(string nuevaContrasena, string confirmarContrasena)
         {
@@ -181,7 +179,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
-        // 🔥 RECUPERAR
+        //RECUPERAR
         [HttpPost]
         public IActionResult Recuperar(string correo)
         {

@@ -20,7 +20,7 @@ namespace WebApplicationAPP.Controllers
         }
 
        
-        // LISTA
+        //LISTA
      
         public IActionResult Index()
         {
@@ -221,7 +221,7 @@ namespace WebApplicationAPP.Controllers
             return View(usuario);
         }
 
-        // CREAR
+        //CREAR
       
         public IActionResult Crear()
         {
@@ -322,7 +322,7 @@ namespace WebApplicationAPP.Controllers
         }
 
         
-        // CAMBIAR ROL
+        //CAMBIAR ROL
       
         public IActionResult CambiarRol(int id)
         {
@@ -375,7 +375,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ELIMINAR
+        //ELIMINAR
 
         public IActionResult Eliminar(int id)
         {

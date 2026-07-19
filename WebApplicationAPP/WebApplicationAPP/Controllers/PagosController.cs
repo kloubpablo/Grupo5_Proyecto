@@ -24,7 +24,7 @@ namespace WebApplicationAPP.Controllers
             return PermisosHelper.TienePermiso(_context, rol, permiso);
         }
 
-        // 🔥 LISTA DE PAGOS
+        //LISTA DE PAGOS
         public IActionResult Index()
         {
             if (!TienePermiso("Pagos/Index"))
@@ -37,7 +37,7 @@ namespace WebApplicationAPP.Controllers
             return View(pagos);
         }
 
-        // 🔥 REGISTRAR (GET)
+        //REGISTRAR (GET)
         public IActionResult Registrar()
         {
             if (!TienePermiso("Pagos/Crear"))
@@ -46,7 +46,7 @@ namespace WebApplicationAPP.Controllers
             return View();
         }
 
-        // 🔥 REGISTRAR (POST)
+        //REGISTRAR (POST)
         [HttpPost]
         public IActionResult Registrar(string cliente, decimal monto, string metodo)
         {
@@ -91,7 +91,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("Index");
         }
 
-        // 🔥 CIERRE DE CAJA
+        //CIERRE DE CAJA
         public IActionResult Cierre()
         {
             if (!TienePermiso("Pagos/Index"))

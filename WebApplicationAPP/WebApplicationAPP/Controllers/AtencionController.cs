@@ -14,7 +14,7 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        // 🔥 SISTEMA DE PERMISOS
+        //SISTEMA DE PERMISOS
         private bool TienePermiso(string permiso)
         {
             var rol = HttpContext.Session.GetString("Rol") ?? "";
@@ -105,5 +105,39 @@ namespace WebApplicationAPP.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+        //REGISTRAR ATENCIÓN DESDE UNA CITA
+        public IActionResult RegistrarDesdeCita(int id)
+        {
+            if (!TienePermiso("Atencion/Index"))
+                return RedirectToAction("Index", "Dashboard");
+
+            var cita = _context.Citas
+                .FirstOrDefault(c => c.IdCita == id);
+
+            if (cita == null)
+                return RedirectToAction("Index", "Citas");
+
+            bool existe = _context.Atencions
+                .Any(a => a.IdCita == id);
+
+            if (existe)
+                return RedirectToAction("Index");
+
+            var atencion = new Atencion
+            {
+                IdCliente = cita.IdCliente,
+                IdCita = cita.IdCita,
+                Estado = "En espera"
+            };
+
+            _context.Atencions.Add(atencion);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+
     }
 }

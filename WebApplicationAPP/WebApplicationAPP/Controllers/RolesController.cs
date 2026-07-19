@@ -24,7 +24,7 @@ namespace WebApplicationAPP.Controllers
             return PermisosHelper.TienePermiso(_context, rol, permiso);
         }
 
-        // 🔥 LISTA DE ROLES
+        //LISTA DE ROLES
         public IActionResult Index()
         {
             if (!TienePermiso("Roles/Index"))
@@ -34,7 +34,7 @@ namespace WebApplicationAPP.Controllers
             return View(roles);
         }
 
-        // 🔥 CREAR (GET)
+        //CREAR (GET)
         public IActionResult Crear()
         {
             if (!TienePermiso("Roles/Crear"))
@@ -43,7 +43,7 @@ namespace WebApplicationAPP.Controllers
             return View();
         }
 
-        // 🔥 CREAR (POST)
+        //CREAR (POST)
         [HttpPost]
         public IActionResult Crear(string nombre, string descripcion)
         {
@@ -77,7 +77,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // 🔥 ACTIVAR / DESACTIVAR
+        //ACTIVAR / DESACTIVAR
         public IActionResult Toggle(int id)
         {
             if (!TienePermiso("Roles/Index"))
@@ -94,7 +94,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // 🔥 ELIMINAR
+        //ELIMINAR
         public IActionResult Eliminar(int id)
         {
             if (!TienePermiso("Roles/Index"))
@@ -111,7 +111,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // 🔥 PERMISOS (GET)
+        //PERMISOS (GET)
         public IActionResult Permisos(int id)
         {
             if (!TienePermiso("Roles/Permisos"))
@@ -145,7 +145,7 @@ namespace WebApplicationAPP.Controllers
             return View(vm);
         }
 
-        // 🔥 TOGGLE PERMISO
+        //TOGGLE PERMISO
         [HttpPost]
         public IActionResult TogglePermiso(int idRol, int idPrivilegio)
         {

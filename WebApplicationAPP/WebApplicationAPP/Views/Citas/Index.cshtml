@@ -14,6 +14,11 @@
         📖 Historial de Citas
     </a>
 
+    <a class="btn btn-info text-white"
+           href="/Citas/HorariosDisponibles">
+        🕒 Horarios Disponibles
+    </a>
+
 </div>
 
 <table class="table table-bordered table-hover">
@@ -73,6 +78,14 @@
                                 Finalizada
                             </span>
                         }
+
+                        else if (c.Estado == "Bloqueada")
+                        {
+                            <span class="badge bg-dark">
+                                Bloqueada
+                            </span>
+                        }
+
                         else
                         {
                             <span class="badge bg-secondary">
@@ -84,11 +97,26 @@
 
                     <td>
 
+
+
+
+
+
                         @if (c.Estado == "Activa")
                         {
+                            <a class="btn btn-sm btn-success"
+                                   href="/Atencion/RegistrarDesdeCita/@c.IdCita">
+                                🪑 Atender
+                            </a>
+
                             <a class="btn btn-sm btn-warning text-dark"
                                    href="/Citas/Editar/@c.IdCita">
                                 ✏️ Editar
+                            </a>
+
+                            <a class="btn btn-sm btn-secondary"
+                                   href="/Citas/Bloquear/@c.IdCita">
+                                🔒 Bloquear
                             </a>
 
                             <a class="btn btn-sm btn-danger"

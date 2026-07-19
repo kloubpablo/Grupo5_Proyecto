@@ -91,7 +91,7 @@ namespace WebApplicationAPP.Controllers
             return View();
         }
 
-        // CREAR CITA (POST)
+        //CREAR CITA (POST)
         [HttpPost]
         public IActionResult Crear(DateOnly fecha, TimeOnly hora, string barbero)
         {
@@ -111,10 +111,11 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            bool ocupado = _context.Citas.Any(c =>
-                c.Fecha == fecha &&
-                c.Hora == hora &&
-                c.Barbero == barbero);
+           bool ocupado = _context.Citas.Any(c =>
+    c.Fecha == fecha &&
+    c.Hora == hora &&
+    c.Barbero == barbero &&
+    (c.Estado == "Activa" || c.Estado == "Bloqueada"));
 
             if (ocupado)
             {
@@ -165,7 +166,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("MisCitas");
         }
 
-        // 🔥 CANCELAR CITA
+        //CANCELAR CITA
         public IActionResult Cancelar(int id)
         {
             if (!TienePermiso("Citas/Index"))
@@ -199,7 +200,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("Index");
         }
 
-        // 🔥 EDITAR CITA (GET)
+        //EDITAR CITA (GET)
         public IActionResult Editar(int id)
         {
             if (!TienePermiso("Citas/Crear"))
@@ -223,7 +224,7 @@ namespace WebApplicationAPP.Controllers
         }
 
 
-        // 🔥 EDITAR CITA (POST)
+        //EDITAR CITA (POST)
         [HttpPost]
         public IActionResult Editar(Cita cita)
         {
@@ -244,10 +245,11 @@ namespace WebApplicationAPP.Controllers
             }
 
             bool ocupado = _context.Citas.Any(c =>
-                c.IdCita != cita.IdCita &&
-                c.Fecha == cita.Fecha &&
-                c.Hora == cita.Hora &&
-                c.Barbero == cita.Barbero);
+    c.IdCita != cita.IdCita &&
+    c.Fecha == cita.Fecha &&
+    c.Hora == cita.Hora &&
+    c.Barbero == cita.Barbero &&
+    (c.Estado == "Activa" || c.Estado == "Bloqueada"));
 
             if (ocupado)
             {
@@ -274,5 +276,58 @@ namespace WebApplicationAPP.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+
+        //BLOQUEAR HORARIO
+        public IActionResult Bloquear(int id)
+        {
+            if (!TienePermiso("Citas/Crear"))
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            var cita = _context.Citas
+                .FirstOrDefault(c => c.IdCita == id);
+
+            if (cita != null)
+            {
+                cita.Estado = "Bloqueada";
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
+        //VISUALIZAR HORARIOS DISPONIBLES
+        public IActionResult HorariosDisponibles()
+        {
+            if (!TienePermiso("Citas/Crear"))
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult HorariosDisponibles(DateOnly fecha)
+        {
+            if (!TienePermiso("Citas/Crear"))
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            var horarios = _context.Citas
+                .Where(c => c.Fecha == fecha)
+                .OrderBy(c => c.Hora)
+                .ToList();
+
+            ViewBag.Fecha = fecha;
+
+            return View(horarios);
+        }
+
     }
 }

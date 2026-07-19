@@ -23,7 +23,7 @@ namespace WebApplicationAPP.Controllers
             return PermisosHelper.TienePermiso(_context, rol, permiso);
         }
 
-        // 🔥 DASHBOARD DE REPORTES
+        //DASHBOARD DE REPORTES
         public IActionResult Index()
         {
             if (!TienePermiso("Reportes/Index"))
@@ -45,7 +45,7 @@ namespace WebApplicationAPP.Controllers
             return View();
         }
 
-        // 🔥 REPORTE POR FECHA (GET)
+        //REPORTE POR FECHA (GET)
         public IActionResult PorFecha()
         {
             if (!TienePermiso("Reportes/Index"))
@@ -54,7 +54,7 @@ namespace WebApplicationAPP.Controllers
             return View();
         }
 
-        // 🔥 REPORTE POR FECHA (POST)
+        //REPORTE POR FECHA (POST)
         [HttpPost]
         public IActionResult PorFecha(DateOnly fecha)
         {
@@ -82,7 +82,7 @@ namespace WebApplicationAPP.Controllers
         }
 
 
-        // 🔥 CLIENTES FRECUENTES
+        //CLIENTES FRECUENTES
         public IActionResult ClientesFrecuentes()
         {
             if (!TienePermiso("Reportes/Index"))
