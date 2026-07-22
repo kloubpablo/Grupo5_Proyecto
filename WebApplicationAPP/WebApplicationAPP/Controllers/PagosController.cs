@@ -97,13 +97,67 @@ namespace WebApplicationAPP.Controllers
             if (!TienePermiso("Pagos/Index"))
                 return RedirectToAction("Index", "Dashboard");
 
-            decimal total = _context.Pagos
-                .Where(p => p.Fecha == DateOnly.FromDateTime(DateTime.Now))
-                .Sum(p => (decimal?)p.Monto) ?? 0;
 
-            ViewBag.Total = total;
+            var hoy = DateOnly.FromDateTime(DateTime.Now);
+
+
+            var pagosHoy = _context.Pagos
+                .Where(p => p.Fecha == hoy && !p.Cerrado)
+                .ToList();
+
+
+            ViewBag.Fecha = DateTime.Now.ToString("dd/MM/yyyy");
+
+            ViewBag.Total = pagosHoy.Sum(p => p.Monto);
+
+            ViewBag.CantidadPagos = pagosHoy.Count;
+
+
+            ViewBag.MetodoMasUsado = pagosHoy
+                .GroupBy(p => p.Metodo)
+                .OrderByDescending(g => g.Count())
+                .Select(g => g.Key)
+                .FirstOrDefault() ?? "Sin registros";
+
+
+            ViewBag.TotalEfectivo = pagosHoy
+                .Where(p => p.Metodo == "Efectivo")
+                .Sum(p => p.Monto);
+
+
+            ViewBag.TotalTarjeta = pagosHoy
+                .Where(p => p.Metodo == "Tarjeta")
+                .Sum(p => p.Monto);
+
 
             return View();
+        }
+        [HttpPost]
+        public IActionResult AplicarCierre()
+        {
+
+            if (!TienePermiso("Pagos/Index"))
+                return RedirectToAction("Index", "Dashboard");
+
+
+            var hoy = DateOnly.FromDateTime(DateTime.Now);
+
+
+            var pagos = _context.Pagos
+                .Where(p => p.Fecha == hoy && !p.Cerrado)
+                .ToList();
+
+
+            foreach (var pago in pagos)
+            {
+                pago.Cerrado = true;
+            }
+
+
+            _context.SaveChanges();
+
+
+            return RedirectToAction("Cierre");
         }
     }
 }

@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Agregar Imagen";
+}
+<h2 class="mb-4">➕ Agregar Imagen</h2>
+
+<form asp-action="AgregarImagen"
+
+      asp-controller="YampiBarberShop"
+
+      method="post" enctype="multipart/form-data">
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Seleccione una imagen
+                </label>
+
+                <input type="file" name="archivo"
+                       class="form-control"
+                       accept=".jpg" />
+            </div>
+
+            <button type="submit"
+                    class="btn btn-success">
+                💾 Guardar
+            </button>
+
+            <a href="/YampiBarberShop/ControlGaleria"
+               class="btn btn-secondary">
+                ↩️ Volver
+            </a>
+
+        </div>
+
+    </div>
+
+</form>

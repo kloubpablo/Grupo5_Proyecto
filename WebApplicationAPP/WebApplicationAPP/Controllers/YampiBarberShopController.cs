@@ -53,5 +53,78 @@ namespace WebApplicationAPP.Controllers
         {
             return View();
         }
+        public IActionResult ControlGaleria()
+        {
+            string ruta = Path.Combine(
+                _env.WebRootPath,
+                "imagenes",
+                "galeria");
+
+            var imagenes = Directory
+                .GetFiles(ruta)
+                .Select(Path.GetFileName)
+                .ToList();
+
+            return View(imagenes);
+        }
+
+        [HttpGet]
+        public IActionResult AgregarImagen()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AgregarImagen(IFormFile archivo)
+        {
+            if (archivo != null)
+            {
+                string carpeta = Path.Combine(
+                    _env.WebRootPath,
+                    "imagenes",
+                    "galeria");
+
+                var numeros = Directory.GetFiles(carpeta)
+                    .Select(x => Path.GetFileNameWithoutExtension(x))
+                    .Where(x => int.TryParse(x, out _))
+                    .Select(int.Parse)
+                    .ToList();
+
+                int siguienteNumero = numeros.Any()
+                    ? numeros.Max() + 1
+                    : 1;
+
+                string extension = Path.GetExtension(archivo.FileName);
+
+                string nombreArchivo = $"{siguienteNumero}{extension}";
+
+                string rutaCompleta = Path.Combine(
+                    carpeta,
+                    nombreArchivo);
+
+                using (var stream = new FileStream(rutaCompleta, FileMode.Create))
+                {
+                    await archivo.CopyToAsync(stream);
+                }
+            }
+
+            return RedirectToAction(nameof(ControlGaleria));
+        }
+
+        public IActionResult EliminarImagen(string nombre)
+        {
+            string ruta = Path.Combine(
+                _env.WebRootPath,
+                "imagenes",
+                "galeria",
+                nombre);
+
+            if (System.IO.File.Exists(ruta))
+            {
+                System.IO.File.Delete(ruta);
+            }
+
+            return RedirectToAction(nameof(ControlGaleria));
+        }
     }
 }

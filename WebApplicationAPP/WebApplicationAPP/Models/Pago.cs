@@ -15,5 +15,6 @@ public partial class Pago
 
     public DateOnly Fecha { get; set; }
 
+    public bool Cerrado { get; set; }
     public virtual Cliente IdClienteNavigation { get; set; } = null!;
 }

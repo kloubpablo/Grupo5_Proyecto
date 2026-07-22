@@ -1,0 +1,65 @@
+﻿@using System.Linq
+@model List<string>
+@{
+    ViewData["Title"] = "Control de Galería";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">🖼️ Control de Galería</h2>
+
+<div class="mb-3 d-flex gap-2">
+    <a class="btn btn-success"
+       href="/YampiBarberShop/AgregarImagen">
+        ➕ Agregar Imagen
+    </a>
+</div>
+
+</div>
+<table class="table table-bordered table-hover">
+
+    <thead class="table-dark">
+        +
+        <tr>
+            <th>Vista Previa</th>
+            <th>Nombre Archivo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model == null || !Model.Any())
+        {
+            <tr>
+                <td colspan="3" class="text-center">
+                    No hay imágenes
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var imagen in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="~/imagenes/galeria/@imagen"
+                             class="img-thumbnail"
+                             style="height:120px;" />
+                    </td>
+
+                    <td>@imagen</td>
+
+                    <td>
+                        <a class="btn btn-danger btn-sm"
+                           href="/YampiBarberShop/EliminarImagen?nombre=@imagen">
+                            🗑️ Eliminar
+                        </a>
+                    </td>
+                </tr>
+
+            }
+
+        }
+
+    </tbody>
+
+</table>

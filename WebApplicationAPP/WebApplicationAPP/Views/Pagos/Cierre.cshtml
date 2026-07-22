@@ -6,9 +6,11 @@
     📊 Cierre de Caja
 </h2>
 
+
 <div class="card shadow p-4">
 
     <div class="row text-center">
+
 
         <div class="col-md-3 mb-3">
 
@@ -22,6 +24,8 @@
 
         </div>
 
+
+
         <div class="col-md-3 mb-3">
 
             <h6 class="text-muted">
@@ -33,6 +37,8 @@
             </h3>
 
         </div>
+
+
 
         <div class="col-md-3 mb-3">
 
@@ -46,11 +52,14 @@
 
         </div>
 
+
+
         <div class="col-md-3 mb-3">
 
             <h6 class="text-muted">
                 💳 Método más utilizado
             </h6>
+
 
             @if (ViewBag.MetodoMasUsado == "Efectivo")
             {
@@ -73,23 +82,93 @@
 
         </div>
 
+
     </div>
+
 
     <hr />
 
+
+    <h4 class="text-center mb-3">
+        💵 Detalle por método de pago
+    </h4>
+
+
+    <div class="row text-center">
+
+
+        <div class="col-md-4 mb-3">
+
+            <div class="card border-success">
+
+                <div class="card-body">
+
+                    <h6 class="text-success">
+                        💵 Efectivo
+                    </h6>
+
+                    <h4>
+                        ₡@ViewBag.TotalEfectivo
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4 mb-3">
+
+            <div class="card border-primary">
+
+                <div class="card-body">
+
+                    <h6 class="text-primary">
+                        💳 Tarjeta
+                    </h6>
+
+                    <h4>
+                        ₡@ViewBag.TotalTarjeta
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <hr />
+
+
     <p class="text-muted text-center mb-0">
+
         Este cierre resume la actividad registrada durante el día actual.
+
     </p>
+
 
 </div>
 
+
+
 <div class="mt-4">
 
-    <a href="/Pagos"
-           class="btn btn-secondary">
+    <a asp-controller="Pagos"
+       asp-action="Index"
+       class="btn btn-secondary">
 
         ← Volver a Pagos
 
     </a>
+    <form asp-action="AplicarCierre"
+          method="post">
+
+        <button class="btn btn-danger">
+            🔒 Aplicar cierre de caja
+        </button>
+
+    </form>
 
 </div>
