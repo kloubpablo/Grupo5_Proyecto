@@ -10,7 +10,7 @@ public partial class YampiBarbershopContext : DbContext
     {
     }
 
-    public YampiBarbershopContext(DbContextOptions<YampiBarbershopContext> options)
+    public YampiBarbershopContext(DbContextOptions<YampiBarbershopContext> options) 
         : base(options)
     {
     }
@@ -49,11 +49,64 @@ public partial class YampiBarbershopContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+        modelBuilder.Entity<Usuario>(entity =>
+        {
+            entity.ToTable("usuarios");
+        });
+
+        modelBuilder.Entity<Cliente>(entity =>
+        {
+            entity.ToTable("clientes");
+        });
+
+        modelBuilder.Entity<Cita>(entity =>
+        {
+            entity.ToTable("citas");
+        });
+
+        modelBuilder.Entity<Pago>(entity =>
+        {
+            entity.ToTable("pagos");
+        });
+
+        modelBuilder.Entity<BitacoraCliente>(entity =>
+        {
+            entity.ToTable("bitacoraclientes");
+        });
+
+        modelBuilder.Entity<BitacoraPago>(entity =>
+        {
+            entity.ToTable("bitacorapagos");
+        });
+
+        modelBuilder.Entity<Privilegio>(entity =>
+        {
+            entity.ToTable("privilegios");
+        });
+
+        modelBuilder.Entity<Reporte>(entity =>
+        {
+            entity.ToTable("reportes");
+        });
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.ToTable("rolesprivilegios");
+        });
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.ToTable("roles");
+        });
+
+
+
+
+
         modelBuilder.Entity<Atencion>(entity =>
         {
             entity.HasKey(e => e.IdAtencion).HasName("PK__Atencion__D0A40236964961F9");
 
-            entity.ToTable("Atencion");
+            entity.ToTable("atencion");
 
             entity.Property(e => e.IdAtencion).HasColumnName("id_atencion");
             entity.Property(e => e.Estado)
@@ -220,7 +273,7 @@ public partial class YampiBarbershopContext : DbContext
             entity.HasKey(e => e.IdRol)
                 .HasName("PK__Roles__6ABCB5E0200EB176");
 
-            entity.ToTable("Roles");
+            entity.ToTable("roles");
 
             entity.Property(e => e.IdRol)
                 .HasColumnName("id_rol");
@@ -260,7 +313,7 @@ public partial class YampiBarbershopContext : DbContext
                         j.HasKey("IdRol", "IdPrivilegio")
                          .HasName("PK__RolesPri__BD72B641FCABBDE1");
 
-                        j.ToTable("RolesPrivilegios");
+                        j.ToTable("rolesprivilegios");
 
                         j.IndexerProperty<int>("IdRol")
                          .HasColumnName("id_rol");
@@ -274,29 +327,37 @@ public partial class YampiBarbershopContext : DbContext
         {
             entity.HasKey(e => e.IdUsuario).HasName("PK__Usuarios__4E3E04AD8BBE2F68");
 
+            entity.ToTable("usuarios");
+
             entity.HasIndex(e => e.Username, "UQ__Usuarios__F3DBC572E9920D8E").IsUnique();
 
             entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
+
             entity.Property(e => e.CorreoElectronico)
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasDefaultValue("")
                 .HasColumnName("correoElectronico");
+
             entity.Property(e => e.IdRol).HasColumnName("id_rol");
+
             entity.Property(e => e.Nombre)
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("nombre");
+
             entity.Property(e => e.PasswordHash)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("password_hash");
+
             entity.Property(e => e.Username)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("username");
 
-            entity.HasOne(d => d.IdRolNavigation).WithMany(p => p.Usuarios)
+            entity.HasOne(d => d.IdRolNavigation)
+                .WithMany(p => p.Usuarios)
                 .HasForeignKey(d => d.IdRol)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Usuarios_Roles");

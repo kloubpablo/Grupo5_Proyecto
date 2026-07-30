@@ -3,10 +3,6 @@ using WebApplicationAPP.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// SQL SERVER
-builder.Services.AddDbContext<YampiBarbershopContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("SqlConnection")));
 
 // MVC
 builder.Services.AddControllersWithViews()
@@ -21,6 +17,10 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddDbContext<YampiBarbershopContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("MySqlConnection"),
+        new MariaDbServerVersion(new Version(11, 4, 12))));
 
 var app = builder.Build();
 
