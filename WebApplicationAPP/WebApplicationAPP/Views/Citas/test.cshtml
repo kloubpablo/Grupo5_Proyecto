@@ -1,0 +1,1110 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Yampi Barber Shop</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+
+</head>
+
+<body>
+
+    <!-- Fondo decorativo -->
+
+    <div class="background">
+
+        <div class="blob blob1"></div>
+
+        <div class="blob blob2"></div>
+
+        <div class="blob blob3"></div>
+
+    </div>
+
+
+    <!-- Aplicación -->
+
+    <div class="app">
+
+        <aside class="sidebar">
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    <i class="bi bi-scissors"></i>
+                </div>
+
+                <div>
+
+                    <h2>Yampi</h2>
+
+                    <span>Barber Shop</span>
+
+                </div>
+
+            </div>
+
+            <span class="menu-title">
+                MENÚ
+            </span>
+
+            <nav>
+
+                <a class="active">
+
+                    <i class="bi bi-grid-fill"></i>
+
+                    Dashboard
+
+                </a>
+
+                <a>
+
+                    <i class="bi bi-calendar2-week-fill"></i>
+
+                    Agendar cita
+
+                </a>
+
+                <a>
+
+                    <i class="bi bi-clock-history"></i>
+
+                    Mis citas
+
+                </a>
+
+                <a>
+
+                    <i class="bi bi-person-badge-fill"></i>
+
+                    Barberos
+
+                </a>
+
+                <a>
+
+                    <i class="bi bi-stars"></i>
+
+                    Servicios
+
+                </a>
+
+                <a>
+
+                    <i class="bi bi-person-circle"></i>
+
+                    Mi perfil
+
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+        <main>
+
+            <header>
+
+                <div class="search">
+
+                    <i class="bi bi-search"></i>
+
+                    <input placeholder="Buscar...">
+
+                </div>
+
+                <div class="top-right">
+
+                    <button class="circle">
+
+                        <i class="bi bi-bell-fill"></i>
+
+                    </button>
+
+                    <button class="circle">
+
+                        <i class="bi bi-chat-dots-fill"></i>
+
+                    </button>
+
+                    <div class="user">
+
+                        <img src="https://i.pravatar.cc/150?img=12">
+
+                        <div>
+
+                            <strong>Dylan</strong>
+
+                            <small>Cliente</small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <section class="dashboard">
+
+                <div class="hero">
+
+                    <div class="hero-info">
+
+                        <span class="gold">BARBERÍA PREMIUM</span>
+
+                        <h1>
+                            Agenda tu próximo estilo
+                        </h1>
+
+                        <p>
+
+                            Reserva una cita con nuestros mejores barberos en cuestión
+                            de segundos.
+
+                        </p>
+
+                        <button class="hero-btn">
+
+                            Agendar ahora
+
+                        </button>
+
+                    </div>
+
+                    <div class="hero-card">
+
+                        <div class="appointment-header">
+
+                            Próxima cita
+
+                        </div>
+
+                        <div class="appointment-date">
+
+                            24 Julio
+
+                        </div>
+
+                        <div class="appointment-hour">
+
+                            2:00 PM
+
+                        </div>
+
+                        <div class="appointment-barber">
+
+                            Carlos Rodríguez
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stats">
+
+                    <div class="stat-card">
+
+                        <div>
+
+                            <small>Total citas</small>
+
+                            <h2>24</h2>
+
+                        </div>
+
+                        <i class="bi bi-calendar-check-fill"></i>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <div>
+
+                            <small>Servicios</small>
+
+                            <h2>12</h2>
+
+                        </div>
+
+                        <i class="bi bi-stars"></i>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <div>
+
+                            <small>Barberos</small>
+
+                            <h2>8</h2>
+
+                        </div>
+
+                        <i class="bi bi-person-badge-fill"></i>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <div>
+
+                            <small>Puntos</small>
+
+                            <h2>240</h2>
+
+                        </div>
+
+                        <i class="bi bi-gem"></i>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="cards-row">
+
+
+                    <!-- PARTE SUPERIOR -->
+                    <div class="top-layout">
+
+
+                        <!-- BARBEROS DESTACADOS -->
+                        <section class="experts-section">
+
+
+                            <div class="experts-header">
+
+                                <div>
+                                    <h2>Barberos destacados</h2>
+                                    <p>Elige al profesional que mejor se adapte a tu estilo.</p>
+                                </div>
+
+
+                                <button class="view-all">
+                                    Ver todos
+                                </button>
+
+                            </div>
+
+
+
+                            <div class="experts-grid">
+
+
+
+                                <div class="expert-card">
+
+                                    <div class="expert-cover"></div>
+
+                                    <img src="https://i.pravatar.cc/180?img=15" class="expert-photo">
+
+                                    <div class="expert-body">
+
+                                        <h3>Carlos Rodríguez</h3>
+
+                                        <span>Fade Specialist</span>
+
+
+                                        <div class="rating">
+                                            ★★★★★
+                                            <small>4.9 (328)</small>
+                                        </div>
+
+
+                                        <div class="expert-footer">
+
+                                            <span>8 años</span>
+
+                                            <button>
+                                                Reservar
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+
+
+                                <div class="expert-card">
+
+                                    <div class="expert-cover"></div>
+
+                                    <img src="https://i.pravatar.cc/180?img=18" class="expert-photo">
+
+                                    <div class="expert-body">
+
+                                        <h3>Andrés Mora</h3>
+
+                                        <span>Classic Barber</span>
+
+
+                                        <div class="rating">
+                                            ★★★★★
+                                            <small>4.8 (281)</small>
+                                        </div>
+
+
+                                        <div class="expert-footer">
+
+                                            <span>6 años</span>
+
+                                            <button>
+                                                Reservar
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+
+
+
+                                <div class="expert-card">
+
+                                    <div class="expert-cover"></div>
+
+                                    <img src="https://i.pravatar.cc/180?img=12" class="expert-photo">
+
+                                    <div class="expert-body">
+
+                                        <h3>José Pérez</h3>
+
+                                        <span>Premium Cuts</span>
+
+
+                                        <div class="rating">
+                                            ★★★★★
+                                            <small>5.0 (412)</small>
+                                        </div>
+
+
+                                        <div class="expert-footer">
+
+                                            <span>10 años</span>
+
+                                            <button>
+                                                Reservar
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+
+
+
+                                <!-- PROMOCIÓN COMO TARJETA -->
+
+                                <div class="promo-card">
+
+                                    <div class="promo-icon">
+                                        <i class="bi bi-percent"></i>
+                                    </div>
+
+
+                                    <h3>
+                                        20% de descuento
+                                    </h3>
+
+
+                                    <p>
+                                        En Corte + Barba durante esta semana.
+                                    </p>
+
+
+                                    <button>
+                                        Ver promoción
+                                    </button>
+
+
+                                </div>
+
+
+
+                            </div>
+
+
+                        </section>
+
+
+                    </div>
+
+
+
+
+
+                    <!-- PARTE DE RESERVA -->
+                    <div class="booking-section">
+
+
+                        <!-- IZQUIERDA -->
+                        <section class="booking-left">
+
+
+                            <!-- HEADER -->
+                            <div class="booking-header">
+
+                                <h2>
+                                    Agendar una cita
+                                </h2>
+
+                                <p>
+                                    Completa los pasos para reservar tu próxima visita.
+                                </p>
+
+                            </div>
+
+
+
+
+
+                            <!-- PASO 1 SERVICIO -->
+                            <div class="booking-step">
+
+
+                                <div class="step-header">
+
+                                    <div class="step-number">
+                                        1
+                                    </div>
+
+                                    <div>
+
+                                        <h3>
+                                            Selecciona un servicio
+                                        </h3>
+
+                                        <p>
+                                            Escoge el servicio que deseas realizar.
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+
+
+
+
+                                <div class="services-grid">
+
+
+                                    <div class="service-card active-service">
+
+                                        <i class="bi bi-scissors"></i>
+
+                                        <h4>
+                                            Corte
+                                        </h4>
+
+                                        <span>
+                                            ₡6 000
+                                        </span>
+
+                                    </div>
+
+
+
+                                    <div class="service-card">
+
+                                        <i class="bi bi-person"></i>
+
+                                        <h4>
+                                            Barba
+                                        </h4>
+
+                                        <span>
+                                            ₡4 000
+                                        </span>
+
+                                    </div>
+
+
+
+                                    <div class="service-card">
+
+                                        <i class="bi bi-stars"></i>
+
+                                        <h4>
+                                            Premium
+                                        </h4>
+
+                                        <span>
+                                            ₡10 000
+                                        </span>
+
+                                    </div>
+
+
+
+                                    <div class="service-card">
+
+                                        <i class="bi bi-droplet-half"></i>
+
+                                        <h4>
+                                            Lavado
+                                        </h4>
+
+                                        <span>
+                                            ₡2 500
+                                        </span>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+
+
+
+
+                            <!-- PASO 2 BARBERO -->
+                            <div class="booking-step">
+
+
+                                <div class="step-header">
+
+                                    <div class="step-number">
+                                        2
+                                    </div>
+
+
+                                    <div>
+
+                                        <h3>
+                                            Selecciona tu barbero
+                                        </h3>
+
+                                        <p>
+                                            Elige el profesional que realizará tu servicio.
+                                        </p>
+
+                                    </div>
+
+
+                                </div>
+
+
+
+
+
+
+                                <div class="barbers">
+
+
+                                    <div class="barber-card selected">
+
+                                        <img src="https://i.pravatar.cc/150?img=15">
+
+                                        <h4>
+                                            Carlos
+                                        </h4>
+
+                                        <span>
+                                            Fade Specialist
+                                        </span>
+
+                                    </div>
+
+
+
+
+                                    <div class="barber-card">
+
+                                        <img src="https://i.pravatar.cc/150?img=13">
+
+                                        <h4>
+                                            Andrés
+                                        </h4>
+
+                                        <span>
+                                            Classic Cuts
+                                        </span>
+
+                                    </div>
+
+
+
+
+                                    <div class="barber-card">
+
+                                        <img src="https://i.pravatar.cc/150?img=18">
+
+                                        <h4>
+                                            José
+                                        </h4>
+
+                                        <span>
+                                            Premium Barber
+                                        </span>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+
+
+
+
+                            <!-- PASO 3 FECHA Y HORA -->
+                            <div class="booking-step">
+
+
+                                <div class="step-header">
+
+                                    <div class="step-number">
+                                        3
+                                    </div>
+
+
+                                    <div>
+
+                                        <h3>
+                                            Selecciona fecha y hora
+                                        </h3>
+
+                                        <p>
+                                            Escoge un horario disponible.
+                                        </p>
+
+                                    </div>
+
+
+                                </div>
+
+
+
+
+
+
+                                <div class="calendar-booking">
+
+
+
+
+
+                                    <!-- CALENDARIO -->
+
+                                    <div class="calendar-card">
+
+
+                                        <div class="calendar-header">
+
+
+                                            <button>
+                                                <i class="bi bi-chevron-left"></i>
+                                            </button>
+
+
+                                            <h4>
+                                                Julio 2026
+                                            </h4>
+
+
+                                            <button>
+                                                <i class="bi bi-chevron-right"></i>
+                                            </button>
+
+
+                                        </div>
+
+
+
+
+
+                                        <div class="weekdays">
+
+                                            <span>L</span>
+                                            <span>M</span>
+                                            <span>X</span>
+                                            <span>J</span>
+                                            <span>V</span>
+                                            <span>S</span>
+                                            <span>D</span>
+
+                                        </div>
+
+
+
+
+
+
+                                        <div class="days">
+
+
+                                            <div class="day disabled">29</div>
+                                            <div class="day disabled">30</div>
+
+
+                                            <div class="day">1</div>
+                                            <div class="day">2</div>
+                                            <div class="day">3</div>
+                                            <div class="day">4</div>
+                                            <div class="day">5</div>
+
+
+
+                                            <div class="day">6</div>
+                                            <div class="day">7</div>
+                                            <div class="day">8</div>
+                                            <div class="day">9</div>
+                                            <div class="day">10</div>
+                                            <div class="day">11</div>
+                                            <div class="day">12</div>
+
+
+
+                                            <div class="day">13</div>
+                                            <div class="day">14</div>
+                                            <div class="day selected-day">15</div>
+                                            <div class="day">16</div>
+                                            <div class="day">17</div>
+                                            <div class="day">18</div>
+                                            <div class="day">19</div>
+
+
+
+                                            <div class="day">20</div>
+                                            <div class="day">21</div>
+                                            <div class="day">22</div>
+                                            <div class="day">23</div>
+                                            <div class="day">24</div>
+                                            <div class="day">25</div>
+                                            <div class="day">26</div>
+
+
+
+                                            <div class="day">27</div>
+                                            <div class="day">28</div>
+                                            <div class="day">29</div>
+                                            <div class="day">30</div>
+                                            <div class="day">31</div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+
+
+
+
+
+                                    <!-- HORARIOS -->
+
+                                    <div class="hours-card">
+
+
+                                        <h4>
+                                            Horarios disponibles
+                                        </h4>
+
+
+
+
+                                        <div class="hours-grid">
+
+
+                                            <button class="hour occupied">
+                                                08:00
+                                            </button>
+
+
+                                            <button class="hour">
+                                                08:30
+                                            </button>
+
+
+                                            <button class="hour">
+                                                09:00
+                                            </button>
+
+
+                                            <button class="hour selected-hour">
+                                                09:30
+                                            </button>
+
+
+                                            <button class="hour">
+                                                10:00
+                                            </button>
+
+
+                                            <button class="hour">
+                                                10:30
+                                            </button>
+
+
+                                            <button class="hour occupied">
+                                                11:00
+                                            </button>
+
+
+                                            <button class="hour">
+                                                11:30
+                                            </button>
+
+
+                                            <button class="hour">
+                                                12:00
+                                            </button>
+
+
+                                            <button class="hour">
+                                                12:30
+                                            </button>
+
+
+                                            <button class="hour">
+                                                13:00
+                                            </button>
+
+
+                                            <button class="hour">
+                                                13:30
+                                            </button>
+
+
+                                            <button class="hour">
+                                                14:00
+                                            </button>
+
+
+                                            <button class="hour">
+                                                14:30
+                                            </button>
+
+
+                                            <button class="hour">
+                                                15:00
+                                            </button>
+
+
+                                            <button class="hour">
+                                                15:30
+                                            </button>
+
+
+                                            <button class="hour">
+                                                16:00
+                                            </button>
+
+
+                                            <button class="hour">
+                                                16:30
+                                            </button>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                </div>
+
+
+                            </div>
+
+
+
+                        </section>
+
+
+
+
+
+
+
+
+
+                        <!-- DERECHA -->
+
+                        <section class="booking-right">
+
+
+                            <div class="summary-card">
+
+
+                                <h3>
+                                    Resumen
+                                </h3>
+
+
+
+                                <div class="summary-item">
+
+                                    <span>
+                                        Servicio
+                                    </span>
+
+                                    <strong>
+                                        Corte
+                                    </strong>
+
+                                </div>
+
+
+
+                                <div class="summary-item">
+
+                                    <span>
+                                        Barbero
+                                    </span>
+
+                                    <strong>
+                                        Carlos
+                                    </strong>
+
+                                </div>
+
+
+
+
+                                <div class="summary-item">
+
+                                    <span>
+                                        Fecha
+                                    </span>
+
+                                    <strong>
+                                        15 Julio 2026
+                                    </strong>
+
+                                </div>
+
+
+
+
+                                <div class="summary-item">
+
+                                    <span>
+                                        Hora
+                                    </span>
+
+                                    <strong>
+                                        09:30
+                                    </strong>
+
+                                </div>
+
+
+
+
+                                <div class="summary-item">
+
+                                    <span>
+                                        Duración
+                                    </span>
+
+                                    <strong>
+                                        45 min
+                                    </strong>
+
+                                </div>
+
+
+
+
+                                <div class="summary-total">
+
+                                    <span>
+                                        Total
+                                    </span>
+
+
+                                    <strong>
+                                        ₡6 000
+                                    </strong>
+
+
+                                </div>
+
+
+
+
+
+                                <button class="continue-btn">
+
+                                    Continuar →
+
+                                </button>
+
+
+
+                            </div>
+
+
+
+                        </section>
+
+
+
+                    </div>
+
+                </main>
+
+            </div>
+
+        </body>
+
+    </html>
