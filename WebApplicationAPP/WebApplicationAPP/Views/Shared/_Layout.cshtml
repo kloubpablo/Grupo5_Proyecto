@@ -150,7 +150,11 @@
             if (esAdmin || WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(Db, rol, "Usuarios/Index"))
             {
                 <li><a asp-controller="Usuarios" asp-action="Index">👤 Usuarios</a></li>
-            }
+                 }
+            if (esAdmin || WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(Db, rol, "Usuarios/Index"))
+                 {
+                        <li><a asp-controller="YampiBarberShop" asp-action="ControlGaleria">Control Galería</a></li>
+                 }
 
             @if (rol == "Cliente")
             {
