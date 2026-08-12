@@ -78,7 +78,7 @@ namespace WebApplicationAPP.Controllers
                 Username = username,
                 PasswordHash = password,
                 CorreoElectronico = correo,
-                IdRol = 4, 
+                IdRol = 7, 
                 ContraTemp = false
             };
 
