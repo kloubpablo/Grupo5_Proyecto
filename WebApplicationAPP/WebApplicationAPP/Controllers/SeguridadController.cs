@@ -33,20 +33,28 @@ namespace WebApplicationAPP.Controllers
 
         [HttpPost]
         public IActionResult Registrar(
-     string nombre,
-     string username,
-     string correo,
-     string password)
+         string nombre,
+         string username,
+         string correo,
+         string password,
+         string confirmPassword)
         {
             if (string.IsNullOrEmpty(nombre) ||
-       string.IsNullOrEmpty(username) ||
-       string.IsNullOrEmpty(correo) ||
-       string.IsNullOrEmpty(password))
+               string.IsNullOrEmpty(username) ||
+               string.IsNullOrEmpty(correo) ||
+               string.IsNullOrEmpty(password) || 
+               string.IsNullOrEmpty(confirmPassword))
+
             {
                 ViewBag.Error =
                     "Debe completar todos los campos";
 
                 return View();
+            }
+            if (password != confirmPassword) 
+            { 
+                ViewBag.Error = "Las contraseñas no coinciden"; 
+                return View(); 
             }
 
             bool existeUsuario = _context.Usuarios
