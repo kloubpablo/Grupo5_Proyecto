@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Contracts;
 
 namespace WebApplicationAPP.Models;
 
@@ -46,6 +47,11 @@ public partial class YampiBarbershopContext : DbContext
     public virtual DbSet<VwRolesPrivilegio> VwRolesPrivilegios { get; set; }
 
     public virtual DbSet<VwUsuariosRole> VwUsuariosRoles { get; set; }
+
+    public virtual DbSet<Contacto> Contactos { get; set; }
+
+    public virtual DbSet<Servicio> Servicios { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -98,7 +104,15 @@ public partial class YampiBarbershopContext : DbContext
             entity.ToTable("roles");
         });
 
+        modelBuilder.Entity<Contacto>(entity =>
+        {
+            entity.ToTable("contactenos");
+        });
 
+        modelBuilder.Entity<Servicio>(entity =>
+        {
+            entity.ToTable("servicios");
+        });
 
 
 
