@@ -210,7 +210,7 @@ namespace WebApplicationAPP.Controllers
 
             mensaje.From.Add(new MailboxAddress(
                 "Yampi Barbershop",
-                "poveda1390@gmail.com"));
+                "yampibarbershop5@gmail.com"));
 
             mensaje.To.Add(MailboxAddress.Parse(correo));
 
@@ -224,7 +224,7 @@ namespace WebApplicationAPP.Controllers
             using (var client = new SmtpClient())
             {
                 client.Connect("smtp.gmail.com", 587, false);
-                client.Authenticate("poveda1390@gmail.com", "vubf zvno qeay ualq");
+                client.Authenticate("yampibarbershop5@gmail.com", "qvss ekyr bfew ockx");
                 client.Send(mensaje);
                 client.Disconnect(true);
             }
