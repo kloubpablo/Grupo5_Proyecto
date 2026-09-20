@@ -314,6 +314,7 @@ namespace WebApplicationAPP.Controllers
             usuario.PasswordHash = password;
             usuario.IdRol = idRol;
             usuario.ContraTemp = false;
+            usuario.Estado = true;
 
             _context.Usuarios.Add(usuario);
             _context.SaveChanges();

@@ -1,4 +1,8 @@
-﻿<h2>💳 Registrar Pago</h2>
+﻿@{
+    ViewData["Title"] = "Registrar Pago";
+}
+
+<h2>💳 Registrar Pago</h2>
 
 <div class="card p-4">
 
@@ -11,33 +15,88 @@
 
     <form method="post">
 
+        <input type="hidden"
+               name="idAtencion"
+               value="@ViewBag.IdAtencion" />
+
         <div class="mb-3">
             <label class="form-label">Cliente</label>
-            <input class="form-control" type="text" name="cliente" placeholder="Nombre del cliente" />
+
+            @if (ViewBag.ClienteAtencion != null)
+            {
+                <input class="form-control"
+                       type="text"
+                       value="@ViewBag.ClienteAtencion"
+                       readonly />
+
+                <input type="hidden"
+                       name="cliente"
+                       value="@ViewBag.ClienteAtencion" />
+            }
+            else
+            {
+                <input class="form-control"
+                       type="text"
+                       name="cliente"
+                       placeholder="Nombre del cliente" />
+            }
+
         </div>
 
         <div class="mb-3">
             <label class="form-label">Monto</label>
-            <input class="form-control" type="number" name="monto" placeholder="Ingrese el monto" />
+
+            <input class="form-control"
+                   type="number"
+                   name="monto"
+                   placeholder="Ingrese el monto"
+                   min="0.01"
+                   step="0.01"
+                   required />
         </div>
 
         <div class="mb-3">
             <label class="form-label">Método de pago</label>
-            <select class="form-select" name="metodo">
+
+            <select class="form-select"
+                    name="metodo"
+                    required>
+
                 <option value="">Seleccione</option>
                 <option>Efectivo</option>
                 <option>Tarjeta</option>
+
             </select>
         </div>
 
         <div class="d-flex justify-content-between mt-4">
-            <button class="btn btn-primary" type="submit">
+
+            <button class="btn btn-primary"
+                    type="submit">
+
                 💾 Registrar Pago
+
             </button>
 
-            <a class="btn btn-secondary" href="/Pagos">
-                Cancelar
-            </a>
+            @if (ViewBag.IdAtencion != null)
+            {
+                <a class="btn btn-secondary"
+                   href="/Atencion">
+
+                    Cancelar
+
+                </a>
+            }
+            else
+            {
+                <a class="btn btn-secondary"
+                   href="/Pagos">
+
+                    Cancelar
+
+                </a>
+            }
+
         </div>
 
     </form>

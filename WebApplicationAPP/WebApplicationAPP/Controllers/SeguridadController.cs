@@ -24,11 +24,11 @@ namespace WebApplicationAPP.Controllers
         {
             return View();
         }
+
         // REGISTRO CLIENTE
         public IActionResult Registrar()
         {
             return View();
-          
         }
 
         [HttpPost]
@@ -42,19 +42,19 @@ namespace WebApplicationAPP.Controllers
             if (string.IsNullOrEmpty(nombre) ||
                string.IsNullOrEmpty(username) ||
                string.IsNullOrEmpty(correo) ||
-               string.IsNullOrEmpty(password) || 
+               string.IsNullOrEmpty(password) ||
                string.IsNullOrEmpty(confirmPassword))
-
             {
                 ViewBag.Error =
                     "Debe completar todos los campos";
 
                 return View();
             }
-            if (password != confirmPassword) 
-            { 
-                ViewBag.Error = "Las contraseñas no coinciden"; 
-                return View(); 
+
+            if (password != confirmPassword)
+            {
+                ViewBag.Error = "Las contraseñas no coinciden";
+                return View();
             }
 
             bool existeUsuario = _context.Usuarios
@@ -79,20 +79,21 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            //CREAR USUARIO
+            // CREAR USUARIO
             var usuario = new Usuario
             {
                 Nombre = nombre,
                 Username = username,
                 PasswordHash = password,
                 CorreoElectronico = correo,
-                IdRol = 7, 
-                ContraTemp = false
+                IdRol = 7,
+                ContraTemp = false,
+                Estado = true
             };
 
             _context.Usuarios.Add(usuario);
 
-            //CREAR CLIENTE
+            // CREAR CLIENTE
             var cliente = new Cliente
             {
                 Nombre = nombre,
@@ -116,7 +117,7 @@ namespace WebApplicationAPP.Controllers
             return View();
         }
 
-        //LOGIN
+        // LOGIN
         [HttpPost]
         public IActionResult Index(string usuario, string password)
         {
@@ -130,7 +131,8 @@ namespace WebApplicationAPP.Controllers
                 .Include(u => u.IdRolNavigation)
                 .FirstOrDefault(u =>
                     u.Username == usuario &&
-                    u.PasswordHash == password);
+                    u.PasswordHash == password &&
+                    u.Estado == true);
 
             if (user == null)
             {
@@ -138,12 +140,10 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            //SESIÓN BÁSICA
+            // SESIÓN BÁSICA
             HttpContext.Session.SetInt32("IdUsuario", user.IdUsuario);
             HttpContext.Session.SetString("Rol", user.IdRolNavigation.Nombre);
             HttpContext.Session.SetString("NombreUsuario", user.Nombre);
-
-            
 
             if (user.ContraTemp)
                 return RedirectToAction("CambiarContrasena");
@@ -151,17 +151,18 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
-        //LOGOUT
+        // LOGOUT
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Index");
-            HttpContext.Session.Remove("Rol");
         }
 
-        //CAMBIO CONTRASEÑA
+        // CAMBIO CONTRASEÑA
         [HttpPost]
-        public IActionResult CambiarContrasena(string nuevaContrasena, string confirmarContrasena)
+        public IActionResult CambiarContrasena(
+            string nuevaContrasena,
+            string confirmarContrasena)
         {
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
 
@@ -174,7 +175,8 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            var usuario = _context.Usuarios.FirstOrDefault(u => u.IdUsuario == idUsuario);
+            var usuario = _context.Usuarios
+                .FirstOrDefault(u => u.IdUsuario == idUsuario);
 
             if (usuario == null)
                 return RedirectToAction("Index");
@@ -187,11 +189,12 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
-        //RECUPERAR
+        // RECUPERAR
         [HttpPost]
         public IActionResult Recuperar(string correo)
         {
-            var usuario = _context.Usuarios.FirstOrDefault(u => u.CorreoElectronico == correo);
+            var usuario = _context.Usuarios
+                .FirstOrDefault(u => u.CorreoElectronico == correo);
 
             if (usuario == null)
             {
@@ -199,7 +202,9 @@ namespace WebApplicationAPP.Controllers
                 return View();
             }
 
-            string temporal = Guid.NewGuid().ToString().Substring(0, 8);
+            string temporal = Guid.NewGuid()
+                .ToString()
+                .Substring(0, 8);
 
             usuario.PasswordHash = temporal;
             usuario.ContraTemp = true;
@@ -224,12 +229,19 @@ namespace WebApplicationAPP.Controllers
             using (var client = new SmtpClient())
             {
                 client.Connect("smtp.gmail.com", 587, false);
-                client.Authenticate("yampibarbershop5@gmail.com", "qvss ekyr bfew ockx");
+
+                // Coloque aquí la NUEVA contraseña de aplicación de Gmail.
+                client.Authenticate(
+                    "yampibarbershop5@gmail.com",
+                    "NUEVA_CONTRASENA_DE_APP");
+
                 client.Send(mensaje);
                 client.Disconnect(true);
             }
 
-            ViewBag.Mensaje = "Se envió una contraseña temporal a su correo";
+            ViewBag.Mensaje =
+                "Se envió una contraseña temporal a su correo";
+
             return View();
         }
     }
