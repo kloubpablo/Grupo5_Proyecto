@@ -1,57 +1,63 @@
-﻿@using System.Linq
-@model List<string>
-@{
-    ViewData["Title"] = "Control de Contacto";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+﻿@model WebApplicationAPP.Models.Contacto 
+@{ ViewData["Title"] = "Control de Contacto"; 
+Layout = "~/Views/Shared/_Layout.cshtml"; } 
 
-<h2 class="mb-4">🖼️ Control de Contacto</h2>
-
-<table class="table table-bordered table-hover">
-
-    <thead class="table-dark">
-        +
-        <tr>
-            <th>Vista Previa</th>
-            <th>Nombre Archivo</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @if (Model == null || !Model.Any())
-        {
-            <tr>
-                <td colspan="3" class="text-center">
-                    No hay imágenes
-                </td>
-            </tr>
-        }
-        else
-        {
-            @foreach (var imagen in Model)
-            {
-                <tr>
-                    <td>
-                        <img src="~/imagenes/galeria/@imagen"
-                             class="img-thumbnail"
-                             style="height:120px;" />
-                    </td>
-
-                    <td>@imagen</td>
-
-                    <td>
-                        <a class="btn btn-danger btn-sm"
-                           href="/YampiBarberShop/EliminarImagen?nombre=@imagen">
-                            🗑️ Eliminar
-                        </a>
-                    </td>
-                </tr>
-
-            }
-
-        }
-
-    </tbody>
-
-</table>
+<h2 class="mb-4">Información de Contacto
+    </h2> @if (Model == null) 
+    { 
+        <div class="alert alert-warning"> 
+            No hay información de contacto registrada. 
+            </div> 
+    } else 
+    { 
+        <div class="card"> 
+            <div class="card-header"> 
+                <h4>Información actual</h4>
+                </div> 
+                <div class="card-body"> 
+                    <div class="mb-3"> 
+                        <h5>Dirección</h5> 
+                        <p>@Model.Direccion</p> 
+                    </div> <div class="mb-3">
+                        <h5>Teléfonos</h5>
+                        <p>@Model.Telefonos</p>
+                    </div> <div class="mb-3"> 
+                        <h5>Correo electrónico</h5>
+                        <p>@Model.Correo</p>
+                    </div> <div class="mb-3"> 
+                        <h5>Horarios</h5> 
+                        <p>@Model.Horarios</p> 
+                    </div> <div class="mb-3"> 
+                        <h5>WhatsApp</h5> 
+                        <p>@Model.Whatsapp</p> 
+                    </div> <div class="mb-3"> 
+                        <h5>Instagram</h5> 
+                        <p>@Model.Instagram</p> 
+                    </div> <div class="mb-3"> 
+                        <h5>Facebook</h5> 
+                        <p>@Model.Facebook</p> 
+                    </div> <div class="mb-3">
+                        <h5>TikTok</h5>
+                        <p>@Model.Tiktok</p> 
+                    </div> <div class="mb-3"> 
+                        <h5>Ubicación</h5>
+                        <div style="max-width: 500px;"> 
+                            <iframe src="@Model.Ubicacion" 
+                                    width="100%" height="250" 
+                                    style="border:0;" 
+                                    allowfullscreen="" 
+                                    loading="lazy" 
+                                    referrerpolicy="strict-origin-when-cross-origin"> 
+                        </iframe>
+                        </div>
+                        </div> 
+                        </div> 
+                        <div class="card-footer"> 
+                            <a asp-controller="YampiBarberShop" 
+                               asp-action="EditarContacto" 
+                               asp-route-id="@Model.Id" 
+                               class="btn btn-primary"> 
+                               Editar información 
+                        </a> 
+                        </div> 
+                        </div> }

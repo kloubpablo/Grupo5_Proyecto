@@ -1,4 +1,5 @@
-﻿@{
+﻿@model WebApplicationAPP.Models.Contacto
+@{
     ViewData["Title"] = "Contáctenos";
     Layout = "~/Views/Shared/_LayoutPublico.cshtml";
 }
@@ -107,75 +108,94 @@
     <p class="subtitulo">
         Estamos listos para atenderte. Ponte en contacto con nosotros o visítanos en nuestra barbería.
     </p>
+     @if (Model == null)
+    {
+        <div class="alert alert-warning text-center">
+            No hay información de contacto disponible.
+        </div>
+    }
+    else
+    {
 
-    <div class="contacto-container">
+        <div class="contacto-container">
 
-        <!-- INFORMACIÓN -->
-        <div class="info-card">
+            <!-- INFORMACIÓN -->
+            <div class="info-card">
 
-            <h3>Información de Contacto</h3>
+                <h3>Información de Contacto</h3>
 
-            <div class="info-item">
-                <h5>📍 Dirección</h5>
-                <p>
-                    Avenida Central, 200 metros norte del Parque Central,
-                    San José, Costa Rica.
-                </p>
+                <div class="info-item">
+                    <h5>📍 Dirección</h5>
+                    <p>
+                         @Model.Direccion
+                    </p>
+                </div>
+
+                <div class="info-item">
+                    <h5>📞 Teléfono Principal</h5>
+                    <p>@Model.Telefonos</p>
+                </div>
+
+                <div class="info-item">
+                    <h5>📱 WhatsApp</h5>
+                    <p>@Model.Whatsapp</p>
+                </div>
+
+                <div class="info-item">
+                    <h5>✉️ Correo Electrónico</h5>
+                    <p>@Model.Correo</p>
+                </div>
+
+                <div class="info-item">
+                    <h5>🕒 Horario</h5>
+                    <p>@Model.Horarios</p>
+                </div>
+
+                <div class="info-item">
+                    <h5>📸 Instagram</h5>
+                    <a href="#">
+                        @Model.Instagram
+                    </a>
+                </div>
+
+                <div class="info-item">
+                    <h5>📘 Facebook</h5>
+                    <a href="#">
+                        @Model.Facebook
+                    </a>
+                </div>
+
+                <div class="info-item">
+                    <h5>🎵 TikTok</h5>
+                    <a href="#">
+                        @Model.Tiktok
+                    </a>
+                </div>
+
             </div>
 
-            <div class="info-item">
-                <h5>📞 Teléfono Principal</h5>
-                <p>+506 2222-5555</p>
-            </div>
+            <div class="mapa-card">
 
-            <div class="info-item">
-                <h5>📱 WhatsApp</h5>
-                <p>+506 8888-9999</p>
-            </div>
+                <h3>Ubicación</h3>
 
-            <div class="info-item">
-                <h5>✉️ Correo Electrónico</h5>
-                <p>contacto@yampibarbershop.com</p>
-            </div>
+                <div class="mapa-container">
 
-            <div class="info-item">
-                <h5>🕒 Horario</h5>
-                <p>Lunes a Viernes: 9:00 AM - 8:00 PM</p>
-                <p>Sábados: 9:00 AM - 6:00 PM</p>
-                <p>Domingos: Cerrado</p>
-            </div>
 
-            <div class="info-item">
-                <h5>📸 Instagram</h5>
-                <a href="#">@@YampiBarberShop</a>
-            </div>
 
-            <div class="info-item">
-                <h5>📘 Facebook</h5>
-                <a href="#">Yampi BarberShop</a>
-            </div>
+                    <iframe src="@Model.Ubicacion" 
+                    width="600" 
+                    height="450" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="strict-origin-when-cross-origin">
+                    </iframe>
 
-            <div class="info-item">
-                <h5>🎵 TikTok</h5>
-                <a href="#">@@YampiBarberShopCR</a>
+                </div>
+
             </div>
 
         </div>
-
-        <div class="mapa-card">
-
-            <h3>Ubicación</h3>
-
-            <div class="mapa-container">
-
-
-
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31442.068110972985!2d-84.034683!3d9.912414499999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa0e397932ca451%3A0xef8088362eda931!2sMultiplaza%20Curridabat!5e0!3m2!1ses-419!2scr!4v1785894537634!5m2!1ses-419!2scr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-
-            </div>
-
-        </div>
-
-    </div>
+    }
 
 </section>
