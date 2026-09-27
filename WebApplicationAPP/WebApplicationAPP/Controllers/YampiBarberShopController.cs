@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.IO;
 using WebApplicationAPP.Models;
@@ -24,6 +25,10 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
+        // ============================
+        // Yampi BarberShop
+        // ============================
+
         public IActionResult Index()
         {
             return View();
@@ -43,6 +48,10 @@ namespace WebApplicationAPP.Controllers
             });
         }
 
+        // ============================
+        // Galeria
+        // ============================
+
         public IActionResult Galeria()
         {
             ViewBag.Total = Directory.GetFiles(
@@ -54,16 +63,128 @@ namespace WebApplicationAPP.Controllers
 
             return View();
         }
+        // ============================
+        // Nosotros
+        // ============================
 
         public IActionResult Nosotros()
         {
             return View();
         }
 
+        // ============================
+        // Servicio
+        // ============================
+
         public IActionResult Servicios()
+        {
+            var servicios = _context.Servicios.ToList();
+            return View(servicios);
+        }
+        // ============================
+        // Eliminar Servicio
+        // ============================
+
+        public IActionResult EliminarServicio(int id)
+        {
+            var servicio = _context.Servicios
+                .FirstOrDefault(s => s.Id == id);
+
+            if (servicio != null)
+            {
+                _context.Servicios.Remove(servicio);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction(nameof(ControlServicio));
+        }
+
+        // ============================
+        // Editar Servicio
+        // ============================
+
+        [HttpGet]
+        public IActionResult EditarServicio(int id)
+        {
+            var servicio = _context.Servicios
+                .FirstOrDefault(s => s.Id == id);
+
+            if (servicio == null)
+            {
+                return RedirectToAction(nameof(ControlServicio));
+            }
+
+            return View(servicio);
+        }
+
+        [HttpPost]
+        public IActionResult EditarServicio(
+            int id,
+            string nombre,
+            decimal precio,
+            string descripcion)
+        {
+            var servicio = _context.Servicios
+                .FirstOrDefault(s => s.Id == id);
+
+            if (servicio != null)
+            {
+                servicio.Nombre = nombre;
+                servicio.Precio = precio;
+                servicio.Descripcion = descripcion;
+
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction(nameof(ControlServicio));
+        }
+        // ============================
+        // Agregar Servicio
+        // ============================
+        [HttpGet]
+        public IActionResult AgregarServicio()
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult AgregarServicio(
+            string nombre,
+            decimal precio,
+            string descripcion)
+        {
+            if (string.IsNullOrEmpty(nombre) ||
+                precio <= 0 ||
+                string.IsNullOrEmpty(descripcion))
+            {
+                ViewBag.Error = "Todos los campos son obligatorios y el precio debe ser mayor a cero.";
+                return View();
+            }
+
+            Servicio servicio = new Servicio();
+
+            servicio.Nombre = nombre;
+            servicio.Precio = precio;
+            servicio.Descripcion = descripcion;
+
+            _context.Servicios.Add(servicio);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(ControlServicio));
+        }
+        // ============================
+        // Control Servicio
+        // ============================
+
+        public IActionResult ControlServicio()
+        {
+            var servicios = _context.Servicios.ToList();
+            return View(servicios);
+        }
+
+        // ============================
+        // Contactenos
+        // ============================
 
         public IActionResult Contactenos()
         {
@@ -71,20 +192,9 @@ namespace WebApplicationAPP.Controllers
             return View(contacto);
         }
 
-        public IActionResult ControlGaleria()
-        {
-            string ruta = Path.Combine(
-                _env.WebRootPath,
-                "imagenes",
-                "galeria");
-
-            var imagenes = Directory
-                .GetFiles(ruta)
-                .Select(Path.GetFileName)
-                .ToList();
-
-            return View(imagenes);
-        }
+        // ============================
+        // Control Contacto
+        // ============================
 
         public IActionResult ControlContacto()
         {
@@ -93,13 +203,8 @@ namespace WebApplicationAPP.Controllers
             return View(contacto);
         }
 
-        public IActionResult ControlServicio()
-        {
-            return View();
-        }
-
         // ============================
-        // EDITAR CONTACTO
+        // Editar Contacto
         // ============================
 
         [HttpGet]
@@ -116,6 +221,26 @@ namespace WebApplicationAPP.Controllers
 
             return View(contacto);
         }
+
+
+        // ============================
+        // Control Galeria
+        // ============================
+        public IActionResult ControlGaleria()
+        {
+            string ruta = Path.Combine(
+                _env.WebRootPath,
+                "imagenes",
+                "galeria");
+
+            var imagenes = Directory
+                .GetFiles(ruta)
+                .Select(Path.GetFileName)
+                .ToList();
+
+            return View(imagenes);
+        }
+
 
         [HttpPost]
         public IActionResult EditarContacto(
@@ -153,7 +278,7 @@ namespace WebApplicationAPP.Controllers
         }
 
         // ============================
-        // AGREGAR IMAGEN
+        // Agregar imagen
         // ============================
 
         [HttpGet]
@@ -202,7 +327,7 @@ namespace WebApplicationAPP.Controllers
         }
 
         // ============================
-        // ELIMINAR IMAGEN
+        // Eliminar Imagen
         // ============================
 
         public IActionResult EliminarImagen(string nombre)
