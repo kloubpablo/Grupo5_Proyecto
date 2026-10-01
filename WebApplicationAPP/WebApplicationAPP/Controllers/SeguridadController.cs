@@ -136,7 +136,7 @@ namespace WebApplicationAPP.Controllers
 
             if (user == null)
             {
-                ViewBag.Error = "Usuario inactivo, por favor contacte al administrador";
+                ViewBag.Error = "Usuario o contraseña incorrectos";
                 return View();
             }
 
