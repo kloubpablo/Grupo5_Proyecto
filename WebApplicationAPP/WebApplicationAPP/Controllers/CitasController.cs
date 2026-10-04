@@ -55,6 +55,11 @@ namespace WebApplicationAPP.Controllers
             return View(citas);
         }
 
+        public IActionResult test()
+        {
+            
+            return View();
+        }
 
         //HISTORIAL DE CITAS
         public IActionResult Historial()

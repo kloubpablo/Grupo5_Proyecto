@@ -1,0 +1,63 @@
+﻿
+@model IEnumerable<WebApplicationAPP.Models.Servicio>
+@{
+    ViewData["Title"] = "Control de Servicios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4"> Control de Servicios</h2>
+
+<div class="mb-3 d-flex gap-2">
+    <a class="btn btn-success"
+       href="/YampiBarberShop/AgregarServicio">
+         Agregar Servicio
+    </a>
+</div>
+
+<table class="table table-bordered table-hover">
+
+    <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Descripcion</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model == null || !Model.Any())
+        {
+            <tr>
+                <td colspan="4" class="text-center">
+                    No hay servicios
+                </td>
+            </tr>
+        }
+        else
+        {
+            var index = 1;
+            foreach (var servicios in Model)
+            {
+                <tr>
+                    <td>@servicios.Nombre</td>
+                    <td>@servicios.Precio</td>
+                    <td>@servicios.Descripcion</td>
+                    <td>
+                        <a class="btn btn-warning btn-sm" 
+                        href="/YampiBarberShop/EditarServicio?id=@servicios.Id"> 
+                            Editar 
+                        </a>
+
+                        <a class="btn btn-danger btn-sm"
+                           href="/YampiBarberShop/EliminarServicio?id=@servicios.Id">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+                index++;
+            }
+        }
+    </tbody>
+
+</table>

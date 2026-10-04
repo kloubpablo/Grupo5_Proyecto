@@ -1,5 +1,4 @@
-﻿
-@using WebApplicationAPP.Models
+﻿@using WebApplicationAPP.Models
 @inject YampiBarbershopContext Db
 @using Microsoft.EntityFrameworkCore
 @inject WebApplicationAPP.Models.YampiBarbershopContext _context
@@ -24,234 +23,217 @@
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - Yampi Barbershop</title>
 
-    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/assets/css/main.css" />
 
-    <!-- 🔥 ESTILO BARBERÍA -->
     <style>
+        body {
+            background-color: #0f172a !important;
+            color: white;
+        }
 
-            body {
-                background-color: #0f172a !important;
-                color: white;
-            }
+        #header {
+            background: #020617 !important;
+            border-bottom: 3px solid #facc15;
+            text-align: center;
+            padding: 15px 0;
+        }
 
-            /* HEADER */
-            #header {
-                background: #020617 !important;
-                border-bottom: 3px solid #facc15;
-                text-align: center;
-                padding: 15px 0;
-            }
+        #header h1 a {
+            color: #facc15 !important;
+            font-weight: bold;
+            font-size: 30px;
+            text-decoration: none;
+        }
 
-                #header h1 a {
-                    color: #facc15 !important;
-                    font-weight: bold;
-                    font-size: 24px;
-                    text-decoration: none;
-                }
+        #nav {
+            background-color: #020617 !important;
+            text-align: center;
+            padding: 7px 0;
 
-            /* NAVBAR */
-            #nav {
-                background-color: #020617 !important;
-                text-align: center;
-                padding: 10px 0;
-            }
+        }
 
-                #nav ul {
-                    list-style: none;
-                    padding: 0;
-                    margin: 0;
-                }
+        #nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
 
-                    #nav ul li {
-                        display: inline-block;
-                        margin: 0 10px;
-                    }
+        }
 
-                        #nav ul li a {
-                            color: #facc15 !important;
-                            font-weight: 500;
-                            text-decoration: none;
-                            padding: 8px 12px;
-                            transition: 0.3s;
-                        }
+        #nav ul li {
+            display: inline-block;
+            margin: 0 10px;
+        }
 
-                            #nav ul li a:hover {
-                                background-color: #facc15;
-                                color: black !important;
-                                border-radius: 5px;
-                            }
+        #nav ul li a {
+            color: #facc15 !important;
+            font-weight: 500;
+            text-decoration: none;
+            padding: 4px 6px;
+            transition: 0.3s;+
+        }
 
-            /* CONTENIDO */
-            #main .container {
-                background-color: #1e293b;
-                padding: 25px;
-                border-radius: 15px;
-                margin-top: 20px;
-            }
+        #nav ul li a:hover {
+            background-color: #facc15;
+            color: black !important;
+            border-radius: 0px;
+
+        }
+
+        #main .container {
+            background-color: #1e293b;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
 
     </style>
 </head>
 
 <body>
 
-    <!-- HEADER -->
-    <header id="header">
-        <h1>
-            <a asp-controller="Dashboard" asp-action="Index">
-                💈 Yampi Barbershop
-            </a>
+
+
+@{
+    var rol = Context.Session.GetString("Rol");
+    var esAdmin = rol == "Administrador";
+}
+<div id="page-wrapper">
+            <h1 id="logo" style="display:none;">
+            Yampi BarberShop
         </h1>
-    </header>
-
-    <!-- NAVBAR -->
-    <nav id="nav">
-        <ul>
-
-            <!-- DASHBOARD -->
-            @if (Context.Session.GetString("Rol") != "Cliente")
+<nav id="nav">
+<ul>
+<li >
+    <h1>
+        <a asp-controller="Dashboard" asp-action="Index">
+            💈 Yampi Barbershop
+        </a>
+    </h1>
+</li>
+        @if (!string.IsNullOrEmpty(rol))
+        {
+            if (esAdmin || WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(Db, rol, "Dashboard/Index"))
             {
-                <li>
-                    <a asp-controller="Dashboard"
-                       asp-action="Index">
-                        📊 Dashboard
-                    </a>
-                </li>
+                <li><a asp-controller="Dashboard" asp-action="Index"><i class="bi bi-house"></i> Inicio</a></li>
             }
 
-            <!-- 🔥 ADMINISTRADOR -->
-            @if (Context.Session.GetString("Rol") == "Administrador")
+            if (esAdmin || WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(Db, rol, "Clientes/Index"))
             {
-                <li>
-                    <a asp-controller="Clientes"
-                       asp-action="Index">
-                        👤 Clientes
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-controller="Citas"
-                       asp-action="Index">
-                        📅 Citas
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-controller="Atencion"
-                       asp-action="Index">
-                        💈 Atención
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-controller="Pagos"
-                       asp-action="Index">
-                        💰 Pagos
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-controller="Reportes"
-                       asp-action="Index">
-                        📊 Reportes
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-controller="Roles"
-                       asp-action="Index">
-                        🛡️ Roles
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-controller="Usuarios"
-                       asp-action="Index">
-                        👤 Usuarios
-                    </a>
-                </li>
+                <li><a asp-controller="Clientes" asp-action="Index"><i class="bi bi-people"></i> Clientes</a></li>
             }
 
-            <!-- 🔥 BARBERO -->
-            @if (Context.Session.GetString("Rol") == "Barbero")
+            if (esAdmin || WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(Db, rol, "Citas/Index"))
             {
-                <li>
-                    <a asp-controller="Citas"
-                       asp-action="Index">
-                        📅 Citas
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-controller="Atencion"
-                       asp-action="Index">
-                        💈 Atención
-                    </a>
-                </li>
+                <li><a asp-controller="Citas" asp-action="Index"> Citas</a></li>
             }
 
-            <!-- 🔥 RECEPCIONISTA -->
-            @if (Context.Session.GetString("Rol") == "Recepcionista")
+            if (esAdmin || WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(Db, rol, "Atencion/Index"))
             {
-                <li>
-                    <a asp-controller="Clientes"
-                       asp-action="Index">
-                        👤 Clientes
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-controller="Pagos"
-                       asp-action="Index">
-                        💰 Pagos
-                    </a>
-                </li>
+                <li><a asp-controller="Atencion" asp-action="Index"> Atención</a></li>
             }
 
-            @if (Context.Session.GetString("Rol") == "Cliente")
+            if (esAdmin || WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(Db, rol, "Pagos/Index"))
+            {
+                <li><a asp-controller="Pagos" asp-action="Index"><i class="bi bi-credit-card"> </i>Pagos</a></li>
+            }
+
+            if (esAdmin || WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(Db, rol, "Reportes/Index"))
+            {
+                <li><a asp-controller="Reportes" asp-action="Index"><i class="bi bi-graph-up"></i> Reportes</a></li>
+            }
+
+            if (esAdmin || WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(Db, rol, "Roles/Index"))
+            {
+                <li><a asp-controller="Roles" asp-action="Index"><i class="bi bi-shield-check"></i> Roles</a></li>
+            }
+
+            if (esAdmin || WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(Db, rol, "Usuarios/Index"))
+            {
+                <li><a asp-controller="Usuarios" asp-action="Index"> Usuarios</a></li>
+                 }
+            if (esAdmin || WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(Db, rol, "Usuarios/Index"))
+                    {
+                     <li class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style=" color: #facc15 !important">
+                         <i class="bi bi-tools"></i> Controles externos
+                        <ul class="dropdown-menu">
+                              <li ><a style=" color: #facc15 !important" asp-controller="YampiBarberShop" asp-action="ControlGaleria">Control Galería</a></li>
+                              <li><a style=" color: #facc15 !important" asp-controller="YampiBarberShop" asp-action="ControlServicio">Control Servicios</a></li>
+                              <li><a style=" color: #facc15 !important" asp-controller="YampiBarberShop" asp-action="ControlContacto">Control Contacto</a></li>
+                         </ul>
+                      </li>
+                 }
+
+            @if (rol == "Cliente")
             {
                 <li>
-                    <a asp-controller="Citas"
-                       asp-action="MisCitas">
+                    <a asp-controller="Citas" asp-action="MisCitas">
                         📅 Mis Citas
                     </a>
                 </li>
 
                 <li>
-                    <a asp-controller="Citas"
-                       asp-action="Crear">
-                        ➕ Agendar Cita
+                    <a asp-controller="Citas" asp-action="Crear">
+                        <i class="bi bi-plus"></i>Agendar Cita
                     </a>
                 </li>
             }
 
-            <!-- CERRAR SESIÓN -->
             <li>
-                <a asp-controller="Seguridad"
-                   asp-action="Logout">
+                <a asp-controller="Seguridad" asp-action="Logout">
                     🚪 Salir
                 </a>
             </li>
 
-        </ul>
-    </nav>
+            <li>
+                <a asp-controller="Usuarios" asp-action="Perfil">
+                    <i class="bi bi-person"></i>
+                </a>
+            </li>
+        }
 
-    <!-- CONTENIDO -->
-    <section id="main">
+    </ul>
+</nav>
+
+<section id="main">
+    <div class="container">
+        @RenderBody()
+    </div>
+</section>
+</div>
+    <footer id="footer">
         <div class="container">
 
-            @RenderBody()
+            <section>
+                <h2 class="major"><span>Yampi BarberShop</span></h2>
+                <p>
+                    Sistema de gestión integral de la barbería:
+                    Clientes, Citas, Servicios, Usuarios y Reportes.
+                </p>
+            </section>
+
+            <div id="copyright">
+                <ul class="menu">
+                    <li>&copy; 2026 Yampi BarberShop</li>
+                </ul>
+            </div>
 
         </div>
-    </section>
-
-    <!-- Bootstrap JS -->
+    </footer>
+ <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/jquery.min.js"></script>
+    <script src="~/assets/js/jquery.dropotron.min.js"></script>
+    <script src="~/assets/js/jquery.scrolly.min.js"></script>
+    <script src="~/assets/js/browser.min.js"></script>
+    <script src="~/assets/js/breakpoints.min.js"></script>
+    <script src="~/assets/js/util.js"></script>
+    <script src="~/assets/js/main.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

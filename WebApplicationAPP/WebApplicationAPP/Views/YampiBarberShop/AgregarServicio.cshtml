@@ -1,0 +1,43 @@
+﻿@model WebApplicationAPP.Models.Servicio
+    @{
+        ViewData["Title"] = "Agregar Servicio"; 
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+<h2 class="mb-4">Agregar Servicio</h2>
+
+
+<form asp-action="AgregarServicio" method="post">
+
+    <div class="mb-3">
+        <label class="from-label">Nombre</label>
+        <input type="text"
+               name="nombre"
+               class="form-control"
+               required />
+    </div>
+    <div class="mb-3">
+        <label class="from-label">Precio</label>
+        <input type="number"
+               name="precio"
+               class="form-control"
+               required />
+    </div>
+    <div class="mb-3">
+        <label class="from-label">Descripcion</label>
+        <textarea name="descripcion"
+                  class="form-control"
+                  rows="4"
+                  required>
+        </textarea>
+    </div>
+    <button type="submit" class="btn btn-success">
+        Guardar
+    </button>
+    <a asp-action="ControlServicio"
+       class="btn btn-secondary">
+        Cancelar
+    </a>
+
+    </form>
+
+</div>

@@ -96,14 +96,11 @@ namespace WebApplicationAPP.Controllers
             var atencion = _context.Atencions
                 .FirstOrDefault(a => a.IdAtencion == id);
 
-            if (atencion != null)
-            {
-                atencion.Estado = "Finalizado";
-                atencion.HoraFin = TimeOnly.FromDateTime(DateTime.Now);
-                _context.SaveChanges();
-            }
+            if (atencion == null)
+                return RedirectToAction("Index");
 
-            return RedirectToAction("Index");
+            //La atención debe pasar primero por el registro del pago.
+            return RedirectToAction("Registrar", "Pagos", new { idAtencion = id });
         }
 
 
