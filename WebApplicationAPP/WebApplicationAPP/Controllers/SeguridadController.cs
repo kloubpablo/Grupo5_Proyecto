@@ -228,23 +228,12 @@ namespace WebApplicationAPP.Controllers
 
             using (var client = new SmtpClient())
             {
-                client.Connect(
-                    "smtp.gmail.com",
-                    587,
-                    MailKit.Security.SecureSocketOptions.StartTls);
-
-                client.Authenticate(
-                    "yampibarbershop5@gmail.com",
-                    "texi sagm qino kgqu");
-
+                client.Connect("smtp.gmail.com", 587, false);
+                client.Authenticate("yampibarbershop5@gmail.com", "texi sagm qino kgqu");
                 client.Send(mensaje);
                 client.Disconnect(true);
+            
             }
-
-            ViewBag.Mensaje =
-                "Se envió una contraseña temporal a su correo";
-
-            return View();
         }
     }
 }
