@@ -234,6 +234,8 @@ namespace WebApplicationAPP.Controllers
                 client.Disconnect(true);
             
             }
+            ViewBag.Mensaje = "Se ha enviado una contraseña temporal a su correo.";
+            return View();
         }
     }
 }
