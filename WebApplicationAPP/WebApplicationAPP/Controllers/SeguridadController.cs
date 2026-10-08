@@ -228,9 +228,11 @@ namespace WebApplicationAPP.Controllers
 
             using (var client = new SmtpClient())
             {
-                client.Connect("smtp.gmail.com", 587, false);
+                client.Connect(
+                    "smtp.gmail.com",
+                    587,
+                    MailKit.Security.SecureSocketOptions.StartTls);
 
-                // Coloque aquí la NUEVA contraseña de aplicación de Gmail.
                 client.Authenticate(
                     "yampibarbershop5@gmail.com",
                     "texi sagm qino kgqu");
