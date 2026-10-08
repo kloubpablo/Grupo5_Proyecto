@@ -233,7 +233,7 @@ namespace WebApplicationAPP.Controllers
                 // Coloque aquí la NUEVA contraseña de aplicación de Gmail.
                 client.Authenticate(
                     "yampibarbershop5@gmail.com",
-                    "NUEVA_CONTRASENA_DE_APP");
+                    "texi sagm qino kgqu");
 
                 client.Send(mensaje);
                 client.Disconnect(true);
