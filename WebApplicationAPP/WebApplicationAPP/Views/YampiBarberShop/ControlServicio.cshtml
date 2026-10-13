@@ -1,5 +1,6 @@
 ﻿
 @using System.Linq
+@using System.Globalization
 @model IEnumerable<WebApplicationAPP.Models.Servicio>
 
 @{
@@ -8,6 +9,8 @@
 
     var servicios = Model?.ToList()
         ?? new List<WebApplicationAPP.Models.Servicio>();
+
+    var culturaCR = CultureInfo.GetCultureInfo("es-CR");
 }
 
 <link rel="stylesheet"
@@ -17,12 +20,13 @@
 <div class="servicios-admin-page">
 
     <!-- ==========================================
-         ENCABEZADO
+         ENCABEZADO PRINCIPAL
     ========================================== -->
 
     <section class="servicios-page-header">
 
-        <div>
+        <div class="servicios-header-info">
+
             <span class="servicios-kicker">
                 ADMINISTRACION / CONTROLES EXTERNOS
             </span>
@@ -36,16 +40,28 @@
             </h1>
 
             <p>
-                Consulta y administra los servicios
-                disponibles en Yampi BarberShop.
+                Gestiona el catalogo de servicios,
+                actualiza sus precios y administra
+                la informacion de Yampi BarberShop.
             </p>
+
         </div>
+
+        <button type="button"
+                class="servicios-btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#modalAgregarServicio">
+
+            <i class="bi bi-plus-lg"></i>
+            Agregar servicio
+
+        </button>
 
     </section>
 
 
     <!-- ==========================================
-         RESUMEN
+         RESUMEN DE SERVICIOS
     ========================================== -->
 
     <section class="servicios-summary">
@@ -54,7 +70,7 @@
             <i class="bi bi-collection"></i>
         </div>
 
-        <div>
+        <div class="servicios-summary-info">
             <span>Servicios registrados</span>
             <strong>@servicios.Count</strong>
         </div>
@@ -63,7 +79,28 @@
 
 
     <!-- ==========================================
-         LISTADO DE SERVICIOS
+         MENSAJES DEL SISTEMA
+    ========================================== -->
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="servicios-alert servicios-alert-success">
+            <i class="bi bi-check-circle"></i>
+            <span>@TempData["Mensaje"]</span>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="servicios-alert servicios-alert-error">
+            <i class="bi bi-exclamation-triangle"></i>
+            <span>@TempData["Error"]</span>
+        </div>
+    }
+
+
+    <!-- ==========================================
+         CATALOGO DE SERVICIOS
     ========================================== -->
 
     <section class="servicios-section">
@@ -71,8 +108,9 @@
         <div class="servicios-section-header">
 
             <div>
+
                 <span class="servicios-kicker">
-                    CATALOGO
+                    CATALOGO ACTUAL
                 </span>
 
                 <h2>
@@ -81,9 +119,10 @@
                 </h2>
 
                 <p>
-                    Informacion actual de los servicios
-                    ofrecidos por la barberia.
+                    Consulta los servicios y modifica
+                    sus datos cuando sea necesario.
                 </p>
+
             </div>
 
             <span class="servicios-count">
@@ -99,20 +138,32 @@
 
             <div class="servicios-empty">
 
-                <i class="bi bi-scissors"></i>
+                <div class="servicios-empty-icon">
+                    <i class="bi bi-scissors"></i>
+                </div>
 
                 <h3>No hay servicios registrados</h3>
 
                 <p>
-                    Actualmente no existen servicios
-                    para mostrar.
+                    Agrega el primer servicio para comenzar
+                    a administrar el catalogo.
                 </p>
+
+                <button type="button"
+                        class="servicios-btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalAgregarServicio">
+
+                    <i class="bi bi-plus-lg"></i>
+                    Agregar primer servicio
+
+                </button>
 
             </div>
         }
         else
         {
-            <!-- TARJETAS -->
+            <!-- TARJETAS DE SERVICIOS -->
 
             <div class="servicios-grid">
 
@@ -120,6 +171,7 @@
                 {
                     <article class="servicio-card">
 
+                        <!-- ENCABEZADO -->
                         <div class="servicio-card-header">
 
                             <div class="servicio-icon">
@@ -133,19 +185,59 @@
                         </div>
 
 
+                        <!-- NOMBRE Y DESCRIPCION -->
                         <div class="servicio-card-body">
 
-                            <h3>
+                            <h3 title="@servicio.Nombre">
+
                                 @(string.IsNullOrWhiteSpace(servicio.Nombre)
                                     ? "Servicio sin nombre"
                                     : servicio.Nombre)
+
                             </h3>
 
-                            <p>
+                            <p title="@servicio.Descripcion">
+
                                 @(string.IsNullOrWhiteSpace(servicio.Descripcion)
                                     ? "Sin descripcion registrada."
                                     : servicio.Descripcion)
+
                             </p>
+
+                        </div>
+
+
+                        <!-- PRECIO -->
+                        <div class="servicio-card-price">
+
+                            <span>
+                                <i class="bi bi-cash-coin"></i>
+                                Precio
+                            </span>
+
+                            <strong>
+                                ₡@servicio.Precio.ToString("N2", culturaCR)
+                            </strong>
+
+                        </div>
+
+
+                        <!-- BOTON EDITAR -->
+                        <div class="servicio-card-footer">
+
+                            <button type="button"
+                                    class="servicio-btn-edit"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEditarServicio"
+                                    data-id="@servicio.Id"
+                                    data-nombre="@servicio.Nombre"
+                                    data-precio="@servicio.Precio.ToString(CultureInfo.InvariantCulture)"
+                                    data-descripcion="@servicio.Descripcion">
+
+                                <i class="bi bi-pencil-square"></i>
+                                Editar servicio
+
+                            </button>
 
                         </div>
 
@@ -158,3 +250,322 @@
     </section>
 
 </div>
+
+
+<!-- ==========================================
+     MODAL - AGREGAR SERVICIO
+========================================== -->
+
+<div class="modal fade"
+     id="modalAgregarServicio"
+     tabindex="-1"
+     aria-labelledby="modalAgregarServicioTitulo"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content servicio-modal">
+
+            <!-- ENCABEZADO -->
+            <div class="modal-header servicio-modal-header">
+
+                <h5 class="modal-title"
+                    id="modalAgregarServicioTitulo">
+
+                    <i class="bi bi-plus-circle"></i>
+                    Agregar servicio
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar">
+                </button>
+
+            </div>
+
+
+            <!-- FORMULARIO -->
+            <form asp-controller="YampiBarberShop"
+                  asp-action="AgregarServicio"
+                  method="post"
+                  id="formAgregarServicio">
+
+                @Html.AntiForgeryToken()
+
+                <div class="modal-body servicio-modal-body">
+
+                    <p class="servicio-modal-description">
+                        Completa los datos del nuevo servicio
+                        para agregarlo al catalogo.
+                    </p>
+
+
+                    <!-- NOMBRE -->
+                    <div class="servicio-form-field">
+
+                        <label for="servicioAgregarNombre">
+                            <i class="bi bi-scissors"></i>
+                            Nombre del servicio
+                        </label>
+
+                        <input type="text"
+                               id="servicioAgregarNombre"
+                               name="nombre"
+                               class="servicio-form-input"
+                               placeholder="Ejemplo: Corte de cabello"
+                               required />
+
+                    </div>
+
+
+                    <!-- PRECIO -->
+                    <div class="servicio-form-field">
+
+                        <label for="servicioAgregarPrecio">
+                            <i class="bi bi-cash-coin"></i>
+                            Precio del servicio
+                        </label>
+
+                        <div class="servicio-price-input">
+
+                            <span>₡</span>
+
+                            <input type="number"
+                                   id="servicioAgregarPrecio"
+                                   name="precio"
+                                   class="servicio-form-input"
+                                   min="0"
+                                   step="0.01"
+                                   placeholder="0.00"
+                                   required />
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DESCRIPCION -->
+                    <div class="servicio-form-field">
+
+                        <label for="servicioAgregarDescripcion">
+                            <i class="bi bi-card-text"></i>
+                            Descripcion
+                        </label>
+
+                        <textarea id="servicioAgregarDescripcion"
+                                  name="descripcion"
+                                  class="servicio-form-input"
+                                  rows="4"
+                                  placeholder="Describe el servicio..."
+                                  required></textarea>
+
+                    </div>
+
+
+                    <!-- ERROR -->
+                    <div id="servicioAgregarError"
+                         class="servicio-form-error"
+                         role="alert"
+                         hidden>
+                    </div>
+
+                </div>
+
+
+                <!-- BOTONES -->
+                <div class="modal-footer servicio-modal-footer">
+
+                    <button type="button"
+                            class="servicio-btn-cancel"
+                            data-bs-dismiss="modal">
+
+                        <i class="bi bi-x-lg"></i>
+                        Cancelar
+
+                    </button>
+
+                    <button type="submit"
+                            id="btnGuardarNuevoServicio"
+                            class="servicios-btn-primary">
+
+                        <i class="bi bi-check-lg"></i>
+                        Guardar servicio
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     MODAL - EDITAR SERVICIO
+========================================== -->
+
+<div class="modal fade"
+     id="modalEditarServicio"
+     tabindex="-1"
+     aria-labelledby="modalEditarServicioTitulo"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content servicio-modal">
+
+            <!-- ENCABEZADO -->
+            <div class="modal-header servicio-modal-header">
+
+                <h5 class="modal-title"
+                    id="modalEditarServicioTitulo">
+
+                    <i class="bi bi-pencil-square"></i>
+                    Editar servicio
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar">
+                </button>
+
+            </div>
+
+
+            <!-- FORMULARIO -->
+            <form asp-controller="YampiBarberShop"
+                  asp-action="EditarServicio"
+                  method="post"
+                  id="formEditarServicio">
+
+                @Html.AntiForgeryToken()
+
+                <!-- ID DEL SERVICIO -->
+                <input type="hidden"
+                       id="servicioEditId"
+                       name="id" />
+
+
+                <div class="modal-body servicio-modal-body">
+
+                    <p class="servicio-modal-description">
+                        Actualiza la informacion del servicio
+                        seleccionado y guarda los cambios.
+                    </p>
+
+
+                    <!-- NOMBRE -->
+                    <div class="servicio-form-field">
+
+                        <label for="servicioEditNombre">
+                            <i class="bi bi-scissors"></i>
+                            Nombre del servicio
+                        </label>
+
+                        <input type="text"
+                               id="servicioEditNombre"
+                               name="nombre"
+                               class="servicio-form-input"
+                               required />
+
+                    </div>
+
+
+                    <!-- PRECIO -->
+                    <div class="servicio-form-field">
+
+                        <label for="servicioEditPrecio">
+                            <i class="bi bi-cash-coin"></i>
+                            Precio del servicio
+                        </label>
+
+                        <div class="servicio-price-input">
+
+                            <span>₡</span>
+
+                            <input type="number"
+                                   id="servicioEditPrecio"
+                                   name="precio"
+                                   class="servicio-form-input"
+                                   min="0"
+                                   step="0.01"
+                                   required />
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DESCRIPCION -->
+                    <div class="servicio-form-field">
+
+                        <label for="servicioEditDescripcion">
+                            <i class="bi bi-card-text"></i>
+                            Descripcion
+                        </label>
+
+                        <textarea id="servicioEditDescripcion"
+                                  name="descripcion"
+                                  class="servicio-form-input"
+                                  rows="4"
+                                  required></textarea>
+
+                    </div>
+
+
+                    <!-- ERROR -->
+                    <div id="servicioEditarError"
+                         class="servicio-form-error"
+                         role="alert"
+                         hidden>
+                    </div>
+
+                </div>
+
+
+                <!-- BOTONES -->
+                <div class="modal-footer servicio-modal-footer">
+
+                    <button type="button"
+                            class="servicio-btn-cancel"
+                            data-bs-dismiss="modal">
+
+                        <i class="bi bi-x-lg"></i>
+                        Cancelar
+
+                    </button>
+
+                    <button type="submit"
+                            id="btnGuardarServicio"
+                            class="servicios-btn-primary">
+
+                        <i class="bi bi-check-lg"></i>
+                        Guardar cambios
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     JAVASCRIPT
+========================================== -->
+
+<script src="~/js/control-servicio.js"
+        asp-append-version="true"></script>
