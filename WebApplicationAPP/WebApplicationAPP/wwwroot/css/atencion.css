@@ -1,0 +1,1782 @@
+
+/* ==========================================
+   YAMPI BARBER SHOP
+   ATENCION - CSS COMPLETO
+========================================== */
+
+/* VARIABLES */
+
+.atencion-page {
+    --gold: #d4af37;
+    --gold-light: #e4c65a;
+    --gold-dark: #9e7f1e;
+    --dark: #121214;
+    --card: #171719;
+    --card-hover: #1c1c1f;
+    --gray-1: #242427;
+    --gray-2: #35353a;
+    --gray-3: #77777f;
+    --gray-4: #a5a5aa;
+    --white: #f5f5f5;
+    --white-soft: #dadadd;
+    --border: #29292d;
+    --green: #4ade80;
+    --orange: #f59e0b;
+    --red: #f87171;
+
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 45px 50px 70px;
+    color: var(--white);
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.atencion-page *,
+.atencion-page *::before,
+.atencion-page *::after {
+    box-sizing: border-box;
+}
+
+.atencion-page [hidden] {
+    display: none !important;
+}
+
+/* ==========================================
+   ENCABEZADO
+========================================== */
+
+.atencion-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.atencion-kicker,
+.atencion-card-kicker {
+    display: block;
+    margin-bottom: 9px;
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+}
+
+.atencion-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 0;
+    color: var(--white);
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.atencion-title-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    background: rgba(212, 175, 55, .1);
+    border: 1px solid rgba(212, 175, 55, .3);
+    border-radius: 14px;
+    color: var(--gold);
+    font-size: 22px;
+}
+
+.atencion-header p {
+    margin: 12px 0 0;
+    color: var(--gray-4);
+    font-size: 13px;
+}
+
+.atencion-header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    flex-shrink: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    color: var(--gold);
+    font-size: 28px;
+}
+
+/* ==========================================
+   ESTADISTICAS
+========================================== */
+
+.atencion-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.atencion-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 105px;
+    padding: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    transition: border-color .2s ease, transform .2s ease;
+}
+
+.atencion-stat-card:hover {
+    border-color: rgba(212, 175, 55, .3);
+    transform: translateY(-2px);
+}
+
+.atencion-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    background: rgba(212, 175, 55, .09);
+    border-radius: 12px;
+    color: var(--gold);
+    font-size: 20px;
+}
+
+.atencion-stat-card span {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--gray-3);
+    font-size: 12px;
+}
+
+.atencion-stat-card strong {
+    color: var(--white);
+    font-size: 26px;
+    font-weight: 700;
+}
+
+/* ==========================================
+   TARJETAS
+========================================== */
+
+.atencion-card {
+    margin-bottom: 28px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    transition: border-color .2s ease;
+}
+
+.atencion-card:hover {
+    border-color: rgba(212, 175, 55, .2);
+}
+
+.atencion-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    min-height: 105px;
+    padding: 24px 26px;
+    border-bottom: 1px solid var(--border);
+}
+
+.atencion-card-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    color: var(--white);
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.atencion-card-header h2 i {
+    color: var(--gold);
+}
+
+.atencion-card-header p {
+    margin: 7px 0 0;
+    color: var(--gray-3);
+    font-size: 12px;
+}
+
+/* ==========================================
+   BOTONES GENERALES
+========================================== */
+
+.atencion-btn-primary,
+.atencion-btn-secondary,
+.atencion-btn-history {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 0 19px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .2s ease;
+}
+
+.atencion-btn-primary,
+.atencion-btn-history {
+    color: #111;
+    background: var(--gold);
+    border: 1px solid var(--gold);
+}
+
+.atencion-btn-primary:hover,
+.atencion-btn-history:hover {
+    color: #111;
+    background: var(--gold-light);
+    border-color: var(--gold-light);
+    transform: translateY(-1px);
+}
+
+.atencion-btn-secondary {
+    color: var(--white-soft);
+    background: var(--gray-1);
+    border: 1px solid var(--border);
+}
+
+.atencion-btn-secondary:hover:not(:disabled) {
+    color: var(--gold);
+    background: rgba(212, 175, 55, .07);
+    border-color: rgba(212, 175, 55, .4);
+}
+
+.atencion-btn-secondary:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+}
+
+.atencion-toolbar,
+.atencion-history-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 22px;
+}
+
+.atencion-chevron,
+.atencion-history-chevron {
+    font-size: 11px;
+    transition: transform .3s ease;
+}
+
+.atencion-btn-primary.active .atencion-chevron,
+.atencion-btn-history.active .atencion-history-chevron {
+    transform: rotate(180deg);
+}
+
+/* ==========================================
+   GAVETAS DESPLEGABLES
+========================================== */
+
+.atencion-drawer {
+    max-height: 4000px;
+    margin-bottom: 28px;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scaleY(1);
+    transform-origin: top center;
+    overflow: hidden;
+    transition:
+        max-height .5s cubic-bezier(.22, 1, .36, 1),
+        opacity .3s ease,
+        transform .5s cubic-bezier(.22, 1, .36, 1),
+        margin .5s ease;
+}
+
+.atencion-drawer.closed {
+    max-height: 0;
+    margin-bottom: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-35px) scaleY(.95);
+    pointer-events: none;
+}
+
+.atencion-drawer > .atencion-card {
+    margin-bottom: 0;
+    border-color: rgba(212, 175, 55, .3);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, .25);
+}
+
+.atencion-drawer:not(.closed) > .atencion-card {
+    animation: atencionDrawerOpen .5s
+        cubic-bezier(.22, 1, .36, 1);
+}
+
+@keyframes atencionDrawerOpen {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px) scaleY(.95);
+    }
+
+    60% {
+        opacity: 1;
+        transform: translateY(4px) scaleY(1.01);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+    }
+}
+
+/* ==========================================
+   FORMULARIO AGREGAR CLIENTE
+========================================== */
+
+.atencion-form {
+    padding: 25px 26px;
+}
+
+.atencion-field label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 9px;
+    color: var(--gray-4);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.atencion-field label i {
+    color: var(--gold);
+}
+
+.atencion-field input {
+    width: 100%;
+    height: 52px;
+    padding: 0 15px;
+    color: var(--white);
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.atencion-field input::placeholder {
+    color: var(--gray-3);
+}
+
+.atencion-field input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, .08);
+}
+
+.atencion-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 11px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+/* ==========================================
+   CONTADOR DE CLIENTES
+========================================== */
+
+.atencion-count {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 65px;
+    height: 55px;
+    padding: 5px 10px;
+    background: rgba(212, 175, 55, .07);
+    border: 1px solid rgba(212, 175, 55, .15);
+    border-radius: 10px;
+}
+
+.atencion-count strong {
+    color: var(--gold);
+    font-size: 19px;
+}
+
+.atencion-count span {
+    color: var(--gray-3);
+    font-size: 10px;
+}
+
+/* ==========================================
+   TABLAS
+========================================== */
+
+.atencion-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.atencion-table {
+    width: 100%;
+    min-width: 850px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.atencion-table th {
+    height: 47px;
+    padding: 0 18px;
+    color: var(--gray-3);
+    background: var(--dark);
+    border-bottom: 1px solid var(--border);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.atencion-table td {
+    height: 75px;
+    padding: 12px 18px;
+    color: var(--white-soft);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+.atencion-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.atencion-table tbody tr:hover {
+    background: rgba(255, 255, 255, .02);
+}
+
+.atencion-table th:nth-child(1) {
+    width: 23%;
+}
+
+.atencion-table th:nth-child(2) {
+    width: 14%;
+}
+
+.atencion-table th:nth-child(3) {
+    width: 16%;
+}
+
+.atencion-table th:nth-child(4) {
+    width: 15%;
+}
+
+.atencion-table th:nth-child(5) {
+    width: 15%;
+}
+
+.atencion-table th:nth-child(6) {
+    width: 17%;
+}
+
+/* ==========================================
+   CLIENTES Y AVATARES
+========================================== */
+
+.atencion-client {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.atencion-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 39px;
+    height: 39px;
+    flex-shrink: 0;
+    color: var(--gold);
+    background: rgba(212, 175, 55, .1);
+    border: 1px solid rgba(212, 175, 55, .18);
+    border-radius: 11px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.atencion-client strong {
+    overflow: hidden;
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.atencion-cita {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.atencion-muted {
+    color: var(--gray-3);
+    font-size: 11px;
+}
+
+.atencion-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--white-soft);
+    font-size: 11px;
+}
+
+.atencion-time i {
+    color: var(--gray-3);
+}
+
+/* ==========================================
+   ESTADOS
+========================================== */
+
+.atencion-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 10px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.atencion-status > span {
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.status-waiting {
+    color: var(--orange);
+    background: rgba(245, 158, 11, .09);
+    border-color: rgba(245, 158, 11, .18);
+}
+
+.status-service {
+    color: var(--gold);
+    background: rgba(212, 175, 55, .09);
+    border-color: rgba(212, 175, 55, .2);
+}
+
+.status-finished {
+    color: var(--green);
+    background: rgba(74, 222, 128, .08);
+    border-color: rgba(74, 222, 128, .17);
+}
+
+/* ==========================================
+   BOTONES DE ACCIONES
+========================================== */
+
+.atencion-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 105px;
+    min-height: 36px;
+    padding: 8px 12px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.action-start {
+    color: #111;
+    background: var(--gold);
+    border-color: var(--gold);
+}
+
+.action-start:hover {
+    color: #111;
+    background: var(--gold-light);
+    border-color: var(--gold-light);
+}
+
+.action-finish {
+    color: var(--green);
+    background: rgba(74, 222, 128, .08);
+    border-color: rgba(74, 222, 128, .3);
+}
+
+.action-finish:hover {
+    color: #111;
+    background: var(--green);
+    border-color: var(--green);
+}
+
+.atencion-action-btn:disabled {
+    opacity: .65;
+    cursor: wait;
+}
+
+/* ==========================================
+   LISTA VACIA
+========================================== */
+
+.atencion-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 25px;
+    text-align: center;
+}
+
+.atencion-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 65px;
+    height: 65px;
+    margin-bottom: 19px;
+    color: var(--gold);
+    background: rgba(212, 175, 55, .08);
+    border: 1px solid rgba(212, 175, 55, .16);
+    border-radius: 17px;
+    font-size: 27px;
+}
+
+.atencion-empty h3 {
+    margin: 0 0 10px;
+    color: var(--white);
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.atencion-empty p {
+    max-width: 400px;
+    margin: 0;
+    color: var(--gray-3);
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.atencion-empty-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 9px 13px;
+    color: var(--green);
+    background: rgba(74, 222, 128, .07);
+    border: 1px solid rgba(74, 222, 128, .15);
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* ==========================================
+   HISTORIAL
+========================================== */
+
+.atencion-history-toolbar {
+    margin-top: 5px;
+}
+
+.atencion-btn-history {
+    gap: 12px;
+}
+
+.atencion-history-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+    color: #111;
+    background: rgba(0, 0, 0, .12);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.atencion-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    color: var(--gray-4);
+    background: var(--gray-1);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.atencion-close-btn:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+}
+
+/* ==========================================
+   BUSCADOR DEL HISTORIAL
+========================================== */
+
+.atencion-history-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 24px 26px 15px;
+}
+
+.atencion-search-input {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+}
+
+.atencion-search-input > i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: var(--gray-3);
+    font-size: 15px;
+    pointer-events: none;
+}
+
+.atencion-search-input input {
+    width: 100%;
+    height: 45px;
+    padding: 0 15px 0 43px;
+    color: var(--white);
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 12px;
+    outline: none;
+    transition: border-color .2s ease;
+}
+
+.atencion-search-input input::placeholder {
+    color: var(--gray-3);
+}
+
+.atencion-search-input input:focus {
+    border-color: var(--gold);
+}
+
+.atencion-results-text {
+    margin: 0;
+    padding: 0 26px 18px;
+    color: var(--gray-3);
+    font-size: 11px;
+}
+
+.atencion-history-table th:nth-child(1) {
+    width: 24%;
+}
+
+.atencion-history-table th:nth-child(2) {
+    width: 14%;
+}
+
+.atencion-history-table th:nth-child(3) {
+    width: 16%;
+}
+
+.atencion-history-table th:nth-child(4) {
+    width: 17%;
+}
+
+.atencion-history-table th:nth-child(5) {
+    width: 17%;
+}
+
+.atencion-history-table th:nth-child(6) {
+    width: 12%;
+}
+
+.atencion-history-id {
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* ==========================================
+   PAGINACION
+========================================== */
+
+.atencion-history-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 24px 15px 10px;
+}
+
+.atencion-page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.atencion-page-btn,
+.atencion-page-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 33px;
+    height: 33px;
+    padding: 0;
+    color: var(--gold);
+    background: rgba(212, 175, 55, .06);
+    border: 1px solid rgba(212, 175, 55, .25);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease;
+}
+
+.atencion-page-btn:hover:not(:disabled),
+.atencion-page-number:hover {
+    background: rgba(212, 175, 55, .15);
+    border-color: rgba(212, 175, 55, .55);
+}
+
+.atencion-page-number.active {
+    color: #111;
+    background: var(--gold);
+    border-color: var(--gold);
+}
+
+.atencion-page-btn:disabled {
+    opacity: .25;
+    cursor: not-allowed;
+}
+
+.atencion-pagination-summary {
+    margin: 0;
+    padding: 5px 15px 23px;
+    color: var(--gray-3);
+    font-size: 11px;
+    text-align: center;
+}
+
+/* ==========================================
+   INFORMACION INFERIOR
+========================================== */
+
+.atencion-bottom-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.atencion-bottom-grid .atencion-card {
+    margin-bottom: 0;
+}
+
+.atencion-info-card {
+    min-height: 210px;
+    padding: 26px;
+}
+
+.atencion-info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    margin-bottom: 18px;
+    color: var(--gold);
+    background: rgba(212, 175, 55, .09);
+    border-radius: 11px;
+    font-size: 21px;
+}
+
+.atencion-info-label {
+    display: block;
+    margin-bottom: 9px;
+    color: var(--gray-3);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.atencion-info-card h3 {
+    margin: 0 0 10px;
+    color: var(--white);
+    font-size: 27px;
+    font-weight: 700;
+}
+
+.atencion-info-card p {
+    margin: 0;
+    color: var(--gray-3);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.atencion-info-card h3.atencion-immediate {
+    color: var(--green);
+    font-size: 22px;
+}
+
+/* ==========================================
+   MODAL DE REGISTRO DE PAGO
+========================================== */
+
+.atencion-page .btn-finalizar-pago {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.atencion-page .btn-finalizar-pago:disabled {
+    opacity: .75;
+    cursor: wait;
+}
+
+.atencion-pago-overlay,
+.atencion-pago-overlay *,
+.atencion-pago-overlay *::before,
+.atencion-pago-overlay *::after {
+    box-sizing: border-box;
+}
+
+.atencion-pago-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3500;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    background: rgba(0, 0, 0, .82);
+    backdrop-filter: blur(6px);
+
+    animation: pagoOverlayEntrada .25s ease both;
+}
+
+.atencion-pago-overlay[hidden],
+.atencion-pago-toast[hidden] {
+    display: none !important;
+}
+
+body.atencion-pago-open {
+    overflow: hidden;
+}
+
+/* VENTANA PRINCIPAL */
+
+.atencion-pago-overlay .atencion-pago-modal {
+    display: block;
+
+    width: 100%;
+    max-width: 540px;
+    max-height: min(90vh, 780px);
+
+    margin: 0;
+    padding: 0;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    color: #f5f5f5;
+    background: #171719;
+
+    border: 1px solid rgba(212, 175, 55, .4);
+    border-radius: 18px;
+
+    box-shadow: 0 25px 80px rgba(0, 0, 0, .65);
+
+    animation: pagoModalEntrada .28s ease both;
+
+    scrollbar-width: thin;
+    scrollbar-color: #a88b35 #202023;
+}
+
+/* ==========================================
+   ENCABEZADO DEL MODAL
+========================================== */
+
+.atencion-pago-overlay .atencion-pago-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+
+    width: 100%;
+    margin: 0;
+    padding: 30px 35px;
+
+    border-bottom: 1px solid #303034;
+}
+
+.atencion-pago-kicker {
+    display: block;
+    margin-bottom: 10px;
+
+    color: #d4af37;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.atencion-pago-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    margin: 0;
+
+    color: #f5f5f5;
+    font-size: 23px;
+    font-weight: 700;
+}
+
+.atencion-pago-header h2 i {
+    color: #d4af37;
+}
+
+.atencion-pago-header p {
+    margin: 12px 0 0;
+    color: #a5a5aa;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.atencion-pago-close {
+    display: grid;
+    place-items: center;
+
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+
+    padding: 0;
+
+    color: #aaa;
+    background: #242427;
+
+    border: 1px solid #35353a;
+    border-radius: 9px;
+
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.atencion-pago-close:hover {
+    color: #d4af37;
+    border-color: #d4af37;
+}
+
+/* ==========================================
+   FORMULARIO DEL MODAL
+========================================== */
+
+/*
+   Se aplica tambien al formulario por su ID.
+   Asi el espaciado funciona aunque falte
+   la clase atencion-pago-form en el HTML.
+*/
+
+.atencion-pago-overlay .atencion-pago-form,
+.atencion-pago-overlay #formRegistrarPago {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0;
+    padding: 32px 35px 35px;
+
+    box-sizing: border-box;
+}
+
+/* CONTENEDORES DE CAMPOS */
+
+.atencion-pago-overlay .atencion-pago-field {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0 0 27px;
+    padding: 0;
+}
+
+.atencion-pago-overlay .atencion-pago-field label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    width: 100%;
+
+    margin: 0 0 12px;
+    padding: 0;
+
+    color: #c5c5cb;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.atencion-pago-field label i {
+    color: #d4af37;
+}
+
+/* INPUTS */
+
+.atencion-pago-overlay .atencion-pago-field input:not([type="hidden"]),
+.atencion-pago-overlay .atencion-pago-field select {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+    height: 52px;
+    min-height: 52px;
+
+    margin: 0;
+    padding: 0 16px;
+
+    color: #f5f5f5;
+    background: #101012;
+
+    border: 1px solid #35353a;
+    border-radius: 11px;
+
+    font-family: inherit;
+    font-size: 13px;
+
+    outline: none;
+    box-shadow: none;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+.atencion-pago-field input::placeholder {
+    color: #77777f;
+}
+
+.atencion-pago-overlay .atencion-pago-field input:focus,
+.atencion-pago-overlay .atencion-pago-field select:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, .09);
+}
+
+.atencion-pago-overlay .atencion-pago-field input[readonly] {
+    color: #c5c5cb;
+    background: #242427;
+    cursor: default;
+}
+
+/* ==========================================
+   CAMPO MONTO
+========================================== */
+
+.atencion-pago-overlay .atencion-pago-monto {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+}
+
+.atencion-pago-overlay .atencion-pago-monto > span {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    z-index: 1;
+
+    transform: translateY(-50%);
+
+    color: #d4af37;
+    font-size: 18px;
+    font-weight: 700;
+    pointer-events: none;
+}
+
+.atencion-pago-overlay .atencion-pago-monto input,
+.atencion-pago-overlay .atencion-pago-field .atencion-pago-monto input {
+    padding-left: 46px;
+}
+
+/* ==========================================
+   SELECTOR PERSONALIZADO
+========================================== */
+
+.atencion-pago-overlay .atencion-custom-select {
+    position: relative;
+
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+}
+
+.atencion-pago-overlay .atencion-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    width: 100%;
+    min-height: 52px;
+
+    margin: 0;
+    padding: 0 16px;
+
+    color: #a5a5aa;
+    background: #101012;
+
+    border: 1px solid #35353a;
+    border-radius: 11px;
+
+    font-family: inherit;
+    font-size: 13px;
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+.atencion-select-trigger:hover {
+    border-color: rgba(212, 175, 55, .5);
+}
+
+.atencion-custom-select.open .atencion-select-trigger,
+.atencion-select-trigger:focus-visible {
+    outline: none;
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, .09);
+}
+
+.atencion-custom-select.has-value .atencion-select-trigger {
+    color: #f5f5f5;
+}
+
+.atencion-select-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.atencion-select-content > i {
+    color: #d4af37;
+    font-size: 17px;
+}
+
+.atencion-select-arrow {
+    color: #d4af37;
+    font-size: 12px;
+    transition: transform .25s ease;
+}
+
+.atencion-custom-select.open .atencion-select-arrow {
+    transform: rotate(180deg);
+}
+
+/* MENU DESPLEGABLE */
+
+.atencion-select-options {
+    position: absolute;
+    top: calc(100% + 7px);
+    left: 0;
+    right: 0;
+    z-index: 100;
+
+    padding: 6px;
+
+    background: #202023;
+
+    border: 1px solid rgba(212, 175, 55, .35);
+    border-radius: 12px;
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, .5);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-7px);
+    pointer-events: none;
+
+    transition:
+        opacity .2s ease,
+        transform .2s ease,
+        visibility .2s ease;
+}
+
+.atencion-custom-select.open .atencion-select-options {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* OPCIONES */
+
+.atencion-select-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    min-height: 48px;
+
+    padding: 8px 12px;
+
+    color: #dadadd;
+    background: transparent;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: left;
+
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.atencion-select-option:hover,
+.atencion-select-option:focus-visible {
+    color: #e4c65a;
+    background: rgba(212, 175, 55, .09);
+    outline: none;
+}
+
+.atencion-select-option.selected {
+    color: #d4af37;
+    background: rgba(212, 175, 55, .12);
+    border-color: rgba(212, 175, 55, .2);
+}
+
+.atencion-select-option-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 33px;
+    height: 33px;
+    flex-shrink: 0;
+
+    color: #d4af37;
+    background: rgba(212, 175, 55, .08);
+
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.atencion-select-check {
+    margin-left: auto;
+    color: #d4af37;
+    font-size: 15px;
+    opacity: 0;
+}
+
+.atencion-select-option.selected .atencion-select-check {
+    opacity: 1;
+}
+
+/* SELECT NATIVO COMO RESPALDO */
+
+.atencion-pago-field select {
+    cursor: pointer;
+    color-scheme: dark;
+}
+
+.atencion-pago-field select option {
+    color: #f5f5f5;
+    background: #242427;
+}
+
+/* ==========================================
+   BOTONES DEL MODAL
+========================================== */
+
+.atencion-pago-overlay .atencion-pago-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+
+    width: 100%;
+
+    margin: 5px 0 0;
+    padding: 25px 0 0;
+
+    border-top: 1px solid #303034;
+}
+
+.atencion-pago-primary,
+.atencion-pago-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    min-height: 46px;
+    padding: 0 23px;
+
+    border: 1px solid transparent;
+    border-radius: 10px;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.atencion-pago-primary {
+    color: #111;
+    background: #d4af37;
+    border-color: #d4af37;
+}
+
+.atencion-pago-primary:hover:not(:disabled) {
+    color: #111;
+    background: #e4c65a;
+    border-color: #e4c65a;
+}
+
+.atencion-pago-secondary {
+    color: #dadadd;
+    background: #242427;
+    border-color: #35353a;
+}
+
+.atencion-pago-secondary:hover {
+    color: #d4af37;
+    border-color: #d4af37;
+}
+
+.atencion-pago-primary:disabled {
+    opacity: .7;
+    cursor: wait;
+}
+
+/* ==========================================
+   SPINNER
+========================================== */
+
+.atencion-pago-spinner {
+    display: inline-block;
+
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+
+    border: 2px solid rgba(212, 175, 55, .3);
+    border-top-color: #d4af37;
+    border-radius: 50%;
+
+    animation: pagoSpinner .7s linear infinite;
+}
+
+.atencion-pago-primary .atencion-pago-spinner {
+    border-color: rgba(0, 0, 0, .2);
+    border-top-color: #111;
+}
+
+@keyframes pagoSpinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==========================================
+   ANIMACIONES DEL MODAL
+========================================== */
+
+@keyframes pagoOverlayEntrada {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes pagoModalEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes pagoOverlaySalida {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes pagoModalSalida {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(12px) scale(.96);
+    }
+}
+
+.atencion-pago-overlay.is-closing {
+    pointer-events: none;
+    animation: pagoOverlaySalida .2s ease both;
+}
+
+.atencion-pago-overlay.is-closing .atencion-pago-modal {
+    animation: pagoModalSalida .2s ease both;
+}
+
+/* ==========================================
+   NOTIFICACIONES
+========================================== */
+
+.atencion-pago-toast {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    z-index: 3600;
+
+    max-width: 370px;
+    padding: 15px 20px;
+
+    color: #e4c65a;
+    background: #1c1c1f;
+
+    border: 1px solid rgba(212, 175, 55, .4);
+    border-radius: 11px;
+
+    box-shadow: 0 12px 35px rgba(0, 0, 0, .4);
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.atencion-pago-toast.error {
+    color: #f87171;
+    border-color: rgba(248, 113, 113, .4);
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1150px) {
+    .atencion-page {
+        padding: 35px 30px 60px;
+    }
+}
+
+@media (max-width: 800px) {
+    .atencion-page {
+        padding: 30px 20px 50px;
+    }
+
+    .atencion-header h1 {
+        font-size: 29px;
+    }
+
+    .atencion-header-icon {
+        display: none;
+    }
+
+    .atencion-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .atencion-bottom-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .atencion-page {
+        padding: 25px 14px 40px;
+    }
+
+    .atencion-header h1 {
+        font-size: 25px;
+    }
+
+    .atencion-title-icon {
+        width: 43px;
+        height: 43px;
+        font-size: 18px;
+    }
+
+    .atencion-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .atencion-toolbar,
+    .atencion-history-toolbar {
+        justify-content: stretch;
+    }
+
+    .atencion-toolbar > button,
+    .atencion-history-toolbar > button {
+        width: 100%;
+    }
+
+    .atencion-card-header {
+        padding: 20px;
+    }
+
+    .atencion-card-header h2 {
+        font-size: 18px;
+    }
+
+    .atencion-form {
+        padding: 20px;
+    }
+
+    .atencion-form-actions {
+        flex-direction: column;
+    }
+
+    .atencion-form-actions button {
+        width: 100%;
+    }
+
+    .atencion-history-search {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 20px;
+    }
+
+    .atencion-history-search button {
+        width: 100%;
+    }
+
+    .atencion-results-text {
+        padding: 0 20px 18px;
+    }
+
+    .atencion-info-card {
+        padding: 22px;
+    }
+
+    /* MODAL RESPONSIVE */
+
+    .atencion-pago-overlay {
+        padding: 14px;
+    }
+
+    .atencion-pago-overlay .atencion-pago-modal {
+        width: 100%;
+        max-height: 90vh;
+    }
+
+    .atencion-pago-overlay .atencion-pago-header {
+        padding: 24px;
+    }
+
+    .atencion-pago-header h2 {
+        font-size: 20px;
+    }
+
+    .atencion-pago-overlay .atencion-pago-form,
+    .atencion-pago-overlay #formRegistrarPago {
+        padding: 25px 24px 28px;
+    }
+
+    .atencion-pago-overlay .atencion-pago-field {
+        margin-bottom: 22px;
+    }
+
+    .atencion-pago-overlay .atencion-pago-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .atencion-pago-actions button {
+        width: 100%;
+    }
+
+    .atencion-pago-toast {
+        left: 15px;
+        right: 15px;
+        bottom: 15px;
+        max-width: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .atencion-drawer,
+    .atencion-chevron,
+    .atencion-history-chevron {
+        transition: none;
+    }
+
+    .atencion-drawer:not(.closed) > .atencion-card {
+        animation: none;
+    }
+
+    .atencion-pago-overlay,
+    .atencion-pago-overlay .atencion-pago-modal {
+        animation-duration: .01ms !important;
+    }
+}

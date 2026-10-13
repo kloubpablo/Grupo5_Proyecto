@@ -1,77 +1,518 @@
-﻿@model IEnumerable<WebApplicationAPP.Models.Usuario>
+﻿
+@model IEnumerable<WebApplicationAPP.Models.Usuario>
+@using WebApplicationAPP.Models
+@using System.Linq
 
-<h2 class="mb-4">👤 Usuarios</h2>
+@{
+    ViewData["Title"] = "Gestion de Usuarios";
 
-<div class="mb-3">
-    <a class="btn btn-primary"
-           href="/Usuarios/Crear">
-        ➕ Nuevo Usuario
-    </a>
+    var usuarios = Model?.ToList() ?? new List<Usuario>();
+    var roles = ViewBag.Roles as IEnumerable<Role>
+        ?? Enumerable.Empty<Role>();
+
+    var total = usuarios.Count;
+    var activos = usuarios.Count(u => u.Estado);
+    var inactivos = total - activos;
+}
+
+<link rel="stylesheet" href="~/css/usuarios.css" asp-append-version="true" />
+
+<div class="usuarios-page" id="usuariosPage">
+
+    <header class="usuarios-header">
+        <div>
+            <span class="usuarios-kicker">ADMINISTRACION DEL SISTEMA</span>
+            <h1><i class="bi bi-people"></i> Gestion de usuarios</h1>
+            <p>Administra las cuentas y permisos de Yampi Barber Shop.</p>
+        </div>
+    </header>
+
+    <!-- ESTADISTICAS -->
+
+    <div class="usuarios-stats">
+        <div class="usuarios-stat">
+            <i class="bi bi-people"></i>
+            <div>
+                <span>Total de usuarios</span>
+                <strong id="totalUsuarios">@total</strong>
+            </div>
+        </div>
+
+        <div class="usuarios-stat">
+            <i class="bi bi-person-check"></i>
+            <div>
+                <span>Usuarios activos</span>
+                <strong id="totalActivos">@activos</strong>
+            </div>
+        </div>
+
+        <div class="usuarios-stat">
+            <i class="bi bi-person-dash"></i>
+            <div>
+                <span>Usuarios inactivos</span>
+                <strong id="totalInactivos">@inactivos</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="usuarios-toolbar">
+        <button type="button" class="usuarios-btn-primary" id="abrirCrearUsuario">
+            <i class="bi bi-person-plus"></i> Nuevo usuario
+        </button>
+    </div>
+
+    <!-- CREAR USUARIO -->
+
+    <section class="usuarios-card usuarios-drawer closed" id="crearUsuarioContainer">
+        <div class="usuarios-card-header">
+            <div>
+                <span class="usuarios-kicker">NUEVO REGISTRO</span>
+                <h2>Registrar usuario</h2>
+                <p>Completa los datos de la nueva cuenta.</p>
+            </div>
+            <button type="button" class="usuarios-icon-btn" id="cerrarCrearUsuario"
+                    aria-label="Cerrar">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <form id="formCrearUsuario" class="usuarios-form"
+              method="post" action="@Url.Action("Crear", "Usuarios")">
+            @Html.AntiForgeryToken()
+
+            <div class="usuarios-form-grid">
+                <div class="usuarios-field">
+                    <label for="crearNombre">Nombre completo</label>
+                    <input id="crearNombre" name="nombre" required maxlength="150" />
+                </div>
+
+                <div class="usuarios-field">
+                    <label for="crearUsername">Nombre de usuario</label>
+                    <input id="crearUsername" name="username" required maxlength="100" />
+                </div>
+
+                <div class="usuarios-field">
+                    <label for="crearCorreo">Correo electronico</label>
+                    <input id="crearCorreo" name="correoElectronico"
+                           type="email" required maxlength="200" />
+                </div>
+
+                <div class="usuarios-field">
+                    <label>Rol</label>
+                    <div class="usuarios-custom-select" data-placeholder="Seleccionar rol">
+                        <input type="hidden" name="idRol" id="crearRol" value="" />
+                        <button type="button" class="usuarios-select-trigger"
+                                aria-expanded="false">
+                            <span class="usuarios-select-text">Seleccionar rol</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div class="usuarios-select-menu">
+                            @foreach (var rol in roles)
+                            {
+                                <button type="button" class="usuarios-select-option"
+                                        data-value="@rol.IdRol">
+                                    <i class="bi bi-shield-check"></i>
+                                    @rol.Nombre
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="usuarios-field">
+                    <label for="crearPassword">Contraseña</label>
+                    <div class="usuarios-password">
+                        <input id="crearPassword" name="password"
+                               type="password" minlength="8" required
+                               autocomplete="new-password" />
+                        <button type="button" class="usuarios-toggle-password"
+                                data-target="crearPassword" aria-label="Mostrar contraseña">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="usuarios-field">
+                    <label for="crearConfirmar">Confirmar contraseña</label>
+                    <div class="usuarios-password">
+                        <input id="crearConfirmar" name="confirmarContraseña"
+                               type="password" minlength="8" required
+                               autocomplete="new-password" />
+                        <button type="button" class="usuarios-toggle-password"
+                                data-target="crearConfirmar" aria-label="Mostrar contraseña">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="usuarios-form-actions">
+                <button type="button" class="usuarios-btn-secondary"
+                        id="cancelarCrearUsuario">Cancelar</button>
+                <button type="submit" class="usuarios-btn-primary">
+                    <i class="bi bi-check-lg"></i> Guardar usuario
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <!-- EDITAR USUARIO -->
+
+    <section class="usuarios-card usuarios-drawer closed" id="editarUsuarioContainer">
+        <div class="usuarios-card-header">
+            <div>
+                <span class="usuarios-kicker">ACTUALIZAR INFORMACION</span>
+                <h2>Editar usuario</h2>
+                <p>Los cambios se guardan sin recargar la pagina.</p>
+            </div>
+            <button type="button" class="usuarios-icon-btn" id="cerrarEditarUsuario"
+                    aria-label="Cerrar">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <form id="formEditarUsuario" class="usuarios-form"
+              method="post" action="@Url.Action("Editar", "Usuarios")">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" id="editarIdUsuario" name="idUsuario" />
+
+            <div class="usuarios-form-grid">
+                <div class="usuarios-field">
+                    <label for="editarNombre">Nombre completo</label>
+                    <input id="editarNombre" name="nombre" required />
+                </div>
+
+                <div class="usuarios-field">
+                    <label for="editarUsername">Nombre de usuario</label>
+                    <input id="editarUsername" name="username" required />
+                </div>
+
+                <div class="usuarios-field">
+                    <label for="editarCorreo">Correo electronico</label>
+                    <input id="editarCorreo" name="correoElectronico"
+                           type="email" required />
+                </div>
+
+                <div class="usuarios-field">
+                    <label>Rol</label>
+                    <div class="usuarios-custom-select" data-placeholder="Seleccionar rol">
+                        <input type="hidden" id="editarRol" name="idRol" />
+                        <button type="button" class="usuarios-select-trigger"
+                                aria-expanded="false">
+                            <span class="usuarios-select-text">Seleccionar rol</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div class="usuarios-select-menu">
+                            @foreach (var rol in roles)
+                            {
+                                <button type="button" class="usuarios-select-option"
+                                        data-value="@rol.IdRol">
+                                    <i class="bi bi-shield-check"></i>
+                                    @rol.Nombre
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="usuarios-field">
+                    <label>Estado de cuenta</label>
+                    <div class="usuarios-custom-select">
+                        <input type="hidden" id="editarEstado" name="estado" value="true" />
+                        <button type="button" class="usuarios-select-trigger"
+                                aria-expanded="false">
+                            <span class="usuarios-select-text">Activo</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div class="usuarios-select-menu">
+                            <button type="button" class="usuarios-select-option"
+                                    data-value="true">
+                                <i class="bi bi-check-circle"></i> Activo
+                            </button>
+                            <button type="button" class="usuarios-select-option"
+                                    data-value="false">
+                                <i class="bi bi-x-circle"></i> Inactivo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="usuarios-field">
+                    <label for="editarPassword">Nueva contraseña (opcional)</label>
+                    <div class="usuarios-password">
+                        <input id="editarPassword" name="password"
+                               type="password" autocomplete="new-password"
+                               placeholder="Dejar vacio para conservar" />
+                        <button type="button" class="usuarios-toggle-password"
+                                data-target="editarPassword" aria-label="Mostrar contraseña">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="usuarios-field">
+                    <label for="editarConfirmar">Confirmar nueva contraseña</label>
+                    <div class="usuarios-password">
+                        <input id="editarConfirmar" name="confirmarContraseña"
+                               type="password" autocomplete="new-password" />
+                        <button type="button" class="usuarios-toggle-password"
+                                data-target="editarConfirmar" aria-label="Mostrar contraseña">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="usuarios-form-actions">
+                <button type="button" class="usuarios-btn-secondary"
+                        id="cancelarEditarUsuario">Cancelar</button>
+                <button type="submit" class="usuarios-btn-primary">
+                    <i class="bi bi-check-lg"></i> Guardar cambios
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <!-- LISTADO -->
+
+    <section class="usuarios-card">
+        <div class="usuarios-card-header">
+            <div>
+                <span class="usuarios-kicker">DIRECTORIO DEL SISTEMA</span>
+                <h2>Usuarios registrados</h2>
+                <p>Gestiona las cuentas y sus permisos.</p>
+            </div>
+        </div>
+
+        <div class="usuarios-search">
+            <div class="usuarios-search-input">
+                <i class="bi bi-search"></i>
+                <input type="search" id="buscarUsuarios"
+                       placeholder="Buscar por nombre, usuario, correo o rol..." />
+            </div>
+            <button type="button" class="usuarios-btn-secondary"
+                    id="mostrarTodosUsuarios">
+                <i class="bi bi-arrow-counterclockwise"></i> Mostrar todos
+            </button>
+        </div>
+
+        <p class="usuarios-results-text" id="usuariosResultadosTexto"></p>
+
+        <div class="usuarios-table-wrapper">
+            <table class="usuarios-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Usuario</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="usuariosTableBody">
+                    @foreach (var u in usuarios)
+                    {
+                        var rolNombre = u.IdRolNavigation?.Nombre ?? "Sin rol";
+
+                        <tr class="usuario-fila"
+                            data-id="@u.IdUsuario"
+                            data-nombre="@u.Nombre"
+                            data-username="@u.Username"
+                            data-correo="@u.CorreoElectronico"
+                            data-idrol="@u.IdRol"
+                            data-rol="@rolNombre"
+                            data-estado="@(u.Estado ? "true" : "false")">
+
+                            <td>
+                                <div class="usuarios-person">
+                                    <div class="usuarios-avatar">
+                                        @(string.IsNullOrWhiteSpace(u.Nombre)
+                                            ? "?"
+                                            : u.Nombre.Substring(0, 1).ToUpper())
+                                    </div>
+                                    <strong class="usuario-nombre">@u.Nombre</strong>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="usuario-username">@u.Username</span>
+                            </td>
+
+                            <td>
+                                <span class="usuario-correo">@u.CorreoElectronico</span>
+                            </td>
+
+                            <td>
+                                <span class="usuarios-role usuario-rol">
+                                    <i class="bi bi-shield-check"></i>
+                                    <span>@rolNombre</span>
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="usuarios-status usuario-estado @(u.Estado ? "status-active" : "status-inactive")">
+                                    <span class="status-dot"></span>
+                                    <span class="status-text">
+                                        @(u.Estado ? "Activo" : "Inactivo")
+                                    </span>
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="usuarios-actions">
+                                    <button type="button"
+                                            class="usuarios-action-btn action-edit btn-editar-usuario">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </button>
+
+                                    <button type="button"
+                                            class="usuarios-action-btn action-role btn-cambiar-rol">
+                                        <i class="bi bi-shield-lock"></i> Rol
+                                        <i class="bi bi-chevron-down"></i>
+                                    </button>
+
+                                    <button type="button"
+                                            class="usuarios-action-btn action-delete btn-eliminar-usuario">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="usuarios-empty" id="usuariosSinResultados" hidden>
+                <i class="bi bi-search"></i>
+                <h3>No se encontraron usuarios</h3>
+                <p>Prueba con otra busqueda.</p>
+            </div>
+        </div>
+
+        <div class="usuarios-pagination" id="usuariosPaginacion">
+            <button type="button" class="usuarios-page-btn" id="usuariosAnterior"
+                    aria-label="Pagina anterior">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <div class="usuarios-page-numbers" id="usuariosNumeros"></div>
+            <button type="button" class="usuarios-page-btn" id="usuariosSiguiente"
+                    aria-label="Pagina siguiente">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+        </div>
+
+        <p class="usuarios-pagination-summary" id="usuariosResumen"></p>
+    </section>
+
+    <!-- MENU FLOTANTE DE ROL Y ESTADO -->
+
+    <div class="usuarios-role-popover" id="usuariosRolePopover" hidden>
+        <form id="formCambiarRol" method="post"
+              action="@Url.Action("CambiarRol", "Usuarios")">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="idUsuario" id="cambiarRolIdUsuario" />
+
+            <div class="usuarios-popover-header">
+                <i class="bi bi-shield-lock"></i>
+                <div>
+                    <strong>Cambiar permisos</strong>
+                    <span id="cambiarRolNombre"></span>
+                </div>
+            </div>
+
+            <div class="usuarios-popover-body">
+                <label>Nuevo rol</label>
+                <div class="usuarios-custom-select" data-placeholder="Seleccionar rol">
+                    <input type="hidden" name="idRol" id="cambiarRolNuevo" />
+                    <button type="button" class="usuarios-select-trigger"
+                            aria-expanded="false">
+                        <span class="usuarios-select-text">Seleccionar rol</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="usuarios-select-menu">
+                        @foreach (var rol in roles)
+                        {
+                            <button type="button" class="usuarios-select-option"
+                                    data-value="@rol.IdRol">
+                                <i class="bi bi-shield-check"></i> @rol.Nombre
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <label>Estado de cuenta</label>
+                <div class="usuarios-custom-select">
+                    <input type="hidden" name="estado"
+                           id="cambiarRolEstado" value="true" />
+                    <button type="button" class="usuarios-select-trigger"
+                            aria-expanded="false">
+                        <span class="usuarios-select-text">Activo</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="usuarios-select-menu">
+                        <button type="button" class="usuarios-select-option"
+                                data-value="true">
+                            <i class="bi bi-check-circle"></i> Activo
+                        </button>
+                        <button type="button" class="usuarios-select-option"
+                                data-value="false">
+                            <i class="bi bi-x-circle"></i> Inactivo
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="usuarios-popover-footer">
+                <button type="button" class="usuarios-btn-secondary"
+                        id="cancelarCambiarRol">Cancelar</button>
+                <button type="submit" class="usuarios-btn-primary">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- CONFIRMACION DE ELIMINACION -->
+
+    <div class="usuarios-modal-overlay" id="usuariosEliminarModal" hidden>
+        <div class="usuarios-modal" role="dialog" aria-modal="true"
+             aria-labelledby="usuariosEliminarTitulo">
+            <div class="usuarios-modal-icon">
+                <i class="bi bi-trash"></i>
+            </div>
+
+            <h2 id="usuariosEliminarTitulo">Eliminar usuario</h2>
+            <p>
+                ¿Estas seguro de eliminar a
+                <strong id="eliminarNombreUsuario"></strong>?
+            </p>
+            <p class="usuarios-modal-warning">
+                Esta accion no se puede deshacer.
+            </p>
+
+            <form id="formEliminarUsuario" method="post"
+                  action="@Url.Action("Eliminar", "Usuarios")">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" id="eliminarIdUsuario" />
+
+                <div class="usuarios-modal-actions">
+                    <button type="button" class="usuarios-btn-secondary"
+                            id="cancelarEliminarUsuario">Cancelar</button>
+                    <button type="submit" class="usuarios-btn-danger">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- NOTIFICACIONES -->
+
+    <div class="usuarios-toast" id="usuariosToast"
+         role="status" aria-live="polite" hidden></div>
 </div>
 
-<table class="table table-bordered text-center">
-
-    <thead class="table-dark">
-        <tr>
-            <th>Nombre</th>
-            <th>Usuario</th>
-            <th>Correo</th>
-            <th>Rol</th>
-            <th>Estado</th> 
-            <th>Acciones</th>
-
-        </tr>
-    </thead>
-
-    <tbody>
-
-        @if (Model == null || !Model.Any())
-        {
-            <tr>
-                <td colspan="5">
-                    No hay usuarios registrados
-                </td>
-            </tr>
-        }
-        else
-        {
-            @foreach (var u in Model)
-            {
-                <tr>
-
-                    <td>@u.Nombre</td>
-
-                    <td>@u.Username</td>
-
-                    <td>@u.CorreoElectronico</td>
-
-                    <td>
-                        @u.IdRolNavigation.Nombre
-                    </td>
-                    
-                    <td>@(u.Estado ? "Activo" : "Inactivo")</td>
-                    <td>
-
-                        <a class="btn btn-info btn-sm"
-                        href="/Usuarios/Editar/@u.IdUsuario">
-                            ✏️ Editar
-                        </a>
-
-                        <a class="btn btn-warning btn-sm"
-                        href="/Usuarios/CambiarRol/@u.IdUsuario">
-                            🔄 Cambiar Rol y Estado
-                        </a>
-
-                        <a class="btn btn-danger btn-sm"
-                        href="/Usuarios/Eliminar/@u.IdUsuario">
-                            🗑 Eliminar
-                        </a>
-                    </td>
-
-                </tr>
-            }
-        }
-
-    </tbody>
-
-</table>
+<script src="~/js/usuarios.js" asp-append-version="true"></script>

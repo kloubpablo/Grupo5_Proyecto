@@ -14,7 +14,7 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        //PERMISOS CENTRALIZADO
+        // PERMISOS CENTRALIZADO
         private bool TienePermiso(string permiso)
         {
             var rol = HttpContext.Session.GetString("Rol") ?? "";
@@ -22,8 +22,8 @@ namespace WebApplicationAPP.Controllers
             return PermisosHelper.TienePermiso(_context, rol, permiso);
         }
 
-        //LISTA GENERAL DE CITAS
-        public IActionResult Index()
+        // LISTA GENERAL DE CITAS
+        public IActionResult Index(int? editarId, DateOnly? fechaHorarios)
         {
             if (!TienePermiso("Citas/Index"))
             {
@@ -32,12 +32,46 @@ namespace WebApplicationAPP.Controllers
 
             var citas = _context.Citas
                 .Include(c => c.IdClienteNavigation)
+                .OrderBy(c => c.Fecha)
+                .ThenBy(c => c.Hora)
+                .ToList();
+
+            // EDITAR
+            if (editarId.HasValue)
+            {
+                var citaEditar = _context.Citas
+                    .FirstOrDefault(c => c.IdCita == editarId.Value);
+
+                if (citaEditar != null)
+                {
+                    ViewBag.CitaEditar = citaEditar;
+
+                    ViewBag.Barberos = _context.Usuarios
+                        .Where(u => u.IdRol == 2)
+                        .ToList();
+                }
+            }
+
+            // HORARIOS
+            if (fechaHorarios.HasValue)
+            {
+                ViewBag.FechaHorarios = fechaHorarios.Value;
+
+                ViewBag.Horarios = _context.Citas
+                    .Where(c => c.Fecha == fechaHorarios.Value)
+                    .OrderBy(c => c.Hora)
+                    .ToList();
+            }
+
+            // BARBEROS PARA CREAR
+            ViewBag.Barberos = _context.Usuarios
+                .Where(u => u.IdRol == 2)
                 .ToList();
 
             return View(citas);
         }
 
-        //MIS CITAS
+        // MIS CITAS
         public IActionResult MisCitas()
         {
             if (!TienePermiso("Citas/MisCitas"))
@@ -50,6 +84,8 @@ namespace WebApplicationAPP.Controllers
             var citas = _context.Citas
                 .Include(c => c.IdClienteNavigation)
                 .Where(c => c.IdClienteNavigation.Nombre == usuario)
+                .OrderBy(c => c.Fecha)
+                .ThenBy(c => c.Hora)
                 .ToList();
 
             return View(citas);
@@ -57,46 +93,10 @@ namespace WebApplicationAPP.Controllers
 
         public IActionResult test()
         {
-            
             return View();
         }
 
-        //HISTORIAL DE CITAS
-        public IActionResult Historial()
-        {
-            if (!TienePermiso("Citas/MisCitas"))
-            {
-                return RedirectToAction("Index", "Dashboard");
-            }
-
-            var usuario = HttpContext.Session.GetString("NombreUsuario") ?? "";
-
-            var historial = _context.Citas
-                .Include(c => c.IdClienteNavigation)
-                .Where(c => c.IdClienteNavigation.Nombre == usuario)
-                .OrderByDescending(c => c.Fecha)
-                .ThenByDescending(c => c.Hora)
-                .ToList();
-
-            return View(historial);
-        }
-
-        //CREAR CITA (GET)
-        public IActionResult Crear()
-        {
-            if (!TienePermiso("Citas/Crear"))
-            {
-                return RedirectToAction("Index", "Dashboard");
-            }
-
-            ViewBag.Barberos = _context.Usuarios
-                .Where(u => u.IdRol == 2)
-                .ToList();
-
-            return View();
-        }
-
-        //CREAR CITA (POST)
+        // CREAR CITA
         [HttpPost]
         public IActionResult Crear(DateOnly fecha, TimeOnly hora, string barbero)
         {
@@ -107,30 +107,24 @@ namespace WebApplicationAPP.Controllers
 
             if (string.IsNullOrWhiteSpace(barbero))
             {
-                ViewBag.Error = "Debe completar todos los campos";
+                TempData["ErrorCita"] = "Debe completar todos los campos";
+                TempData["SeccionCita"] = "crear";
 
-                ViewBag.Barberos = _context.Usuarios
-                    .Where(u => u.IdRol == 2)
-                    .ToList();
-
-                return View();
+                return RedirectToAction("Index");
             }
 
-           bool ocupado = _context.Citas.Any(c =>
-    c.Fecha == fecha &&
-    c.Hora == hora &&
-    c.Barbero == barbero &&
-    (c.Estado == "Activa" || c.Estado == "Bloqueada"));
+            bool ocupado = _context.Citas.Any(c =>
+                c.Fecha == fecha &&
+                c.Hora == hora &&
+                c.Barbero == barbero &&
+                (c.Estado == "Activa" || c.Estado == "Bloqueada"));
 
             if (ocupado)
             {
-                ViewBag.Error = "Horario no disponible";
+                TempData["ErrorCita"] = "Horario no disponible";
+                TempData["SeccionCita"] = "crear";
 
-                ViewBag.Barberos = _context.Usuarios
-                    .Where(u => u.IdRol == 2)
-                    .ToList();
-
-                return View();
+                return RedirectToAction("Index");
             }
 
             var nombreCliente = HttpContext.Session.GetString("NombreUsuario") ?? "";
@@ -168,10 +162,67 @@ namespace WebApplicationAPP.Controllers
             _context.Citas.Add(nuevaCita);
             _context.SaveChanges();
 
-            return RedirectToAction("MisCitas");
+            TempData["MensajeCita"] = "Cita creada correctamente";
+            TempData["SeccionCita"] = "agenda";
+
+            return RedirectToAction("Index");
         }
 
-        //CANCELAR CITA
+        // EDITAR CITA
+        [HttpPost]
+        public IActionResult Editar(Cita cita)
+        {
+            if (!TienePermiso("Citas/Crear"))
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            if (string.IsNullOrWhiteSpace(cita.Barbero))
+            {
+                TempData["ErrorCita"] = "Debe completar todos los campos";
+                TempData["SeccionCita"] = "editar";
+                TempData["EditarId"] = cita.IdCita;
+
+                return RedirectToAction("Index");
+            }
+
+            bool ocupado = _context.Citas.Any(c =>
+                c.IdCita != cita.IdCita &&
+                c.Fecha == cita.Fecha &&
+                c.Hora == cita.Hora &&
+                c.Barbero == cita.Barbero &&
+                (c.Estado == "Activa" || c.Estado == "Bloqueada"));
+
+            if (ocupado)
+            {
+                TempData["ErrorCita"] = "Ese horario ya está ocupado.";
+                TempData["SeccionCita"] = "editar";
+                TempData["EditarId"] = cita.IdCita;
+
+                return RedirectToAction("Index");
+            }
+
+            var citaDB = _context.Citas
+                .FirstOrDefault(c => c.IdCita == cita.IdCita);
+
+            if (citaDB == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            citaDB.Fecha = cita.Fecha;
+            citaDB.Hora = cita.Hora;
+            citaDB.Barbero = cita.Barbero;
+
+            _context.SaveChanges();
+
+            TempData["MensajeCita"] = "Cita actualizada correctamente";
+            TempData["SeccionCita"] = "agenda";
+
+            return RedirectToAction("Index");
+        }
+
+        // CANCELAR CITA
         public IActionResult Cancelar(int id)
         {
             if (!TienePermiso("Citas/Index"))
@@ -200,91 +251,10 @@ namespace WebApplicationAPP.Controllers
                 _context.SaveChanges();
             }
 
-
-
             return RedirectToAction("Index");
         }
 
-        //EDITAR CITA (GET)
-        public IActionResult Editar(int id)
-        {
-            if (!TienePermiso("Citas/Crear"))
-            {
-                return RedirectToAction("Index", "Dashboard");
-            }
-
-            var cita = _context.Citas
-                .FirstOrDefault(c => c.IdCita == id);
-
-            if (cita == null)
-            {
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.Barberos = _context.Usuarios
-                .Where(u => u.IdRol == 2)
-                .ToList();
-
-            return View(cita);
-        }
-
-
-        //EDITAR CITA (POST)
-        [HttpPost]
-        public IActionResult Editar(Cita cita)
-        {
-            if (!TienePermiso("Citas/Crear"))
-            {
-                return RedirectToAction("Index", "Dashboard");
-            }
-
-            if (string.IsNullOrWhiteSpace(cita.Barbero))
-            {
-                ViewBag.Error = "Debe completar todos los campos";
-
-                ViewBag.Barberos = _context.Usuarios
-                    .Where(u => u.IdRol == 2)
-                    .ToList();
-
-                return View(cita);
-            }
-
-            bool ocupado = _context.Citas.Any(c =>
-    c.IdCita != cita.IdCita &&
-    c.Fecha == cita.Fecha &&
-    c.Hora == cita.Hora &&
-    c.Barbero == cita.Barbero &&
-    (c.Estado == "Activa" || c.Estado == "Bloqueada"));
-
-            if (ocupado)
-            {
-                ViewBag.Error = "Ese horario ya está ocupado.";
-
-                ViewBag.Barberos = _context.Usuarios
-                    .Where(u => u.IdRol == 2)
-                    .ToList();
-
-                return View(cita);
-            }
-
-            var citaDB = _context.Citas
-                .FirstOrDefault(c => c.IdCita == cita.IdCita);
-
-            if (citaDB != null)
-            {
-                citaDB.Fecha = cita.Fecha;
-                citaDB.Hora = cita.Hora;
-                citaDB.Barbero = cita.Barbero;
-
-                _context.SaveChanges();
-            }
-
-            return RedirectToAction("Index");
-        }
-
-
-
-        //BLOQUEAR HORARIO
+        // BLOQUEAR HORARIO
         public IActionResult Bloquear(int id)
         {
             if (!TienePermiso("Citas/Crear"))
@@ -304,18 +274,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("Index");
         }
 
-
-        //VISUALIZAR HORARIOS DISPONIBLES
-        public IActionResult HorariosDisponibles()
-        {
-            if (!TienePermiso("Citas/Crear"))
-            {
-                return RedirectToAction("Index", "Dashboard");
-            }
-
-            return View();
-        }
-
+        // HORARIOS DISPONIBLES
         [HttpPost]
         public IActionResult HorariosDisponibles(DateOnly fecha)
         {
@@ -324,15 +283,10 @@ namespace WebApplicationAPP.Controllers
                 return RedirectToAction("Index", "Dashboard");
             }
 
-            var horarios = _context.Citas
-                .Where(c => c.Fecha == fecha)
-                .OrderBy(c => c.Hora)
-                .ToList();
-
-            ViewBag.Fecha = fecha;
-
-            return View(horarios);
+            return RedirectToAction(
+                "Index",
+                new { fechaHorarios = fecha }
+            );
         }
-
     }
 }

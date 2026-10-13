@@ -1,65 +1,445 @@
-﻿@using System.Linq
+﻿
+@using System.Linq
 @model List<string>
+
 @{
-    ViewData["Title"] = "Control de Galería";
+    ViewData["Title"] = "Control de Galeria";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    int totalImagenes = Model?.Count ?? 0;
 }
 
-<h2 class="mb-4">🖼️ Control de Galería</h2>
+<link rel="stylesheet"
+      href="~/css/control-galeria.css"
+      asp-append-version="true" />
 
-<div class="mb-3 d-flex gap-2">
-    <a class="btn btn-success"
-       href="/YampiBarberShop/AgregarImagen">
-        ➕ Agregar Imagen
-    </a>
-</div>
+<div class="galeria-admin-page">
 
-</div>
-<table class="table table-bordered table-hover">
+    <!-- ==========================================
+         ENCABEZADO
+    ========================================== -->
+    <section class="galeria-page-header">
 
-    <thead class="table-dark">
-        +
-        <tr>
-            <th>Vista Previa</th>
-            <th>Nombre Archivo</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
+        <div class="galeria-header-info">
 
-    <tbody>
+            <span class="galeria-kicker">
+                ADMINISTRACION / CONTROLES EXTERNOS
+            </span>
+
+            <h1>
+                <span class="galeria-header-icon">
+                    <i class="bi bi-images"></i>
+                </span>
+                Control de Galeria
+            </h1>
+
+            <p>
+                Administra las imagenes que se muestran
+                en la galeria de Yampi BarberShop.
+            </p>
+
+        </div>
+
+        <button type="button"
+                class="galeria-btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#modalAgregarImagen">
+
+            <i class="bi bi-plus-lg"></i>
+            Agregar imagen
+
+        </button>
+
+    </section>
+
+
+    <!-- ==========================================
+         RESUMEN
+    ========================================== -->
+    <section class="galeria-summary">
+
+        <div class="galeria-summary-icon">
+            <i class="bi bi-collection"></i>
+        </div>
+
+        <div class="galeria-summary-info">
+            <span>Imagenes registradas</span>
+            <strong>@totalImagenes</strong>
+        </div>
+
+        <div class="galeria-summary-decoration">
+            <i class="bi bi-images"></i>
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         MENSAJES
+    ========================================== -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="galeria-alert galeria-alert-success">
+            <i class="bi bi-check-circle"></i>
+            <span>@TempData["Mensaje"]</span>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="galeria-alert galeria-alert-error">
+            <i class="bi bi-exclamation-circle"></i>
+            <span>@TempData["Error"]</span>
+        </div>
+    }
+
+
+    <!-- ==========================================
+         IMAGENES REGISTRADAS
+    ========================================== -->
+    <section class="galeria-section">
+
+        <div class="galeria-section-header">
+
+            <div>
+                <span class="galeria-kicker">
+                    CONTENIDO ACTUAL
+                </span>
+
+                <h2>
+                    <i class="bi bi-grid-3x3-gap"></i>
+                    Imagenes de la galeria
+                </h2>
+
+                <p>
+                    Visualiza y administra el contenido
+                    fotografico del negocio.
+                </p>
+            </div>
+
+            <span class="galeria-count">
+                @totalImagenes imagenes
+            </span>
+
+        </div>
+
+
         @if (Model == null || !Model.Any())
         {
-            <tr>
-                <td colspan="3" class="text-center">
-                    No hay imágenes
-                </td>
-            </tr>
+            <!-- ESTADO VACIO -->
+            <div class="galeria-empty">
+
+                <div class="galeria-empty-icon">
+                    <i class="bi bi-image"></i>
+                </div>
+
+                <h3>No hay imagenes registradas</h3>
+
+                <p>
+                    Agrega tu primera imagen para comenzar
+                    a mostrar contenido en la galeria.
+                </p>
+
+                <button type="button"
+                        class="galeria-btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalAgregarImagen">
+
+                    <i class="bi bi-plus-lg"></i>
+                    Agregar primera imagen
+
+                </button>
+
+            </div>
         }
         else
         {
-            @foreach (var imagen in Model)
-            {
-                <tr>
-                    <td>
-                        <img src="~/imagenes/galeria/@imagen"
-                             class="img-thumbnail"
-                             style="height:120px;" />
-                    </td>
+            <!-- GRID DE TARJETAS -->
+            <div class="galeria-grid">
 
-                    <td>@imagen</td>
+                @foreach (var imagen in Model)
+                {
+                    <article class="galeria-card">
 
-                    <td>
-                        <a class="btn btn-danger btn-sm"
-                           href="/YampiBarberShop/EliminarImagen?nombre=@imagen">
-                            🗑️ Eliminar
-                        </a>
-                    </td>
-                </tr>
+                        <!-- IMAGEN -->
+                        <div class="galeria-card-image">
 
-            }
+                            <img src="@Url.Content("~/imagenes/galeria/" + imagen)"
+                                 alt="Imagen de galeria: @imagen"
+                                 loading="lazy" />
 
+                            <span class="galeria-image-badge">
+                                <i class="bi bi-image"></i>
+                                Imagen
+                            </span>
+
+                        </div>
+
+
+                        <!-- NOMBRE DEL ARCHIVO -->
+                        <div class="galeria-card-body">
+
+                            <div class="galeria-file-icon">
+                                <i class="bi bi-file-earmark-image"></i>
+                            </div>
+
+                            <div class="galeria-file-info">
+
+                                <span>Nombre del archivo</span>
+
+                                <strong title="@imagen">
+                                    @imagen
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ACCIONES -->
+                        <div class="galeria-card-footer">
+
+                            <button type="button"
+                                    class="galeria-btn-delete"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEliminarImagen"
+                                    data-imagen="@imagen">
+
+                                <i class="bi bi-trash3"></i>
+                                Eliminar imagen
+
+                            </button>
+
+                        </div>
+
+                    </article>
+                }
+
+            </div>
         }
 
-    </tbody>
+    </section>
 
-</table>
+</div>
+
+
+<!-- ==========================================
+     MODAL - AGREGAR IMAGEN
+========================================== -->
+<div class="modal fade"
+     id="modalAgregarImagen"
+     tabindex="-1"
+     aria-labelledby="modalAgregarImagenTitulo"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content galeria-modal">
+
+            <div class="modal-header galeria-modal-header">
+
+                <h5 class="modal-title"
+                    id="modalAgregarImagenTitulo">
+
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    Agregar imagen
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar">
+                </button>
+
+            </div>
+
+
+            <form asp-controller="YampiBarberShop"
+                  asp-action="AgregarImagen"
+                  method="post"
+                  enctype="multipart/form-data"
+                  id="formAgregarImagen">
+
+                @Html.AntiForgeryToken()
+
+                <div class="modal-body galeria-modal-body">
+
+                    <p class="galeria-upload-description">
+                        Selecciona una imagen JPG para agregarla
+                        a la galeria de Yampi BarberShop.
+                    </p>
+
+
+                    <!-- SELECCIONAR ARCHIVO -->
+                    <div class="galeria-upload-field">
+
+                        <label for="archivoGaleria">
+                            <i class="bi bi-image"></i>
+                            Seleccionar imagen
+                        </label>
+
+                        <input type="file"
+                               id="archivoGaleria"
+                               name="archivo"
+                               class="galeria-upload-input"
+                               accept=".jpg,.jpeg,image/jpeg"
+                               required />
+
+                        <small>
+                            Formatos permitidos: JPG y JPEG.
+                        </small>
+
+                    </div>
+
+
+                    <!-- VISTA PREVIA -->
+                    <div id="galeriaPreviewContainer"
+                         class="galeria-upload-preview"
+                         hidden>
+
+                        <span class="galeria-preview-title">
+                            VISTA PREVIA
+                        </span>
+
+                        <div class="galeria-preview-image">
+
+                            <img id="galeriaPreviewImagen"
+                                 alt="Vista previa de la imagen" />
+
+                        </div>
+
+                        <span id="galeriaPreviewNombre"
+                              class="galeria-preview-name">
+                        </span>
+
+                    </div>
+
+
+                    <!-- MENSAJE DE ERROR -->
+                    <div id="galeriaUploadError"
+                         class="galeria-upload-error"
+                         role="alert"
+                         hidden>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer galeria-modal-footer">
+
+                    <button type="button"
+                            class="galeria-btn-cancel"
+                            data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+                    <button type="submit"
+                            id="btnGuardarImagen"
+                            class="galeria-btn-primary">
+
+                        <i class="bi bi-check-lg"></i>
+                        Guardar imagen
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     MODAL - ELIMINAR IMAGEN
+========================================== -->
+<div class="modal fade"
+     id="modalEliminarImagen"
+     tabindex="-1"
+     aria-labelledby="modalEliminarImagenTitulo"
+     aria-hidden="true"
+     data-delete-url="@Url.Action("EliminarImagen", "YampiBarberShop")">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content galeria-modal">
+
+            <div class="modal-header galeria-modal-header">
+
+                <h5 class="modal-title"
+                    id="modalEliminarImagenTitulo">
+
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Eliminar imagen
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar">
+                </button>
+
+            </div>
+
+
+            <div class="modal-body galeria-modal-body">
+
+                <p>
+                    Estas seguro de que deseas eliminar
+                    esta imagen de la galeria?
+                </p>
+
+                <div class="galeria-delete-file">
+                    <i class="bi bi-file-earmark-image"></i>
+
+                    <strong id="nombreImagenEliminar">
+                    </strong>
+                </div>
+
+                <p class="galeria-modal-warning">
+                    Esta accion no se puede deshacer.
+                </p>
+
+            </div>
+
+
+            <div class="modal-footer galeria-modal-footer">
+
+                <button type="button"
+                        class="galeria-btn-cancel"
+                        data-bs-dismiss="modal">
+
+                    Cancelar
+
+                </button>
+
+                <a id="btnConfirmarEliminar"
+                   href="#"
+                   class="galeria-btn-confirm-delete">
+
+                    <i class="bi bi-trash3"></i>
+                    Eliminar imagen
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     JAVASCRIPT DE LA GALERIA
+========================================== -->
+<script src="~/js/control-galeria.js"
+        asp-append-version="true"></script>

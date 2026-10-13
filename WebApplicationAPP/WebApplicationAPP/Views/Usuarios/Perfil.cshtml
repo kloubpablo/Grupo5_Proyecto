@@ -1,98 +1,483 @@
+
 @model WebApplicationAPP.Models.Usuario
 
-<h2 class="mb-4">👤 Mi Perfil</h2>
+@{
+    ViewData["Title"] = "Mi Perfil";
 
-<div class="card p-4">
+    var nombre = Model.Nombre ?? "Usuario";
+
+    var iniciales = string.Join("",
+        nombre.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+              .Take(2)
+              .Select(p => p.Substring(0, 1).ToUpper()));
+
+    var rol = Model.IdRolNavigation?.Nombre ?? "Usuario";
+}
+
+<link rel="stylesheet"
+      href="~/css/perfil.css"
+      asp-append-version="true" />
+
+<div class="perfil-page">
+
+    <!-- ENCABEZADO -->
+
+    <div class="perfil-header">
+
+        <div>
+
+            <span class="perfil-kicker">
+                YAMPI BARBER SHOP / MI CUENTA
+            </span>
+
+            <h1>
+                <span class="perfil-title-icon">
+                    <i class="bi bi-person-circle"></i>
+                </span>
+
+                Mi Perfil
+            </h1>
+
+            <p>
+                Administra tu informacion personal y
+                la seguridad de tu cuenta.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- MENSAJES -->
 
     @if (ViewBag.Error != null)
     {
-        <div class="alert alert-danger">
+        <div class="perfil-alert error">
+            <i class="bi bi-exclamation-circle"></i>
             @ViewBag.Error
         </div>
     }
 
     @if (ViewBag.Exito != null)
     {
-        <div class="alert alert-success">
+        <div class="perfil-alert success">
+            <i class="bi bi-check-circle"></i>
             @ViewBag.Exito
         </div>
     }
 
-    <form method="post">
+    <!-- TARJETA PRINCIPAL -->
 
-        <div class="mb-3">
-            <label class="form-label">
-                Nombre
-            </label>
+    <div class="perfil-card">
 
-            <input class="form-control"
-                   type="text"
-                   name="nombre"
-                   value="@Model.Nombre" />
+        <!-- PORTADA -->
+
+        <div class="perfil-cover">
+
+            <div class="perfil-cover-decoration"></div>
+
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">
-                Usuario
-            </label>
+        <!-- FOTO Y DATOS PRINCIPALES -->
 
-            <input class="form-control"
-                   type="text"
-                   name="username"
-                   value="@Model.Username" />
+        <div class="perfil-identity">
+
+            <div class="perfil-avatar-section">
+
+                <button type="button"
+                        class="perfil-avatar-button"
+                        id="perfilAvatarButton"
+                        aria-label="Cambiar foto de perfil"
+                        title="Cambiar foto de perfil">
+
+                    <span class="perfil-avatar-initials"
+                          id="perfilIniciales">
+                        @iniciales
+                    </span>
+
+                    <img id="perfilAvatarImagen"
+                         alt="Foto de perfil"
+                         hidden />
+
+                    <span class="perfil-avatar-overlay">
+
+                        <i class="bi bi-camera-fill"></i>
+
+                        <small>Editar foto</small>
+
+                    </span>
+
+                </button>
+
+                <input type="file"
+                       id="perfilFotoInput"
+                       accept="image/png,image/jpeg,image/webp"
+                       hidden />
+
+            </div>
+
+            <div class="perfil-identity-info">
+
+                <h2>@Model.Nombre</h2>
+
+                <p>
+                    <i class="bi bi-at"></i>
+                    @Model.Username
+                </p>
+
+                <span class="perfil-role-badge">
+                    <i class="bi bi-shield-check"></i>
+                    @rol
+                </span>
+
+            </div>
+
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">
-                Correo
-            </label>
+        <!-- OPCIONES DE FOTO -->
 
-            <input class="form-control"
-                   type="email"
-                   name="correoElectronico"
-                   value="@Model.CorreoElectronico" />
+        <div class="perfil-photo-actions">
+
+            <button type="button"
+                    class="perfil-photo-action"
+                    id="perfilCambiarFoto">
+
+                <i class="bi bi-camera"></i>
+                Cambiar foto
+
+            </button>
+
+            <button type="button"
+                    class="perfil-photo-action remove"
+                    id="perfilEliminarFoto"
+                    hidden>
+
+                <i class="bi bi-trash3"></i>
+                Eliminar foto
+
+            </button>
+
+            <span class="perfil-photo-hint">
+                JPG, PNG o WEBP. Maximo 2 MB. 
+            </span>
+
         </div>
 
-        <hr />
+        <!-- FORMULARIO -->
 
-        <h5>Cambiar Contraseña</h5>
+        <form asp-controller="Usuarios"
+              asp-action="Perfil"
+              method="post"
+              id="perfilFormulario">
 
-        <div class="mb-3">
-            <label class="form-label">
-                Nueva Contraseña
-            </label>
+            @Html.AntiForgeryToken()
 
-            <input class="form-control"
-                   type="password"
-                   name="password"
-                   placeholder="Dejar vacío para mantener la actual" />
-        </div>
+            <div class="perfil-content">
 
-        <div class="mb-3">
-            <label class="form-label">
-                Confirmar Contraseña
-            </label>
+                <!-- INFORMACION PERSONAL -->
 
-            <input class="form-control"
-                   type="password"
-                   name="confirmarContraseña" />
-        </div>
+                <div class="perfil-section-heading">
 
-        <div class="mb-3">
-            <label class="form-label">
-                Rol
-            </label>
+                    <div class="perfil-section-icon">
+                        <i class="bi bi-person-vcard"></i>
+                    </div>
 
-            <input class="form-control"
-                   value="@Model.IdRolNavigation.Nombre"
-                   readonly />
-        </div>
+                    <div>
 
-        <button type="submit"
-                class="btn btn-primary">
-            💾 Guardar Cambios
-        </button>
+                        <span>DATOS DE LA CUENTA</span>
 
-    </form>
+                        <h3>Informacion personal</h3>
+
+                        <p>
+                            Actualiza los datos asociados
+                            a tu cuenta.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="perfil-form-grid">
+
+                    <!-- NOMBRE -->
+
+                    <div class="perfil-field">
+
+                        <label for="perfilNombre">
+
+                            <i class="bi bi-person"></i>
+                            Nombre completo
+
+                        </label>
+
+                        <input type="text"
+                               id="perfilNombre"
+                               name="nombre"
+                               value="@Model.Nombre"
+                               placeholder="Nombre completo"
+                               maxlength="150"
+                               required />
+
+                    </div>
+
+                    <!-- USUARIO -->
+
+                    <div class="perfil-field">
+
+                        <label for="perfilUsername">
+
+                            <i class="bi bi-at"></i>
+                            Nombre de usuario
+
+                        </label>
+
+                        <input type="text"
+                               id="perfilUsername"
+                               name="username"
+                               value="@Model.Username"
+                               placeholder="Nombre de usuario"
+                               maxlength="100"
+                               required />
+
+                    </div>
+
+                    <!-- CORREO -->
+
+                    <div class="perfil-field">
+
+                        <label for="perfilCorreo">
+
+                            <i class="bi bi-envelope"></i>
+                            Correo electronico
+
+                        </label>
+
+                        <input type="email"
+                               id="perfilCorreo"
+                               name="correoElectronico"
+                               value="@Model.CorreoElectronico"
+                               placeholder="correo@ejemplo.com"
+                               maxlength="200"
+                               required />
+
+                    </div>
+
+                    <!-- ROL -->
+
+                    <div class="perfil-field">
+
+                        <label for="perfilRol">
+
+                            <i class="bi bi-shield-lock"></i>
+                            Rol asignado
+
+                        </label>
+
+                        <div class="perfil-readonly">
+
+                            <i class="bi bi-shield-check"></i>
+
+                            <input type="text"
+                                   id="perfilRol"
+                                   value="@rol"
+                                   readonly />
+
+                            <i class="bi bi-lock-fill"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- SEGURIDAD -->
+
+                <div class="perfil-security">
+
+                    <div class="perfil-security-header">
+
+                        <div class="perfil-security-info">
+
+                            <div class="perfil-section-icon">
+                                <i class="bi bi-lock"></i>
+                            </div>
+
+                            <div>
+
+                                <span>SEGURIDAD</span>
+
+                                <h3>Contraseña de acceso</h3>
+
+                                <p>
+                                    Puedes actualizar tu contraseña
+                                    cuando lo necesites.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <button type="button"
+                                class="perfil-password-toggle"
+                                id="perfilTogglePassword"
+                                aria-expanded="false"
+                                aria-controls="perfilPasswordDrawer">
+
+                            <i class="bi bi-key"></i>
+
+                            <span id="perfilPasswordToggleText">
+                                Cambiar contraseña
+                            </span>
+
+                            <i class="bi bi-chevron-down perfil-toggle-arrow"></i>
+
+                        </button>
+
+                    </div>
+
+                    <!-- GAVETA DE CONTRASEÑA -->
+
+                    <div class="perfil-password-drawer"
+                         id="perfilPasswordDrawer"
+                         aria-hidden="true">
+
+                        <div class="perfil-password-inner">
+
+                            <div class="perfil-password-content">
+
+                                <div class="perfil-password-notice">
+
+                                    <i class="bi bi-info-circle"></i>
+
+                                    <span>
+                                        La nueva contraseña debe tener
+                                        al menos 8 caracteres. Si no deseas
+                                        cambiarla, deja estos campos vacios.
+                                    </span>
+
+                                </div>
+
+                                <div class="perfil-form-grid">
+
+                                    <!-- NUEVA CONTRASEÑA -->
+
+                                    <div class="perfil-field">
+
+                                        <label for="perfilPassword">
+
+                                            <i class="bi bi-key"></i>
+                                            Nueva contraseña
+
+                                        </label>
+
+                                        <div class="perfil-password-input">
+
+                                            <input type="password"
+                                                   id="perfilPassword"
+                                                   name="password"
+                                                   placeholder="Nueva contraseña"
+                                                   minlength="8"
+                                                   autocomplete="new-password"
+                                                   disabled />
+
+                                            <button type="button"
+                                                    class="perfil-show-password"
+                                                    data-target="perfilPassword"
+                                                    aria-label="Mostrar contraseña">
+
+                                                <i class="bi bi-eye"></i>
+
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- CONFIRMAR CONTRASEÑA -->
+
+                                    <div class="perfil-field">
+
+                                        <label for="perfilConfirmarPassword">
+
+                                            <i class="bi bi-shield-check"></i>
+                                            Confirmar contraseña
+
+                                        </label>
+
+                                        <div class="perfil-password-input">
+
+                                            <input type="password"
+                                                   id="perfilConfirmarPassword"
+                                                   name="confirmarContraseña"
+                                                   placeholder="Repetir contraseña"
+                                                   minlength="8"
+                                                   autocomplete="new-password"
+                                                   disabled />
+
+                                            <button type="button"
+                                                    class="perfil-show-password"
+                                                    data-target="perfilConfirmarPassword"
+                                                    aria-label="Mostrar contraseña">
+
+                                                <i class="bi bi-eye"></i>
+
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="perfil-password-error"
+                                     id="perfilPasswordError"
+                                     role="alert"
+                                     hidden>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ACCIONES -->
+
+                <div class="perfil-form-actions">
+
+                    <div class="perfil-save-hint">
+
+                        <i class="bi bi-info-circle"></i>
+
+                        <span>
+                            Los cambios de informacion se guardaran
+                            en tu cuenta.
+                        </span>
+
+                    </div>
+
+                    <button type="submit"
+                            class="perfil-save-button">
+
+                        <i class="bi bi-floppy"></i>
+                        Guardar cambios
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
+
+<script>
+    window.perfilUsuarioId = @Model.IdUsuario;
+</script>
+
+<script src="~/js/perfil.js"
+        asp-append-version="true"></script>

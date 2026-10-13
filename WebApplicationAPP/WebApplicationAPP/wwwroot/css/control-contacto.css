@@ -1,0 +1,643 @@
+
+/* ==========================================
+   YAMPI BARBERSHOP - CONTROL DE CONTACTO
+========================================== */
+
+.contacto-admin-page {
+    width: 100%;
+    max-width: 1450px;
+    margin: 0 auto;
+    padding: 32px 28px 65px;
+    color: #ededed;
+    box-sizing: border-box;
+}
+
+.contacto-admin-page *,
+.contacto-admin-page *::before,
+.contacto-admin-page *::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   ENCABEZADO
+========================================== */
+
+.contacto-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 32px;
+    padding-bottom: 26px;
+    border-bottom: 1px solid #333;
+}
+
+.contacto-header-info {
+    min-width: 0;
+}
+
+.contacto-kicker {
+    display: block;
+    margin-bottom: 12px;
+    color: #d4af37;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+}
+
+.contacto-page-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 12px;
+    color: #f5f5f5;
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 700;
+}
+
+.contacto-header-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    background: #2b261c;
+    border: 1px solid #594923;
+    border-radius: 13px;
+    color: #d4af37;
+    font-size: 24px;
+}
+
+.contacto-page-header p {
+    margin: 0;
+    max-width: 650px;
+    color: #999;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* ==========================================
+   BOTONES
+========================================== */
+
+.contacto-btn-primary,
+.contacto-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 12px 20px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.contacto-btn-primary {
+    flex-shrink: 0;
+    background: #d4af37;
+    border: 1px solid #d4af37;
+    color: #171717;
+}
+
+.contacto-btn-primary:hover {
+    background: #e5c35b;
+    border-color: #e5c35b;
+    color: #171717;
+}
+
+.contacto-btn-secondary {
+    background: #242424;
+    border: 1px solid #454545;
+    color: #ddd;
+}
+
+.contacto-btn-secondary:hover {
+    background: #303030;
+    color: #fff;
+}
+
+/* ==========================================
+   ENCABEZADOS DE SECCION
+========================================== */
+
+.contacto-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.contacto-section-heading h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    color: #f4f4f4;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.contacto-section-heading h2 i {
+    color: #d4af37;
+}
+
+.contacto-section-heading p {
+    margin: 8px 0 0;
+    color: #999;
+    font-size: 13px;
+}
+
+.contacto-spacing {
+    margin-top: 36px;
+}
+
+.contacto-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid #315440;
+    border-radius: 20px;
+    color: #8bd2a3;
+    background: #1b2d22;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ==========================================
+   TARJETAS PRINCIPALES
+========================================== */
+
+.contacto-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.contacto-info-card,
+.contacto-social-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    min-width: 0;
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 13px;
+    padding: 22px;
+    transition: border-color 0.2s;
+}
+
+.contacto-info-card:hover,
+.contacto-social-card:hover {
+    border-color: #74602d;
+}
+
+.contacto-card-icon,
+.contacto-social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    background: #2d281d;
+    border: 1px solid #483d24;
+    border-radius: 11px;
+    color: #d4af37;
+    font-size: 20px;
+}
+
+.contacto-card-content,
+.contacto-social-info {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    flex: 1;
+    min-width: 0;
+}
+
+.contacto-card-content > span,
+.contacto-social-info > span {
+    color: #999;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.contacto-card-content strong,
+.contacto-social-info strong,
+.contacto-card-content a {
+    color: #f0f0f0;
+    font-size: 14px;
+    line-height: 1.65;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+    text-decoration: none;
+}
+
+.contacto-card-content a:hover {
+    color: #d4af37;
+}
+
+.contacto-multiline {
+    white-space: pre-line;
+}
+
+/* ==========================================
+   REDES SOCIALES
+========================================== */
+
+.contacto-social-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+/* ==========================================
+   MAPA
+========================================== */
+
+.contacto-map-card {
+    width: 100%;
+    padding: 12px;
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.contacto-map-card iframe {
+    display: block;
+    width: 100%;
+    height: 340px;
+    border: 0;
+    border-radius: 9px;
+}
+
+.contacto-map-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 240px;
+    padding: 30px;
+    text-align: center;
+    color: #aaa;
+}
+
+.contacto-map-empty i {
+    font-size: 42px;
+    color: #d4af37;
+}
+
+.contacto-map-empty strong {
+    color: #eee;
+    font-size: 16px;
+}
+
+/* ==========================================
+   FORMULARIO DE EDICION
+========================================== */
+
+.contacto-edit-section[hidden],
+.contacto-view[hidden] {
+    display: none !important;
+}
+
+.contacto-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contacto-form-card {
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 14px;
+    padding: 26px;
+}
+
+.contacto-form-card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #353535;
+}
+
+.contacto-form-card-header > i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    background: #30291c;
+    color: #d4af37;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.contacto-form-card-header h3 {
+    margin: 0 0 5px;
+    font-size: 17px;
+    color: #f5f5f5;
+}
+
+.contacto-form-card-header p {
+    margin: 0;
+    color: #999;
+    font-size: 12px;
+}
+
+.contacto-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.contacto-full {
+    grid-column: 1 / -1;
+}
+
+.contacto-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+}
+
+.contacto-field label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ddd;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.contacto-field label i {
+    color: #d4af37;
+}
+
+.contacto-admin-page .contacto-input {
+    width: 100%;
+    min-width: 0;
+    padding: 12px 14px;
+    background: #141414;
+    border: 1px solid #424242;
+    border-radius: 9px;
+    outline: none;
+    color: #f5f5f5;
+    font-size: 13px;
+    font-family: inherit;
+    line-height: 1.6;
+    transition: border-color 0.2s;
+}
+
+.contacto-admin-page .contacto-input:focus {
+    border-color: #d4af37;
+}
+
+.contacto-admin-page textarea.contacto-input {
+    resize: vertical;
+}
+
+.contacto-field small {
+    color: #999;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.contacto-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-top: 6px;
+}
+
+/* ==========================================
+   MENSAJES
+========================================== */
+
+.contacto-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px 18px;
+    margin-bottom: 22px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.contacto-alert-success {
+    color: #9ddcb2;
+    background: #1b2a21;
+    border: 1px solid #315440;
+}
+
+.contacto-alert-error {
+    color: #f1aaa9;
+    background: #301d1d;
+    border: 1px solid #6a3434;
+}
+
+.contacto-alert ul {
+    margin-bottom: 0;
+}
+
+/* ==========================================
+   ESTADO VACIO
+========================================== */
+
+.contacto-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 65px 20px;
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 14px;
+    text-align: center;
+}
+
+.contacto-empty-icon {
+    color: #d4af37;
+    font-size: 45px;
+}
+
+.contacto-empty h2 {
+    margin: 0;
+    font-size: 21px;
+}
+
+.contacto-empty p {
+    margin: 0;
+    color: #999;
+}
+
+/* ==========================================
+   TABLETS
+========================================== */
+
+@media (max-width: 1100px) {
+
+    .contacto-social-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* ==========================================
+   CELULARES
+========================================== */
+
+@media (max-width: 650px) {
+
+    .contacto-admin-page {
+        padding: 20px 14px 45px;
+    }
+
+    .contacto-page-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+    }
+
+    .contacto-page-header h1 {
+        font-size: 23px;
+    }
+
+    .contacto-header-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+
+    .contacto-page-header .contacto-btn-primary {
+        width: 100%;
+    }
+
+    .contacto-cards-grid,
+    .contacto-social-grid,
+    .contacto-form-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .contacto-full {
+        grid-column: auto;
+    }
+
+    .contacto-info-card,
+    .contacto-social-card {
+        padding: 17px;
+        gap: 13px;
+    }
+
+    .contacto-card-icon,
+    .contacto-social-icon {
+        flex-basis: 40px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .contacto-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .contacto-section-heading h2 {
+        font-size: 19px;
+    }
+
+    .contacto-form-card {
+        padding: 18px;
+    }
+
+    .contacto-map-card iframe {
+        height: 260px;
+    }
+
+    .contacto-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .contacto-form-actions button {
+        width: 100%;
+    }
+}
+
+
+/* ==========================================
+   UNIFICAR TAMANO DE TARJETAS
+========================================== */
+
+/* Tarjetas de informacion general */
+.contacto-admin-page .contacto-cards-grid {
+    align-items: stretch;
+    grid-auto-rows: 1fr;
+}
+
+/* Tarjetas de redes sociales */
+.contacto-admin-page .contacto-social-grid {
+    align-items: stretch;
+    grid-auto-rows: 1fr;
+}
+
+/* Altura y estructura uniforme */
+.contacto-admin-page .contacto-info-card,
+.contacto-admin-page .contacto-social-card {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    height: 90%;
+    min-width: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Evitar que los textos largos agranden las columnas */
+.contacto-admin-page .contacto-card-content,
+.contacto-admin-page .contacto-social-info {
+    min-width: 0;
+    flex: 1;
+}
+
+/* Ajustar textos largos sin desbordamientos */
+.contacto-admin-page .contacto-card-content strong,
+.contacto-admin-page .contacto-social-info strong,
+.contacto-admin-page .contacto-card-content a {
+    display: block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    line-height: 1.5;
+}
+
+/* ==========================================
+   CELULARES
+========================================== */
+
+@media (max-width: 650px) {
+
+    .contacto-admin-page .contacto-cards-grid,
+    .contacto-admin-page .contacto-social-grid {
+        grid-auto-rows: auto;
+    }
+
+    .contacto-admin-page .contacto-info-card,
+    .contacto-admin-page .contacto-social-card {
+        height: auto;
+        min-height: 100px;
+        padding: 16px;
+    }
+}

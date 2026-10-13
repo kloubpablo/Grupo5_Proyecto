@@ -25,6 +25,7 @@ namespace WebApplicationAPP.Controllers
         }
 
         //LISTA DE PAGOS
+        
         public IActionResult Index()
         {
             if (!TienePermiso("Pagos/Index"))
@@ -32,10 +33,12 @@ namespace WebApplicationAPP.Controllers
 
             var pagos = _context.Pagos
                 .Include(p => p.IdClienteNavigation)
+                .OrderByDescending(p => p.Fecha)
                 .ToList();
 
             return View(pagos);
         }
+
 
         //REGISTRAR (GET)
         public IActionResult Registrar(int? idAtencion)
@@ -168,6 +171,131 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("Index");
         }
 
+       
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegistrarAjax(
+            int idAtencion,
+            decimal monto,
+            string metodo)
+        {
+            // VALIDAR PERMISOS
+            if (!TienePermiso("Pagos/Crear"))
+            {
+                return StatusCode(403, new
+                {
+                    ok = false,
+                    mensaje = "No tienes permiso para registrar pagos."
+                });
+            }
+
+            // VALIDAR DATOS
+            if (idAtencion <= 0 || monto <= 0)
+            {
+                return BadRequest(new
+                {
+                    ok = false,
+                    mensaje = "El monto y la atencion deben ser validos."
+                });
+            }
+
+            if (metodo != "Efectivo" && metodo != "Tarjeta")
+            {
+                return BadRequest(new
+                {
+                    ok = false,
+                    mensaje = "Selecciona un metodo de pago valido."
+                });
+            }
+
+            // BUSCAR ATENCION
+            var atencion = await _context.Atencions
+                .Include(a => a.IdClienteNavigation)
+                .FirstOrDefaultAsync(a => a.IdAtencion == idAtencion);
+
+            if (atencion == null)
+            {
+                return NotFound(new
+                {
+                    ok = false,
+                    mensaje = "La atencion no existe."
+                });
+            }
+
+            if (atencion.Estado != "En servicio")
+            {
+                return BadRequest(new
+                {
+                    ok = false,
+                    mensaje = "La atencion no esta en servicio o ya fue finalizada."
+                });
+            }
+
+            // TRANSACCION
+            await using var transaccion =
+                await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                // REGISTRAR PAGO
+                var pago = new Pago
+                {
+                    IdCliente = atencion.IdCliente,
+                    Monto = monto,
+                    Metodo = metodo,
+                    Fecha = DateOnly.FromDateTime(DateTime.Now)
+                };
+
+                _context.Pagos.Add(pago);
+
+                // FINALIZAR ATENCION
+                atencion.Estado = "Finalizado";
+                atencion.HoraFin =
+                    TimeOnly.FromDateTime(DateTime.Now);
+
+                // FINALIZAR CITA ASOCIADA
+                if (atencion.IdCita.HasValue)
+                {
+                    var cita = await _context.Citas
+                        .FirstOrDefaultAsync(
+                            c => c.IdCita == atencion.IdCita.Value
+                        );
+
+                    if (cita != null)
+                    {
+                        cita.Estado = "Finalizada";
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                await transaccion.CommitAsync();
+
+                return Json(new
+                {
+                    ok = true,
+                    mensaje = "Pago registrado y atencion finalizada correctamente.",
+                    idAtencion = atencion.IdAtencion,
+                    cliente = atencion.IdClienteNavigation?.Nombre ?? "",
+                    monto = pago.Monto,
+                    metodo = pago.Metodo,
+                    horaFin = atencion.HoraFin?.ToString("HH:mm")
+                });
+            }
+            catch (Exception)
+            {
+                await transaccion.RollbackAsync();
+
+                return StatusCode(500, new
+                {
+                    ok = false,
+                    mensaje = "Ocurrio un error al registrar el pago."
+                });
+            }
+        }
+
+
+
         //CIERRE DE CAJA
         public IActionResult Cierre()
         {
@@ -235,7 +363,7 @@ namespace WebApplicationAPP.Controllers
             _context.SaveChanges();
 
 
-            return RedirectToAction("Cierre");
+            return RedirectToAction("Index");
         }
     }
 }

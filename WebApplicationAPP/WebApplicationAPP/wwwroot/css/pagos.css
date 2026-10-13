@@ -1,0 +1,1698 @@
+
+/* ==========================================
+   YAMPI BARBER SHOP
+   PAGOS - ESTILO COMPLETO
+========================================== */
+
+.pagos-page {
+    --gold: #d4af37;
+    --gold-light: #e4c65a;
+    --dark: #121214;
+    --card: #171719;
+    --border: #29292d;
+    --gray: #a5a5aa;
+    --white: #f5f5f5;
+
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 45px 50px 70px;
+    color: var(--white);
+    box-sizing: border-box;
+}
+
+.pagos-page *,
+.pagos-page *::before,
+.pagos-page *::after,
+.pagos-modal-overlay *,
+.pagos-modal-overlay *::before,
+.pagos-modal-overlay *::after {
+    box-sizing: border-box;
+}
+
+.pagos-page [hidden],
+.pagos-modal-overlay[hidden],
+.pagos-no-results[hidden],
+.pagos-pagination[hidden] {
+    display: none !important;
+}
+
+/* ENCABEZADO */
+
+.pagos-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.pagos-kicker,
+.pagos-card-kicker {
+    display: block;
+    margin-bottom: 10px;
+    color: #d4af37;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.pagos-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 0;
+    color: #f5f5f5;
+    font-size: 35px;
+    font-weight: 700;
+}
+
+.pagos-title-icon,
+.pagos-header-icon,
+.pagos-stat-icon,
+.pagos-method-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #d4af37;
+    background: rgba(212, 175, 55, .09);
+    border: 1px solid rgba(212, 175, 55, .2);
+    border-radius: 13px;
+}
+
+.pagos-title-icon {
+    width: 52px;
+    height: 52px;
+    font-size: 23px;
+}
+
+.pagos-header-icon {
+    width: 70px;
+    height: 70px;
+    font-size: 29px;
+}
+
+.pagos-header p {
+    margin: 12px 0 0;
+    color: #a5a5aa;
+    font-size: 13px;
+}
+
+/* ESTADISTICAS */
+
+.pagos-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.pagos-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 110px;
+    padding: 22px;
+    background: #171719;
+    border: 1px solid #29292d;
+    border-radius: 15px;
+    transition: border-color .2s, transform .2s;
+}
+
+.pagos-stat-card:hover {
+    border-color: rgba(212, 175, 55, .4);
+    transform: translateY(-2px);
+}
+
+.pagos-stat-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+}
+
+.pagos-stat-card span {
+    display: block;
+    margin-bottom: 7px;
+    color: #77777f;
+    font-size: 12px;
+}
+
+.pagos-stat-card strong {
+    color: #f5f5f5;
+    font-size: clamp(17px, 2vw, 25px);
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+/* BOTONES */
+
+.pagos-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.pagos-btn-primary,
+.pagos-btn-secondary,
+.pagos-btn-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 45px;
+    padding: 0 20px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all .2s ease;
+}
+
+.pagos-btn-primary {
+    color: #111;
+    background: #d4af37;
+    border-color: #d4af37;
+}
+
+.pagos-btn-primary:hover {
+    color: #111;
+    background: #e4c65a;
+    border-color: #e4c65a;
+}
+
+.pagos-btn-secondary {
+    color: #dadadd;
+    background: #242427;
+    border-color: #35353a;
+}
+
+.pagos-btn-secondary:hover {
+    color: #d4af37;
+    border-color: #d4af37;
+}
+
+.pagos-btn-danger {
+    color: #f87171;
+    background: rgba(248, 113, 113, .08);
+    border-color: rgba(248, 113, 113, .35);
+}
+
+.pagos-btn-danger:hover {
+    color: #111;
+    background: #f87171;
+    border-color: #f87171;
+}
+
+.pagos-chevron {
+    transition: transform .3s ease;
+}
+
+#btnToggleCierre.active .pagos-chevron {
+    transform: rotate(180deg);
+}
+
+/* TARJETAS */
+
+.pagos-card {
+    margin-bottom: 28px;
+    background: #171719;
+    border: 1px solid #29292d;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.pagos-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 25px 27px;
+    border-bottom: 1px solid #29292d;
+}
+
+.pagos-card-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    color: #f5f5f5;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.pagos-card-header h2 i {
+    color: #d4af37;
+}
+
+.pagos-card-header p {
+    margin: 9px 0 0;
+    color: #77777f;
+    font-size: 12px;
+}
+
+.pagos-count {
+    padding: 9px 13px;
+    color: #d4af37;
+    background: rgba(212, 175, 55, .08);
+    border: 1px solid rgba(212, 175, 55, .2);
+    border-radius: 9px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* CIERRE DE CAJA */
+
+.pagos-cierre-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-18px);
+    margin-bottom: 0;
+    transition:
+        grid-template-rows .45s cubic-bezier(.22, 1, .36, 1),
+        opacity .3s ease,
+        transform .4s ease,
+        margin .4s ease,
+        visibility .4s ease;
+}
+
+.pagos-cierre-wrapper.open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    margin-bottom: 28px;
+}
+
+.pagos-cierre-card {
+    min-height: 0;
+    margin-bottom: 0;
+    border-color: rgba(212, 175, 55, .3);
+}
+
+.pagos-close-btn {
+    display: grid;
+    place-items: center;
+    width: 37px;
+    height: 37px;
+    flex-shrink: 0;
+    padding: 0;
+    color: #aaa;
+    background: #242427;
+    border: 1px solid #35353a;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.pagos-close-btn:hover {
+    color: #d4af37;
+    border-color: #d4af37;
+}
+
+.pagos-cierre-body {
+    padding: 27px;
+}
+
+.pagos-cierre-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.pagos-cierre-stat {
+    min-height: 105px;
+    padding: 20px;
+    background: #121214;
+    border: 1px solid #29292d;
+    border-radius: 12px;
+}
+
+.pagos-cierre-stat span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 13px;
+    color: #a5a5aa;
+    font-size: 11px;
+}
+
+.pagos-cierre-stat span i {
+    color: #d4af37;
+}
+
+.pagos-cierre-stat strong {
+    color: #f5f5f5;
+    font-size: 19px;
+    overflow-wrap: anywhere;
+}
+
+.pagos-cierre-stat strong.pagos-gold,
+.pagos-cierre-stat strong.pagos-method {
+    color: #d4af37;
+}
+
+.pagos-section-heading {
+    margin-bottom: 20px;
+}
+
+.pagos-section-heading > span {
+    display: block;
+    margin-bottom: 9px;
+    color: #d4af37;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.pagos-section-heading h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    color: #f5f5f5;
+    font-size: 19px;
+}
+
+.pagos-section-heading h3 i {
+    color: #d4af37;
+}
+
+.pagos-method-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.pagos-method-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px;
+    background: #121214;
+    border: 1px solid #29292d;
+    border-radius: 13px;
+}
+
+.pagos-method-icon {
+    width: 46px;
+    height: 46px;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.pagos-method-card > span {
+    margin-bottom: 9px;
+    color: #a5a5aa;
+    font-size: 12px;
+}
+
+.pagos-method-card > strong {
+    color: #d4af37;
+    font-size: 25px;
+    overflow-wrap: anywhere;
+}
+
+.pagos-cierre-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #29292d;
+}
+
+.pagos-cierre-footer p {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0;
+    color: #77777f;
+    font-size: 12px;
+}
+
+.pagos-cierre-footer p i {
+    color: #d4af37;
+}
+
+/* BUSCADOR */
+
+.pagos-search-area {
+    padding: 24px 27px;
+}
+
+.pagos-search {
+    position: relative;
+}
+
+.pagos-search > i {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    color: #77777f;
+    pointer-events: none;
+}
+
+.pagos-search input {
+    width: 100%;
+    height: 46px;
+    padding: 0 16px 0 45px;
+    color: #f5f5f5;
+    background: #121214;
+    border: 1px solid #35353a;
+    border-radius: 11px;
+    font-family: inherit;
+    font-size: 12px;
+    outline: none;
+    transition: .2s;
+}
+
+.pagos-search input:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, .08);
+}
+
+.pagos-search input::placeholder {
+    color: #77777f;
+}
+
+/* TABLA */
+
+.pagos-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.pagos-table {
+    width: 100%;
+    min-width: 650px;
+    border-collapse: collapse;
+}
+
+.pagos-table th {
+    height: 48px;
+    padding: 0 22px;
+    color: #77777f;
+    background: #121214;
+    border-bottom: 1px solid #29292d;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.pagos-table td {
+    height: 75px;
+    padding: 14px 22px;
+    color: #dadadd;
+    border-bottom: 1px solid #29292d;
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+.pagos-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.pagos-table tbody tr:hover {
+    background: rgba(255, 255, 255, .02);
+}
+
+.pagos-data-row[hidden] {
+    display: none !important;
+}
+
+.pagos-client {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pagos-avatar {
+    display: grid;
+    place-items: center;
+    width: 39px;
+    height: 39px;
+    flex-shrink: 0;
+    color: #d4af37;
+    background: rgba(212, 175, 55, .1);
+    border: 1px solid rgba(212, 175, 55, .2);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.pagos-client strong {
+    color: #f5f5f5;
+    font-weight: 600;
+}
+
+.pagos-amount {
+    color: #d4af37;
+    font-size: 13px;
+}
+
+.pagos-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 12px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.pagos-badge.efectivo {
+    color: #4ade80;
+    background: rgba(74, 222, 128, .08);
+    border-color: rgba(74, 222, 128, .2);
+}
+
+.pagos-badge.tarjeta {
+    color: #60a5fa;
+    background: rgba(96, 165, 250, .08);
+    border-color: rgba(96, 165, 250, .2);
+}
+
+.pagos-badge.otro {
+    color: #d4af37;
+    background: rgba(212, 175, 55, .08);
+    border-color: rgba(212, 175, 55, .2);
+}
+
+.pagos-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #a5a5aa;
+}
+
+.pagos-date i {
+    color: #77777f;
+}
+
+.pagos-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 45px 20px;
+    text-align: center;
+}
+
+.pagos-empty > i {
+    margin-bottom: 15px;
+    color: #d4af37;
+    font-size: 35px;
+}
+
+.pagos-empty h3 {
+    color: #f5f5f5;
+    font-size: 17px;
+}
+
+.pagos-empty p,
+.pagos-no-results {
+    color: #77777f;
+    font-size: 12px;
+}
+
+.pagos-no-results {
+    padding: 25px;
+    text-align: center;
+}
+
+.pagos-no-results i {
+    margin-right: 8px;
+    color: #d4af37;
+}
+
+/* PAGINACION */
+
+.pagos-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 26px 15px 10px;
+}
+
+.pagos-page-numbers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.pagos-page-btn,
+.pagos-page-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    color: #d4af37;
+    background: rgba(212, 175, 55, .06);
+    border: 1px solid rgba(212, 175, 55, .25);
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .2s ease;
+}
+
+.pagos-page-btn:hover:not(:disabled),
+.pagos-page-number:hover:not(.active) {
+    color: #e4c65a;
+    background: rgba(212, 175, 55, .14);
+    border-color: rgba(212, 175, 55, .55);
+    transform: translateY(-1px);
+}
+
+.pagos-page-number.active {
+    color: #111;
+    background: #d4af37;
+    border-color: #d4af37;
+}
+
+.pagos-page-btn:disabled {
+    opacity: .3;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.pagos-pagination-summary {
+    margin: 0;
+    padding: 8px 15px 25px;
+    color: #77777f;
+    font-size: 11px;
+    text-align: center;
+}
+
+/* MODAL */
+
+.pagos-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 4000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, .82);
+    backdrop-filter: blur(6px);
+    animation: pagosOverlayIn .25s ease;
+}
+
+body.pagos-modal-open {
+    overflow: hidden;
+}
+
+.pagos-modal {
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    color: #f5f5f5;
+    background: #171719;
+    border: 1px solid rgba(212, 175, 55, .4);
+    border-radius: 18px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, .65);
+    animation: pagosModalIn .3s ease;
+    scrollbar-width: thin;
+    scrollbar-color: #a88b35 #202023;
+}
+
+.pagos-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 30px 35px;
+    border-bottom: 1px solid #303034;
+}
+
+.pagos-modal-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin: 0;
+    color: #f5f5f5;
+    font-size: 23px;
+}
+
+.pagos-modal-header h2 i {
+    color: #d4af37;
+}
+
+.pagos-modal-header p {
+    margin: 12px 0 0;
+    color: #a5a5aa;
+    font-size: 12px;
+}
+
+.pagos-modal-form {
+    width: 100%;
+    padding: 32px 35px 35px;
+}
+
+.pagos-field {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.pagos-field label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 12px;
+    color: #c5c5cb;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pagos-field label i {
+    color: #d4af37;
+}
+
+.pagos-modal .pagos-field input,
+.pagos-modal .pagos-field select {
+    display: block;
+    width: 100%;
+    height: 52px;
+    min-height: 52px;
+    padding: 0 16px;
+    color: #f5f5f5;
+    background: #101012;
+    border: 1px solid #35353a;
+    border-radius: 11px;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    box-shadow: none;
+    transition: .2s;
+}
+
+.pagos-modal .pagos-field input:focus,
+.pagos-modal .pagos-field select:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, .09);
+}
+
+.pagos-modal .pagos-field input::placeholder {
+    color: #77777f;
+}
+
+.pagos-monto-input {
+    position: relative;
+}
+
+.pagos-monto-input > span {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    color: #d4af37;
+    font-size: 18px;
+    font-weight: 700;
+    pointer-events: none;
+}
+
+.pagos-modal .pagos-monto-input input {
+    padding-left: 45px;
+}
+
+.pagos-modal .pagos-field select {
+    cursor: pointer;
+    color-scheme: dark;
+}
+
+.pagos-modal .pagos-field select option {
+    color: #f5f5f5;
+    background: #242427;
+}
+
+.pagos-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 13px;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #303034;
+}
+
+@keyframes pagosOverlayIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes pagosModalIn {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+    .pagos-page {
+        padding: 35px 30px 60px;
+    }
+
+    .pagos-cierre-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 800px) {
+    .pagos-page {
+        padding: 30px 20px 50px;
+    }
+
+    .pagos-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .pagos-header h1 {
+        font-size: 28px;
+    }
+
+    .pagos-header-icon {
+        display: none;
+    }
+
+    .pagos-cierre-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 600px) {
+    .pagos-page {
+        padding: 25px 14px 40px;
+    }
+
+    .pagos-header h1 {
+        font-size: 24px;
+    }
+
+    .pagos-stats,
+    .pagos-cierre-stats,
+    .pagos-method-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pagos-toolbar {
+        flex-direction: column;
+    }
+
+    .pagos-toolbar button {
+        width: 100%;
+    }
+
+    .pagos-card-header {
+        padding: 21px;
+    }
+
+    .pagos-card-header h2 {
+        font-size: 18px;
+    }
+
+    .pagos-cierre-body {
+        padding: 20px;
+    }
+
+    .pagos-pagination {
+        gap: 5px;
+        padding: 22px 10px 10px;
+    }
+
+    .pagos-page-numbers {
+        gap: 4px;
+    }
+
+    .pagos-page-btn,
+    .pagos-page-number {
+        width: 32px;
+        height: 32px;
+        font-size: 11px;
+    }
+
+    .pagos-modal-overlay {
+        padding: 14px;
+    }
+
+    .pagos-modal-header {
+        padding: 24px;
+    }
+
+    .pagos-modal-form {
+        padding: 25px 24px 28px;
+    }
+
+    .pagos-modal-header h2 {
+        font-size: 20px;
+    }
+
+    .pagos-modal-actions {
+        flex-direction: column;
+    }
+
+    .pagos-modal-actions button {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pagos-cierre-wrapper,
+    .pagos-modal-overlay,
+    .pagos-modal {
+        animation: none;
+        transition: none;
+    }
+}
+
+
+/* ==========================================
+   SELECT PERSONALIZADO - YAMPI
+========================================== */
+
+.pagos-custom-select {
+    position: relative;
+    width: 100%;
+}
+
+.pagos-custom-select .pagos-native-select {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.pagos-custom-select .pagos-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    width: 100%;
+    min-height: 52px;
+    padding: 0 16px;
+
+    color: #a5a5aa;
+    background: #101012;
+
+    border: 1px solid #35353a;
+    border-radius: 11px;
+
+    font-family: inherit;
+    font-size: 13px;
+    text-align: left;
+
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.pagos-custom-select .pagos-select-trigger:hover {
+    border-color: rgba(212, 175, 55, .55);
+}
+
+.pagos-custom-select.open .pagos-select-trigger,
+.pagos-custom-select .pagos-select-trigger:focus-visible {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, .09);
+    outline: none;
+}
+
+.pagos-select-value {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pagos-select-value > i {
+    color: #d4af37;
+    font-size: 17px;
+}
+
+.pagos-custom-select.selected .pagos-select-trigger {
+    color: #f5f5f5;
+}
+
+.pagos-select-arrow {
+    color: #d4af37;
+    font-size: 12px;
+    transition: transform .25s ease;
+}
+
+.pagos-custom-select.open .pagos-select-arrow {
+    transform: rotate(180deg);
+}
+
+/* MENU DESPLEGABLE */
+
+.pagos-custom-select .pagos-select-options {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 100;
+
+    padding: 7px;
+
+    background: #1c1c1f;
+    border: 1px solid rgba(212, 175, 55, .35);
+    border-radius: 12px;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, .55);
+
+    animation: pagosSelectEntrada .18s ease both;
+}
+
+.pagos-custom-select .pagos-select-options[hidden] {
+    display: none !important;
+}
+
+/* OPCIONES */
+
+.pagos-custom-select .pagos-select-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    min-height: 49px;
+    padding: 8px 12px;
+
+    color: #d1d1d5;
+    background: transparent;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 13px;
+    text-align: left;
+
+    cursor: pointer;
+    transition: .18s ease;
+}
+
+.pagos-custom-select .pagos-select-option:hover,
+.pagos-custom-select .pagos-select-option:focus-visible {
+    color: #e4c65a;
+    background: rgba(212, 175, 55, .09);
+    border-color: rgba(212, 175, 55, .12);
+    outline: none;
+}
+
+.pagos-option-icon {
+    display: grid;
+    place-items: center;
+
+    width: 32px;
+    height: 32px;
+
+    color: #d4af37;
+    background: rgba(212, 175, 55, .09);
+
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.pagos-option-check {
+    margin-left: auto;
+    color: #d4af37;
+    opacity: 0;
+}
+
+.pagos-select-option.active {
+    color: #d4af37;
+    background: rgba(212, 175, 55, .12);
+}
+
+.pagos-select-option.active .pagos-option-check {
+    opacity: 1;
+}
+
+@keyframes pagosSelectEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ==========================================
+   YAMPI BARBER SHOP
+   MODAL CIERRE DE CAJA
+========================================== */
+
+/* FONDO OSCURO */
+
+#modalCierreCaja.pagos-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(7px);
+}
+
+#modalCierreCaja[hidden] {
+    display: none !important;
+}
+
+/* VENTANA PRINCIPAL */
+
+#modalCierreCaja .pagos-cierre-modal {
+    width: 100%;
+    max-width: 620px;
+    max-height: 90vh;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    color: #f5f5f5;
+    background: #171719;
+
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: 18px;
+
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.7);
+
+    animation: cierreModalEntrada 0.3s ease;
+
+    scrollbar-width: thin;
+    scrollbar-color: #d4af37 #202023;
+}
+
+/* ENCABEZADO */
+
+#modalCierreCaja .pagos-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+
+    padding: 28px 32px;
+
+    background: #1c1c1e;
+    border-bottom: 1px solid #303034;
+}
+
+#modalCierreCaja .pagos-card-kicker {
+    display: block;
+    margin-bottom: 10px;
+
+    color: #d4af37;
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+#modalCierreCaja .pagos-modal-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    margin: 0;
+
+    color: #f5f5f5;
+    font-size: 23px;
+    font-weight: 700;
+}
+
+#modalCierreCaja .pagos-modal-header h2 i {
+    color: #d4af37;
+}
+
+#modalCierreCaja .pagos-modal-header p {
+    margin: 11px 0 0;
+
+    color: #9999a2;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* BOTON CERRAR */
+
+#modalCierreCaja .pagos-close-btn {
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    width: 37px;
+    height: 37px;
+    padding: 0;
+
+    color: #a5a5aa;
+    background: #28282b;
+
+    border: 1px solid #39393e;
+    border-radius: 9px;
+
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+#modalCierreCaja .pagos-close-btn:hover {
+    color: #d4af37;
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.1);
+}
+
+/* CUERPO DEL MODAL */
+
+#modalCierreCaja .pagos-cierre-modal-body {
+    padding: 28px 32px 32px;
+}
+
+/* FECHA Y ESTADO */
+
+#modalCierreCaja .pagos-cierre-fecha {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    margin-bottom: 24px;
+
+    color: #aaaab2;
+    font-size: 12px;
+}
+
+#modalCierreCaja .pagos-cierre-fecha > i {
+    color: #d4af37;
+    font-size: 16px;
+}
+
+#modalCierreCaja .pagos-caja-abierta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-left: auto;
+    padding: 8px 12px;
+
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.08);
+
+    border: 1px solid rgba(74, 222, 128, 0.2);
+    border-radius: 30px;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+#modalCierreCaja .pagos-caja-abierta i {
+    font-size: 7px;
+}
+
+/* ==========================================
+   TOTAL PRINCIPAL
+========================================== */
+
+#modalCierreCaja .pagos-cierre-total {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    padding: 34px 18px;
+    margin-bottom: 22px;
+
+    text-align: center;
+
+    background:
+        radial-gradient(
+            circle at top center,
+            rgba(212, 175, 55, 0.14),
+            transparent 75%
+        ),
+        #101012;
+
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 14px;
+}
+
+#modalCierreCaja .pagos-cierre-total > span {
+    color: #a5a5aa;
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+#modalCierreCaja .pagos-cierre-total strong {
+    color: #d4af37;
+
+    font-size: clamp(28px, 5vw, 40px);
+    font-weight: 750;
+
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+#modalCierreCaja .pagos-cierre-total small {
+    color: #898992;
+    font-size: 12px;
+}
+
+/* ==========================================
+   DESGLOSE EFECTIVO Y TARJETA
+========================================== */
+
+#modalCierreCaja .pagos-cierre-modal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 15px;
+    margin-bottom: 24px;
+}
+
+#modalCierreCaja .pagos-cierre-modal-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 11px;
+
+    min-width: 0;
+    padding: 22px;
+
+    background: #111113;
+
+    border: 1px solid #303034;
+    border-radius: 12px;
+
+    transition: border-color 0.2s ease;
+}
+
+#modalCierreCaja .pagos-cierre-modal-stat:hover {
+    border-color: rgba(212, 175, 55, 0.45);
+}
+
+#modalCierreCaja .pagos-cierre-modal-icon {
+    display: grid;
+    place-items: center;
+
+    width: 44px;
+    height: 44px;
+
+    color: #d4af37;
+    background: rgba(212, 175, 55, 0.1);
+
+    border: 1px solid rgba(212, 175, 55, 0.16);
+    border-radius: 11px;
+
+    font-size: 20px;
+}
+
+#modalCierreCaja .pagos-cierre-modal-stat > span {
+    color: #a5a5aa;
+    font-size: 12px;
+}
+
+#modalCierreCaja .pagos-cierre-modal-stat > strong {
+    color: #f5f5f5;
+
+    font-size: 23px;
+    font-weight: 700;
+
+    overflow-wrap: anywhere;
+}
+
+/* ==========================================
+   DETALLES DEL CIERRE
+========================================== */
+
+#modalCierreCaja .pagos-cierre-details {
+    display: flex;
+    flex-direction: column;
+
+    margin-bottom: 24px;
+    padding: 0 3px;
+}
+
+#modalCierreCaja .pagos-cierre-details > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    padding: 15px 0;
+
+    border-bottom: 1px solid #303034;
+}
+
+#modalCierreCaja .pagos-cierre-details span {
+    color: #a5a5aa;
+    font-size: 12px;
+}
+
+#modalCierreCaja .pagos-cierre-details strong {
+    color: #f5f5f5;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-align: right;
+}
+
+/* ==========================================
+   AVISO DEL CIERRE
+========================================== */
+
+#modalCierreCaja .pagos-cierre-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+    padding: 16px;
+    margin-bottom: 25px;
+
+    color: #c1ad76;
+    background: rgba(212, 175, 55, 0.06);
+
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 11px;
+}
+
+#modalCierreCaja .pagos-cierre-notice > i {
+    flex-shrink: 0;
+    margin-top: 2px;
+
+    color: #d4af37;
+    font-size: 18px;
+}
+
+#modalCierreCaja .pagos-cierre-notice p {
+    margin: 0;
+
+    color: #b9ab84;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* ==========================================
+   BOTONES INFERIORES
+========================================== */
+
+#modalCierreCaja .pagos-cierre-modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+
+    padding-top: 24px;
+
+    border-top: 1px solid #303034;
+}
+
+#modalCierreCaja .pagos-cierre-modal-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    min-height: 45px;
+    padding: 0 21px;
+
+    border-radius: 10px;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+/* CANCELAR */
+
+#modalCierreCaja .pagos-btn-secondary {
+    color: #dadadd;
+    background: #29292d;
+    border: 1px solid #3b3b40;
+}
+
+#modalCierreCaja .pagos-btn-secondary:hover {
+    color: #d4af37;
+    border-color: #d4af37;
+}
+
+/* APLICAR CIERRE */
+
+#modalCierreCaja .pagos-btn-primary {
+    color: #111;
+    background: #d4af37;
+    border: 1px solid #d4af37;
+}
+
+#modalCierreCaja .pagos-btn-primary:hover:not(:disabled) {
+    color: #111;
+    background: #e4c65a;
+    border-color: #e4c65a;
+}
+
+#modalCierreCaja button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* ==========================================
+   CONTADOR DEL BOTON PRINCIPAL
+========================================== */
+
+.pagos-page .pagos-caja-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 23px;
+    height: 23px;
+    padding: 0 6px;
+
+    color: #111;
+    background: #d4af37;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* ==========================================
+   ANIMACIONES
+========================================== */
+
+@keyframes cierreModalEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 600px) {
+
+    #modalCierreCaja.pagos-modal-overlay {
+        padding: 12px;
+    }
+
+    #modalCierreCaja .pagos-modal-header {
+        padding: 23px 20px;
+    }
+
+    #modalCierreCaja .pagos-modal-header h2 {
+        font-size: 20px;
+    }
+
+    #modalCierreCaja .pagos-cierre-modal-body {
+        padding: 22px 18px;
+    }
+
+    #modalCierreCaja .pagos-cierre-modal-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    #modalCierreCaja .pagos-cierre-modal-stat {
+        padding: 18px;
+    }
+
+    #modalCierreCaja .pagos-cierre-modal-actions {
+        flex-direction: column;
+    }
+
+    #modalCierreCaja .pagos-cierre-modal-actions button {
+        width: 100%;
+    }
+
+    #modalCierreCaja .pagos-caja-abierta {
+        margin-left: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    #modalCierreCaja .pagos-cierre-modal {
+        animation: none;
+    }
+}

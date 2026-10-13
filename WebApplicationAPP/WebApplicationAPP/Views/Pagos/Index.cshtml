@@ -1,122 +1,1005 @@
-﻿@model List<WebApplicationAPP.Models.Pago>
+﻿
+@model List<WebApplicationAPP.Models.Pago>
 
 @{
-    decimal totalGeneral = 0;
+    ViewData["Title"] = "Pagos";
 
-    if (Model != null)
-    {
-        totalGeneral = Model.Sum(p => p.Monto);
-    }
+    var pagos = Model ?? new List<WebApplicationAPP.Models.Pago>();
+
+    // Total historico de pagos
+    decimal totalGeneral = pagos.Sum(p => p.Monto);
+
+    // Fecha actual
+    var fechaActual = DateOnly.FromDateTime(DateTime.Today);
+
+    // Solo pagos de hoy que siguen abiertos
+    var pagosHoy = pagos
+        .Where(p => p.Fecha == fechaActual && !p.Cerrado)
+        .ToList();
+
+    // Saldo actual de caja
+    decimal totalHoy = pagosHoy.Sum(p => p.Monto);
+
+    // Desglose por metodo de pago
+    decimal totalEfectivo = pagosHoy
+        .Where(p => p.Metodo == "Efectivo")
+        .Sum(p => p.Monto);
+
+    decimal totalTarjeta = pagosHoy
+        .Where(p => p.Metodo == "Tarjeta")
+        .Sum(p => p.Monto);
+
+    // Cantidad de pagos abiertos
+    int cantidadHoy = pagosHoy.Count;
+
+    // Metodo mas utilizado en la caja
+    string metodoMasUsado = pagosHoy
+        .GroupBy(p => p.Metodo)
+        .OrderByDescending(g => g.Count())
+        .Select(g => g.Key)
+        .FirstOrDefault() ?? "Sin registros";
 }
 
-<h2 class="mb-4">💰 Pagos</h2>
+<link rel="stylesheet"
+      href="~/css/pagos.css"
+      asp-append-version="true" />
 
-<!-- BOTONES -->
-<div class="mb-3 d-flex gap-2">
+<div class="pagos-page">
 
-    <a class="btn btn-primary"
-           href="/Pagos/Registrar">
-        ➕ Registrar Pago
-    </a>
+    <!-- ==========================================
+         ENCABEZADO
+    ========================================== -->
 
-    <a class="btn btn-warning text-dark"
-           href="/Pagos/Cierre">
-        📊 Cierre de Caja
-    </a>
+    <div class="pagos-header">
 
-</div>
+        <div>
 
-<!-- TARJETA CALCULO TOTAL -->
-<div class="card border-success mb-4">
+            <span class="pagos-kicker">
+                YAMPI BARBER SHOP
+            </span>
 
-    <div class="card-header bg-success text-white">
+            <h1>
 
-        <h5 class="mb-0">
-            💵 Cálculo de Total
-        </h5>
+                <span class="pagos-title-icon">
+                    <i class="bi bi-wallet2"></i>
+                </span>
+
+                Gestion de Pagos
+
+            </h1>
+
+            <p>
+                Administra los pagos registrados
+                y controla los ingresos de caja.
+            </p>
+
+        </div>
+
+        <div class="pagos-header-icon">
+            <i class="bi bi-cash-stack"></i>
+        </div>
 
     </div>
 
-    <div class="card-body text-center">
+    <!-- ==========================================
+         MENSAJES
+    ========================================== -->
 
-        <h2 style="color:#198754; font-weight:bold;">
-            ₡@totalGeneral
-        </h2>
+    @if (TempData["ExitoCaja"] != null)
+    {
+        <div class="pagos-caja-alert success" role="status">
 
-        <p class="text-muted mb-0">
-            Total acumulado de todos los pagos registrados.
+            <i class="bi bi-check-circle"></i>
+
+            @TempData["ExitoCaja"]
+
+        </div>
+    }
+
+    @if (TempData["ErrorCaja"] != null)
+    {
+        <div class="pagos-caja-alert error" role="alert">
+
+            <i class="bi bi-exclamation-triangle"></i>
+
+            @TempData["ErrorCaja"]
+
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="pagos-caja-alert error" role="alert">
+
+            <i class="bi bi-exclamation-triangle"></i>
+
+            @TempData["Error"]
+
+        </div>
+    }
+
+    <!-- ==========================================
+         ESTADISTICAS
+    ========================================== -->
+
+    <div class="pagos-stats">
+
+        <!-- TOTAL HISTORICO -->
+
+        <div class="pagos-stat-card">
+
+            <div class="pagos-stat-icon">
+                <i class="bi bi-currency-dollar"></i>
+            </div>
+
+            <div>
+
+                <span>Total acumulado</span>
+
+                <strong>
+                    ₡@totalGeneral.ToString("N2")
+                </strong>
+
+            </div>
+
+        </div>
+
+        <!-- CAJA ACTUAL -->
+
+        <div class="pagos-stat-card">
+
+            <div class="pagos-stat-icon">
+                <i class="bi bi-cash-coin"></i>
+            </div>
+
+            <div>
+
+                <span>Caja actual</span>
+
+                <strong>
+                    ₡@totalHoy.ToString("N2")
+                </strong>
+
+            </div>
+
+        </div>
+
+        <!-- PAGOS PENDIENTES -->
+
+        <div class="pagos-stat-card">
+
+            <div class="pagos-stat-icon">
+                <i class="bi bi-receipt"></i>
+            </div>
+
+            <div>
+
+                <span>Pagos pendientes de cierre</span>
+
+                <strong>
+                    @cantidadHoy
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         BOTONES PRINCIPALES
+    ========================================== -->
+
+    <div class="pagos-toolbar">
+
+        <button type="button"
+                class="pagos-btn-primary"
+                id="btnAbrirPago">
+
+            <i class="bi bi-plus-lg"></i>
+
+            Registrar Pago
+
+        </button>
+
+        <button type="button"
+                class="pagos-btn-secondary"
+                id="btnAbrirCierre">
+
+            <i class="bi bi-calculator"></i>
+
+            Cierre de Caja
+
+            <span class="pagos-caja-badge">
+                @cantidadHoy
+            </span>
+
+        </button>
+
+    </div>
+
+    <!-- ==========================================
+         HISTORIAL DE PAGOS
+    ========================================== -->
+
+    <section class="pagos-card">
+
+        <div class="pagos-card-header">
+
+            <div>
+
+                <span class="pagos-card-kicker">
+                    REGISTROS
+                </span>
+
+                <h2>
+
+                    <i class="bi bi-clock-history"></i>
+
+                    Historial de Pagos
+
+                </h2>
+
+                <p>
+                    Consulta todos los pagos,
+                    incluyendo los que ya fueron cerrados.
+                </p>
+
+            </div>
+
+            <span class="pagos-count">
+                @pagos.Count registros
+            </span>
+
+        </div>
+
+        <!-- BUSCADOR -->
+
+        <div class="pagos-search-area">
+
+            <div class="pagos-search">
+
+                <i class="bi bi-search"></i>
+
+                <input type="text"
+                       id="buscarPagos"
+                       placeholder="Buscar cliente, metodo, fecha o estado..."
+                       autocomplete="off" />
+
+            </div>
+
+        </div>
+
+        <!-- TABLA -->
+
+        <div class="pagos-table-wrapper">
+
+            <table class="pagos-table"
+                   id="tablaPagos">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Cliente</th>
+
+                        <th>Monto</th>
+
+                        <th>Metodo</th>
+
+                        <th>Fecha</th>
+
+                        <th>Estado</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (pagos.Count == 0)
+                    {
+                        <tr>
+
+                            <td colspan="5">
+
+                                <div class="pagos-empty">
+
+                                    <i class="bi bi-receipt"></i>
+
+                                    <h3>
+                                        No hay pagos registrados
+                                    </h3>
+
+                                    <p>
+                                        Los pagos apareceran aqui
+                                        cuando sean registrados.
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var p in pagos
+                            .OrderByDescending(p => p.Fecha)
+                            .ThenByDescending(p => p.IdPago))
+                        {
+                            var nombre = p.IdClienteNavigation?.Nombre
+                                ?? "Cliente";
+
+                            var inicial = nombre.Length > 0
+                                ? nombre.Substring(0, 1).ToUpper()
+                                : "C";
+
+                            <tr class="pagos-data-row">
+
+                                <!-- CLIENTE -->
+
+                                <td>
+
+                                    <div class="pagos-client">
+
+                                        <span class="pagos-avatar">
+                                            @inicial
+                                        </span>
+
+                                        <strong>
+                                            @nombre
+                                        </strong>
+
+                                    </div>
+
+                                </td>
+
+                                <!-- MONTO -->
+
+                                <td>
+
+                                    <strong class="pagos-amount">
+                                        ₡@p.Monto.ToString("N2")
+                                    </strong>
+
+                                </td>
+
+                                <!-- METODO -->
+
+                                <td>
+
+                                    @if (p.Metodo == "Efectivo")
+                                    {
+                                        <span class="pagos-badge efectivo">
+
+                                            <i class="bi bi-cash"></i>
+
+                                            Efectivo
+
+                                        </span>
+                                    }
+                                    else if (p.Metodo == "Tarjeta")
+                                    {
+                                        <span class="pagos-badge tarjeta">
+
+                                            <i class="bi bi-credit-card"></i>
+
+                                            Tarjeta
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="pagos-badge otro">
+                                            @p.Metodo
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <!-- FECHA -->
+
+                                <td>
+
+                                    <span class="pagos-date">
+
+                                        <i class="bi bi-calendar3"></i>
+
+                                        @p.Fecha.ToString("dd/MM/yyyy")
+
+                                    </span>
+
+                                </td>
+
+                                <!-- ESTADO -->
+
+                                <td>
+
+                                    @if (p.Cerrado)
+                                    {
+                                        <span class="pagos-badge otro">
+
+                                            <i class="bi bi-lock-fill"></i>
+
+                                            Cerrado
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="pagos-badge efectivo">
+
+                                            <i class="bi bi-clock"></i>
+
+                                            Pendiente
+
+                                        </span>
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- SIN RESULTADOS -->
+
+        <div class="pagos-no-results"
+             id="pagosSinResultados"
+             hidden>
+
+            <i class="bi bi-search"></i>
+
+            No se encontraron pagos con esa busqueda.
+
+        </div>
+
+        <!-- PAGINACION -->
+
+        <div class="pagos-pagination"
+             id="pagosPaginacion"
+             hidden>
+
+            <button type="button"
+                    class="pagos-page-btn"
+                    id="pagosPaginaAnterior"
+                    aria-label="Pagina anterior">
+
+                <i class="bi bi-chevron-left"></i>
+
+            </button>
+
+            <div class="pagos-page-numbers"
+                 id="pagosNumerosPagina">
+            </div>
+
+            <button type="button"
+                    class="pagos-page-btn"
+                    id="pagosPaginaSiguiente"
+                    aria-label="Pagina siguiente">
+
+                <i class="bi bi-chevron-right"></i>
+
+            </button>
+
+        </div>
+
+        <p class="pagos-pagination-summary"
+           id="pagosResumenPaginacion">
         </p>
 
+    </section>
+
+</div>
+
+<!-- ==========================================
+     MODAL REGISTRAR PAGO
+========================================== -->
+
+<div class="pagos-modal-overlay"
+     id="modalRegistrarPago"
+     hidden>
+
+    <div class="pagos-modal"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="tituloModalPago"
+         tabindex="-1">
+
+        <div class="pagos-modal-header">
+
+            <div>
+
+                <span class="pagos-card-kicker">
+                    NUEVO REGISTRO
+                </span>
+
+                <h2 id="tituloModalPago">
+
+                    <i class="bi bi-wallet2"></i>
+
+                    Registrar Pago
+
+                </h2>
+
+                <p>
+                    Completa los datos del pago.
+                </p>
+
+            </div>
+
+            <button type="button"
+                    class="pagos-close-btn"
+                    id="btnCerrarPago"
+                    aria-label="Cerrar registro de pago">
+
+                <i class="bi bi-x-lg"></i>
+
+            </button>
+
+        </div>
+
+        <form asp-controller="Pagos"
+              asp-action="Registrar"
+              method="post"
+              id="formRegistrarPago"
+              class="pagos-modal-form">
+
+            @Html.AntiForgeryToken()
+
+            <!--
+                Se conserva para compatibilidad
+                con el controlador actual.
+            -->
+
+            <input type="hidden"
+                   name="idAtencion"
+                   value="" />
+
+            <!-- CLIENTE -->
+
+            <div class="pagos-field">
+
+                <label for="pagoCliente">
+
+                    <i class="bi bi-person"></i>
+
+                    Cliente
+
+                </label>
+
+                <input type="text"
+                       id="pagoCliente"
+                       name="cliente"
+                       placeholder="Nombre del cliente"
+                       required />
+
+            </div>
+
+            <!-- MONTO -->
+
+            <div class="pagos-field">
+
+                <label for="pagoMonto">
+
+                    <i class="bi bi-cash-stack"></i>
+
+                    Monto
+
+                </label>
+
+                <div class="pagos-monto-input">
+
+                    <span>₡</span>
+
+                    <input type="number"
+                           id="pagoMonto"
+                           name="monto"
+                           min="0.01"
+                           step="0.01"
+                           placeholder="0.00"
+                           required />
+
+                </div>
+
+            </div>
+
+            <!-- METODO DE PAGO PERSONALIZADO -->
+
+            <div class="pagos-field">
+
+                <label for="pagoMetodo">
+
+                    <i class="bi bi-credit-card"></i>
+
+                    Metodo de pago
+
+                </label>
+
+                <div class="pagos-custom-select"
+                     id="pagosCustomSelect">
+
+                    <select id="pagoMetodo"
+                            name="metodo"
+                            class="pagos-native-select"
+                            required
+                            tabindex="-1"
+                            aria-hidden="true">
+
+                        <option value="">
+                            Seleccione un metodo
+                        </option>
+
+                        <option value="Efectivo">
+                            Efectivo
+                        </option>
+
+                        <option value="Tarjeta">
+                            Tarjeta
+                        </option>
+
+                    </select>
+
+                    <button type="button"
+                            class="pagos-select-trigger"
+                            id="pagosSelectTrigger"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                            aria-controls="pagosSelectOpciones">
+
+                        <span class="pagos-select-value">
+
+                            <i class="bi bi-credit-card"></i>
+
+                            <span id="pagosSelectTexto">
+                                Seleccione un metodo
+                            </span>
+
+                        </span>
+
+                        <i class="bi bi-chevron-down pagos-select-arrow"></i>
+
+                    </button>
+
+                    <div class="pagos-select-options"
+                         id="pagosSelectOpciones"
+                         role="listbox"
+                         aria-label="Metodo de pago"
+                         hidden>
+
+                        <!-- EFECTIVO -->
+
+                        <button type="button"
+                                class="pagos-select-option"
+                                data-value="Efectivo"
+                                role="option"
+                                aria-selected="false">
+
+                            <span class="pagos-option-icon">
+
+                                <i class="bi bi-cash-stack"></i>
+
+                            </span>
+
+                            <span>Efectivo</span>
+
+                            <i class="bi bi-check-lg pagos-option-check"></i>
+
+                        </button>
+
+                        <!-- TARJETA -->
+
+                        <button type="button"
+                                class="pagos-select-option"
+                                data-value="Tarjeta"
+                                role="option"
+                                aria-selected="false">
+
+                            <span class="pagos-option-icon">
+
+                                <i class="bi bi-credit-card"></i>
+
+                            </span>
+
+                            <span>Tarjeta</span>
+
+                            <i class="bi bi-check-lg pagos-option-check"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ACCIONES -->
+
+            <div class="pagos-modal-actions">
+
+                <button type="button"
+                        class="pagos-btn-secondary"
+                        id="btnCancelarPago">
+
+                    Cancelar
+
+                </button>
+
+                <button type="submit"
+                        class="pagos-btn-primary"
+                        id="btnGuardarPago">
+
+                    <i class="bi bi-check-lg"></i>
+
+                    Registrar Pago
+
+                </button>
+
+            </div>
+
+        </form>
+
     </div>
 
 </div>
 
-<!-- TABLA -->
+<!-- ==========================================
+     MODAL CIERRE DE CAJA
+========================================== -->
 
-<table class="table table-bordered text-center">
+<div class="pagos-modal-overlay"
+     id="modalCierreCaja"
+     hidden>
 
-    <thead class="table-dark">
-        <tr>
+    <div class="pagos-modal pagos-cierre-modal"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="tituloCierre"
+         tabindex="-1">
 
-            <th>Cliente</th>
-            <th>Monto</th>
-            <th>Método</th>
-            <th>Fecha</th>
+        <!-- ENCABEZADO -->
 
-        </tr>
-    </thead>
+        <div class="pagos-modal-header">
 
-    <tbody>
+            <div>
 
-        @if (Model == null || Model.Count == 0)
-        {
-            <tr>
+                <span class="pagos-card-kicker">
+                    CONTROL FINANCIERO
+                </span>
 
-                <td colspan="4">
+                <h2 id="tituloCierre">
 
-                    No hay pagos registrados
+                    <i class="bi bi-calculator"></i>
 
-                </td>
+                    Cierre de Caja
 
-            </tr>
-        }
-        else
-        {
-            @foreach (var p in Model)
-            {
+                </h2>
 
-                <tr>
+                <p>
+                    Resumen de los ingresos pendientes
+                    del dia actual.
+                </p>
 
-                    <td>@p.IdClienteNavigation.Nombre</td>
+            </div>
 
-                    <td style="font-weight:bold; color:#facc15;">
-                        ₡@p.Monto
-                    </td>
+            <button type="button"
+                    class="pagos-close-btn"
+                    id="btnCerrarModalCierre"
+                    aria-label="Cerrar cierre de caja">
 
-                    <td>
+                <i class="bi bi-x-lg"></i>
 
-                        @if (p.Metodo == "Efectivo")
-                        {
-                            <span class="badge bg-success">
-                                Efectivo
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-primary">
-                                Tarjeta
-                            </span>
-                        }
+            </button>
 
-                    </td>
+        </div>
 
-                    <td>@p.Fecha</td>
+        <!-- CUERPO -->
 
-                </tr>
+        <div class="pagos-cierre-modal-body">
 
-            }
-        }
+            <!-- FECHA -->
 
-    </tbody>
+            <div class="pagos-cierre-fecha">
 
-</table>
+                <i class="bi bi-calendar3"></i>
+
+                <span>
+                    @fechaActual.ToString("dd/MM/yyyy")
+                </span>
+
+                <span class="pagos-caja-abierta">
+
+                    <i class="bi bi-circle-fill"></i>
+
+                    Caja abierta
+
+                </span>
+
+            </div>
+
+            <!-- TOTAL PENDIENTE -->
+
+            <div class="pagos-cierre-total">
+
+                <span>
+                    TOTAL PENDIENTE DE CIERRE
+                </span>
+
+                <strong>
+                    ₡@totalHoy.ToString("N2")
+                </strong>
+
+                <small>
+                    @cantidadHoy
+                    @(cantidadHoy == 1 ? "pago pendiente" : "pagos pendientes")
+                </small>
+
+            </div>
+
+            <!-- EFECTIVO Y TARJETA -->
+
+            <div class="pagos-cierre-modal-grid">
+
+                <!-- EFECTIVO -->
+
+                <div class="pagos-cierre-modal-stat">
+
+                    <div class="pagos-cierre-modal-icon">
+
+                        <i class="bi bi-cash-stack"></i>
+
+                    </div>
+
+                    <span>
+                        Efectivo
+                    </span>
+
+                    <strong>
+                        ₡@totalEfectivo.ToString("N2")
+                    </strong>
+
+                </div>
+
+                <!-- TARJETA -->
+
+                <div class="pagos-cierre-modal-stat">
+
+                    <div class="pagos-cierre-modal-icon">
+
+                        <i class="bi bi-credit-card"></i>
+
+                    </div>
+
+                    <span>
+                        Tarjeta
+                    </span>
+
+                    <strong>
+                        ₡@totalTarjeta.ToString("N2")
+                    </strong>
+
+                </div>
+
+            </div>
+
+            <!-- DATOS ADICIONALES -->
+
+            <div class="pagos-cierre-details">
+
+                <div>
+
+                    <span>
+                        Fecha de cierre
+                    </span>
+
+                    <strong>
+                        @fechaActual.ToString("dd/MM/yyyy")
+                    </strong>
+
+                </div>
+
+                <div>
+
+                    <span>
+                        Pagos pendientes
+                    </span>
+
+                    <strong>
+                        @cantidadHoy
+                    </strong>
+
+                </div>
+
+                <div>
+
+                    <span>
+                        Metodo mas utilizado
+                    </span>
+
+                    <strong>
+                        @metodoMasUsado
+                    </strong>
+
+                </div>
+
+            </div>
+
+            <!-- AVISO -->
+
+            <div class="pagos-cierre-notice">
+
+                <i class="bi bi-info-circle"></i>
+
+                <p>
+                    Al aplicar el cierre, todos los pagos
+                    pendientes de hoy quedaran marcados
+                    como cerrados. La caja regresara a cero
+                    y los registros permaneceran en el
+                    historial de pagos.
+                </p>
+
+            </div>
+
+            <!-- FORMULARIO ORIGINAL -->
+
+            <form asp-controller="Pagos"
+                  asp-action="AplicarCierre"
+                  method="post"
+                  id="formAplicarCierre">
+
+                @Html.AntiForgeryToken()
+
+                <div class="pagos-cierre-modal-actions">
+
+                    <button type="button"
+                            class="pagos-btn-secondary"
+                            id="btnCancelarCierre">
+
+                        Cancelar
+
+                    </button>
+
+                    @if (cantidadHoy > 0)
+                    {
+                        <button type="submit"
+                                class="pagos-btn-primary"
+                                id="btnConfirmarCierre">
+
+                            <i class="bi bi-lock"></i>
+
+                            Aplicar cierre
+
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button"
+                                class="pagos-btn-primary"
+                                disabled>
+
+                            <i class="bi bi-check-circle"></i>
+
+                            Caja en cero
+
+                        </button>
+                    }
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="~/js/pagos.js"
+        asp-append-version="true"></script>

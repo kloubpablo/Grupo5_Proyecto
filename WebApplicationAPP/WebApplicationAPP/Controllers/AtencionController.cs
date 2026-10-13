@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationAPP.Models;
 using WebApplicationAPP.Helpers;
@@ -14,30 +15,41 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        //SISTEMA DE PERMISOS
+        // SISTEMA DE PERMISOS
         private bool TienePermiso(string permiso)
         {
             var rol = HttpContext.Session.GetString("Rol") ?? "";
             return PermisosHelper.TienePermiso(_context, rol, permiso);
         }
 
+        // LISTA DE ATENCIONES
         public IActionResult Index()
         {
             if (!TienePermiso("Atencion/Index"))
                 return RedirectToAction("Index", "Dashboard");
 
             var atenciones = _context.Atencions
+                .AsNoTracking()
                 .Include(a => a.IdClienteNavigation)
+                .Where(a =>
+                    a.Estado == "En espera" ||
+                    a.Estado == "En servicio" ||
+                    a.Estado == "Finalizado")
+                .OrderByDescending(a => a.IdAtencion)
                 .ToList();
 
             return View(atenciones);
         }
 
+        // AGREGAR CLIENTE
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Agregar(string nombre)
         {
             if (!TienePermiso("Atencion/Index"))
                 return RedirectToAction("Index", "Dashboard");
+
+            nombre = nombre?.Trim() ?? "";
 
             if (string.IsNullOrWhiteSpace(nombre))
                 return RedirectToAction("Index");
@@ -70,6 +82,7 @@ namespace WebApplicationAPP.Controllers
             return RedirectToAction("Index");
         }
 
+        // INICIAR ATENCION
         public IActionResult Iniciar(int id)
         {
             if (!TienePermiso("Atencion/Index"))
@@ -78,16 +91,21 @@ namespace WebApplicationAPP.Controllers
             var atencion = _context.Atencions
                 .FirstOrDefault(a => a.IdAtencion == id);
 
-            if (atencion != null)
+            if (atencion != null &&
+                atencion.Estado == "En espera")
             {
                 atencion.Estado = "En servicio";
-                atencion.HoraInicio = TimeOnly.FromDateTime(DateTime.Now);
+                atencion.HoraInicio =
+                    TimeOnly.FromDateTime(DateTime.Now);
+
                 _context.SaveChanges();
             }
 
             return RedirectToAction("Index");
         }
 
+        // FINALIZAR ATENCION
+        // El pago se registra antes de finalizar
         public IActionResult Finalizar(int id)
         {
             if (!TienePermiso("Atencion/Index"))
@@ -96,15 +114,20 @@ namespace WebApplicationAPP.Controllers
             var atencion = _context.Atencions
                 .FirstOrDefault(a => a.IdAtencion == id);
 
-            if (atencion == null)
+            if (atencion == null ||
+                atencion.Estado != "En servicio")
+            {
                 return RedirectToAction("Index");
+            }
 
-            //La atención debe pasar primero por el registro del pago.
-            return RedirectToAction("Registrar", "Pagos", new { idAtencion = id });
+            return RedirectToAction(
+                "Registrar",
+                "Pagos",
+                new { idAtencion = id }
+            );
         }
 
-
-        //REGISTRAR ATENCIÓN DESDE UNA CITA
+        // REGISTRAR ATENCION DESDE CITA
         public IActionResult RegistrarDesdeCita(int id)
         {
             if (!TienePermiso("Atencion/Index"))
@@ -134,7 +157,5 @@ namespace WebApplicationAPP.Controllers
 
             return RedirectToAction("Index");
         }
-
-
     }
 }

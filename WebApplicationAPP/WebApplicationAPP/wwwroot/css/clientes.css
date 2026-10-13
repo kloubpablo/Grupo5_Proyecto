@@ -1,0 +1,1103 @@
+
+/* =====================================================
+   YAMPI BARBER SHOP - CLIENTES
+   ESTILO OSCURO Y DORADO
+===================================================== */
+
+.clientes-page {
+    --gold: #d4af37;
+    --gold-light: #e4c65a;
+    --gold-dark: #9e7f1e;
+
+    --black: #09090a;
+    --background: #0d0d0f;
+    --dark: #121214;
+    --card: #171719;
+    --card-hover: #1c1c1f;
+
+    --gray-1: #242427;
+    --gray-2: #35353a;
+    --gray-3: #77777f;
+    --gray-4: #a5a5aa;
+
+    --white: #f5f5f5;
+    --white-soft: #dadadd;
+    --border: #29292d;
+
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 45px 50px 70px;
+
+    color: var(--white);
+    background: var(--background);
+
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.clientes-page *,
+.clientes-page *::before,
+.clientes-page *::after {
+    box-sizing: border-box;
+}
+
+/* =====================================================
+   ENCABEZADO
+===================================================== */
+
+.clientes-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.section-kicker {
+    display: block;
+    margin-bottom: 8px;
+
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+}
+
+.clientes-header h1 {
+    margin: 0 0 10px;
+
+    color: var(--white);
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.clientes-header p {
+    margin: 0;
+    color: var(--gray-4);
+    font-size: 14px;
+}
+
+/* =====================================================
+   CONTADOR DE CLIENTES
+===================================================== */
+
+.clientes-total {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    min-width: 190px;
+    padding: 17px 21px;
+
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+
+    transition: border-color 0.2s ease;
+}
+
+.clientes-total:hover {
+    border-color: rgba(212, 175, 55, 0.3);
+}
+
+.clientes-total > i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 47px;
+    height: 47px;
+    flex-shrink: 0;
+
+    color: var(--gold);
+    background: rgba(212, 175, 55, 0.09);
+    border-radius: 12px;
+
+    font-size: 21px;
+}
+
+.clientes-total strong {
+    display: block;
+    margin-bottom: 3px;
+
+    color: var(--white);
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.clientes-total span {
+    color: var(--gray-3);
+    font-size: 11px;
+}
+
+/* =====================================================
+   BARRA DE ACCIONES
+===================================================== */
+
+.clientes-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+
+    margin-bottom: 24px;
+}
+
+.clientes-toolbar .clientes-btn-primary {
+    min-height: 43px;
+    padding: 0 19px;
+}
+
+.clientes-toggle-icon {
+    margin-left: 5px;
+    font-size: 10px;
+
+    transition: transform 0.3s ease;
+}
+
+#abrirCrearCliente.active .clientes-toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* =====================================================
+   TARJETAS
+===================================================== */
+
+.clientes-card {
+    width: 100%;
+    margin-bottom: 28px;
+
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    overflow: visible;
+
+    transition: border-color 0.2s ease;
+}
+
+.clientes-card:hover {
+    border-color: rgba(212, 175, 55, 0.22);
+}
+
+.clientes-card-header {
+    min-height: 105px;
+    padding: 24px 26px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.clientes-card-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin: 0;
+
+    color: var(--white);
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.clientes-card-header h2 i {
+    color: var(--gold);
+    font-size: 19px;
+}
+
+.clientes-card-header p {
+    margin: 7px 0 0;
+
+    color: var(--gray-3);
+    font-size: 13px;
+}
+
+/* =====================================================
+   FORMULARIOS
+===================================================== */
+
+.clientes-form {
+    padding: 25px 26px;
+}
+
+.clientes-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.clientes-field {
+    min-width: 0;
+}
+
+.clientes-field label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    margin-bottom: 9px;
+
+    color: var(--gray-4);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.clientes-field label i {
+    color: var(--gold);
+}
+
+.clientes-field input {
+    width: 100%;
+    height: 52px;
+
+    padding: 0 15px;
+
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    color: var(--white);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.clientes-field input::placeholder {
+    color: var(--gray-3);
+    font-weight: 400;
+}
+
+.clientes-field input:hover {
+    border-color: var(--gray-2);
+}
+
+.clientes-field input:focus {
+    border-color: var(--gold);
+    background: #151517;
+
+    box-shadow:
+        0 0 0 3px rgba(212, 175, 55, 0.08);
+}
+
+.clientes-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 11px;
+
+    margin-top: 25px;
+    padding-top: 20px;
+
+    border-top: 1px solid var(--border);
+}
+
+/* =====================================================
+   BOTONES GENERALES
+===================================================== */
+
+.clientes-btn-primary,
+.clientes-btn-secondary,
+.clientes-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-height: 43px;
+    padding: 0 18px;
+
+    border-radius: 10px;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* BOTON DORADO */
+
+.clientes-btn-primary {
+    color: #111;
+    background: var(--gold);
+    border: 1px solid var(--gold);
+}
+
+.clientes-btn-primary:hover {
+    color: #111;
+    background: var(--gold-light);
+    border-color: var(--gold-light);
+
+    transform: translateY(-1px);
+    box-shadow: 0 5px 16px rgba(212, 175, 55, 0.15);
+}
+
+.clientes-btn-primary:active {
+    transform: translateY(0);
+}
+
+/* BOTON SECUNDARIO */
+
+.clientes-btn-secondary {
+    color: var(--white-soft);
+    background: var(--gray-1);
+    border: 1px solid var(--border);
+}
+
+.clientes-btn-secondary:hover:not(:disabled) {
+    color: var(--gold);
+    background: rgba(212, 175, 55, 0.07);
+    border-color: rgba(212, 175, 55, 0.4);
+}
+
+/* =====================================================
+   GAVETA CREAR CLIENTE
+===================================================== */
+
+.clientes-create-container {
+    position: relative;
+    z-index: 1;
+
+    max-height: 800px;
+    margin-top: 0;
+    margin-bottom: 28px;
+
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateY(0) scaleY(1);
+    transform-origin: top center;
+
+    overflow: hidden;
+
+    transition:
+        max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.3s ease,
+        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        margin 0.5s ease;
+}
+
+.clientes-create-container.closed {
+    max-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(-40px) scaleY(0.94);
+    pointer-events: none;
+}
+
+.clientes-create-container .clientes-card {
+    margin-bottom: 0;
+
+    border-color: rgba(212, 175, 55, 0.3);
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.3),
+        0 -8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.clientes-create-container:not(.closed) .clientes-card {
+    animation: clienteDrawerOpen 0.5s
+        cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* =====================================================
+   GAVETA EDITAR CLIENTE
+===================================================== */
+
+.clientes-edit-container {
+    position: relative;
+    z-index: 1;
+
+    max-height: 800px;
+    margin-top: 0;
+    margin-bottom: 28px;
+
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateY(0) scaleY(1);
+    transform-origin: top center;
+
+    overflow: hidden;
+
+    transition:
+        max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.3s ease,
+        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        margin 0.5s ease;
+}
+
+.clientes-edit-container.closed {
+    max-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(-40px) scaleY(0.94);
+    pointer-events: none;
+}
+
+.clientes-edit-card {
+    margin-bottom: 0;
+    border-color: rgba(212, 175, 55, 0.3);
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.3),
+        0 -8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.clientes-edit-container:not(.closed) .clientes-edit-card {
+    animation: clienteDrawerOpen 0.5s
+        cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* =====================================================
+   ANIMACION DE GAVETA
+===================================================== */
+
+@keyframes clienteDrawerOpen {
+    0% {
+        opacity: 0;
+        transform: translateY(-35px) scaleY(0.94);
+    }
+
+    60% {
+        opacity: 1;
+        transform: translateY(5px) scaleY(1.01);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+    }
+}
+
+/* =====================================================
+   TARJETA DE CLIENTES REGISTRADOS
+===================================================== */
+
+.clientes-list-card {
+    margin-bottom: 28px;
+}
+
+.clientes-list-card > .clientes-search {
+    margin: 24px 26px 10px;
+}
+
+/* =====================================================
+   BUSCADOR INSTANTANEO
+===================================================== */
+
+.clientes-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.clientes-search-input {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+}
+
+.clientes-search-input > i {
+    position: absolute;
+    z-index: 1;
+
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    color: var(--gold);
+    font-size: 15px;
+
+    pointer-events: none;
+}
+
+.clientes-search-input input {
+    width: 100%;
+    height: 47px;
+
+    padding: 0 40px 0 43px;
+
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+
+    color: var(--white);
+    font-family: inherit;
+    font-size: 12px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.clientes-search-input input::placeholder {
+    color: var(--gray-3);
+}
+
+.clientes-search-input input:hover {
+    border-color: var(--gray-2);
+}
+
+.clientes-search-input input:focus {
+    border-color: var(--gold);
+    background: #151517;
+
+    box-shadow:
+        0 0 0 3px rgba(212, 175, 55, 0.08);
+}
+
+.clientes-search-input input::-webkit-search-cancel-button {
+    cursor: pointer;
+}
+
+/* =====================================================
+   BOTON MOSTRAR TODOS
+===================================================== */
+
+.clientes-reset-btn {
+    flex-shrink: 0;
+
+    min-height: 47px;
+    padding: 0 17px;
+
+    color: var(--gold);
+    background: rgba(212, 175, 55, 0.07);
+
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 10px;
+
+    font-size: 11px;
+}
+
+.clientes-reset-btn:hover:not(:disabled) {
+    color: var(--gold-light);
+    background: rgba(212, 175, 55, 0.14);
+    border-color: rgba(212, 175, 55, 0.5);
+}
+
+.clientes-reset-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+    transform: none;
+}
+
+.clientes-reset-btn i {
+    font-size: 13px;
+}
+
+/* =====================================================
+   CONTADOR DE RESULTADOS
+===================================================== */
+
+.clientes-search-summary {
+    margin: 0 26px 18px;
+
+    color: var(--gray-3);
+    font-size: 11px;
+}
+
+/* =====================================================
+   TABLA DE CLIENTES
+===================================================== */
+
+.clientes-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.clientes-table {
+    width: 100%;
+    min-width: 750px;
+
+    border-collapse: collapse;
+    table-layout: fixed;
+
+    text-align: left;
+}
+
+.clientes-table th,
+.clientes-table td {
+    box-sizing: border-box;
+}
+
+.clientes-table thead {
+    background: var(--dark);
+}
+
+.clientes-table th {
+    height: 48px;
+    padding: 0 18px;
+
+    color: var(--gray-3);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.clientes-table th:nth-child(1) {
+    width: 10%;
+}
+
+.clientes-table th:nth-child(2) {
+    width: 30%;
+}
+
+.clientes-table th:nth-child(3) {
+    width: 20%;
+}
+
+.clientes-table th:nth-child(4) {
+    width: 22%;
+}
+
+.clientes-table th:nth-child(5) {
+    width: 18%;
+    text-align: right;
+}
+
+.clientes-table td {
+    height: 73px;
+    padding: 12px 18px;
+
+    color: var(--white-soft);
+    font-size: 12px;
+
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.clientes-table td:last-child {
+    text-align: right;
+}
+
+.clientes-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.clientes-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.018);
+}
+
+.clientes-id {
+    color: var(--gold) !important;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* =====================================================
+   CLIENTE EN TABLA
+===================================================== */
+
+.clientes-person {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    min-width: 0;
+}
+
+.clientes-person strong {
+    display: block;
+
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 600;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.clientes-avatar {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 50%;
+
+    color: var(--gold);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* =====================================================
+   BOTON EDITAR DE LA TABLA
+===================================================== */
+
+.clientes-edit-btn {
+    min-height: 33px;
+    padding: 0 13px;
+
+    color: var(--gold);
+    background: rgba(212, 175, 55, 0.07);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 8px;
+
+    font-size: 11px;
+}
+
+.clientes-edit-btn:hover {
+    color: #111;
+    background: var(--gold);
+    border-color: var(--gold);
+
+    transform: translateY(-1px);
+}
+
+.clientes-edit-btn i {
+    font-size: 11px;
+}
+
+/* =====================================================
+   ESTADO VACIO / SIN RESULTADOS
+===================================================== */
+
+.clientes-empty {
+    padding: 45px 20px;
+    text-align: center;
+}
+
+.clientes-empty > i {
+    width: 55px;
+    height: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 14px;
+
+    color: var(--gold);
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+
+    font-size: 23px;
+}
+
+.clientes-empty h3 {
+    margin: 0;
+
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.clientes-empty p {
+    margin: 7px 0 0;
+
+    color: var(--gray-3);
+    font-size: 11px;
+}
+
+/* =====================================================
+   PAGINACION
+===================================================== */
+
+.clientes-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    padding: 22px 15px 25px;
+}
+
+.clientes-page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.clientes-page-btn,
+.clientes-page-number {
+    width: 30px;
+    height: 30px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    color: var(--gold);
+    background: rgba(212, 175, 55, 0.06);
+
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.15s ease;
+}
+
+.clientes-page-btn:hover:not(:disabled),
+.clientes-page-number:hover {
+    color: var(--gold-light);
+    background: rgba(212, 175, 55, 0.14);
+    border-color: rgba(212, 175, 55, 0.55);
+}
+
+.clientes-page-number.active {
+    color: #111;
+    background: var(--gold);
+    border-color: var(--gold);
+
+    box-shadow:
+        0 3px 10px rgba(212, 175, 55, 0.18);
+}
+
+.clientes-page-btn i {
+    font-size: 10px;
+}
+
+.clientes-page-btn:disabled {
+    opacity: 0.25;
+    cursor: default;
+}
+
+.clientes-page-btn:not(:disabled):active,
+.clientes-page-number:active {
+    transform: scale(0.92);
+}
+
+/* =====================================================
+   ALERTAS
+===================================================== */
+
+.clientes-alert {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 15px 18px;
+    margin-bottom: 25px;
+
+    border: 1px solid;
+    border-radius: 12px;
+
+    font-size: 12px;
+}
+
+.clientes-alert i {
+    font-size: 18px;
+}
+
+.clientes-alert.error {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.07);
+    border-color: rgba(248, 113, 113, 0.25);
+}
+
+.clientes-alert.success {
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.07);
+    border-color: rgba(74, 222, 128, 0.25);
+}
+
+/* =====================================================
+   ACCESIBILIDAD Y ENFOQUE
+===================================================== */
+
+.clientes-page button:focus-visible,
+.clientes-page input:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+}
+
+.clientes-page button:disabled {
+    cursor: not-allowed;
+}
+
+/* =====================================================
+   RESPONSIVE - TABLET
+===================================================== */
+
+@media (max-width: 1150px) {
+    .clientes-page {
+        padding: 35px 30px 60px;
+    }
+
+    .clientes-header h1 {
+        font-size: 33px;
+    }
+}
+
+/* =====================================================
+   RESPONSIVE - MOVIL
+===================================================== */
+
+@media (max-width: 768px) {
+    .clientes-page {
+        padding: 30px 20px 50px;
+    }
+
+    .clientes-header {
+        align-items: flex-start;
+    }
+
+    .clientes-header h1 {
+        font-size: 29px;
+    }
+
+    .clientes-card-header {
+        padding: 20px;
+    }
+
+    .clientes-card-header h2 {
+        font-size: 18px;
+    }
+
+    .clientes-form {
+        padding: 20px;
+    }
+
+    .clientes-form-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .clientes-list-card > .clientes-search {
+        margin: 20px 20px 10px;
+    }
+
+    .clientes-search-summary {
+        margin: 0 20px 18px;
+    }
+
+    .clientes-table {
+        min-width: 750px;
+    }
+}
+
+@media (max-width: 600px) {
+    .clientes-page {
+        padding: 25px 14px 40px;
+    }
+
+    .clientes-header h1 {
+        font-size: 26px;
+    }
+
+    .clientes-header p {
+        font-size: 12px;
+    }
+
+    .clientes-total {
+        width: 100%;
+    }
+
+    .clientes-toolbar {
+        justify-content: stretch;
+    }
+
+    .clientes-toolbar .clientes-btn-primary {
+        width: 100%;
+    }
+
+    .clientes-search {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .clientes-search-input {
+        width: 100%;
+    }
+
+    .clientes-reset-btn {
+        width: 100%;
+    }
+
+    .clientes-form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .clientes-form-actions .clientes-btn-primary,
+    .clientes-form-actions .clientes-btn-secondary {
+        width: 100%;
+    }
+
+    .clientes-card-header {
+        min-height: auto;
+        padding: 20px;
+    }
+
+    .clientes-pagination {
+        padding-bottom: 22px;
+    }
+}
+
+/* =====================================================
+   REDUCIR ANIMACIONES SI EL USUARIO LO PREFIERE
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .clientes-create-container,
+    .clientes-edit-container {
+        transition: none;
+    }
+
+    .clientes-create-container:not(.closed) .clientes-card,
+    .clientes-edit-container:not(.closed) .clientes-edit-card {
+        animation: none;
+    }
+
+    .clientes-page button,
+    .clientes-page input {
+        transition: none;
+    }
+}

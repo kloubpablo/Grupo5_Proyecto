@@ -1,176 +1,738 @@
-﻿@model List<WebApplicationAPP.Models.Atencion>
+﻿
+@model List<WebApplicationAPP.Models.Atencion>
+@using System.Linq
 
 @{
-    ViewData["Title"] = "Registro de Atención";
+    ViewData["Title"] = "Registro de Atencion";
+
+    var atenciones = Model ?? new List<WebApplicationAPP.Models.Atencion>();
+
+    var activas = atenciones
+        .Where(a => a.Estado == "En espera" || a.Estado == "En servicio")
+        .OrderBy(a => a.Estado == "En servicio" ? 0 : 1)
+        .ThenBy(a => a.IdAtencion)
+        .ToList();
+
+    var historial = atenciones
+        .Where(a => a.Estado == "Finalizado")
+        .OrderByDescending(a => a.IdAtencion)
+        .ToList();
+
+    int enEspera = activas.Count(a => a.Estado == "En espera");
+    int enServicio = activas.Count(a => a.Estado == "En servicio");
+    int totalActivos = activas.Count;
+    int totalHistorial = historial.Count;
+    int tiempoEstimado = enEspera * 10;
 }
 
-<h2 class="mb-4">🪑 Registro de Atención</h2>
+<link rel="stylesheet"
+      href="~/css/atencion.css"
+      asp-append-version="true" />
 
-<form method="post"
-      action="/Atencion/Agregar"
-      class="row g-2 mb-4">
+<div class="atencion-page">
 
-    <div class="col-md-8">
-        <input class="form-control"
-               type="text"
-               name="nombre"
-               placeholder="Nombre del cliente" />
+    <!-- ENCABEZADO -->
+
+    <header class="atencion-header">
+        <div>
+            <span class="atencion-kicker">GESTION DE SERVICIOS</span>
+
+            <h1>
+                <span class="atencion-title-icon">
+                    <i class="bi bi-scissors"></i>
+                </span>
+                Registro de atencion
+            </h1>
+
+            <p>
+                Administra los clientes en espera,
+                los servicios activos y el historial.
+            </p>
+        </div>
+
+        <div class="atencion-header-icon">
+            <i class="bi bi-person-workspace"></i>
+        </div>
+    </header>
+
+    <!-- ESTADISTICAS -->
+
+    <div class="atencion-stats">
+
+        <div class="atencion-stat-card">
+            <div class="atencion-stat-icon">
+                <i class="bi bi-people"></i>
+            </div>
+            <div>
+                <span>Clientes activos</span>
+                <strong>@totalActivos</strong>
+            </div>
+        </div>
+
+        <div class="atencion-stat-card">
+            <div class="atencion-stat-icon">
+                <i class="bi bi-hourglass-split"></i>
+            </div>
+            <div>
+                <span>En espera</span>
+                <strong>@enEspera</strong>
+            </div>
+        </div>
+
+        <div class="atencion-stat-card">
+            <div class="atencion-stat-icon">
+                <i class="bi bi-scissors"></i>
+            </div>
+            <div>
+                <span>En servicio</span>
+                <strong>@enServicio</strong>
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-4">
-        <button class="btn btn-primary w-100">
-            Agregar a lista
+    <!-- BOTON AGREGAR CLIENTE -->
+
+    <div class="atencion-toolbar">
+        <button type="button"
+                id="abrirCrearAtencion"
+                class="atencion-btn-primary"
+                aria-controls="crearAtencionContainer"
+                aria-expanded="false">
+
+            <i class="bi bi-person-plus"></i>
+
+            <span id="textoCrearAtencion">Agregar cliente</span>
+
+            <i class="bi bi-chevron-down atencion-chevron"></i>
         </button>
     </div>
 
-</form>
+    <!-- GAVETA AGREGAR CLIENTE -->
 
-<table class="table table-bordered table-hover">
+    <div id="crearAtencionContainer"
+         class="atencion-drawer closed">
 
-    <thead class="table-dark">
-        <tr>
-            <th>Cliente</th>
-            <th>Cita</th>
-            <th>Estado</th>
-            <th>Hora Inicio</th>
-            <th>Hora Fin</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
+        <section class="atencion-card">
 
-    <tbody>
+            <div class="atencion-card-header">
+                <div>
+                    <span class="atencion-card-kicker">NUEVO INGRESO</span>
 
-        @if (Model == null || Model.Count == 0)
+                    <h2>
+                        <i class="bi bi-person-plus"></i>
+                        Agregar a lista de atencion
+                    </h2>
+
+                    <p>
+                        Registra un cliente para ponerlo
+                        en la lista de espera.
+                    </p>
+                </div>
+            </div>
+
+            <form method="post"
+                  action="@Url.Action("Agregar", "Atencion")"
+                  class="atencion-form">
+
+                @Html.AntiForgeryToken()
+
+                <div class="atencion-field">
+                    <label for="nombreCliente">
+                        <i class="bi bi-person"></i>
+                        Nombre del cliente
+                    </label>
+
+                    <input type="text"
+                           id="nombreCliente"
+                           name="nombre"
+                           placeholder="Ingrese el nombre del cliente"
+                           maxlength="150"
+                           required />
+                </div>
+
+                <div class="atencion-form-actions">
+                    <button type="button"
+                            id="cerrarCrearAtencion"
+                            class="atencion-btn-secondary">
+                        <i class="bi bi-x-lg"></i>
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            class="atencion-btn-primary">
+                        <i class="bi bi-check-lg"></i>
+                        Agregar a lista
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <!-- LISTA DE ATENCION -->
+
+    <section class="atencion-card atencion-list-card">
+
+        <div class="atencion-card-header">
+            <div>
+                <span class="atencion-card-kicker">CONTROL DE ATENCION</span>
+
+                <h2>
+                    <i class="bi bi-list-ul"></i>
+                    Lista de atencion
+                </h2>
+
+                <p>Clientes pendientes y actualmente en servicio.</p>
+            </div>
+
+            <div class="atencion-count">
+                <strong>@totalActivos</strong>
+                <span>Activos</span>
+            </div>
+        </div>
+
+        @if (totalActivos == 0)
         {
-            <tr>
-                <td colspan="6" class="text-center">
-                    No hay clientes en espera.
-                </td>
-            </tr>
+            <div class="atencion-empty">
+                <div class="atencion-empty-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+
+                <h3>No hay clientes en espera</h3>
+
+                <p>
+                    La lista de atencion esta vacia.
+                    No existen clientes pendientes ni en servicio.
+                </p>
+
+                <span class="atencion-empty-status">
+                    <i class="bi bi-check-circle"></i>
+                    Lista actualizada
+                </span>
+            </div>
         }
         else
         {
-            @foreach (var c in Model)
-            {
-                <tr>
+            <div class="atencion-table-wrapper">
+                <table class="atencion-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Cita</th>
+                            <th>Estado</th>
+                            <th>Hora inicio</th>
+                            <th>Hora fin</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
 
-                    <td>
-                        @c.IdClienteNavigation.Nombre
-                    </td>
-
-                    <td>
-
-                        @if (c.IdCita != null)
+                    <tbody>
+                        @foreach (var a in activas)
                         {
-                            <span class="badge bg-info">
-                                Cita #@c.IdCita
-                            </span>
+                            var nombre = a.IdClienteNavigation?.Nombre
+                                ?? "Cliente sin nombre";
+
+                            <tr>
+                                <td>
+                                    <div class="atencion-client">
+                                        <div class="atencion-avatar">
+                                            @(string.IsNullOrWhiteSpace(nombre)
+                                                ? "?"
+                                                : nombre.Substring(0, 1).ToUpper())
+                                        </div>
+                                        <strong>@nombre</strong>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    @if (a.IdCita != null)
+                                    {
+                                        <span class="atencion-cita">
+                                            <i class="bi bi-calendar-check"></i>
+                                            Cita #@a.IdCita
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="atencion-muted">Sin cita</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (a.Estado == "En espera")
+                                    {
+                                        <span class="atencion-status status-waiting">
+                                            <span></span>
+                                            En espera
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="atencion-status status-service">
+                                            <span></span>
+                                            Atendiendo
+                                        </span>
+                                    }
+                                </td>
+
+                                <td>
+                                    <span class="atencion-time">
+                                        <i class="bi bi-clock"></i>
+                                        @(a.HoraInicio?.ToString("HH:mm") ?? "--")
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="atencion-time">
+                                        <i class="bi bi-clock-history"></i>
+                                        @(a.HoraFin?.ToString("HH:mm") ?? "--")
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @if (a.Estado == "En espera")
+                                    {
+                                        <a class="atencion-action-btn action-start"
+                                           href="@Url.Action("Iniciar", "Atencion", new { id = a.IdAtencion })">
+                                            <i class="bi bi-play-fill"></i>
+                                            Iniciar
+                                        </a>
+                                    }
+                                    else if (a.Estado == "En servicio")
+                                    {
+                                        <button type="button"
+                                                class="atencion-action-btn action-finish btn-finalizar-pago"
+                                                data-id="@a.IdAtencion"
+                                                data-cliente="@nombre">
+                                            <i class="bi bi-check2-circle"></i>
+                                            Finalizar
+                                        </button>
+                                    }
+                                </td>
+                            </tr>
                         }
-                        else
-                        {
-                            <span class="text-muted">
-                                Sin cita
-                            </span>
-                        }
-
-                    </td>
-
-                    <td>
-
-                        @if (c.Estado == "En espera")
-                        {
-                            <span class="badge bg-warning text-dark">
-                                En espera
-                            </span>
-                        }
-                        else if (c.Estado == "En servicio")
-                        {
-                            <span class="badge bg-success">
-                                Atendiendo
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-secondary">
-                                Finalizado
-                            </span>
-                        }
-
-                    </td>
-
-                    <td>
-                        @(c.HoraInicio?.ToString() ?? "--")
-                    </td>
-
-                    <td>
-                        @(c.HoraFin?.ToString() ?? "--")
-                    </td>
-
-                    <td>
-
-                        @if (c.Estado == "En espera")
-                        {
-                            <a class="btn btn-sm btn-primary"
-                               href="/Atencion/Iniciar/@c.IdAtencion">
-                                ▶️ Iniciar
-                            </a>
-                        }
-                        else if (c.Estado == "En servicio")
-                        {
-                            <a class="btn btn-sm btn-danger"
-                               href="/Atencion/Finalizar/@c.IdAtencion">
-                                ⏹️ Finalizar
-                            </a>
-                        }
-                        else
-                        {
-                            <span class="text-muted">
-                                Completado
-                            </span>
-                        }
-
-                    </td>
-
-                </tr>
-            }
+                    </tbody>
+                </table>
+            </div>
         }
+    </section>
 
-    </tbody>
+    <!-- BOTON HISTORIAL -->
 
-</table>
+    <div class="atencion-history-toolbar">
+        <button type="button"
+                id="abrirHistorialAtencion"
+                class="atencion-btn-history"
+                aria-controls="historialAtencionContainer"
+                aria-expanded="false">
 
-<div class="row mt-4">
+            <i class="bi bi-clock-history"></i>
 
-    <div class="col-md-6">
+            <span id="textoBotonHistorial">
+                Ver historial de atencion
+            </span>
 
-        <div class="card p-3 text-center">
+            <span class="atencion-history-count">
+                @totalHistorial
+            </span>
 
-            <h5>
-                ⏱ Tiempo estimado
-            </h5>
-
-            <h3>
-                @((Model?.Count(c => c.Estado != "Finalizado") ?? 0) * 10) minutos
-            </h3>
-
-        </div>
-
+            <i class="bi bi-chevron-down atencion-history-chevron"></i>
+        </button>
     </div>
 
-    <div class="col-md-6">
+    <!-- GAVETA HISTORIAL -->
 
-        <div class="card p-3 text-center">
+    <div id="historialAtencionContainer"
+         class="atencion-drawer atencion-history-container closed">
 
-            <h5>
-                👥 Clientes en atención
-            </h5>
+        <section class="atencion-card atencion-history-card">
 
-            <h3>
-                @(Model?.Count(c => c.Estado != "Finalizado") ?? 0)
-            </h3>
+            <div class="atencion-card-header">
+                <div>
+                    <span class="atencion-card-kicker">REGISTROS ANTERIORES</span>
 
-        </div>
+                    <h2>
+                        <i class="bi bi-clock-history"></i>
+                        Historial de atencion
+                    </h2>
 
+                    <p>Consulta los servicios finalizados.</p>
+                </div>
+
+                <button type="button"
+                        id="cerrarHistorialAtencion"
+                        class="atencion-close-btn"
+                        aria-label="Cerrar historial">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            @if (totalHistorial == 0)
+            {
+                <div class="atencion-empty">
+                    <div class="atencion-empty-icon">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+
+                    <h3>No hay historial de atencion</h3>
+                    <p>Todavia no existen servicios finalizados registrados.</p>
+                </div>
+            }
+            else
+            {
+                <div class="atencion-history-search">
+                    <div class="atencion-search-input">
+                        <i class="bi bi-search"></i>
+
+                        <input type="search"
+                               id="buscarHistorialAtencion"
+                               placeholder="Buscar por cliente, cita o ID..."
+                               autocomplete="off" />
+                    </div>
+
+                    <button type="button"
+                            id="mostrarTodoHistorial"
+                            class="atencion-btn-secondary">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        Mostrar todos
+                    </button>
+                </div>
+
+                <p id="historialAtencionResultados"
+                   class="atencion-results-text">
+                    @totalHistorial registros finalizados
+                </p>
+
+                <div class="atencion-table-wrapper">
+                    <table class="atencion-table atencion-history-table">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Cita</th>
+                                <th>Estado</th>
+                                <th>Hora inicio</th>
+                                <th>Hora fin</th>
+                                <th>Registro</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var a in historial)
+                            {
+                                var nombre = a.IdClienteNavigation?.Nombre
+                                    ?? "Cliente sin nombre";
+
+                                <tr class="atencion-history-row"
+                                    data-id="@a.IdAtencion"
+                                    data-cliente="@nombre"
+                                    data-cita="@(a.IdCita?.ToString() ?? "")">
+
+                                    <td>
+                                        <div class="atencion-client">
+                                            <div class="atencion-avatar">
+                                                @(string.IsNullOrWhiteSpace(nombre)
+                                                    ? "?"
+                                                    : nombre.Substring(0, 1).ToUpper())
+                                            </div>
+                                            <strong>@nombre</strong>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        @if (a.IdCita != null)
+                                        {
+                                            <span class="atencion-cita">
+                                                <i class="bi bi-calendar-check"></i>
+                                                Cita #@a.IdCita
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="atencion-muted">Sin cita</span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        <span class="atencion-status status-finished">
+                                            <span></span>
+                                            Finalizado
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="atencion-time">
+                                            <i class="bi bi-clock"></i>
+                                            @(a.HoraInicio?.ToString("HH:mm") ?? "--")
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="atencion-time">
+                                            <i class="bi bi-clock-history"></i>
+                                            @(a.HoraFin?.ToString("HH:mm") ?? "--")
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="atencion-history-id">
+                                            #@a.IdAtencion
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div id="historialAtencionSinResultados"
+                         class="atencion-empty"
+                         hidden>
+
+                        <div class="atencion-empty-icon">
+                            <i class="bi bi-search"></i>
+                        </div>
+
+                        <h3>No se encontraron resultados</h3>
+                        <p>Prueba con otro nombre, numero de cita o ID.</p>
+                    </div>
+                </div>
+
+                <div id="historialAtencionPaginacion"
+                     class="atencion-history-pagination">
+
+                    <button type="button"
+                            id="historialAtencionAnterior"
+                            class="atencion-page-btn">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+
+                    <div id="historialAtencionNumeros"
+                         class="atencion-page-numbers"></div>
+
+                    <button type="button"
+                            id="historialAtencionSiguiente"
+                            class="atencion-page-btn">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+
+                <p id="historialAtencionResumen"
+                   class="atencion-pagination-summary"></p>
+            }
+        </section>
     </div>
 
+    <!-- INFORMACION INFERIOR -->
+
+    <div class="atencion-bottom-grid">
+
+        <section class="atencion-card atencion-info-card">
+            <div class="atencion-info-icon">
+                <i class="bi bi-clock-history"></i>
+            </div>
+
+            <span class="atencion-info-label">
+                TIEMPO ESTIMADO DE ESPERA
+            </span>
+
+            @if (enEspera == 0)
+            {
+                <h3 class="atencion-immediate">
+                    Atencion inmediata disponible
+                </h3>
+                <p>No hay clientes en espera.</p>
+            }
+            else
+            {
+                <h3>@tiempoEstimado minutos</h3>
+                <p>Estimacion de 10 minutos por cliente en espera.</p>
+            }
+        </section>
+
+        <section class="atencion-card atencion-info-card">
+            <div class="atencion-info-icon">
+                <i class="bi bi-people"></i>
+            </div>
+
+            <span class="atencion-info-label">
+                CLIENTES EN ATENCION
+            </span>
+
+            <h3>@totalActivos</h3>
+            <p>@enEspera en espera y @enServicio en servicio.</p>
+        </section>
+    </div>
 </div>
+
+<!-- MODAL REGISTRAR PAGO -->
+
+<div class="atencion-pago-overlay"
+     id="registrarPagoModal"
+     hidden>
+
+    <div class="atencion-pago-modal"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="pagoModalTitulo">
+
+        <div class="atencion-pago-header">
+            <div>
+                <span class="atencion-pago-kicker">
+                    FINALIZACION DEL SERVICIO
+                </span>
+
+                <h2 id="pagoModalTitulo">
+                    <i class="bi bi-credit-card"></i>
+                    Registrar pago
+                </h2>
+
+                <p>
+                    Registra el pago para finalizar la atencion.
+                </p>
+            </div>
+
+            <button type="button"
+                    class="atencion-pago-close"
+                    id="cerrarPagoModal"
+                    aria-label="Cerrar ventana">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <form id="formRegistrarPago"
+            method="post"
+            action="@Url.Action("RegistrarAjax", "Pagos")">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden"
+                   id="pagoAtencionId"
+                   name="idAtencion" />
+
+            <div class="atencion-pago-field">
+                <label for="pagoClienteVisible">
+                    <i class="bi bi-person"></i>
+                    Cliente
+                </label>
+
+                <input type="text"
+                       id="pagoClienteVisible"
+                       readonly />
+            </div>
+
+            <div class="atencion-pago-field">
+                <label for="pagoMonto">
+                    <i class="bi bi-cash-stack"></i>
+                    Monto
+                </label>
+
+                <div class="atencion-pago-monto">
+                    <span>₡</span>
+
+                    <input type="number"
+                           id="pagoMonto"
+                           name="monto"
+                           min="0.01"
+                           step="0.01"
+                           placeholder="0.00"
+                           required />
+                </div>
+            </div>
+
+            
+            <div class="atencion-pago-field">
+                <label id="pagoMetodoLabel">
+                    <i class="bi bi-wallet2"></i>
+                    Metodo de pago
+                </label>
+
+                <div class="atencion-custom-select"
+                    id="pagoMetodoDropdown">
+
+                    <input type="hidden"
+                        id="pagoMetodo"
+                        name="metodo"
+                        value="" />
+
+                    <button type="button"
+                            id="pagoMetodoTrigger"
+                            class="atencion-select-trigger"
+                            aria-labelledby="pagoMetodoLabel pagoMetodoTexto"
+                            aria-expanded="false"
+                            aria-controls="pagoMetodoOpciones"
+                            aria-haspopup="listbox">
+
+                        <span class="atencion-select-content">
+                            <i class="bi bi-wallet2"></i>
+
+                            <span id="pagoMetodoTexto">
+                                Seleccione un metodo
+                            </span>
+                        </span>
+
+                        <i class="bi bi-chevron-down atencion-select-arrow"></i>
+                    </button>
+
+                    <div id="pagoMetodoOpciones"
+                        class="atencion-select-options"
+                        role="listbox"
+                        aria-labelledby="pagoMetodoLabel">
+
+                        <button type="button"
+                                class="atencion-select-option"
+                                role="option"
+                                aria-selected="false"
+                                data-value="Efectivo">
+
+                            <span class="atencion-select-option-icon">
+                                <i class="bi bi-cash-stack"></i>
+                            </span>
+
+                            <span>Efectivo</span>
+
+                            <i class="bi bi-check-lg atencion-select-check"></i>
+                        </button>
+
+                        <button type="button"
+                                class="atencion-select-option"
+                                role="option"
+                                aria-selected="false"
+                                data-value="Tarjeta">
+
+                            <span class="atencion-select-option-icon">
+                                <i class="bi bi-credit-card"></i>
+                            </span>
+
+                            <span>Tarjeta</span>
+
+                            <i class="bi bi-check-lg atencion-select-check"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="atencion-pago-actions">
+                <button type="button"
+                        id="cancelarPagoModal"
+                        class="atencion-pago-secondary">
+                    Cancelar
+                </button>
+
+                <button type="submit"
+                        id="guardarPagoBtn"
+                        class="atencion-pago-primary">
+                    <i class="bi bi-check-lg"></i>
+                    Registrar pago
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="atencionPagoToast"
+     class="atencion-pago-toast"
+     role="status"
+     aria-live="polite"
+     hidden></div>
+
+<script src="~/js/atencion.js"
+        asp-append-version="true"></script>

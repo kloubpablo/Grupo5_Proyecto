@@ -1,142 +1,1418 @@
 ﻿@model List<WebApplicationAPP.Models.Cita>
 
-<h2 class="mb-4">📅 Citas</h2>
+@{
+    ViewData["Title"] = "Citas";
 
-<div class="mb-3 d-flex gap-2">
+    var horarios = ViewBag.Horarios as List<WebApplicationAPP.Models.Cita>;
+    var citaEditar = ViewBag.CitaEditar as WebApplicationAPP.Models.Cita;
 
-    <a class="btn btn-success"
-           href="/Citas/Crear">
-        ➕ Nueva Cita
-    </a>
+    bool mostrarResultadoHorarios = ViewBag.FechaHorarios != null;
+    bool mostrarMensaje = TempData["MensajeCita"] != null;
+    bool mostrarError = TempData["ErrorCita"] != null;
 
-    <a class="btn btn-primary"
-           href="/Citas/Historial">
-        📖 Historial de Citas
-    </a>
+    var citasActivas = Model
+        .Where(c => c.Estado == "Activa")
+        .OrderBy(c => c.Fecha)
+        .ThenBy(c => c.Hora)
+        .ToList();
 
-    <a class="btn btn-info text-white"
-           href="/Citas/HorariosDisponibles">
-        🕒 Horarios Disponibles
-    </a>
+    var citasHistorial = Model
+        .Where(c => c.Estado == "Cancelada" || c.Estado == "Bloqueada")
+        .OrderByDescending(c => c.Fecha)
+        .ThenByDescending(c => c.Hora)
+        .ToList();
+}
 
-</div>
+<link rel="stylesheet" href="~/css/citas.css" />
 
-<table class="table table-bordered table-hover">
+<div class="citas-page">
 
-    <thead class="table-dark">
-        <tr>
-            <th>Cliente</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Barbero</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <section class="page-header">
+        <div>
+            <span class="page-kicker">GESTION DE BARBERIA</span>
 
-    <tbody>
+            <h1 class="page-title">
+                <span class="page-icon">
+                    <i class="bi bi-calendar3"></i>
+                </span>
+                Citas
+            </h1>
 
-        @if (Model == null || Model.Count == 0)
+            <p class="page-description">
+                Administra las citas, horarios y agenda de Yampi Barbershop.
+            </p>
+        </div>
+
+        <div class="header-decoration">
+            <i class="bi bi-scissors"></i>
+        </div>
+    </section>
+
+
+    <!-- =========================
+         MENSAJES
+    ========================== -->
+    @if (mostrarMensaje)
+    {
+        <div class="alert-custom alert-success-custom">
+            <div class="alert-icon">
+                <i class="bi bi-check-lg"></i>
+            </div>
+
+            <div>
+                <strong>Operacion realizada</strong>
+                <span>@TempData["MensajeCita"]</span>
+            </div>
+        </div>
+    }
+
+    @if (mostrarError)
+    {
+        <div class="alert-custom alert-error-custom">
+            <div class="alert-icon">
+                <i class="bi bi-exclamation-lg"></i>
+            </div>
+
+            <div>
+                <strong>No se pudo completar la operacion</strong>
+                <span>@TempData["ErrorCita"]</span>
+            </div>
+        </div>
+    }
+
+
+    <!-- =========================
+         RESUMEN
+    ========================== -->
+    <section class="stats-grid">
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="bi bi-calendar-check"></i>
+            </div>
+
+            <div class="stat-info">
+                <span class="stat-label">Citas activas</span>
+                <strong class="stat-number">@citasActivas.Count</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="bi bi-calendar-event"></i>
+            </div>
+
+            <div class="stat-info">
+                <span class="stat-label">Total de citas</span>
+                <strong class="stat-number">@Model.Count</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="bi bi-clock-history"></i>
+            </div>
+
+            <div class="stat-info">
+                <span class="stat-label">Historial</span>
+                <strong class="stat-number">@citasHistorial.Count</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="bi bi-person-badge"></i>
+            </div>
+
+            <div class="stat-info">
+                <span class="stat-label">Barberos</span>
+                <strong class="stat-number">
+                    @(ViewBag.Barberos?.Count ?? 0)
+                </strong>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         CREAR + HORARIOS
+    ========================== -->
+    <section class="top-sections-grid">
+
+        <!-- CREAR CITA -->
+        <div class="content-card create-card">
+
+            <div class="card-header">
+                <div>
+                    <span class="card-kicker">NUEVA RESERVACION</span>
+
+                    <h2>
+                        <i class="bi bi-plus-circle"></i>
+                        Crear cita
+                    </h2>
+
+                    <p>
+                        Selecciona el barbero, fecha y hora.
+                    </p>
+                </div>
+            </div>
+
+            <form asp-action="Crear" asp-controller="Citas" method="post">
+
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <span class="step-number">01</span>
+
+                        <div>
+                            <strong>Selecciona un barbero</strong>
+                            <small>Elige quien atendera la cita</small>
+                        </div>
+                    </div>
+
+                    <div class="barber-select-grid">
+
+                        @if (ViewBag.Barberos != null)
+                        {
+                            foreach (var barbero in ViewBag.Barberos)
+                            {
+                                <label class="barber-option">
+
+                                    <input type="radio"
+                                           name="barbero"
+                                           value="@barbero.Nombre"
+                                           required />
+
+                                    <div class="barber-option-content">
+
+                                        <div class="barber-avatar">
+                                            @if (!string.IsNullOrEmpty(barbero.Nombre))
+                                            {
+                                                @barbero.Nombre.Substring(0, 1).ToUpper()
+                                            }
+                                            else
+                                            {
+                                                <text>?</text>
+                                            }
+                                        </div>
+
+                                        <div class="barber-details">
+                                            <strong>@barbero.Nombre</strong>
+                                            <span>Barbero</span>
+                                        </div>
+
+                                        <i class="bi bi-check-circle-fill barber-check"></i>
+
+                                    </div>
+
+                                </label>
+                            }
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <span class="step-number">02</span>
+
+                        <div>
+                            <strong>Fecha y hora</strong>
+                            <small>Selecciona cuando quieres tu cita</small>
+                        </div>
+                    </div>
+
+
+                    <div class="datetime-grid">
+
+                        <!-- FECHA -->
+                        <div class="date-selector-box">
+
+                            <div class="field-label">
+                                <i class="bi bi-calendar3"></i>
+                                <span>Fecha</span>
+                            </div>
+
+                            <div class="custom-date-selectors">
+
+                                <!-- DIA -->
+                                <div class="custom-select" data-name="dia">
+
+                                    <button type="button" class="custom-select-trigger">
+                                        <span class="custom-select-value">
+                                            Dia
+                                        </span>
+
+                                        <i class="bi bi-chevron-down"></i>
+                                    </button>
+
+                                    <div class="custom-select-menu">
+                                    </div>
+
+                                </div>
+
+
+                                <!-- MES -->
+                                <div class="custom-select" data-name="mes">
+
+                                    <button type="button" class="custom-select-trigger">
+                                        <span class="custom-select-value">
+                                            Mes
+                                        </span>
+
+                                        <i class="bi bi-chevron-down"></i>
+                                    </button>
+
+                                    <div class="custom-select-menu">
+
+                                        <button type="button" data-value="1">
+                                            Enero
+                                        </button>
+
+                                        <button type="button" data-value="2">
+                                            Febrero
+                                        </button>
+
+                                        <button type="button" data-value="3">
+                                            Marzo
+                                        </button>
+
+                                        <button type="button" data-value="4">
+                                            Abril
+                                        </button>
+
+                                        <button type="button" data-value="5">
+                                            Mayo
+                                        </button>
+
+                                        <button type="button" data-value="6">
+                                            Junio
+                                        </button>
+
+                                        <button type="button" data-value="7">
+                                            Julio
+                                        </button>
+
+                                        <button type="button" data-value="8">
+                                            Agosto
+                                        </button>
+
+                                        <button type="button" data-value="9">
+                                            Septiembre
+                                        </button>
+
+                                        <button type="button" data-value="10">
+                                            Octubre
+                                        </button>
+
+                                        <button type="button" data-value="11">
+                                            Noviembre
+                                        </button>
+
+                                        <button type="button" data-value="12">
+                                            Diciembre
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- AÑO -->
+                                <div class="custom-select" data-name="anio">
+
+                                    <button type="button" class="custom-select-trigger">
+                                        <span class="custom-select-value">
+                                            Año
+                                        </span>
+
+                                        <i class="bi bi-chevron-down"></i>
+                                    </button>
+
+                                    <div class="custom-select-menu">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <button type="button" class="today-btn" id="btnHoy">
+
+                                <i class="bi bi-calendar-check"></i>
+
+                                Hoy
+
+                            </button>
+
+                            <input type="hidden" id="fecha" name="fecha">
+
+                        </div>
+
+
+                        <!-- HORA -->
+                        <div class="time-selector-box">
+
+                            <div class="field-label">
+
+                                <i class="bi bi-clock"></i>
+
+                                <span>Hora</span>
+
+                            </div>
+
+
+                            <div class="custom-time-selectors">
+
+
+                                <!-- HORA -->
+                                <div class="custom-select" data-name="hora">
+
+                                    <button type="button" class="custom-select-trigger">
+
+                                        <span class="custom-select-value">
+                                            Hora
+                                        </span>
+
+                                        <i class="bi bi-chevron-down"></i>
+
+                                    </button>
+
+
+                                    <div class="custom-select-menu">
+
+                                        <button type="button" data-value="07">
+                                            07 AM
+                                        </button>
+
+                                        <button type="button" data-value="08">
+                                            08 AM
+                                        </button>
+
+                                        <button type="button" data-value="09">
+                                            09 AM
+                                        </button>
+
+                                        <button type="button" data-value="10">
+                                            10 AM
+                                        </button>
+
+                                        <button type="button" data-value="11">
+                                            11 AM
+                                        </button>
+
+                                        <button type="button" data-value="12">
+                                            12 PM
+                                        </button>
+
+                                        <button type="button" data-value="13">
+                                            13 PM
+                                        </button>
+
+                                        <button type="button" data-value="14">
+                                            14 PM
+                                        </button>
+
+                                        <button type="button" data-value="15">
+                                            15 PM
+                                        </button>
+
+                                        <button type="button" data-value="16">
+                                            16 PM
+                                        </button>
+
+                                        <button type="button" data-value="17">
+                                            17 PM
+                                        </button>
+
+                                        <button type="button" data-value="18">
+                                            18 PM
+                                        </button>
+
+                                        <button type="button" data-value="19">
+                                            19 PM
+                                        </button>
+
+                                        <button type="button" data-value="20">
+                                            20 PM
+                                        </button>
+
+                                        <button type="button" data-value="21">
+                                            21 PM
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- MINUTOS -->
+                                <div class="custom-select" data-name="minuto">
+
+                                    <button type="button" class="custom-select-trigger">
+
+                                        <span class="custom-select-value">
+                                            Minutos
+                                        </span>
+
+                                        <i class="bi bi-chevron-down"></i>
+
+                                    </button>
+
+
+                                    <div class="custom-select-menu">
+
+                                        <button type="button" data-value="00">
+                                            00
+                                        </button>
+
+                                        <button type="button" data-value="15">
+                                            15
+                                        </button>
+
+                                        <button type="button" data-value="30">
+                                            30
+                                        </button>
+
+                                        <button type="button" data-value="45">
+                                            45
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <input type="hidden" id="horaFinal" name="hora">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-footer">
+
+                    <div class="form-tip">
+                        <i class="bi bi-info-circle"></i>
+                        <span>
+                            Verifica que el horario este disponible antes de reservar.
+                        </span>
+                    </div>
+
+                    <button type="submit" class="primary-btn">
+                        <i class="bi bi-calendar-plus"></i>
+                        Crear cita
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- HORARIOS -->
+        <div class="content-card schedule-card">
+
+            <div class="card-header">
+
+                <div>
+                    <span class="card-kicker">DISPONIBILIDAD</span>
+
+                    <h2>
+                        <i class="bi bi-clock"></i>
+                        Horarios
+                    </h2>
+
+                    <p>
+                        Consulta las citas ocupadas para una fecha.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <form asp-action="HorariosDisponibles"
+                asp-controller="Citas"
+                method="post"
+                class="schedule-form">
+
+                <div class="visual-date-field schedule-date">
+
+                    <label>
+                        <i class="bi bi-calendar3"></i>
+                        Seleccionar fecha
+                    </label>
+
+                    <div class="schedule-custom-date">
+
+                        <!-- DIA -->
+                        <div class="custom-select" data-name="scheduleDia">
+
+                            <button type="button" class="custom-select-trigger">
+                                <span class="custom-select-value">
+                                    Dia
+                                </span>
+
+                                <i class="bi bi-chevron-down"></i>
+                            </button>
+
+                            <div class="custom-select-menu">
+                            </div>
+
+                        </div>
+
+
+                        <!-- MES -->
+                        <div class="custom-select" data-name="scheduleMes">
+
+                            <button type="button" class="custom-select-trigger">
+
+                                <span class="custom-select-value">
+                                    Mes
+                                </span>
+
+                                <i class="bi bi-chevron-down"></i>
+
+                            </button>
+
+                            <div class="custom-select-menu">
+                            </div>
+
+                        </div>
+
+
+                        <!-- AÑO -->
+                        <div class="custom-select" data-name="scheduleAnio">
+
+                            <button type="button" class="custom-select-trigger">
+
+                                <span class="custom-select-value">
+                                    Año
+                                </span>
+
+                                <i class="bi bi-chevron-down"></i>
+
+                            </button>
+
+                            <div class="custom-select-menu">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <button type="button"
+                            class="today-btn"
+                            id="btnHoyHorarios">
+
+                        <i class="bi bi-calendar-check"></i>
+                        Hoy
+
+                    </button>
+
+
+                    <input type="hidden"
+                        id="fechaHorarios"
+                        name="fecha"
+                        required />
+
+                </div>
+
+
+                <button type="submit"
+                        class="secondary-btn schedule-btn">
+
+                    <i class="bi bi-search"></i>
+                    Consultar horarios
+
+                </button>
+
+            </form>
+
+
+            <!-- Contenedor permanente para los resultados de AJAX -->
+            <div id="contenedorResultadosHorario">
+                @if (mostrarResultadoHorarios)
+                {
+                    var fechaConsultada = (DateOnly)ViewBag.FechaHorarios;
+
+                    <div class="schedule-result">
+
+                        <div class="schedule-result-header">
+                            <div>
+                                <span>HORARIOS DEL DIA</span>
+                                <strong>
+                                    @fechaConsultada.ToString("dd/MM/yyyy")
+                                </strong>
+                            </div>
+                            <div class="schedule-date-icon">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                        </div>
+
+                        @if (horarios != null && horarios.Any())
+                        {
+                            <div class="occupied-list">
+                                @foreach (var horario in horarios)
+                                {
+                                    <div class="occupied-item">
+                                        <div class="occupied-time">
+                                            <i class="bi bi-clock"></i>
+                                            @horario.Hora.ToString("HH:mm")
+                                        </div>
+                                        <div class="occupied-info">
+                                            <strong>@horario.Barbero</strong>
+                                            <span>Horario ocupado</span>
+                                        </div>
+                                        <span class="occupied-status">Ocupado</span>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="schedule-empty">
+                                <div class="schedule-empty-icon">
+                                    <i class="bi bi-check2-circle"></i>
+                                </div>
+                                <strong>No hay citas registradas</strong>
+                                <span>No existen horarios ocupados para esta fecha.</span>
+                            </div>
+                        }
+
+                    </div>
+                }
+            </div>
+
+        </div>
+
+    </section>
+
+
+    
+    <!-- ==========================================
+        AGENDA - CITAS PROGRAMADAS
+    ========================================== -->
+
+    <section class="content-card agenda-card">
+
+        <!-- ENCABEZADO -->
+        <div class="card-header">
+
+            <div>
+                <span class="card-kicker">AGENDA</span>
+
+                <h2>
+                    <i class="bi bi-calendar2-week"></i>
+                    Citas programadas
+                </h2>
+
+                <p>
+                    Todas las citas activas actualmente.
+                </p>
+            </div>
+
+            <div class="agenda-count">
+                <span>@citasActivas.Count</span>
+                <small>activas</small>
+            </div>
+
+        </div>
+
+        @if (citasActivas.Any())
         {
-            <tr>
-                <td colspan="6" class="text-center">
-                    No hay citas registradas.
-                </td>
-            </tr>
+            <!-- ======================================
+                COMPUTADORA - TABLA TRADICIONAL
+            ======================================= -->
+
+            <div class="agenda-table-wrapper agenda-desktop">
+
+                <table class="agenda-table">
+
+                    <thead>
+                        <tr>
+                            <th>CLIENTE</th>
+                            <th>FECHA</th>
+                            <th>HORA</th>
+                            <th>BARBERO</th>
+                            <th>ESTADO</th>
+                            <th class="text-center">ACCIONES</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var c in citasActivas)
+                        {
+                            <tr>
+
+                                <!-- CLIENTE -->
+                                <td>
+                                    <div class="client-cell">
+
+                                        <div class="cliente-avatar">
+                                            @if (!string.IsNullOrEmpty(c.IdClienteNavigation?.Nombre))
+                                            {
+                                                @c.IdClienteNavigation.Nombre.Substring(0, 1).ToUpper()
+                                            }
+                                            else
+                                            {
+                                                <text>?</text>
+                                            }
+                                        </div>
+
+                                        <div class="client-info">
+                                            <strong>
+                                                @(c.IdClienteNavigation?.Nombre ?? "Sin cliente")
+                                            </strong>
+                                            <span>Cliente</span>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                                <!-- FECHA -->
+                                <td>
+                                    <div class="date-cell">
+                                        <i class="bi bi-calendar3"></i>
+                                        <span>
+                                            @c.Fecha.ToString("dd/MM/yyyy")
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <!-- HORA -->
+                                <td>
+                                    <div class="time-cell">
+                                        <i class="bi bi-clock"></i>
+                                        <strong>
+                                            @c.Hora.ToString("HH:mm")
+                                        </strong>
+                                    </div>
+                                </td>
+
+                                <!-- BARBERO -->
+                                <td>
+                                    <div class="barber-cell">
+
+                                        <div class="small-barber-avatar">
+                                            @if (!string.IsNullOrEmpty(c.Barbero))
+                                            {
+                                                @c.Barbero.Substring(0, 1).ToUpper()
+                                            }
+                                            else
+                                            {
+                                                <text>?</text>
+                                            }
+                                        </div>
+
+                                        <span>@c.Barbero</span>
+
+                                    </div>
+                                </td>
+
+                                <!-- ESTADO -->
+                                <td>
+                                    <span class="status status-active">
+                                        <span></span>
+                                        @c.Estado
+                                    </span>
+                                </td>
+
+                                <!-- ACCIONES -->
+                                <td>
+                                    <div class="action-buttons">
+
+                                        <!-- ATENDER -->
+                                        <a href="/Atencion/RegistrarDesdeCita/@c.IdCita"
+                                        class="table-action action-attend"
+                                        title="Atender"
+                                        aria-label="Atender cita">
+                                            <i class="bi bi-scissors"></i>
+                                        </a>
+
+                                        <!-- EDITAR -->
+                                        <button type="button"
+                                                class="table-action action-edit btn-abrir-editar"
+                                                title="Editar"
+                                                aria-label="Editar cita"
+                                                data-id="@c.IdCita"
+                                                data-cliente-id="@c.IdCliente"
+                                                data-cliente-nombre="@(c.IdClienteNavigation?.Nombre ?? "")"
+                                                data-fecha="@c.Fecha.ToString("yyyy-MM-dd")"
+                                                data-hora="@c.Hora.ToString("HH\\:mm")"
+                                                data-barbero="@c.Barbero">
+
+                                            <i class="bi bi-pencil"></i>
+
+                                        </button>
+
+                                        <!-- BLOQUEAR -->
+                                        <a href="/Citas/Bloquear/@c.IdCita"
+                                        class="table-action action-block"
+                                        title="Bloquear"
+                                        aria-label="Bloquear cita">
+                                            <i class="bi bi-lock"></i>
+                                        </a>
+
+                                        <!-- CANCELAR -->
+                                        <a href="/Citas/Cancelar/@c.IdCita"
+                                        class="table-action action-cancel"
+                                        title="Cancelar"
+                                        aria-label="Cancelar cita">
+                                            <i class="bi bi-x-lg"></i>
+                                        </a>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- ======================================
+                TABLET Y CELULAR - CARRUSEL
+            ======================================= -->
+
+            <div class="agenda-mobile">
+
+                <div class="citas-carousel">
+
+                    @foreach (var c in citasActivas)
+                    {
+                        <article class="cita-carousel-card">
+
+                            <!-- CLIENTE Y ESTADO -->
+                            <div class="cita-card-top">
+
+                                <div class="cita-card-client">
+
+                                    <div class="cliente-avatar">
+                                        @if (!string.IsNullOrEmpty(c.IdClienteNavigation?.Nombre))
+                                        {
+                                            @c.IdClienteNavigation.Nombre.Substring(0, 1).ToUpper()
+                                        }
+                                        else
+                                        {
+                                            <text>?</text>
+                                        }
+                                    </div>
+
+                                    <div class="cita-card-client-info">
+                                        <strong>
+                                            @(c.IdClienteNavigation?.Nombre ?? "Sin cliente")
+                                        </strong>
+
+                                        <span>Cliente</span>
+                                    </div>
+
+                                </div>
+
+                                <span class="status status-active">
+                                    <span></span>
+                                    @c.Estado
+                                </span>
+
+                            </div>
+
+
+                            <!-- INFORMACION -->
+                            <div class="cita-card-details">
+
+                                <!-- FECHA -->
+                                <div class="cita-card-detail">
+
+                                    <span class="cita-card-label">
+                                        <i class="bi bi-calendar3"></i>
+                                        Fecha
+                                    </span>
+
+                                    <strong>
+                                        @c.Fecha.ToString("dd/MM/yyyy")
+                                    </strong>
+
+                                </div>
+
+                                <!-- HORA -->
+                                <div class="cita-card-detail">
+
+                                    <span class="cita-card-label">
+                                        <i class="bi bi-clock"></i>
+                                        Hora
+                                    </span>
+
+                                    <strong>
+                                        @c.Hora.ToString("HH:mm")
+                                    </strong>
+
+                                </div>
+
+                                <!-- BARBERO -->
+                                <div class="cita-card-detail">
+
+                                    <span class="cita-card-label">
+                                        <i class="bi bi-scissors"></i>
+                                        Barbero
+                                    </span>
+
+                                    <strong>
+                                        @c.Barbero
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ACCIONES -->
+                            <div class="cita-card-footer">
+
+                                <span class="cita-card-actions-title">
+                                    Acciones
+                                </span>
+
+                                <div class="action-buttons">
+
+                                    <!-- ATENDER -->
+                                    <a href="/Atencion/RegistrarDesdeCita/@c.IdCita"
+                                    class="table-action action-attend"
+                                    title="Atender"
+                                    aria-label="Atender cita">
+
+                                        <i class="bi bi-scissors"></i>
+
+                                    </a>
+
+                                    <!-- EDITAR -->
+                                    <button type="button"
+                                            class="table-action action-edit btn-abrir-editar"
+                                            title="Editar"
+                                            aria-label="Editar cita"
+                                            data-id="@c.IdCita"
+                                            data-cliente-id="@c.IdCliente"
+                                            data-cliente-nombre="@(c.IdClienteNavigation?.Nombre ?? "")"
+                                            data-fecha="@c.Fecha.ToString("yyyy-MM-dd")"
+                                            data-hora="@c.Hora.ToString("HH\\:mm")"
+                                            data-barbero="@c.Barbero">
+
+                                        <i class="bi bi-pencil"></i>
+
+                                    </button>
+
+                                    <!-- BLOQUEAR -->
+                                    <a href="/Citas/Bloquear/@c.IdCita"
+                                    class="table-action action-block"
+                                    title="Bloquear"
+                                    aria-label="Bloquear cita">
+
+                                        <i class="bi bi-lock"></i>
+
+                                    </a>
+
+                                    <!-- CANCELAR -->
+                                    <a href="/Citas/Cancelar/@c.IdCita"
+                                    class="table-action action-cancel"
+                                    title="Cancelar"
+                                    aria-label="Cancelar cita">
+
+                                        <i class="bi bi-x-lg"></i>
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+                    }
+
+                </div>
+
+            </div>
         }
         else
         {
-            @foreach (var c in Model)
-            {
-                <tr>
+            <!-- SIN CITAS -->
+            <div class="empty-state">
 
-                    <td>@c.IdClienteNavigation.Nombre</td>
+                <div class="empty-icon">
+                    <i class="bi bi-calendar-x"></i>
+                </div>
 
-                    <td>@c.Fecha</td>
+                <h3>No hay citas programadas</h3>
 
-                    <td>@c.Hora</td>
+                <p>
+                    Actualmente no existen citas activas.
+                </p>
 
-                    <td>@c.Barbero</td>
-
-                    <td>
-
-                        @if (c.Estado == "Activa")
-                        {
-                            <span class="badge bg-success">
-                                Activa
-                            </span>
-                        }
-                        else if (c.Estado == "Cancelada")
-                        {
-                            <span class="badge bg-danger">
-                                Cancelada
-                            </span>
-                        }
-                        else if (c.Estado == "Finalizada")
-                        {
-                            <span class="badge bg-primary">
-                                Finalizada
-                            </span>
-                        }
-
-                        else if (c.Estado == "Bloqueada")
-                        {
-                            <span class="badge bg-dark">
-                                Bloqueada
-                            </span>
-                        }
-
-                        else
-                        {
-                            <span class="badge bg-secondary">
-                                @c.Estado
-                            </span>
-                        }
-
-                    </td>
-
-                    <td>
-
-
-
-
-
-
-                        @if (c.Estado == "Activa")
-                        {
-                            <a class="btn btn-sm btn-success"
-                                   href="/Atencion/RegistrarDesdeCita/@c.IdCita">
-                                🪑 Atender
-                            </a>
-
-                            <a class="btn btn-sm btn-warning text-dark"
-                                   href="/Citas/Editar/@c.IdCita">
-                                ✏️ Editar
-                            </a>
-
-                            <a class="btn btn-sm btn-secondary"
-                                   href="/Citas/Bloquear/@c.IdCita">
-                                🔒 Bloquear
-                            </a>
-
-                            <a class="btn btn-sm btn-danger"
-                                   href="/Citas/Cancelar/@c.IdCita">
-                                ❌ Cancelar
-                            </a>
-                        }
-                        else
-                        {
-                            <span class="text-muted">
-                                Sin acciones
-                            </span>
-                        }
-
-                    </td>
-
-                </tr>
-            }
+            </div>
         }
 
-    </tbody>
+    </section>
 
-</table>
+
+
+    <!-- =========================
+         EDITAR CITA (DESLIZANTE)
+    ========================== -->
+    @{
+        bool hayCitaEdit = citaEditar != null;
+        int idEdit = hayCitaEdit ? citaEditar.IdCita : 0;
+        int idClienteEdit = hayCitaEdit ? citaEditar.IdCliente : 0;
+        string nombreEdit = hayCitaEdit ? (citaEditar.IdClienteNavigation?.Nombre ?? "Sin cliente") : "Sin cliente";
+        string inicialEdit = hayCitaEdit && !string.IsNullOrEmpty(citaEditar.IdClienteNavigation?.Nombre) ? citaEditar.IdClienteNavigation.Nombre.Substring(0,1).ToUpper() : "?";
+        string barberoEdit = hayCitaEdit ? citaEditar.Barbero : "";
+        
+        string strFecha = hayCitaEdit ? citaEditar.Fecha.ToString("yyyy-MM-dd") : "";
+        string strDia = hayCitaEdit ? citaEditar.Fecha.Day.ToString("D2") : "Dia";
+        int numMes = hayCitaEdit ? citaEditar.Fecha.Month : 1;
+        string[] mesesArray = { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
+        string nombreMesEdit = hayCitaEdit ? mesesArray[numMes - 1] : "Mes";
+        string strAnio = hayCitaEdit ? citaEditar.Fecha.Year.ToString() : "Año";
+        
+        string strHora = hayCitaEdit ? citaEditar.Hora.ToString("HH\\:mm") : "";
+        string strH = hayCitaEdit ? citaEditar.Hora.Hour.ToString("D2") : "07";
+        string strM = hayCitaEdit ? citaEditar.Hora.Minute.ToString("D2") : "00";
+        string strHLbl = hayCitaEdit ? strH + (citaEditar.Hora.Hour < 12 ? " AM" : " PM") : "Hora";
+    }
+
+    <div class="edit-drawer-container closed" id="editDrawerContainer">
+        <section class="content-card edit-card">
+            <div class="card-header">
+                <div>
+                    <span class="card-kicker">MODIFICAR RESERVACION</span>
+                    <h2>
+                        <i class="bi bi-pencil-square"></i>
+                        Editar cita
+                    </h2>
+                    <p>Actualiza la fecha, hora o barbero de la cita.</p>
+                </div>
+                <div class="edit-id" id="editIdBadge">#@idEdit</div>
+            </div>
+
+            <form asp-action="Editar" asp-controller="Citas" method="post" id="formEditarCita" style="padding: 0;">
+                <input type="hidden" id="editInputIdCita" name="IdCita" value="@idEdit" />
+                <input type="hidden" id="editInputIdCliente" name="IdCliente" value="@idClienteEdit" />
+
+                <!-- SECCIÓN CLIENTE -->
+                <div class="form-section">
+                    <div class="edit-client" style="margin-bottom: 0;">
+                        <div class="cliente-avatar large" id="editAvatarCliente">@inicialEdit</div>
+                        <div>
+                            <span>Cliente</span>
+                            <strong id="editNombreCliente">@nombreEdit</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN BARBERO -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="step-number">01</span>
+                        <div>
+                            <strong>Selecciona un barbero</strong>
+                            <small>Elige quien atenderá la cita</small>
+                        </div>
+                    </div>
+
+                    <div class="barber-select-grid">
+                        @if (ViewBag.Barberos != null)
+                        {
+                            foreach (var barbero in ViewBag.Barberos)
+                            {
+                                bool isSelected = (barbero.Nombre == barberoEdit);
+                                <label class="barber-option">
+                                    <input type="radio" name="Barbero" value="@barbero.Nombre" @(isSelected ? "checked" : "") required />
+                                    <div class="barber-option-content">
+                                        <div class="barber-avatar">
+                                            @(!string.IsNullOrEmpty(barbero.Nombre) ? barbero.Nombre.Substring(0,1).ToUpper() : "?")
+                                        </div>
+                                        <div class="barber-details">
+                                            <strong>@barbero.Nombre</strong>
+                                            <span>Barbero</span>
+                                        </div>
+                                        <i class="bi bi-check-circle-fill barber-check"></i>
+                                    </div>
+                                </label>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <!-- SECCIÓN FECHA Y HORA -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="step-number">02</span>
+                        <div>
+                            <strong>Fecha y hora</strong>
+                            <small>Actualiza cuándo quieres tu cita</small>
+                        </div>
+                    </div>
+
+                    <div class="datetime-grid">
+                        <div class="date-selector-box">
+                            <div class="field-label">
+                                <i class="bi bi-calendar3"></i> <span>Fecha</span>
+                            </div>
+
+                            <div class="custom-date-selectors">
+                                <div class="custom-select" data-name="editDia">
+                                    <button type="button" class="custom-select-trigger">
+                                        <span class="custom-select-value">@strDia</span> <i class="bi bi-chevron-down"></i>
+                                    </button>
+                                    <div class="custom-select-menu"></div>
+                                </div>
+
+                                <div class="custom-select" data-name="editMes">
+                                    <button type="button" class="custom-select-trigger">
+                                        <span class="custom-select-value">@nombreMesEdit</span> <i class="bi bi-chevron-down"></i>
+                                    </button>
+                                    <div class="custom-select-menu">
+                                        @for (int m = 1; m <= 12; m++)
+                                        {
+                                            <button type="button" data-value="@m" class="@(numMes == m && hayCitaEdit ? "selected" : "")">
+                                                @mesesArray[m - 1]
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="custom-select" data-name="editAnio">
+                                    <button type="button" class="custom-select-trigger">
+                                        <span class="custom-select-value">@strAnio</span> <i class="bi bi-chevron-down"></i>
+                                    </button>
+                                    <div class="custom-select-menu"></div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="today-btn" id="btnHoyEdit">
+                                <i class="bi bi-calendar-check"></i> Hoy
+                            </button>
+                            <input type="hidden" id="editFecha" name="Fecha" value="@strFecha">
+                        </div>
+
+                        <div class="time-selector-box">
+                            <div class="field-label">
+                                <i class="bi bi-clock"></i> <span>Hora</span>
+                            </div>
+                            <div class="custom-time-selectors">
+                                <div class="custom-select" data-name="editHora">
+                                    <button type="button" class="custom-select-trigger">
+                                        <span class="custom-select-value">@strHLbl</span> <i class="bi bi-chevron-down"></i>
+                                    </button>
+                                    <div class="custom-select-menu">
+                                        <button type="button" data-value="07">07 AM</button><button type="button" data-value="08">08 AM</button><button type="button" data-value="09">09 AM</button><button type="button" data-value="10">10 AM</button><button type="button" data-value="11">11 AM</button><button type="button" data-value="12">12 PM</button><button type="button" data-value="13">13 PM</button><button type="button" data-value="14">14 PM</button><button type="button" data-value="15">15 PM</button><button type="button" data-value="16">16 PM</button><button type="button" data-value="17">17 PM</button><button type="button" data-value="18">18 PM</button><button type="button" data-value="19">19 PM</button><button type="button" data-value="20">20 PM</button><button type="button" data-value="21">21 PM</button>
+                                    </div>
+                                </div>
+
+                                <div class="custom-select" data-name="editMinuto">
+                                    <button type="button" class="custom-select-trigger">
+                                        <span class="custom-select-value">@strM</span> <i class="bi bi-chevron-down"></i>
+                                    </button>
+                                    <div class="custom-select-menu">
+                                        <button type="button" data-value="00">00</button><button type="button" data-value="15">15</button><button type="button" data-value="30">30</button><button type="button" data-value="45">45</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="editHoraFinal" name="Hora" value="@strHora">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FOOTER -->
+                <div class="form-footer">
+                    <div class="form-tip">
+                        <i class="bi bi-info-circle"></i> <span>Verifica la disponibilidad antes de actualizar.</span>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+                        <!-- BOTÓN CANCELAR REPARADO -->
+                        <button type="button" class="secondary-btn btn-cerrar-editar">
+                            <i class="bi bi-x-lg"></i>
+                            Cancelar
+                        </button>
+                        <button type="submit" class="primary-btn">
+                            <i class="bi bi-check-lg"></i> Guardar cambios
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <!-- =========================
+         HISTORIAL
+    ========================== -->
+    <!-- =========================
+     HISTORIAL
+    ========================== -->
+    <section class="content-card history-card">
+
+        <div class="card-header">
+
+            <div>
+                <span class="card-kicker">REGISTRO</span>
+
+                <h2>
+                    <i class="bi bi-clock-history"></i>
+                    Historial de citas
+                </h2>
+
+                <p>
+                    Citas canceladas y bloqueadas.
+                </p>
+            </div>
+
+        </div>
+
+
+        @if (citasHistorial.Any())
+        {
+            <div class="history-list" id="historialCitas">
+
+                @foreach (var c in citasHistorial)
+                {
+                    <div class="history-item historial-cita-row">
+
+                        <div class="history-main">
+
+                            <div class="history-client">
+
+                                <div class="cliente-avatar">
+
+                                    @if (!string.IsNullOrEmpty(c.IdClienteNavigation?.Nombre))
+                                    {
+                                        @c.IdClienteNavigation.Nombre.Substring(0, 1).ToUpper()
+                                    }
+                                    else
+                                    {
+                                        <text>?</text>
+                                    }
+
+                                </div>
+
+                                <div>
+                                    <strong>
+                                        @(c.IdClienteNavigation?.Nombre ?? "Sin cliente")
+                                    </strong>
+
+                                    <span>
+                                        @c.Barbero
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="history-date">
+
+                                <div>
+                                    <i class="bi bi-calendar3"></i>
+
+                                    <span>
+                                        @c.Fecha.ToString("dd/MM/yyyy")
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <i class="bi bi-clock"></i>
+
+                                    <span>
+                                        @c.Hora.ToString("HH:mm")
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            @if (c.Estado == "Cancelada")
+                            {
+                                <span class="status status-cancelled">
+                                    <span></span>
+                                    Cancelada
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="status status-blocked">
+                                    <span></span>
+                                    Bloqueada
+                                </span>
+                            }
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+
+            <!-- PAGINACION -->
+            <div id="historialPaginacion" class="historial-paginacion">
+
+                <button type="button"
+                        id="historialAnterior"
+                        class="pagination-btn"
+                        title="Pagina anterior">
+
+                    <i class="bi bi-chevron-left"></i>
+
+                </button>
+
+
+                <div id="historialNumeros" class="pagination-numbers"></div>
+
+
+                <button type="button"
+                        id="historialSiguiente"
+                        class="pagination-btn"
+                        title="Pagina siguiente">
+
+                    <i class="bi bi-chevron-right"></i>
+
+                </button>
+
+            </div>
+
+        }
+        else
+        {
+            <div class="empty-state history-empty">
+
+                <div class="empty-icon">
+                    <i class="bi bi-clock"></i>
+                </div>
+
+                <h3>Historial vacio</h3>
+
+                <p>
+                    Todavia no existen citas canceladas o bloqueadas.
+                </p>
+
+            </div>
+        }
+
+    </section>
+
+<script src="~/js/citas.js" asp-append-version="true"></script>
+
+</div>

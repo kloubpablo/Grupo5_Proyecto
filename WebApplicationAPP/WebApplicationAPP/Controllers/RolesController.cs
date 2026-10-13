@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationAPP.Models;
 using WebApplicationAPP.Helpers;
@@ -24,45 +25,76 @@ namespace WebApplicationAPP.Controllers
             return PermisosHelper.TienePermiso(_context, rol, permiso);
         }
 
-        //LISTA DE ROLES
+        private IActionResult SinPermiso()
+        {
+            return StatusCode(403, new
+            {
+                ok = false,
+                mensaje = "No tienes permisos o tu sesion ha expirado"
+            });
+        }
+
+        private IActionResult Error(string mensaje)
+        {
+            return BadRequest(new
+            {
+                ok = false,
+                mensaje
+            });
+        }
+
+        // ==========================================
+        // LISTADO
+        // ==========================================
+
+        [HttpGet]
         public IActionResult Index()
         {
             if (!TienePermiso("Roles/Index"))
                 return RedirectToAction("Index", "Dashboard");
 
-            var roles = _context.Roles.ToList();
+            var roles = _context.Roles
+                .OrderByDescending(r => r.IdRol)
+                .ToList();
+
             return View(roles);
         }
 
-        //CREAR (GET)
+        // ==========================================
+        // CREAR - GET
+        // ==========================================
+
+        [HttpGet]
         public IActionResult Crear()
         {
             if (!TienePermiso("Roles/Crear"))
                 return RedirectToAction("Index", "Dashboard");
 
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
-        //CREAR (POST)
+        // ==========================================
+        // CREAR - POST AJAX
+        // ==========================================
+
         [HttpPost]
-        public IActionResult Crear(string nombre, string descripcion)
+        [ValidateAntiForgeryToken]
+        public IActionResult Crear(string nombre, string? descripcion)
         {
             if (!TienePermiso("Roles/Crear"))
-                return RedirectToAction("Index", "Dashboard");
+                return SinPermiso();
+
+            nombre = nombre?.Trim() ?? "";
+            descripcion = descripcion?.Trim() ?? "";
 
             if (string.IsNullOrWhiteSpace(nombre))
-            {
-                ViewBag.Error = "Debe ingresar el nombre del rol";
-                return View();
-            }
+                return Error("Debe ingresar el nombre del rol");
 
-            bool existe = _context.Roles.Any(r => r.Nombre == nombre);
+            bool existe = _context.Roles.Any(r =>
+                r.Nombre == nombre);
 
             if (existe)
-            {
-                ViewBag.Error = "El rol ya existe";
-                return View();
-            }
+                return Error("El rol ya existe");
 
             var rol = new Role
             {
@@ -74,105 +106,202 @@ namespace WebApplicationAPP.Controllers
             _context.Roles.Add(rol);
             _context.SaveChanges();
 
-            return RedirectToAction(nameof(Index));
+            return Json(new
+            {
+                ok = true,
+                mensaje = "Rol creado correctamente",
+                rol = new
+                {
+                    idRol = rol.IdRol,
+                    nombre = rol.Nombre,
+                    descripcion = rol.Descripcion,
+                    estado = rol.Estado
+                }
+            });
         }
 
-        //ACTIVAR / DESACTIVAR
+        // ==========================================
+        // CAMBIAR ESTADO - POST AJAX
+        // ==========================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Toggle(int id)
         {
             if (!TienePermiso("Roles/Index"))
-                return RedirectToAction("Index", "Dashboard");
+                return SinPermiso();
 
-            var rol = _context.Roles.FirstOrDefault(r => r.IdRol == id);
+            var rol = _context.Roles
+                .FirstOrDefault(r => r.IdRol == id);
 
-            if (rol != null)
+            if (rol == null)
+                return NotFound(new
+                {
+                    ok = false,
+                    mensaje = "Rol no encontrado"
+                });
+
+            rol.Estado = !rol.Estado;
+
+            _context.SaveChanges();
+
+            return Json(new
             {
-                rol.Estado = !rol.Estado;
-                _context.SaveChanges();
-            }
-
-            return RedirectToAction(nameof(Index));
+                ok = true,
+                mensaje = rol.Estado
+                    ? "Rol activado correctamente"
+                    : "Rol desactivado correctamente",
+                estado = rol.Estado,
+                idRol = rol.IdRol
+            });
         }
 
-        //ELIMINAR
+        // ==========================================
+        // ELIMINAR - POST AJAX
+        // ==========================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Eliminar(int id)
         {
             if (!TienePermiso("Roles/Index"))
-                return RedirectToAction("Index", "Dashboard");
+                return SinPermiso();
 
-            var rol = _context.Roles.FirstOrDefault(r => r.IdRol == id);
+            var rol = _context.Roles
+                .FirstOrDefault(r => r.IdRol == id);
 
-            if (rol != null)
+            if (rol == null)
+                return NotFound(new
+                {
+                    ok = false,
+                    mensaje = "Rol no encontrado"
+                });
+
+            try
             {
                 _context.Roles.Remove(rol);
                 _context.SaveChanges();
-            }
 
-            return RedirectToAction(nameof(Index));
+                return Json(new
+                {
+                    ok = true,
+                    mensaje = "Rol eliminado correctamente",
+                    idRol = id
+                });
+            }
+            catch (DbUpdateException)
+            {
+                return Error(
+                    "No se puede eliminar el rol porque tiene registros relacionados"
+                );
+            }
         }
 
-        //PERMISOS (GET)
+        // ==========================================
+        // CONSULTAR PERMISOS - GET JSON
+        // ==========================================
+
+        [HttpGet]
         public IActionResult Permisos(int id)
         {
             if (!TienePermiso("Roles/Permisos"))
-                return RedirectToAction("Index", "Dashboard");
+                return SinPermiso();
 
             var rol = _context.Roles
                 .Include(r => r.IdPrivilegios)
                 .FirstOrDefault(r => r.IdRol == id);
 
             if (rol == null)
-                return RedirectToAction(nameof(Index));
+                return NotFound(new
+                {
+                    ok = false,
+                    mensaje = "Rol no encontrado"
+                });
 
-            var vm = new PermisosRolVM
+            var permisos = _context.Privilegios
+                .AsNoTracking()
+                .OrderBy(p => p.Nombre)
+                .ToList()
+                .Select(p => new
+                {
+                    idPrivilegio = p.IdPrivilegio,
+                    nombre = p.Nombre,
+                    descripcion = p.Descripcion ?? "",
+                    seleccionado = rol.IdPrivilegios.Any(x =>
+                        x.IdPrivilegio == p.IdPrivilegio)
+                })
+                .ToList();
+
+            return Json(new
             {
-                IdRol = rol.IdRol,
-                NombreRol = rol.Nombre,
-
-                Permisos = _context.Privilegios
-                    .ToList()
-                    .Select(p => new PermisoCheckVM
-                    {
-                        IdPrivilegio = p.IdPrivilegio,
-                        Nombre = p.Nombre,
-                        Descripcion = p.Descripcion ?? "",
-                        Seleccionado = rol.IdPrivilegios
-                            .Any(x => x.IdPrivilegio == p.IdPrivilegio)
-                    })
-                    .ToList()
-            };
-
-            return View(vm);
+                ok = true,
+                idRol = rol.IdRol,
+                nombreRol = rol.Nombre,
+                permisos
+            });
         }
 
-        //TOGGLE PERMISO
+        // ==========================================
+        // ACTIVAR / DESACTIVAR PERMISO - POST AJAX
+        // ==========================================
+
         [HttpPost]
-        public IActionResult TogglePermiso(int idRol, int idPrivilegio)
+        [ValidateAntiForgeryToken]
+        public IActionResult TogglePermiso(
+            int idRol,
+            int idPrivilegio)
         {
             if (!TienePermiso("Roles/Permisos"))
-                return RedirectToAction("Index", "Dashboard");
+                return SinPermiso();
 
             var rol = _context.Roles
                 .Include(r => r.IdPrivilegios)
                 .FirstOrDefault(r => r.IdRol == idRol);
 
             if (rol == null)
-                return RedirectToAction("Index");
+                return NotFound(new
+                {
+                    ok = false,
+                    mensaje = "Rol no encontrado"
+                });
 
             var permiso = _context.Privilegios
-                .FirstOrDefault(p => p.IdPrivilegio == idPrivilegio);
+                .FirstOrDefault(p =>
+                    p.IdPrivilegio == idPrivilegio);
 
             if (permiso == null)
-                return RedirectToAction("Permisos", new { id = idRol });
+                return NotFound(new
+                {
+                    ok = false,
+                    mensaje = "Permiso no encontrado"
+                });
 
-            if (rol.IdPrivilegios.Any(p => p.IdPrivilegio == idPrivilegio))
+            bool seleccionado;
+
+            if (rol.IdPrivilegios.Any(p =>
+                p.IdPrivilegio == idPrivilegio))
+            {
                 rol.IdPrivilegios.Remove(permiso);
+                seleccionado = false;
+            }
             else
+            {
                 rol.IdPrivilegios.Add(permiso);
+                seleccionado = true;
+            }
 
             _context.SaveChanges();
 
-            return RedirectToAction("Permisos", new { id = idRol });
+            return Json(new
+            {
+                ok = true,
+                mensaje = seleccionado
+                    ? "Permiso activado correctamente"
+                    : "Permiso desactivado correctamente",
+                idRol,
+                idPrivilegio,
+                seleccionado
+            });
         }
     }
 }

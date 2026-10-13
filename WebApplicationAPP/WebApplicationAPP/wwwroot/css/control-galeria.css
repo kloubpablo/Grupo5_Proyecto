@@ -1,0 +1,785 @@
+
+/* ==========================================
+   YAMPI BARBERSHOP - CONTROL DE GALERIA
+========================================== */
+
+.galeria-admin-page {
+    width: 100%;
+    max-width: 1450px;
+    margin: 0 auto;
+    padding: 32px 28px 65px;
+    color: #ededed;
+    box-sizing: border-box;
+}
+
+.galeria-admin-page *,
+.galeria-admin-page *::before,
+.galeria-admin-page *::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   ENCABEZADO
+========================================== */
+
+.galeria-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 26px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid #353535;
+}
+
+.galeria-header-info {
+    min-width: 0;
+}
+
+.galeria-kicker {
+    display: block;
+    margin-bottom: 12px;
+    color: #d4af37;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.7px;
+}
+
+.galeria-page-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 12px;
+    color: #f5f5f5;
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 700;
+}
+
+.galeria-header-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+    background: #2b261c;
+    border: 1px solid #594923;
+    border-radius: 13px;
+    color: #d4af37;
+    font-size: 24px;
+}
+
+.galeria-page-header p {
+    margin: 0;
+    max-width: 650px;
+    color: #999;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* ==========================================
+   BOTON PRINCIPAL
+========================================== */
+
+.galeria-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-shrink: 0;
+    min-height: 44px;
+    padding: 12px 20px;
+    background: #d4af37;
+    border: 1px solid #d4af37;
+    border-radius: 9px;
+    color: #171717;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.galeria-btn-primary:hover {
+    background: #e5c35b;
+    border-color: #e5c35b;
+    color: #171717;
+}
+
+.galeria-btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ==========================================
+   RESUMEN
+========================================== */
+
+.galeria-summary {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 35px;
+    padding: 22px 25px;
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 13px;
+    overflow: hidden;
+}
+
+.galeria-summary-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 54px;
+    width: 54px;
+    height: 54px;
+    background: #30291c;
+    border-radius: 12px;
+    color: #d4af37;
+    font-size: 25px;
+}
+
+.galeria-summary-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.galeria-summary-info span {
+    color: #999;
+    font-size: 12px;
+}
+
+.galeria-summary-info strong {
+    color: #f5f5f5;
+    font-size: 27px;
+    font-weight: 700;
+}
+
+.galeria-summary-decoration {
+    position: absolute;
+    right: 28px;
+    color: #363126;
+    font-size: 65px;
+}
+
+/* ==========================================
+   ENCABEZADO DE GALERIA
+========================================== */
+
+.galeria-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.galeria-section-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 10px;
+    color: #f5f5f5;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.galeria-section-header h2 i {
+    color: #d4af37;
+}
+
+.galeria-section-header p {
+    margin: 0;
+    color: #999;
+    font-size: 13px;
+}
+
+.galeria-count {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    background: #30291c;
+    border: 1px solid #514224;
+    border-radius: 20px;
+    color: #d4af37;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ==========================================
+   GRID DE IMAGENES
+========================================== */
+
+.galeria-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    align-items: stretch;
+}
+
+/* ==========================================
+   TARJETAS
+========================================== */
+
+.galeria-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: 100%;
+    margin: 0;
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 13px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.galeria-card:hover {
+    border-color: #8f762d;
+}
+
+/* ==========================================
+   VISTA PREVIA DE CADA TARJETA
+========================================== */
+
+.galeria-card-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #151515;
+}
+
+.galeria-card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.25s;
+}
+
+.galeria-card:hover .galeria-card-image img {
+    transform: scale(1.04);
+}
+
+.galeria-image-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 11px;
+    background: #1b1b1b;
+    border: 1px solid #484848;
+    border-radius: 7px;
+    color: #d4af37;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* ==========================================
+   NOMBRE DEL ARCHIVO
+========================================== */
+
+.galeria-card-body {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+    padding: 18px;
+}
+
+.galeria-file-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    background: #30291c;
+    border-radius: 9px;
+    color: #d4af37;
+    font-size: 18px;
+}
+
+.galeria-file-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-width: 0;
+}
+
+.galeria-file-info span {
+    color: #999;
+    font-size: 11px;
+}
+
+.galeria-file-info strong {
+    display: block;
+    color: #ededed;
+    font-size: 13px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ==========================================
+   ELIMINAR IMAGEN
+========================================== */
+
+.galeria-card-footer {
+    padding: 0 18px 18px;
+}
+
+.galeria-btn-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 14px;
+    background: #2a1c1c;
+    border: 1px solid #613333;
+    border-radius: 9px;
+    color: #f0a3a3;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.galeria-btn-delete:hover {
+    background: #3c2424;
+    color: #ffd1d1;
+}
+
+/* ==========================================
+   SIN IMAGENES
+========================================== */
+
+.galeria-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 65px 22px;
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 13px;
+    text-align: center;
+}
+
+.galeria-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 75px;
+    height: 75px;
+    background: #30291c;
+    border-radius: 18px;
+    color: #d4af37;
+    font-size: 35px;
+}
+
+.galeria-empty h3 {
+    margin: 0;
+    color: #f5f5f5;
+    font-size: 20px;
+}
+
+.galeria-empty p {
+    margin: 0 0 12px;
+    color: #999;
+    font-size: 13px;
+}
+
+/* ==========================================
+   MENSAJES
+========================================== */
+
+.galeria-alert {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 18px;
+    margin-bottom: 22px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.galeria-alert-success {
+    color: #9ddcb2;
+    background: #1b2a21;
+    border: 1px solid #315440;
+}
+
+.galeria-alert-error {
+    color: #f1aaa9;
+    background: #301d1d;
+    border: 1px solid #6a3434;
+}
+
+/* ==========================================
+   MODALES
+========================================== */
+
+.galeria-modal {
+    background: #1e1e1e;
+    border: 1px solid #484848;
+    border-radius: 14px;
+    color: #eee;
+    overflow: hidden;
+}
+
+.galeria-modal-header,
+.galeria-modal-footer {
+    border-color: #383838;
+}
+
+.galeria-modal-header {
+    padding: 20px 24px;
+}
+
+.galeria-modal-header .modal-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #f5f5f5;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.galeria-modal-header .modal-title i {
+    color: #d4af37;
+}
+
+.galeria-modal-body {
+    padding: 24px;
+}
+
+.galeria-modal-body > p {
+    color: #bbb;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.galeria-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 16px 24px;
+}
+
+.galeria-btn-cancel,
+.galeria-btn-confirm-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.galeria-btn-cancel {
+    background: #292929;
+    border: 1px solid #484848;
+    color: #ddd;
+}
+
+.galeria-btn-cancel:hover {
+    background: #343434;
+    color: #fff;
+}
+
+.galeria-btn-confirm-delete {
+    background: #983b3b;
+    border: 1px solid #983b3b;
+    color: #fff;
+}
+
+.galeria-btn-confirm-delete:hover {
+    background: #b24747;
+    color: #fff;
+}
+
+/* ==========================================
+   MODAL - SUBIR IMAGEN
+========================================== */
+
+.galeria-upload-description {
+    margin: 0 0 22px;
+    color: #aaa;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.galeria-upload-field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.galeria-upload-field label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #ededed;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.galeria-upload-field label i {
+    color: #d4af37;
+    font-size: 17px;
+}
+
+.galeria-upload-input {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    background: #141414;
+    color: #eaeaea;
+    border: 1px solid #454545;
+    border-radius: 9px;
+    font-size: 13px;
+}
+
+.galeria-upload-input:focus {
+    outline: none;
+    border-color: #d4af37;
+}
+
+.galeria-upload-input::file-selector-button {
+    padding: 8px 12px;
+    margin-right: 12px;
+    background: #30291c;
+    border: 1px solid #514224;
+    border-radius: 6px;
+    color: #d4af37;
+    cursor: pointer;
+}
+
+.galeria-upload-field small {
+    color: #999;
+    font-size: 12px;
+}
+
+/* ==========================================
+   VISTA PREVIA
+========================================== */
+
+.galeria-upload-preview {
+    margin-top: 22px;
+    padding: 15px;
+    background: #171717;
+    border: 1px solid #3c3c3c;
+    border-radius: 11px;
+}
+
+.galeria-upload-preview[hidden],
+.galeria-upload-error[hidden] {
+    display: none !important;
+}
+
+.galeria-preview-title {
+    display: block;
+    margin-bottom: 12px;
+    color: #d4af37;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.galeria-preview-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-height: 260px;
+    background: #111;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.galeria-preview-image img {
+    display: block;
+    width: 100%;
+    max-height: 260px;
+    object-fit: contain;
+}
+
+.galeria-preview-name {
+    display: block;
+    margin-top: 12px;
+    color: #bbb;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.galeria-upload-error {
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: #321d1d;
+    border: 1px solid #703434;
+    border-radius: 8px;
+    color: #f1abab;
+    font-size: 12px;
+}
+
+/* ==========================================
+   MODAL - ELIMINAR
+========================================== */
+
+.galeria-delete-file {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px;
+    margin-top: 14px;
+    background: #151515;
+    border: 1px solid #383838;
+    border-radius: 9px;
+}
+
+.galeria-delete-file i {
+    color: #d4af37;
+    font-size: 20px;
+}
+
+.galeria-delete-file strong {
+    min-width: 0;
+    color: #f5f5f5;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.galeria-modal-warning {
+    margin-top: 18px;
+    margin-bottom: 0;
+    color: #e2a3a3 !important;
+    font-size: 12px !important;
+}
+
+/* ==========================================
+   TABLETS
+========================================== */
+
+@media (max-width: 1100px) {
+
+    .galeria-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 850px) {
+
+    .galeria-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* ==========================================
+   CELULARES
+========================================== */
+
+@media (max-width: 650px) {
+
+    .galeria-admin-page {
+        padding: 20px 14px 45px;
+    }
+
+    .galeria-page-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+    }
+
+    .galeria-page-header h1 {
+        font-size: 23px;
+    }
+
+    .galeria-header-icon {
+        flex-basis: 44px;
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+
+    .galeria-page-header .galeria-btn-primary {
+        width: 100%;
+    }
+
+    .galeria-summary {
+        padding: 18px;
+        margin-bottom: 28px;
+    }
+
+    .galeria-summary-decoration {
+        display: none;
+    }
+
+    .galeria-section-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .galeria-section-header h2 {
+        font-size: 19px;
+    }
+
+    .galeria-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .galeria-card-image {
+        aspect-ratio: 16 / 10;
+    }
+
+    .galeria-modal-header {
+        padding: 18px;
+    }
+
+    .galeria-modal-body {
+        padding: 18px;
+    }
+
+    .galeria-modal-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        padding: 16px 18px;
+    }
+
+    .galeria-modal-footer button,
+    .galeria-modal-footer a {
+        width: 100%;
+    }
+
+    #modalAgregarImagen .modal-dialog,
+    #modalEliminarImagen .modal-dialog {
+        margin: 12px;
+    }
+
+    .galeria-preview-image,
+    .galeria-preview-image img {
+        max-height: 200px;
+    }
+}

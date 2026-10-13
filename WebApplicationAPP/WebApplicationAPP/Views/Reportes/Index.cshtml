@@ -1,79 +1,796 @@
-﻿<h2 class="mb-4">
-    📊 Reportes
-</h2>
+﻿
+@using System.Text.Json
+@using WebApplicationAPP.Models
 
-<div class="row">
+@model List<WebApplicationAPP.Models.Pago>
 
-    <div class="col-md-4 mb-3">
+@{
+    ViewData["Title"] = "Reportes";
 
-        <div class="card p-3 text-center">
+    var pagos = Model ?? new List<Pago>();
 
-            <h5>
-                📅 Citas del día
-            </h5>
+    var fechasCitas = ViewBag.FechasCitas as List<string>
+        ?? new List<string>();
 
-            <h2>
-                @ViewBag.CitasHoy
-            </h2>
+    var datos = new
+    {
+        pagos = pagos.Select(p => new
+        {
+            fecha = p.Fecha.ToString("yyyy-MM-dd"),
+            cliente = p.IdClienteNavigation?.Nombre
+                ?? "Cliente sin nombre",
+            monto = p.Monto,
+            metodo = p.Metodo ?? "Otro"
+        }).ToList(),
+
+        citas = fechasCitas
+    };
+
+    var datosJson = JsonSerializer.Serialize(datos);
+}
+
+<link rel="stylesheet"
+      href="~/css/reportes.css"
+      asp-append-version="true" />
+
+<div class="reportes-page">
+
+    <!-- =====================================
+         ENCABEZADO
+    ====================================== -->
+
+    <header class="rep-header">
+
+        <div class="rep-header-content">
+
+            <span class="rep-kicker">
+                YAMPI BARBER SHOP / ANALITICA
+            </span>
+
+            <h1>
+                <span class="rep-title-icon">
+                    <i class="bi bi-bar-chart-line"></i>
+                </span>
+
+                Reportes de Ventas
+            </h1>
+
+            <p>
+                Analiza tus ingresos, descubre tendencias
+                y consulta el rendimiento del negocio.
+            </p>
 
         </div>
 
-    </div>
+        <div class="rep-header-actions">
 
-    <div class="col-md-4 mb-3">
+            <button type="button"
+                    class="rep-btn-outline"
+                    id="repLimpiar">
 
-        <div class="card p-3 text-center">
+                <i class="bi bi-arrow-counterclockwise"></i>
+                Restablecer
 
-            <h5>
-                💰 Ingresos del día
-            </h5>
+            </button>
 
-            <h2 style="color:#198754;">
-                ₡@ViewBag.IngresosHoy
-            </h2>
+            <button type="button"
+                    class="rep-btn-primary"
+                    id="repExportar">
 
-            <small class="text-muted">
-                Total de pagos registrados hoy.
-            </small>
+                <i class="bi bi-download"></i>
+                Exportar CSV
 
-        </div>
-
-    </div>
-
-    <div class="col-md-4 mb-3">
-
-        <div class="card p-3 text-center">
-
-            <h5>
-                ⭐ Clientes frecuentes
-            </h5>
-
-            <h2>
-                @ViewBag.ClientesFrecuentes
-            </h2>
+            </button>
 
         </div>
 
+    </header>
+
+    <!-- =====================================
+         FILTROS
+    ====================================== -->
+
+    <section class="rep-card rep-filtros-card">
+
+        <div class="rep-section-heading">
+
+            <div>
+                <span class="rep-section-kicker">
+                    PERSONALIZA TU CONSULTA
+                </span>
+
+                <h2>
+                    <i class="bi bi-sliders"></i>
+                    Filtros del reporte
+                </h2>
+
+                <p>
+                    Todos los indicadores y graficos
+                    se actualizan al cambiar los filtros.
+                </p>
+            </div>
+
+            <span class="rep-filter-status">
+                <i class="bi bi-circle-fill"></i>
+                Datos actualizados
+            </span>
+
+        </div>
+
+        <div class="rep-filtros-body">
+
+            <!-- PERIODOS RAPIDOS -->
+
+            <div class="rep-filter-group">
+
+                <label class="rep-filter-label">
+                    <i class="bi bi-calendar-range"></i>
+                    Periodo
+                </label>
+
+                <div class="rep-presets"
+                     id="repPresets">
+
+                    <button type="button"
+                            class="rep-preset"
+                            data-rango="hoy">
+                        Hoy
+                    </button>
+
+                    <button type="button"
+                            class="rep-preset"
+                            data-rango="7d">
+                        7 dias
+                    </button>
+
+                    <button type="button"
+                            class="rep-preset"
+                            data-rango="30d">
+                        30 dias
+                    </button>
+
+                    <button type="button"
+                            class="rep-preset active"
+                            data-rango="mes">
+                        Este mes
+                    </button>
+
+                    <button type="button"
+                            class="rep-preset"
+                            data-rango="anterior">
+                        Mes anterior
+                    </button>
+
+                    <button type="button"
+                            class="rep-preset"
+                            data-rango="todo">
+                        Todo
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- FECHAS PERSONALIZADAS -->
+
+            <div class="rep-date-grid">
+
+                <div class="rep-filter-group">
+
+                    <label for="repFechaInicio"
+                           class="rep-filter-label">
+
+                        <i class="bi bi-calendar3"></i>
+                        Desde
+
+                    </label>
+
+                    <input type="date"
+                           id="repFechaInicio"
+                           class="rep-input rep-date-input" />
+
+                </div>
+
+                <div class="rep-filter-group">
+
+                    <label for="repFechaFin"
+                           class="rep-filter-label">
+
+                        <i class="bi bi-calendar3"></i>
+                        Hasta
+
+                    </label>
+
+                    <input type="date"
+                           id="repFechaFin"
+                           class="rep-input rep-date-input" />
+
+                </div>
+
+            </div>
+
+            <!-- METODO DE PAGO -->
+
+            <div class="rep-filter-group">
+
+                <label class="rep-filter-label">
+                    <i class="bi bi-credit-card"></i>
+                    Metodo de pago
+                </label>
+
+                <div class="rep-metodos"
+                     id="repMetodos">
+                </div>
+
+            </div>
+
+            <!-- BUSQUEDA -->
+
+            <div class="rep-filter-group">
+
+                <label for="repBuscarCliente"
+                       class="rep-filter-label">
+
+                    <i class="bi bi-person-search"></i>
+                    Buscar cliente
+
+                </label>
+
+                <div class="rep-input-icon">
+
+                    <i class="bi bi-search"></i>
+
+                    <input type="text"
+                           id="repBuscarCliente"
+                           class="rep-input"
+                           placeholder="Nombre del cliente..."
+                           autocomplete="off" />
+
+                </div>
+
+            </div>
+
+            <div class="rep-filter-error"
+                 id="repErrorFechas"
+                 role="alert"
+                 hidden>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =====================================
+         RESUMEN DEL PERIODO
+    ====================================== -->
+
+    <div class="rep-results-heading">
+
+        <div>
+            <span class="rep-section-kicker">
+                RESUMEN FINANCIERO
+            </span>
+
+            <h2>Rendimiento del periodo</h2>
+        </div>
+
+        <span class="rep-periodo-texto"
+              id="repPeriodoTexto">
+        </span>
+
     </div>
+
+    <section class="rep-stats">
+
+        <!-- INGRESOS -->
+
+        <article class="rep-stat-card rep-stat-featured">
+
+            <div class="rep-stat-top">
+
+                <span>Ingresos totales</span>
+
+                <div class="rep-stat-icon">
+                    <i class="bi bi-cash-stack"></i>
+                </div>
+
+            </div>
+
+            <strong class="rep-stat-value"
+                    id="repTotal">
+                ₡0,00
+            </strong>
+
+            <div class="rep-stat-footer">
+
+                <span class="rep-trend"
+                      id="repVariacion">
+                    Sin comparacion
+                </span>
+
+                <small>
+                    vs. periodo anterior
+                </small>
+
+            </div>
+
+        </article>
+
+        <!-- CANTIDAD PAGOS -->
+
+        <article class="rep-stat-card">
+
+            <div class="rep-stat-top">
+
+                <span>Pagos realizados</span>
+
+                <div class="rep-stat-icon">
+                    <i class="bi bi-receipt"></i>
+                </div>
+
+            </div>
+
+            <strong class="rep-stat-value"
+                    id="repCantidad">
+                0
+            </strong>
+
+            <div class="rep-stat-footer">
+                <small>
+                    Transacciones registradas
+                </small>
+            </div>
+
+        </article>
+
+        <!-- TICKET PROMEDIO -->
+
+        <article class="rep-stat-card">
+
+            <div class="rep-stat-top">
+
+                <span>Ticket promedio</span>
+
+                <div class="rep-stat-icon">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+
+            </div>
+
+            <strong class="rep-stat-value"
+                    id="repPromedio">
+                ₡0,00
+            </strong>
+
+            <div class="rep-stat-footer">
+                <small>
+                    Promedio por pago
+                </small>
+            </div>
+
+        </article>
+
+        <!-- CITAS -->
+
+        <article class="rep-stat-card">
+
+            <div class="rep-stat-top">
+
+                <span>Citas registradas</span>
+
+                <div class="rep-stat-icon">
+                    <i class="bi bi-calendar-check"></i>
+                </div>
+
+            </div>
+
+            <strong class="rep-stat-value"
+                    id="repCitas">
+                0
+            </strong>
+
+            <div class="rep-stat-footer">
+                <small>
+                    Citas del intervalo de fechas
+                </small>
+            </div>
+
+        </article>
+
+    </section>
+
+    <!-- =====================================
+         INDICADORES SECUNDARIOS
+    ====================================== -->
+
+    <section class="rep-mini-stats">
+
+        <div class="rep-mini-stat">
+
+            <div class="rep-mini-icon">
+                <i class="bi bi-people"></i>
+            </div>
+
+            <div>
+                <span>Clientes atendidos</span>
+                <strong id="repClientes">0</strong>
+            </div>
+
+        </div>
+
+        <div class="rep-mini-stat">
+
+            <div class="rep-mini-icon">
+                <i class="bi bi-arrow-repeat"></i>
+            </div>
+
+            <div>
+                <span>Clientes con 2+ pagos</span>
+                <strong id="repRecurrentes">0</strong>
+            </div>
+
+        </div>
+
+        <div class="rep-mini-stat">
+
+            <div class="rep-mini-icon">
+                <i class="bi bi-trophy"></i>
+            </div>
+
+            <div>
+                <span>Dia con mayores ingresos</span>
+                <strong id="repMejorDia">Sin datos</strong>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =====================================
+         EVOLUCION DE INGRESOS
+    ====================================== -->
+
+    <section class="rep-card rep-chart-main">
+
+        <div class="rep-section-heading">
+
+            <div>
+
+                <span class="rep-section-kicker">
+                    COMPORTAMIENTO DE VENTAS
+                </span>
+
+                <h2>
+                    <i class="bi bi-graph-up"></i>
+                    Evolucion de ingresos
+                </h2>
+
+                <p>
+                    Observa como cambian las ventas
+                    a lo largo del tiempo.
+                </p>
+
+            </div>
+
+            <div class="rep-segmented"
+                 id="repAgrupacion">
+
+                <button type="button"
+                        class="active"
+                        data-agrupa="dia">
+                    Dia
+                </button>
+
+                <button type="button"
+                        data-agrupa="semana">
+                    Semana
+                </button>
+
+                <button type="button"
+                        data-agrupa="mes">
+                    Mes
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="rep-chart-body">
+
+            <div class="rep-chart-total">
+
+                <div>
+                    <span>Ventas del periodo</span>
+                    <strong id="repGraficoTotal">
+                        ₡0,00
+                    </strong>
+                </div>
+
+                <span class="rep-chart-tag">
+                    <i class="bi bi-activity"></i>
+                    Tendencia
+                </span>
+
+            </div>
+
+            
+            <div class="rep-chart-canvas">
+                <canvas id="repGraficoVentas"></canvas>
+            </div>
+
+
+        </div>
+
+    </section>
+
+    <!-- =====================================
+         GRAFICOS SECUNDARIOS
+    ====================================== -->
+
+    <div class="rep-charts-grid">
+
+        <!-- DISTRIBUCION POR METODO -->
+
+        <section class="rep-card">
+
+            <div class="rep-section-heading">
+
+                <div>
+
+                    <span class="rep-section-kicker">
+                        DISTRIBUCION
+                    </span>
+
+                    <h2>
+                        <i class="bi bi-pie-chart"></i>
+                        Metodos de pago
+                    </h2>
+
+                    <p>
+                        Proporcion de ingresos
+                        por metodo utilizado.
+                    </p>
+
+                </div>
+
+            </div>
+
+            
+            <div class="rep-donut-body">
+
+                <div class="rep-donut-canvas">
+                    <canvas id="repDonut"></canvas>
+                </div>
+
+                <div class="rep-donut-legend" id="repMetodosLeyenda"></div>
+
+            </div>
+
+
+        </section>
+
+        <!-- DIAS DE LA SEMANA -->
+
+        <section class="rep-card">
+
+            <div class="rep-section-heading">
+
+                <div>
+
+                    <span class="rep-section-kicker">
+                        PATRONES DE VENTA
+                    </span>
+
+                    <h2>
+                        <i class="bi bi-bar-chart"></i>
+                        Ventas por dia de semana
+                    </h2>
+
+                    <p>
+                        Total acumulado por dia
+                        dentro del intervalo.
+                    </p>
+
+                </div>
+
+            </div>
+
+            
+            <div class="rep-week-canvas">
+                <canvas id="repGraficoSemana"></canvas>
+            </div>
+
+
+        </section>
+
+    </div>
+
+    <!-- =====================================
+         CLIENTES FRECUENTES
+    ====================================== -->
+
+    <section class="rep-card">
+
+        <div class="rep-section-heading">
+
+            <div>
+
+                <span class="rep-section-kicker">
+                    ANALISIS DE CLIENTES
+                </span>
+
+                <h2>
+                    <i class="bi bi-stars"></i>
+                    Mejores clientes
+                </h2>
+
+                <p>
+                    Clientes con mayores ingresos
+                    dentro del periodo seleccionado.
+                </p>
+
+            </div>
+
+            <span class="rep-count"
+                  id="repClientesCount">
+                0 clientes
+            </span>
+
+        </div>
+
+        <div class="rep-client-ranking"
+             id="repRankingClientes">
+        </div>
+
+    </section>
+
+    <!-- =====================================
+         HISTORIAL DE VENTAS
+    ====================================== -->
+
+    <section class="rep-card">
+
+        <div class="rep-section-heading">
+
+            <div>
+
+                <span class="rep-section-kicker">
+                    DETALLE DE TRANSACCIONES
+                </span>
+
+                <h2>
+                    <i class="bi bi-clock-history"></i>
+                    Historial de ventas
+                </h2>
+
+                <p>
+                    Pagos correspondientes a los filtros activos.
+                </p>
+
+            </div>
+
+            <span class="rep-count"
+                  id="repRegistrosCount">
+                0 registros
+            </span>
+
+        </div>
+
+        <div class="rep-table-wrapper">
+
+            <table class="rep-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            <button type="button"
+                                    class="rep-sort"
+                                    data-orden="fecha">
+
+                                Fecha
+                                <i class="bi bi-arrow-down-up"></i>
+
+                            </button>
+                        </th>
+
+                        <th>Cliente</th>
+
+                        <th>Metodo</th>
+
+                        <th>
+                            <button type="button"
+                                    class="rep-sort"
+                                    data-orden="monto">
+
+                                Monto
+                                <i class="bi bi-arrow-down-up"></i>
+
+                            </button>
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="repTablaBody">
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="rep-empty"
+             id="repTablaVacia"
+             hidden>
+
+            <i class="bi bi-inbox"></i>
+
+            <h3>No se encontraron pagos</h3>
+
+            <p>
+                Prueba otro intervalo de fechas,
+                metodo o nombre de cliente.
+            </p>
+
+        </div>
+
+        <!-- PAGINACION -->
+
+        <div class="rep-pagination"
+             id="repPaginacion"
+             hidden>
+
+            <button type="button"
+                    class="rep-page-btn"
+                    id="repAnterior"
+                    aria-label="Pagina anterior">
+
+                <i class="bi bi-chevron-left"></i>
+
+            </button>
+
+            <div class="rep-page-numbers"
+                 id="repNumeros">
+            </div>
+
+            <button type="button"
+                    class="rep-page-btn"
+                    id="repSiguiente"
+                    aria-label="Pagina siguiente">
+
+                <i class="bi bi-chevron-right"></i>
+
+            </button>
+
+        </div>
+
+        <div class="rep-pagination-summary"
+             id="repResumenTabla">
+        </div>
+
+    </section>
+
+    <footer class="rep-footer">
+
+        <i class="bi bi-info-circle"></i>
+
+        Los ingresos se calculan usando los pagos registrados.
+        Las citas se cuentan por fecha y no se filtran por
+        metodo de pago ni por nombre del cliente.
+
+    </footer>
 
 </div>
 
-<hr />
 
-<div class="d-flex gap-2 mt-3">
+<!-- DATOS DEL CONTROLADOR -->
+<script type="application/json" id="repDatosJson">@Html.Raw(datosJson)</script>
 
-    <a href="/Reportes/PorFecha"
-           class="btn btn-primary">
+<!-- LIBRERIA DE GRAFICOS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
 
-        🔍 Reporte de Ingresos
-
-    </a>
-
-    <a href="/Reportes/ClientesFrecuentes"
-           class="btn btn-success">
-
-        ⭐ Clientes Frecuentes
-
-    </a>
-
-</div>
+<!-- LOGICA DE REPORTES -->
+<script src="~/js/reportes.js"
+        asp-append-version="true"></script>

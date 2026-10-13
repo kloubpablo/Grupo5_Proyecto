@@ -1,10 +1,28 @@
 ﻿
+<<<<<<< Updated upstream
 @model IEnumerable<WebApplicationAPP.Models.Servicio>
+=======
+@model WebApplicationAPP.Models.Contacto
+
+>>>>>>> Stashed changes
 @{
-    ViewData["Title"] = "Control de Servicios";
+    ViewData["Title"] = "Control de Contacto";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    bool mapaValido = false;
+
+    if (Model != null &&
+        Uri.TryCreate(Model.Ubicacion, UriKind.Absolute, out var mapa))
+    {
+        mapaValido =
+            mapa.Scheme == Uri.UriSchemeHttps &&
+            (mapa.Host == "www.google.com" ||
+             mapa.Host == "google.com" ||
+             mapa.Host == "maps.google.com");
+    }
 }
 
+<<<<<<< Updated upstream
 <h2 class="mb-4"> Control de Servicios</h2>
 
 <div class="mb-3 d-flex gap-2">
@@ -24,10 +42,36 @@
             <th>Acciones</th>
         </tr>
     </thead>
+=======
+<link rel="stylesheet"
+      href="~/css/control-contacto.css"
+      asp-append-version="true" />
 
-    <tbody>
-        @if (Model == null || !Model.Any())
+<div class="contacto-page">
+
+    <!-- ENCABEZADO -->
+    <header class="contacto-header">
+
+        <div>
+            <span class="contacto-kicker">
+                CONTROLES EXTERNOS
+            </span>
+>>>>>>> Stashed changes
+
+            <h1>
+                <i class="bi bi-person-lines-fill"></i>
+                Control de Contacto
+            </h1>
+
+            <p>
+                Gestiona la informacion y los canales de
+                comunicacion de Yampi BarberShop.
+            </p>
+        </div>
+
+        @if (Model != null)
         {
+<<<<<<< Updated upstream
             <tr>
                 <td colspan="4" class="text-center">
                     No hay servicios
@@ -59,5 +103,533 @@
             }
         }
     </tbody>
+=======
+            <button type="button"
+                    id="btnEditarContacto"
+                    class="contacto-btn contacto-btn-primary">
+                <i class="bi bi-pencil-square"></i>
+                Editar informacion
+            </button>
+        }
 
-</table>
+    </header>
+>>>>>>> Stashed changes
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="contacto-alert">
+            <div asp-validation-summary="All"></div>
+        </div>
+    }
+
+    @if (Model == null)
+    {
+        <div class="contacto-empty">
+            <i class="bi bi-info-circle"></i>
+            <h2>No hay informacion registrada</h2>
+            <p>Actualmente no existen datos de contacto.</p>
+        </div>
+    }
+    else
+    {
+        <!-- VISTA DE INFORMACION -->
+        <div id="contactoVista">
+
+            <div class="contacto-dashboard">
+
+                <!-- INFORMACION GENERAL -->
+                <section class="contacto-card">
+
+                    <div class="contacto-card-header">
+                        <span class="contacto-card-icon">
+                            <i class="bi bi-building"></i>
+                        </span>
+
+                        <div>
+                            <span class="contacto-card-kicker">
+                                INFORMACION
+                            </span>
+                            <h2>Datos generales</h2>
+                        </div>
+                    </div>
+
+                    <div class="contacto-card-body">
+
+                        <div class="contacto-detail">
+                            <span class="contacto-label">
+                                <i class="bi bi-geo-alt"></i>
+                                Direccion
+                            </span>
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(Model.Direccion)
+                                    ? "No registrada"
+                                    : Model.Direccion)
+                            </strong>
+                        </div>
+
+                        <div class="contacto-detail">
+                            <span class="contacto-label">
+                                <i class="bi bi-envelope"></i>
+                                Correo electronico
+                            </span>
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(Model.Correo)
+                                    ? "No registrado"
+                                    : Model.Correo)
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- CONTACTO DIRECTO -->
+                <section class="contacto-card">
+
+                    <div class="contacto-card-header">
+                        <span class="contacto-card-icon">
+                            <i class="bi bi-telephone"></i>
+                        </span>
+
+                        <div>
+                            <span class="contacto-card-kicker">
+                                COMUNICACION
+                            </span>
+                            <h2>Contacto directo</h2>
+                        </div>
+                    </div>
+
+                    <div class="contacto-card-body">
+
+                        <div class="contacto-detail">
+                            <span class="contacto-label">
+                                <i class="bi bi-telephone"></i>
+                                Telefonos
+                            </span>
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(Model.Telefonos)
+                                    ? "No registrados"
+                                    : Model.Telefonos)
+                            </strong>
+                        </div>
+
+                        <div class="contacto-detail">
+                            <span class="contacto-label">
+                                <i class="bi bi-whatsapp"></i>
+                                WhatsApp
+                            </span>
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(Model.Whatsapp)
+                                    ? "No registrado"
+                                    : Model.Whatsapp)
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- HORARIOS -->
+                <section class="contacto-card">
+
+                    <div class="contacto-card-header">
+                        <span class="contacto-card-icon">
+                            <i class="bi bi-clock-history"></i>
+                        </span>
+
+                        <div>
+                            <span class="contacto-card-kicker">
+                                DISPONIBILIDAD
+                            </span>
+                            <h2>Horarios de atencion</h2>
+                        </div>
+                    </div>
+
+                    <div class="contacto-card-body">
+
+                        <div class="contacto-detail">
+                            <span class="contacto-label">
+                                <i class="bi bi-calendar-week"></i>
+                                Horario registrado
+                            </span>
+
+                            <strong class="contacto-preline">
+                                @(string.IsNullOrWhiteSpace(Model.Horarios)
+                                    ? "No registrado"
+                                    : Model.Horarios)
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- REDES SOCIALES -->
+                <section class="contacto-card">
+
+                    <div class="contacto-card-header">
+                        <span class="contacto-card-icon">
+                            <i class="bi bi-share"></i>
+                        </span>
+
+                        <div>
+                            <span class="contacto-card-kicker">
+                                CANALES DIGITALES
+                            </span>
+                            <h2>Redes sociales</h2>
+                        </div>
+                    </div>
+
+                    <div class="contacto-card-body contacto-social-body">
+
+                        <div class="contacto-detail">
+                            <span class="contacto-label">
+                                <i class="bi bi-instagram"></i>
+                                Instagram
+                            </span>
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(Model.Instagram)
+                                    ? "No registrado"
+                                    : Model.Instagram)
+                            </strong>
+                        </div>
+
+                        <div class="contacto-detail">
+                            <span class="contacto-label">
+                                <i class="bi bi-facebook"></i>
+                                Facebook
+                            </span>
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(Model.Facebook)
+                                    ? "No registrado"
+                                    : Model.Facebook)
+                            </strong>
+                        </div>
+
+                        <div class="contacto-detail">
+                            <span class="contacto-label">
+                                <i class="bi bi-tiktok"></i>
+                                TikTok
+                            </span>
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(Model.Tiktok)
+                                    ? "No registrado"
+                                    : Model.Tiktok)
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- UBICACION -->
+                <section class="contacto-card contacto-card-map">
+
+                    <div class="contacto-card-header">
+                        <span class="contacto-card-icon">
+                            <i class="bi bi-map"></i>
+                        </span>
+
+                        <div>
+                            <span class="contacto-card-kicker">
+                                UBICACION
+                            </span>
+                            <h2>Mapa del negocio</h2>
+                        </div>
+                    </div>
+
+                    <div class="contacto-map-content">
+
+                        @if (mapaValido)
+                        {
+                            <iframe src="@Model.Ubicacion"
+                                    title="Ubicacion de Yampi BarberShop"
+                                    loading="lazy"
+                                    allowfullscreen
+                                    referrerpolicy="strict-origin-when-cross-origin">
+                            </iframe>
+                        }
+                        else
+                        {
+                            <div class="contacto-map-empty">
+                                <i class="bi bi-geo-alt"></i>
+                                <strong>Mapa no disponible</strong>
+                                <span>
+                                    Configura una URL de insercion
+                                    de Google Maps.
+                                </span>
+                            </div>
+                        }
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+        <!-- EDICION EN LA MISMA PAGINA -->
+        <div id="contactoEdicion" hidden>
+
+            <form asp-controller="YampiBarberShop"
+                  asp-action="EditarContacto"
+                  method="post"
+                  id="formContacto">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       name="id"
+                       value="@Model.Id" />
+
+                <div class="contacto-dashboard">
+
+                    <!-- EDITAR DATOS GENERALES -->
+                    <section class="contacto-card">
+
+                        <div class="contacto-card-header">
+                            <span class="contacto-card-icon">
+                                <i class="bi bi-building"></i>
+                            </span>
+                            <div>
+                                <span class="contacto-card-kicker">EDITAR</span>
+                                <h2>Datos generales</h2>
+                            </div>
+                        </div>
+
+                        <div class="contacto-card-body">
+
+                            <div class="contacto-field">
+                                <label for="contactoDireccion">
+                                    Direccion
+                                </label>
+                                <textarea id="contactoDireccion"
+                                          name="direccion"
+                                          rows="3">@Model.Direccion</textarea>
+                            </div>
+
+                            <div class="contacto-field">
+                                <label for="contactoCorreo">
+                                    Correo electronico
+                                </label>
+                                <input id="contactoCorreo"
+                                       type="email"
+                                       name="correo"
+                                       value="@Model.Correo" />
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                    <!-- EDITAR CONTACTO DIRECTO -->
+                    <section class="contacto-card">
+
+                        <div class="contacto-card-header">
+                            <span class="contacto-card-icon">
+                                <i class="bi bi-telephone"></i>
+                            </span>
+                            <div>
+                                <span class="contacto-card-kicker">EDITAR</span>
+                                <h2>Contacto directo</h2>
+                            </div>
+                        </div>
+
+                        <div class="contacto-card-body">
+
+                            <div class="contacto-field">
+                                <label for="contactoTelefonos">
+                                    Telefonos
+                                </label>
+                                <input id="contactoTelefonos"
+                                       type="text"
+                                       name="telefonos"
+                                       value="@Model.Telefonos" />
+                            </div>
+
+                            <div class="contacto-field">
+                                <label for="contactoWhatsapp">
+                                    WhatsApp
+                                </label>
+                                <input id="contactoWhatsapp"
+                                       type="text"
+                                       name="whatsapp"
+                                       value="@Model.Whatsapp" />
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                    <!-- EDITAR HORARIOS -->
+                    <section class="contacto-card">
+
+                        <div class="contacto-card-header">
+                            <span class="contacto-card-icon">
+                                <i class="bi bi-clock-history"></i>
+                            </span>
+                            <div>
+                                <span class="contacto-card-kicker">EDITAR</span>
+                                <h2>Horarios de atencion</h2>
+                            </div>
+                        </div>
+
+                        <div class="contacto-card-body">
+
+                            <div class="contacto-field">
+                                <label for="contactoHorarios">
+                                    Horarios
+                                </label>
+                                <textarea id="contactoHorarios"
+                                          name="horarios"
+                                          rows="4">@Model.Horarios</textarea>
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                    <!-- EDITAR REDES -->
+                    <section class="contacto-card">
+
+                        <div class="contacto-card-header">
+                            <span class="contacto-card-icon">
+                                <i class="bi bi-share"></i>
+                            </span>
+                            <div>
+                                <span class="contacto-card-kicker">EDITAR</span>
+                                <h2>Redes sociales</h2>
+                            </div>
+                        </div>
+
+                        <div class="contacto-card-body">
+
+                            <div class="contacto-field">
+                                <label for="contactoInstagram">Instagram</label>
+                                <input id="contactoInstagram"
+                                       type="text"
+                                       name="instagram"
+                                       value="@Model.Instagram" />
+                            </div>
+
+                            <div class="contacto-field">
+                                <label for="contactoFacebook">Facebook</label>
+                                <input id="contactoFacebook"
+                                       type="text"
+                                       name="facebook"
+                                       value="@Model.Facebook" />
+                            </div>
+
+                            <div class="contacto-field">
+                                <label for="contactoTiktok">TikTok</label>
+                                <input id="contactoTiktok"
+                                       type="text"
+                                       name="tiktok"
+                                       value="@Model.Tiktok" />
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                    <!-- EDITAR UBICACION -->
+                    <section class="contacto-card contacto-card-map">
+
+                        <div class="contacto-card-header">
+                            <span class="contacto-card-icon">
+                                <i class="bi bi-map"></i>
+                            </span>
+                            <div>
+                                <span class="contacto-card-kicker">EDITAR</span>
+                                <h2>Ubicacion del negocio</h2>
+                            </div>
+                        </div>
+
+                        <div class="contacto-card-body">
+
+                            <div class="contacto-field">
+                                <label for="contactoUbicacion">
+                                    URL de Google Maps
+                                </label>
+                                <textarea id="contactoUbicacion"
+                                          name="ubicacion"
+                                          rows="3">@Model.Ubicacion</textarea>
+                                <small>
+                                    Utiliza la URL del atributo src
+                                    de Google Maps.
+                                </small>
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+                <!-- BOTONES -->
+                <div class="contacto-actions">
+
+                    <button type="button"
+                            id="btnCancelarContacto"
+                            class="contacto-btn contacto-btn-secondary">
+                        <i class="bi bi-x-lg"></i>
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            class="contacto-btn contacto-btn-primary">
+                        <i class="bi bi-check-lg"></i>
+                        Guardar cambios
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    }
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const btnEditar = document.getElementById("btnEditarContacto");
+        const btnCancelar = document.getElementById("btnCancelarContacto");
+        const vista = document.getElementById("contactoVista");
+        const edicion = document.getElementById("contactoEdicion");
+        const formulario = document.getElementById("formContacto");
+
+        if (!btnEditar || !btnCancelar || !vista || !edicion || !formulario)
+            return;
+
+        btnEditar.addEventListener("click", function () {
+
+            vista.hidden = true;
+            edicion.hidden = false;
+            btnEditar.hidden = true;
+
+        });
+
+        btnCancelar.addEventListener("click", function () {
+
+            formulario.reset();
+
+            edicion.hidden = true;
+            vista.hidden = false;
+            btnEditar.hidden = false;
+
+        });
+
+        // Mostrar el formulario si hay errores de validacion
+        const errores = document.getElementById("contactoErrores");
+
+        if (errores) {
+            vista.hidden = true;
+            edicion.hidden = false;
+            btnEditar.hidden = true;
+        }
+
+    });
+</script>

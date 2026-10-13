@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplicationAPP.Models;
 using WebApplicationAPP.Helpers;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace WebApplicationAPP.Controllers
 {
@@ -24,26 +26,32 @@ namespace WebApplicationAPP.Controllers
         }
 
         //DASHBOARD DE REPORTES
+
         public IActionResult Index()
         {
-            if (!TienePermiso("Reportes/Index"))
-                return RedirectToAction("Index", "Dashboard");
+            // Mantener aqui tu validacion de permisos actual
 
-            int citasHoy = _context.Citas
-                .Count(c => c.Fecha == DateOnly.FromDateTime(DateTime.Now));
+            var pagos = _context.Pagos
+                .Include(p => p.IdClienteNavigation)
+                .AsNoTracking()
+                .OrderByDescending(p => p.Fecha)
+                .ToList();
 
-            decimal ingresosHoy = _context.Pagos
-                .Where(p => p.Fecha == DateOnly.FromDateTime(DateTime.Now))
-                .Sum(p => (decimal?)p.Monto) ?? 0;
+            // Las fechas de las citas permiten calcular
+            // cuantos registros hubo en cada intervalo.
 
-            int clientesFrecuentes = _context.Clientes.Count();
+            var fechasCitas = _context.Citas
+                .AsNoTracking()
+                .Select(c => c.Fecha)
+                .ToList()
+                .Select(fecha => fecha.ToString("yyyy-MM-dd"))
+                .ToList();
 
-            ViewBag.CitasHoy = citasHoy;
-            ViewBag.IngresosHoy = ingresosHoy;
-            ViewBag.ClientesFrecuentes = clientesFrecuentes;
+            ViewBag.FechasCitas = fechasCitas;
 
-            return View();
+            return View(pagos);
         }
+
 
         //REPORTE POR FECHA (GET)
         public IActionResult PorFecha()

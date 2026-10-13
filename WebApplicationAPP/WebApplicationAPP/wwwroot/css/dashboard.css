@@ -1,0 +1,1128 @@
+
+/* ==========================================
+   YAMPI BARBERSHOP - DASHBOARD
+========================================== */
+
+.dashboard-page {
+    width: 100%;
+    max-width: 1500px;
+    min-width: 0;
+    margin: 0 auto;
+    padding: 32px 28px 65px;
+    box-sizing: border-box;
+    color: #ededed;
+}
+
+.dashboard-page *,
+.dashboard-page *::before,
+.dashboard-page *::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   ENCABEZADO
+========================================== */
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 34px;
+    padding-bottom: 26px;
+    border-bottom: 1px solid #353535;
+}
+
+.dashboard-header-info {
+    min-width: 0;
+}
+
+.dashboard-kicker {
+    display: block;
+    margin-bottom: 10px;
+    color: #d4af37;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.7px;
+}
+
+.dashboard-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 12px;
+    color: #f5f5f5;
+    font-size: clamp(25px, 3vw, 35px);
+    font-weight: 700;
+}
+
+.dashboard-header-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+    background: #2b261c;
+    border: 1px solid #594923;
+    border-radius: 13px;
+    color: #d4af37;
+    font-size: 24px;
+}
+
+.dashboard-header p {
+    margin: 0;
+    max-width: 650px;
+    color: #999;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.dashboard-header-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.dashboard-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 10px 14px;
+    background: #1e1e1e;
+    border: 1px solid #383838;
+    border-radius: 9px;
+    color: #ccc;
+    font-size: 13px;
+}
+
+.dashboard-date i {
+    color: #d4af37;
+}
+
+.dashboard-refresh-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 10px 18px;
+    background: #d4af37;
+    border: 1px solid #d4af37;
+    border-radius: 9px;
+    color: #171717;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dashboard-refresh-btn:hover {
+    background: #e6c55d;
+}
+
+.dashboard-refresh-btn:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+/* ==========================================
+   SECCIONES
+========================================== */
+
+.dashboard-section {
+    min-width: 0;
+    margin-bottom: 35px;
+}
+
+.dashboard-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.dashboard-section-heading h2,
+.dashboard-panel-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    color: #f4f4f4;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.dashboard-section-heading h2 i,
+.dashboard-panel-header h2 i {
+    color: #d4af37;
+}
+
+.dashboard-section-heading p,
+.dashboard-panel-header p {
+    margin: 9px 0 0;
+    color: #999;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.dashboard-section-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #999;
+    font-size: 12px;
+}
+
+.dashboard-section-note i {
+    color: #d4af37;
+}
+
+.dashboard-section-count {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    background: #30291c;
+    border: 1px solid #514224;
+    border-radius: 20px;
+    color: #d4af37;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ==========================================
+   TARJETAS DE ESTADISTICAS
+========================================== */
+
+.dashboard-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    align-items: stretch;
+}
+
+.dashboard-stat-card {
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+    min-width: 0;
+    min-height: 190px;
+    padding: 22px;
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 13px;
+    transition: border-color 0.2s;
+}
+
+.dashboard-stat-card:hover {
+    border-color: #77612d;
+}
+
+.dashboard-stat-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.dashboard-stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    background: #30291c;
+    border: 1px solid #493e26;
+    border-radius: 11px;
+    color: #d4af37;
+    font-size: 20px;
+}
+
+.dashboard-stat-tag {
+    color: #9e8955;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: right;
+}
+
+.dashboard-stat-body {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+}
+
+.dashboard-stat-body > span {
+    color: #aaa;
+    font-size: 13px;
+}
+
+.dashboard-stat-body > strong {
+    color: #f5f5f5;
+    font-size: clamp(27px, 3vw, 36px);
+    font-weight: 700;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.dashboard-stat-body > strong.dashboard-money {
+    font-size: clamp(23px, 2.5vw, 32px);
+}
+
+.dashboard-stat-bottom {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: auto;
+    color: #999;
+    font-size: 12px;
+}
+
+.dashboard-stat-bottom i {
+    color: #d4af37;
+}
+
+/* ==========================================
+   GRAFICO Y RESUMEN OPERATIVO
+========================================== */
+
+.dashboard-overview-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: stretch;
+    margin-bottom: 36px;
+}
+
+.dashboard-panel {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 25px;
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 14px;
+}
+
+.dashboard-panel-header {
+    margin-bottom: 25px;
+}
+
+/* ==========================================
+   GRAFICO DE BARRAS
+========================================== */
+
+.dashboard-chart {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    align-items: end;
+    gap: 12px;
+    flex: 1;
+    min-height: 190px;
+}
+
+.dashboard-chart-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    min-width: 0;
+    height: 100%;
+}
+
+.dashboard-chart-value {
+    color: #d4af37;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.dashboard-chart-track {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    height: 150px;
+    padding: 0 5px;
+    border-bottom: 1px solid #474747;
+}
+
+.dashboard-chart-bar {
+    width: 100%;
+    max-width: 45px;
+    min-height: 2px;
+    background: #b69a47;
+    border-radius: 5px 5px 0 0;
+    transition: background 0.2s;
+}
+
+.dashboard-chart-bar:hover {
+    background: #d4af37;
+}
+
+.dashboard-chart-zero {
+    opacity: 0.25;
+}
+
+.dashboard-chart-label {
+    color: #999;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+/* ==========================================
+   ESTADO OPERATIVO
+========================================== */
+
+.dashboard-operation-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-operation-item {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px 0;
+    border-bottom: 1px solid #343434;
+}
+
+.dashboard-operation-item:last-child {
+    border-bottom: none;
+}
+
+.dashboard-operation-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    background: #2b261c;
+    border-radius: 9px;
+    color: #d4af37;
+    font-size: 17px;
+}
+
+.dashboard-operation-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.dashboard-operation-info strong {
+    color: #eee;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.dashboard-operation-info span {
+    color: #888;
+    font-size: 11px;
+}
+
+.dashboard-operation-item > b {
+    color: #d4af37;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* ==========================================
+   ESTADO DE BARBEROS
+========================================== */
+
+.dashboard-barber-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.dashboard-mini-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.dashboard-mini-status i {
+    font-size: 8px;
+}
+
+.dashboard-mini-status.available {
+    background: #1d3025;
+    border: 1px solid #325740;
+    color: #93d7a5;
+}
+
+.dashboard-mini-status.busy {
+    background: #342c1b;
+    border: 1px solid #665029;
+    color: #e4c275;
+}
+
+.dashboard-mini-status.inactive {
+    background: #302121;
+    border: 1px solid #654040;
+    color: #e5a0a0;
+}
+
+.dashboard-barbers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    align-items: stretch;
+}
+
+.dashboard-barber-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 18px;
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 12px;
+}
+
+.dashboard-barber-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 43px;
+    width: 43px;
+    height: 43px;
+    background: #30291c;
+    border-radius: 50%;
+    color: #d4af37;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.dashboard-barber-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-width: 0;
+}
+
+.dashboard-barber-info strong {
+    color: #f1f1f1;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.dashboard-barber-info > span {
+    color: #999;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+}
+
+.dashboard-barber-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-shrink: 0;
+    padding: 7px 10px;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.dashboard-barber-status i {
+    font-size: 7px;
+}
+
+.dashboard-barber-status.available {
+    color: #91d8a5;
+    background: #1c3024;
+}
+
+.dashboard-barber-status.busy {
+    color: #e4c275;
+    background: #342c1b;
+}
+
+.dashboard-barber-status.inactive {
+    color: #e6a0a0;
+    background: #302020;
+}
+
+/* ==========================================
+   TABLA DE CITAS
+========================================== */
+
+.dashboard-table-container {
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 13px;
+}
+
+.dashboard-citas-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dashboard-citas-table thead {
+    background: #252525;
+}
+
+.dashboard-citas-table th {
+    padding: 17px 18px;
+    color: #d4af37;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.dashboard-citas-table td {
+    padding: 17px 18px;
+    border-top: 1px solid #363636;
+    color: #dedede;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.dashboard-citas-table tbody tr:hover {
+    background: #252525;
+}
+
+.dashboard-client-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.dashboard-client-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 39px;
+    width: 39px;
+    height: 39px;
+    background: #30291c;
+    border-radius: 50%;
+    color: #d4af37;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.dashboard-client-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.dashboard-client-details strong {
+    color: #eee;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.dashboard-client-details span {
+    color: #888;
+    font-size: 11px;
+}
+
+.dashboard-time,
+.dashboard-table-barber {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.dashboard-time i,
+.dashboard-table-barber i {
+    color: #d4af37;
+}
+
+.dashboard-cita-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 11px;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.dashboard-cita-status i {
+    font-size: 7px;
+}
+
+.dashboard-cita-status.active {
+    background: #1d3025;
+    color: #92d8a5;
+}
+
+.dashboard-cita-status.cancelled {
+    background: #302020;
+    color: #e5a0a0;
+}
+
+.dashboard-cita-status.blocked {
+    background: #342c1b;
+    color: #e4c275;
+}
+
+.dashboard-cita-status.neutral {
+    background: #333;
+    color: #ccc;
+}
+
+.dashboard-table-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 11px;
+    background: #30291c;
+    border: 1px solid #544526;
+    border-radius: 7px;
+    color: #d4af37;
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.dashboard-table-action:hover {
+    background: #433821;
+    color: #f0d476;
+}
+
+/* ==========================================
+   ESTADOS VACIOS
+========================================== */
+
+.dashboard-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+    padding: 50px 20px;
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 13px;
+    text-align: center;
+}
+
+.dashboard-empty > i {
+    color: #d4af37;
+    font-size: 40px;
+}
+
+.dashboard-empty h3 {
+    margin: 0;
+    color: #eee;
+    font-size: 18px;
+}
+
+.dashboard-empty p {
+    margin: 0;
+    color: #999;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.dashboard-empty-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 8px;
+    padding: 10px 15px;
+    background: #30291c;
+    border: 1px solid #544526;
+    border-radius: 8px;
+    color: #d4af37;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.dashboard-empty-link:hover {
+    color: #f0d476;
+}
+
+/* ==========================================
+   PIE DEL DASHBOARD
+========================================== */
+
+.dashboard-update-info {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+    color: #888;
+    font-size: 11px;
+}
+
+.dashboard-update-info > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.dashboard-update-info i {
+    color: #d4af37;
+}
+
+.dashboard-update-info strong {
+    color: #bbb;
+    font-weight: 600;
+}
+
+/* ==========================================
+   PANTALLAS MEDIANAS
+========================================== */
+
+@media (max-width: 1250px) {
+
+    .dashboard-barbers-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1000px) {
+
+    .dashboard-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-overview-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ==========================================
+   TABLETS Y CELULARES
+========================================== */
+
+@media (max-width: 720px) {
+
+    .dashboard-page {
+        padding: 20px 14px 45px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 24px;
+    }
+
+    .dashboard-header-icon {
+        flex-basis: 44px;
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+
+    .dashboard-header-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .dashboard-date,
+    .dashboard-refresh-btn {
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .dashboard-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .dashboard-section-heading h2,
+    .dashboard-panel-header h2 {
+        font-size: 19px;
+    }
+
+    .dashboard-barbers-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* TABLA CONVERTIDA EN TARJETAS */
+    .dashboard-table-container {
+        overflow: visible;
+        background: transparent;
+        border: none;
+    }
+
+    .dashboard-citas-table,
+    .dashboard-citas-table tbody,
+    .dashboard-citas-table tr,
+    .dashboard-citas-table td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .dashboard-citas-table thead {
+        display: none;
+    }
+
+    .dashboard-citas-table tbody tr {
+        margin-bottom: 14px;
+        padding: 15px;
+        background: #1e1e1e;
+        border: 1px solid #353535;
+        border-radius: 12px;
+    }
+
+    .dashboard-citas-table td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 0;
+        border: none;
+        border-bottom: 1px solid #343434;
+        text-align: right;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .dashboard-citas-table td:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .dashboard-citas-table td::before {
+        content: attr(data-label);
+        flex: 0 0 26%;
+        color: #d4af37;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    .dashboard-client-cell {
+        justify-content: flex-end;
+        text-align: right;
+    }
+
+    .dashboard-table-action {
+        justify-content: center;
+    }
+
+    .dashboard-panel {
+        padding: 18px;
+    }
+
+    .dashboard-chart {
+        gap: 5px;
+    }
+
+    .dashboard-chart-track {
+        padding: 0 2px;
+    }
+
+    .dashboard-chart-label {
+        font-size: 9px;
+    }
+
+    .dashboard-update-info {
+        flex-direction: column;
+    }
+}
+
+/* ==========================================
+   CELULARES PEQUENOS
+========================================== */
+
+@media (max-width: 480px) {
+
+    .dashboard-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .dashboard-stat-card {
+        min-height: 175px;
+        gap: 13px;
+        padding: 14px;
+    }
+
+    .dashboard-stat-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 17px;
+    }
+
+    .dashboard-stat-tag {
+        font-size: 8px;
+    }
+
+    .dashboard-stat-body > span {
+        font-size: 11px;
+    }
+
+    .dashboard-stat-body > strong {
+        font-size: 26px;
+    }
+
+    .dashboard-stat-body > strong.dashboard-money {
+        font-size: 19px;
+    }
+
+    .dashboard-stat-bottom {
+        font-size: 10px;
+        line-height: 1.4;
+    }
+
+    .dashboard-barber-card {
+        flex-wrap: wrap;
+        padding: 14px;
+    }
+
+    .dashboard-barber-status {
+        margin-left: auto;
+    }
+
+    .dashboard-operation-item {
+        gap: 9px;
+    }
+
+    .dashboard-operation-info strong {
+        font-size: 11px;
+    }
+
+    .dashboard-operation-info span {
+        font-size: 10px;
+    }
+}
+
+/* ==========================================
+   ACCESIBILIDAD
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .dashboard-page *,
+    .dashboard-page *::before,
+    .dashboard-page *::after {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+
+/* ==========================================
+   DASHBOARD - TARJETAS MAS COMPACTAS
+========================================== */
+
+/* RESUMEN GENERAL */
+
+/* Evitar alturas innecesarias */
+.dashboard-page .dashboard-stats-grid {
+    align-items: start;
+    grid-auto-rows: auto;
+}
+
+.dashboard-page .dashboard-stat-card {
+    min-height: 155px !important;
+    height: auto !important;
+    padding: 18px !important;
+    gap: 12px !important;
+}
+
+/* Mantener los datos agrupados */
+.dashboard-page .dashboard-stat-body {
+    gap: 6px;
+}
+
+.dashboard-page .dashboard-stat-bottom {
+    margin-top: 5px;
+}
+
+/* ==========================================
+   ESTADO DE BARBEROS
+========================================== */
+
+.dashboard-page .dashboard-barbers-grid {
+    align-items: start !important;
+    grid-auto-rows: auto !important;
+}
+
+.dashboard-page .dashboard-barber-card {
+    min-height: 76px;
+    height: auto !important;
+    padding: 13px 15px !important;
+    gap: 10px !important;
+    align-self: start;
+}
+
+/* Avatar mas compacto */
+.dashboard-page .dashboard-barber-avatar {
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    font-size: 15px;
+}
+
+/* Nombre y usuario */
+.dashboard-page .dashboard-barber-info {
+    gap: 3px;
+}
+
+.dashboard-page .dashboard-barber-info strong {
+    font-size: 12px;
+}
+
+.dashboard-page .dashboard-barber-info > span {
+    font-size: 11px;
+}
+
+/* Estado */
+.dashboard-page .dashboard-barber-status {
+    padding: 6px 9px;
+    font-size: 10px;
+}
+
+/* ==========================================
+   CELULARES
+========================================== */
+
+@media (max-width: 650px) {
+
+    .dashboard-page .dashboard-stat-card {
+        min-height: 145px !important;
+        padding: 13px !important;
+        gap: 10px !important;
+    }
+
+    .dashboard-page .dashboard-barber-card {
+        min-height: 65px;
+        padding: 11px 12px !important;
+    }
+}
+

@@ -1,126 +1,557 @@
-﻿@model List<WebApplicationAPP.Models.Cliente>
+﻿
+@model List<WebApplicationAPP.Models.Cliente>
 
-<h2 class="mb-4">👤 Clientes</h2>
+@{
+    ViewData["Title"] = "Clientes";
 
-<div class="card p-3 mb-3">
+    var clienteEditar = ViewBag.ClienteEditar as WebApplicationAPP.Models.Cliente;
+    var totalClientes = Model?.Count ?? 0;
+}
 
-    <form method="get"
-          class="row g-2 align-items-center">
+<link rel="stylesheet"
+      href="~/css/clientes.css"
+      asp-append-version="true" />
 
-        <div class="col-md-9">
+<div class="clientes-page">
 
-            <input class="form-control"
-                   type="text"
-                   name="buscar"
-                   placeholder="🔍 Buscar por nombre o teléfono..." />
+    <!-- =====================================================
+         ENCABEZADO
+    ===================================================== -->
+
+    <header class="clientes-header">
+
+        <div>
+            <span class="section-kicker">
+                ADMINISTRACION
+            </span>
+
+            <h1>Gestion de clientes</h1>
+
+            <p>
+                Administra la informacion y el registro
+                de tus clientes.
+            </p>
+        </div>
+
+        <div class="clientes-total">
+
+            <i class="bi bi-people"></i>
+
+            <div>
+                <strong>@totalClientes</strong>
+                <span>Clientes registrados</span>
+            </div>
 
         </div>
 
-        <div class="col-md-3">
+    </header>
 
-            <button class="btn btn-primary w-100"
-                    type="submit">
-                Buscar
+    <!-- =====================================================
+         ALERTAS
+    ===================================================== -->
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="clientes-alert error">
+            <i class="bi bi-exclamation-circle"></i>
+            <span>@ViewBag.Error</span>
+        </div>
+    }
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="clientes-alert success">
+            <i class="bi bi-check-circle"></i>
+            <span>@TempData["Mensaje"]</span>
+        </div>
+    }
+
+    <!-- =====================================================
+         BOTON NUEVO CLIENTE
+    ===================================================== -->
+
+    <div class="clientes-toolbar">
+
+        <button type="button"
+                id="abrirCrearCliente"
+                class="clientes-btn-primary"
+                aria-controls="crearClienteContainer"
+                aria-expanded="false">
+
+            <i class="bi bi-person-plus"></i>
+
+            Nuevo cliente
+
+            <i class="bi bi-chevron-down clientes-toggle-icon"></i>
+
+        </button>
+
+    </div>
+
+    <!-- =====================================================
+         GAVETA REGISTRAR CLIENTE
+    ===================================================== -->
+
+    <div id="crearClienteContainer"
+         class="clientes-create-container closed">
+
+        <section class="clientes-card">
+
+            <div class="clientes-card-header">
+
+                <div>
+
+                    <span class="section-kicker">
+                        NUEVO REGISTRO
+                    </span>
+
+                    <h2>
+                        <i class="bi bi-person-plus"></i>
+                        Registrar cliente
+                    </h2>
+
+                    <p>
+                        Agrega un nuevo cliente al sistema.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <form method="post"
+                  action="@Url.Action("Crear", "Clientes")"
+                  class="clientes-form">
+
+                @Html.AntiForgeryToken()
+
+                <div class="clientes-form-grid">
+
+                    <!-- NOMBRE -->
+
+                    <div class="clientes-field">
+
+                        <label for="nuevoNombre">
+                            <i class="bi bi-person"></i>
+                            Nombre completo
+                        </label>
+
+                        <input type="text"
+                               id="nuevoNombre"
+                               name="nombre"
+                               placeholder="Ingrese el nombre del cliente"
+                               maxlength="150"
+                               required />
+
+                    </div>
+
+                    <!-- TELEFONO -->
+
+                    <div class="clientes-field">
+
+                        <label for="nuevoTelefono">
+                            <i class="bi bi-telephone"></i>
+                            Telefono
+                        </label>
+
+                        <input type="tel"
+                               id="nuevoTelefono"
+                               name="telefono"
+                               placeholder="Ingrese el numero de telefono"
+                               maxlength="20"
+                               required />
+
+                    </div>
+
+                </div>
+
+                <div class="clientes-form-actions">
+
+                    <button type="button"
+                            id="cerrarCrearCliente"
+                            class="clientes-btn-secondary">
+
+                        <i class="bi bi-x-lg"></i>
+                        Cancelar
+
+                    </button>
+
+                    <button type="submit"
+                            class="clientes-btn-primary">
+
+                        <i class="bi bi-check-lg"></i>
+                        Registrar cliente
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </div>
+
+    <!-- =====================================================
+         GAVETA EDITAR CLIENTE
+    ===================================================== -->
+
+    <div id="editarClienteContainer"
+         class="clientes-edit-container @(clienteEditar == null ? "closed" : "")">
+
+        <section class="clientes-card clientes-edit-card">
+
+            <div class="clientes-card-header">
+
+                <div>
+
+                    <span class="section-kicker">
+                        ACTUALIZAR INFORMACION
+                    </span>
+
+                    <h2>
+                        <i class="bi bi-pencil-square"></i>
+                        Editar cliente
+                    </h2>
+
+                    <p>
+                        Modifica la informacion del cliente
+                        seleccionado.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <form method="post"
+                  action="@Url.Action("Editar", "Clientes")"
+                  class="clientes-form">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       id="editarId"
+                       name="id"
+                       value="@clienteEditar?.IdCliente" />
+
+                <div class="clientes-form-grid">
+
+                    <!-- NOMBRE -->
+
+                    <div class="clientes-field">
+
+                        <label for="editarNombre">
+                            <i class="bi bi-person"></i>
+                            Nombre completo
+                        </label>
+
+                        <input type="text"
+                               id="editarNombre"
+                               name="nombre"
+                               value="@clienteEditar?.Nombre"
+                               maxlength="150"
+                               required />
+
+                    </div>
+
+                    <!-- TELEFONO -->
+
+                    <div class="clientes-field">
+
+                        <label for="editarTelefono">
+                            <i class="bi bi-telephone"></i>
+                            Telefono
+                        </label>
+
+                        <input type="tel"
+                               id="editarTelefono"
+                               name="telefono"
+                               value="@clienteEditar?.Telefono"
+                               maxlength="20"
+                               required />
+
+                    </div>
+
+                </div>
+
+                <div class="clientes-form-actions">
+
+                    <button type="button"
+                            id="cerrarEditarCliente"
+                            class="clientes-btn-secondary">
+
+                        <i class="bi bi-x-lg"></i>
+                        Cancelar
+
+                    </button>
+
+                    <button type="submit"
+                            class="clientes-btn-primary">
+
+                        <i class="bi bi-check-lg"></i>
+                        Guardar cambios
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </div>
+
+    <!-- =====================================================
+         CLIENTES REGISTRADOS
+    ===================================================== -->
+
+    <section class="clientes-card clientes-list-card">
+
+        <div class="clientes-card-header">
+
+            <div>
+
+                <span class="section-kicker">
+                    DIRECTORIO
+                </span>
+
+                <h2>
+                    <i class="bi bi-people"></i>
+                    Clientes registrados
+                </h2>
+
+                <p>
+                    Consulta y actualiza la informacion
+                    de tus clientes.
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- =====================================================
+             BUSQUEDA INSTANTANEA
+        ===================================================== -->
+
+        <div class="clientes-search">
+
+            <div class="clientes-search-input">
+
+                <i class="bi bi-search"></i>
+
+                <input type="search"
+                       id="buscarClientes"
+                       placeholder="Buscar por nombre, telefono o ID..."
+                       autocomplete="off"
+                       aria-label="Buscar clientes" />
+
+            </div>
+
+            <button type="button"
+                    id="mostrarTodosClientes"
+                    class="clientes-btn-secondary clientes-reset-btn">
+
+                <i class="bi bi-arrow-counterclockwise"></i>
+
+                Mostrar todos
+
             </button>
 
         </div>
 
-    </form>
+        <!-- CONTADOR DE RESULTADOS -->
+
+        <div class="clientes-search-summary">
+
+            <span id="clientesResultadosTexto">
+                @totalClientes clientes registrados
+            </span>
+
+        </div>
+
+        <!-- =====================================================
+             TABLA
+        ===================================================== -->
+
+        <div class="clientes-table-wrapper">
+
+            <table class="clientes-table">
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Telefono</th>
+                        <th>Fecha de registro</th>
+                        <th>Acciones</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (Model == null || Model.Count == 0)
+                    {
+                        <tr>
+
+                            <td colspan="5">
+
+                                <div class="clientes-empty">
+
+                                    <i class="bi bi-people"></i>
+
+                                    <h3>No hay clientes registrados</h3>
+
+                                    <p>
+                                        Todavia no existen clientes
+                                        en el sistema.
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var c in Model)
+                        {
+                            <tr class="cliente-fila"
+                                data-id="@c.IdCliente"
+                                data-nombre="@c.Nombre"
+                                data-telefono="@c.Telefono">
+
+                                <!-- ID -->
+
+                                <td class="clientes-id">
+                                    #@c.IdCliente
+                                </td>
+
+                                <!-- CLIENTE -->
+
+                                <td>
+
+                                    <div class="clientes-person">
+
+                                        <div class="clientes-avatar">
+
+                                            @(string.IsNullOrWhiteSpace(c.Nombre)
+                                                ? "?"
+                                                : c.Nombre.Substring(0, 1).ToUpper())
+
+                                        </div>
+
+                                        <strong>
+                                            @c.Nombre
+                                        </strong>
+
+                                    </div>
+
+                                </td>
+
+                                <!-- TELEFONO -->
+
+                                <td>
+                                    @c.Telefono
+                                </td>
+
+                                <!-- FECHA -->
+
+                                <td>
+
+                                    @(c.FechaRegistro.HasValue
+                                        ? c.FechaRegistro.Value.ToString("dd/MM/yyyy")
+                                        : "Sin fecha")
+
+                                </td>
+
+                                <!-- ACCIONES -->
+
+                                <td>
+
+                                    <button type="button"
+                                            class="clientes-edit-btn btn-editar-cliente"
+                                            data-id="@c.IdCliente"
+                                            data-nombre="@c.Nombre"
+                                            data-telefono="@c.Telefono"
+                                            aria-controls="editarClienteContainer">
+
+                                        <i class="bi bi-pencil"></i>
+
+                                        Editar
+
+                                    </button>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+            <!-- SIN RESULTADOS DE BUSQUEDA -->
+
+            <div id="clientesSinResultados"
+                 class="clientes-empty"
+                 style="display:none;">
+
+                <i class="bi bi-search"></i>
+
+                <h3>Sin resultados</h3>
+
+                <p>
+                    No se encontraron clientes
+                    con esa busqueda.
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- =====================================================
+             PAGINACION
+        ===================================================== -->
+
+        <div id="clientesPaginacion"
+             class="clientes-pagination">
+
+            <button type="button"
+                    id="clientesAnterior"
+                    class="clientes-page-btn"
+                    title="Pagina anterior"
+                    aria-label="Pagina anterior">
+
+                <i class="bi bi-chevron-left"></i>
+
+            </button>
+
+            <div id="clientesNumeros"
+                 class="clientes-page-numbers">
+            </div>
+
+            <button type="button"
+                    id="clientesSiguiente"
+                    class="clientes-page-btn"
+                    title="Pagina siguiente"
+                    aria-label="Pagina siguiente">
+
+                <i class="bi bi-chevron-right"></i>
+
+            </button>
+
+        </div>
+
+    </section>
 
 </div>
 
-<div class="mb-3">
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
 
-    <a class="btn btn-primary"
-           href="/Clientes/Crear">
-
-        ➕ Nuevo Cliente
-
-    </a>
-
-</div>
-
-<table class="table table-bordered table-striped text-center align-middle">
-
-    <thead class="table-dark">
-
-        <tr>
-
-            <th style="width:10%;">
-                ID
-            </th>
-
-            <th style="width:30%;">
-                Nombre
-            </th>
-
-            <th style="width:20%;">
-                Teléfono
-            </th>
-
-            <th style="width:20%;">
-                Fecha Registro
-            </th>
-
-            <th style="width:20%;">
-                Acciones
-            </th>
-
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-        @if (Model == null || Model.Count == 0)
-        {
-            <tr>
-
-                <td colspan="5">
-                    No hay clientes registrados
-                </td>
-
-            </tr>
-        }
-        else
-        {
-            @foreach (var c in Model)
-            {
-                <tr>
-
-                    <td>
-                        @c.IdCliente
-                    </td>
-
-                    <td>
-                        @c.Nombre
-                    </td>
-
-                    <td>
-                        @c.Telefono
-                    </td>
-
-                    <td>
-                        @(c.FechaRegistro.HasValue
-                            ? c.FechaRegistro.Value.ToString("dd/MM/yyyy")
-                            : "Sin fecha")
-                    </td>
-
-                    <td>
-
-                        <a class="btn btn-sm btn-warning text-dark"
-                               href="/Clientes/Editar/@c.IdCliente">
-
-                            ✏️ Editar
-
-                        </a>
-
-                    </td>
-
-                </tr>
-            }
-        }
-
-    </tbody>
-
-</table>
+<script src="~/js/clientes.js"
+        asp-append-version="true"></script>

@@ -1,69 +1,834 @@
-﻿@model List<WebApplicationAPP.Models.Usuario>
+﻿
+@using System.Linq
+@using System.Globalization
+@using WebApplicationAPP.Models
 
-<h3>💈 Estado de Barberos</h3>
+@model List<WebApplicationAPP.Models.Usuario>
 
-<table class="table table-striped">
-    <thead class="table-dark">
-        <tr>
-            <th>Nombre</th>
-            <th>Usuario</th>
-            <th>Estado</th>
-        </tr>
-    </thead>
+@{
+    ViewData["Title"] = "Dashboard";
 
-    <tbody>
-        @foreach (var b in Model)
+    var citas = ViewBag.CitasProgramadas as List<Cita>
+        ?? new List<Cita>();
+
+    var nombresOcupados =
+        ViewBag.NombresBarberosConCita as HashSet<string>
+        ?? new HashSet<string>(
+            StringComparer.OrdinalIgnoreCase
+        );
+
+    var diasGrafico = ViewBag.DiasGrafico as List<string>
+        ?? new List<string>();
+
+    var cantidadesGrafico =
+        ViewBag.CantidadesGrafico as List<int>
+        ?? new List<int>();
+
+    int citasHoy = (int)ViewBag.CitasHoy;
+    int citasActivasHoy = (int)ViewBag.CitasActivasHoy;
+    int citasCanceladasHoy = (int)ViewBag.CitasCanceladasHoy;
+
+    decimal ingresosHoy = (decimal)ViewBag.IngresosHoy;
+    int pagosHoy = (int)ViewBag.PagosHoy;
+
+    int clientesAtendidos = (int)ViewBag.ClientesAtendidos;
+    int totalClientes = (int)ViewBag.TotalClientes;
+    int totalUsuarios = (int)ViewBag.TotalUsuarios;
+    int totalBarberos = (int)ViewBag.TotalBarberos;
+
+    int disponibles = (int)ViewBag.BarberosDisponibles;
+    int ocupados = (int)ViewBag.BarberosOcupados;
+    int inactivos = (int)ViewBag.BarberosInactivos;
+
+    int maximoGrafico = cantidadesGrafico.Any()
+        ? Math.Max(1, cantidadesGrafico.Max())
+        : 1;
+
+    DateTime fechaActual = (DateTime)ViewBag.FechaActual;
+
+    var culturaCR = CultureInfo.GetCultureInfo("es-CR");
+}
+
+<link rel="stylesheet"
+      href="~/css/dashboard.css"
+      asp-append-version="true" />
+
+<div class="dashboard-page">
+
+    <!-- ==========================================
+         ENCABEZADO
+    ========================================== -->
+
+    <section class="dashboard-header">
+
+        <div class="dashboard-header-info">
+
+            <span class="dashboard-kicker">
+                PANEL DE ADMINISTRACION
+            </span>
+
+            <h1>
+                <span class="dashboard-header-icon">
+                    <i class="bi bi-grid-1x2"></i>
+                </span>
+                Dashboard
+            </h1>
+
+            <p>
+                Resumen general de Yampi BarberShop,
+                citas, ingresos y disponibilidad de barberos.
+            </p>
+
+        </div>
+
+        <div class="dashboard-header-actions">
+
+            <div class="dashboard-date">
+                <i class="bi bi-calendar3"></i>
+                <span>@fechaActual.ToString("dd/MM/yyyy")</span>
+            </div>
+
+            <button type="button"
+                    id="btnActualizarDashboard"
+                    class="dashboard-refresh-btn">
+
+                <i class="bi bi-arrow-clockwise"></i>
+                Actualizar
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         RESUMEN GENERAL
+    ========================================== -->
+
+    <section class="dashboard-section">
+
+        <div class="dashboard-section-heading">
+
+            <div>
+                <span class="dashboard-kicker">
+                    ESTADISTICAS
+                </span>
+
+                <h2>
+                    <i class="bi bi-speedometer2"></i>
+                    Resumen general
+                </h2>
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-stats-grid">
+
+            <!-- CITAS DE HOY -->
+            <article class="dashboard-stat-card">
+
+                <div class="dashboard-stat-top">
+
+                    <div class="dashboard-stat-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+
+                    <span class="dashboard-stat-tag">
+                        HOY
+                    </span>
+
+                </div>
+
+                <div class="dashboard-stat-body">
+                    <span>Citas registradas hoy</span>
+                    <strong>@citasHoy</strong>
+                </div>
+
+                <div class="dashboard-stat-bottom">
+                    <i class="bi bi-check-circle"></i>
+                    @citasActivasHoy activas
+                </div>
+
+            </article>
+
+
+            <!-- INGRESOS -->
+            <article class="dashboard-stat-card">
+
+                <div class="dashboard-stat-top">
+
+                    <div class="dashboard-stat-icon">
+                        <i class="bi bi-cash-coin"></i>
+                    </div>
+
+                    <span class="dashboard-stat-tag">
+                        HOY
+                    </span>
+
+                </div>
+
+                <div class="dashboard-stat-body">
+                    <span>Ingresos del dia</span>
+
+                    <strong class="dashboard-money">
+                        ₡@ingresosHoy.ToString("N2", culturaCR)
+                    </strong>
+                </div>
+
+                <div class="dashboard-stat-bottom">
+                    <i class="bi bi-receipt"></i>
+                    @pagosHoy pagos registrados
+                </div>
+
+            </article>
+
+
+            <!-- CLIENTES ATENDIDOS -->
+            <article class="dashboard-stat-card">
+
+                <div class="dashboard-stat-top">
+
+                    <div class="dashboard-stat-icon">
+                        <i class="bi bi-scissors"></i>
+                    </div>
+
+                    <span class="dashboard-stat-tag">
+                        HISTORICO
+                    </span>
+
+                </div>
+
+                <div class="dashboard-stat-body">
+                    <span>Clientes atendidos</span>
+                    <strong>@clientesAtendidos</strong>
+                </div>
+
+                <div class="dashboard-stat-bottom">
+                    <i class="bi bi-check2-circle"></i>
+                    Atenciones finalizadas
+                </div>
+
+            </article>
+
+
+            <!-- BARBEROS DISPONIBLES -->
+            <article class="dashboard-stat-card">
+
+                <div class="dashboard-stat-top">
+
+                    <div class="dashboard-stat-icon">
+                        <i class="bi bi-person-check"></i>
+                    </div>
+
+                    <span class="dashboard-stat-tag">
+                        AGENDA DE HOY
+                    </span>
+
+                </div>
+
+                <div class="dashboard-stat-body">
+                    <span>Barberos disponibles</span>
+                    <strong>@disponibles</strong>
+                </div>
+
+                <div class="dashboard-stat-bottom">
+                    <i class="bi bi-person-badge"></i>
+                    @ocupados con citas activas
+                </div>
+
+            </article>
+
+
+            <!-- TOTAL CLIENTES -->
+            <article class="dashboard-stat-card">
+
+                <div class="dashboard-stat-top">
+
+                    <div class="dashboard-stat-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+
+                    <span class="dashboard-stat-tag">
+                        GENERAL
+                    </span>
+
+                </div>
+
+                <div class="dashboard-stat-body">
+                    <span>Clientes registrados</span>
+                    <strong>@totalClientes</strong>
+                </div>
+
+                <div class="dashboard-stat-bottom">
+                    <i class="bi bi-person-plus"></i>
+                    Base de clientes
+                </div>
+
+            </article>
+
+
+            <!-- TOTAL BARBEROS -->
+            <article class="dashboard-stat-card">
+
+                <div class="dashboard-stat-top">
+
+                    <div class="dashboard-stat-icon">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+
+                    <span class="dashboard-stat-tag">
+                        GENERAL
+                    </span>
+
+                </div>
+
+                <div class="dashboard-stat-body">
+                    <span>Barberos registrados</span>
+                    <strong>@totalBarberos</strong>
+                </div>
+
+                <div class="dashboard-stat-bottom">
+                    <i class="bi bi-people"></i>
+                    @inactivos inactivos
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         ACTIVIDAD Y ESTADISTICAS
+    ========================================== -->
+
+    <section class="dashboard-overview-grid">
+
+        <!-- GRAFICO DE 7 DIAS -->
+        <div class="dashboard-panel">
+
+            <div class="dashboard-panel-header">
+
+                <div>
+                    <span class="dashboard-kicker">
+                        ACTIVIDAD RECIENTE
+                    </span>
+
+                    <h2>
+                        <i class="bi bi-bar-chart"></i>
+                        Citas de los ultimos 7 dias
+                    </h2>
+
+                    <p>
+                        Cantidad de citas registradas por fecha.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-chart">
+
+                @for (int i = 0; i < diasGrafico.Count; i++)
+                {
+                    int cantidad = cantidadesGrafico[i];
+
+                    int altura = cantidad == 0
+                        ? 2
+                        : Math.Max(
+                            8,
+                            (int)Math.Round(
+                                (double)cantidad / maximoGrafico * 100
+                            )
+                        );
+
+                    <div class="dashboard-chart-column">
+
+                        <span class="dashboard-chart-value">
+                            @cantidad
+                        </span>
+
+                        <div class="dashboard-chart-track">
+
+                            <div class="dashboard-chart-bar @(cantidad == 0 ? "dashboard-chart-zero" : "")"
+                                 style="height: @(altura)%"
+                                 title="@cantidad citas">
+                            </div>
+
+                        </div>
+
+                        <span class="dashboard-chart-label">
+                            @diasGrafico[i]
+                        </span>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+
+        <!-- RESUMEN OPERATIVO -->
+        <div class="dashboard-panel">
+
+            <div class="dashboard-panel-header">
+
+                <div>
+                    <span class="dashboard-kicker">
+                        OPERACION
+                    </span>
+
+                    <h2>
+                        <i class="bi bi-clipboard-data"></i>
+                        Estado del negocio
+                    </h2>
+
+                    <p>
+                        Indicadores de actividad y personal.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-operation-list">
+
+                <div class="dashboard-operation-item">
+
+                    <div class="dashboard-operation-icon">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+
+                    <div class="dashboard-operation-info">
+                        <strong>Citas activas de hoy</strong>
+                        <span>Reservaciones vigentes</span>
+                    </div>
+
+                    <b>@citasActivasHoy</b>
+
+                </div>
+
+
+                <div class="dashboard-operation-item">
+
+                    <div class="dashboard-operation-icon">
+                        <i class="bi bi-calendar-x"></i>
+                    </div>
+
+                    <div class="dashboard-operation-info">
+                        <strong>Citas canceladas de hoy</strong>
+                        <span>Reservaciones canceladas</span>
+                    </div>
+
+                    <b>@citasCanceladasHoy</b>
+
+                </div>
+
+
+                <div class="dashboard-operation-item">
+
+                    <div class="dashboard-operation-icon">
+                        <i class="bi bi-person-check"></i>
+                    </div>
+
+                    <div class="dashboard-operation-info">
+                        <strong>Barberos disponibles</strong>
+                        <span>Activos sin citas hoy</span>
+                    </div>
+
+                    <b>@disponibles</b>
+
+                </div>
+
+
+                <div class="dashboard-operation-item">
+
+                    <div class="dashboard-operation-icon">
+                        <i class="bi bi-person-dash"></i>
+                    </div>
+
+                    <div class="dashboard-operation-info">
+                        <strong>Barberos ocupados hoy</strong>
+                        <span>Con citas activas asignadas</span>
+                    </div>
+
+                    <b>@ocupados</b>
+
+                </div>
+
+
+                <div class="dashboard-operation-item">
+
+                    <div class="dashboard-operation-icon">
+                        <i class="bi bi-person-x"></i>
+                    </div>
+
+                    <div class="dashboard-operation-info">
+                        <strong>Barberos inactivos</strong>
+                        <span>Personal desactivado</span>
+                    </div>
+
+                    <b>@inactivos</b>
+
+                </div>
+
+
+                <div class="dashboard-operation-item">
+
+                    <div class="dashboard-operation-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+
+                    <div class="dashboard-operation-info">
+                        <strong>Usuarios registrados</strong>
+                        <span>Total de cuentas del sistema</span>
+                    </div>
+
+                    <b>@totalUsuarios</b>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         ESTADO DE BARBEROS
+    ========================================== -->
+
+    <section class="dashboard-section">
+
+        <div class="dashboard-section-heading">
+
+            <div>
+                <span class="dashboard-kicker">
+                    PERSONAL
+                </span>
+
+                <h2>
+                    <i class="bi bi-person-workspace"></i>
+                    Estado de barberos
+                </h2>
+
+                <p>
+                    Disponibilidad basada en las citas activas de hoy.
+                </p>
+            </div>
+
+            <span class="dashboard-section-count">
+                @totalBarberos barberos
+            </span>
+
+        </div>
+
+
+        <div class="dashboard-barber-summary">
+
+            <span class="dashboard-mini-status available">
+                <i class="bi bi-circle-fill"></i>
+                @disponibles disponibles
+            </span>
+
+            <span class="dashboard-mini-status busy">
+                <i class="bi bi-circle-fill"></i>
+                @ocupados ocupados hoy
+            </span>
+
+            <span class="dashboard-mini-status inactive">
+                <i class="bi bi-circle-fill"></i>
+                @inactivos inactivos
+            </span>
+
+        </div>
+
+
+        @if (Model != null && Model.Any())
         {
-            <tr>
-                <td>@b.Nombre</td>
-                <td>@b.Username</td>
+            <div class="dashboard-barbers-grid">
 
-                <td>
-                    @if (b.Estado)
-                    {
-                        <span class="badge bg-success">Activo</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-danger">Inactivo</span>
-                    }
-                </td>
-            </tr>
+                @foreach (var barbero in Model)
+                {
+                    string nombre = barbero.Nombre ?? "";
+
+                    bool tieneCita =
+                        nombresOcupados.Contains(nombre.Trim());
+
+                    string estadoVisual = !barbero.Estado
+                        ? "Inactivo"
+                        : tieneCita
+                            ? "Ocupado hoy"
+                            : "Disponible";
+
+                    string claseEstado = !barbero.Estado
+                        ? "inactive"
+                        : tieneCita
+                            ? "busy"
+                            : "available";
+
+                    <article class="dashboard-barber-card">
+
+                        <div class="dashboard-barber-avatar">
+                            @(string.IsNullOrWhiteSpace(nombre)
+                                ? "?"
+                                : nombre.Substring(0, 1).ToUpper())
+                        </div>
+
+                        <div class="dashboard-barber-info">
+
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(nombre)
+                                    ? "Sin nombre"
+                                    : nombre)
+                            </strong>
+
+                            <span>
+                                @(barbero.Username ?? "Sin usuario")
+                            </span>
+
+                        </div>
+
+                        <span class="dashboard-barber-status @claseEstado">
+                            <i class="bi bi-circle-fill"></i>
+                            @estadoVisual
+                        </span>
+
+                    </article>
+                }
+
+            </div>
         }
-    </tbody>
-</table>
+        else
+        {
+            <div class="dashboard-empty">
 
-@if (ViewBag.CitasProgramadas != null &&
-((List<WebApplicationAPP.Models.Cita>)ViewBag.CitasProgramadas).Count > 0)
-{
-    <h3>📅 Citas Programadas de Hoy</h3>
+                <i class="bi bi-person-x"></i>
 
-    <table class="table table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>ID Cita</th>
-                <th>ID Cliente</th>
-                <th>Hora</th>
-                <th>Barbero</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
+                <h3>No hay barberos registrados</h3>
 
-        <tbody>
-            @foreach (var cita in (List<WebApplicationAPP.Models.Cita>)ViewBag.CitasProgramadas)
-            {
-                <tr>
-                    <td>@cita.IdCita</td>
-                    <td>@cita.IdCliente</td>
-                    <td>@cita.Hora</td>
-                    <td>@cita.Barbero</td>
-                    <td>@cita.Estado</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No hay citas programadas para hoy.</p>
-}
+                <p>
+                    Actualmente no existen barberos
+                    para mostrar en el dashboard.
+                </p>
+
+            </div>
+        }
+
+    </section>
+
+
+    <!-- ==========================================
+         CITAS PROGRAMADAS DE HOY
+    ========================================== -->
+
+    <section class="dashboard-section">
+
+        <div class="dashboard-section-heading">
+
+            <div>
+                <span class="dashboard-kicker">
+                    AGENDA DEL DIA
+                </span>
+
+                <h2>
+                    <i class="bi bi-calendar2-week"></i>
+                    Citas programadas de hoy
+                </h2>
+
+                <p>
+                    Citas ordenadas desde la hora mas temprana
+                    hasta la ultima.
+                </p>
+            </div>
+
+            <span class="dashboard-section-count">
+                @citasHoy citas
+            </span>
+
+        </div>
+
+
+        @if (citas.Any())
+        {
+            <div class="dashboard-table-container">
+
+                <table class="dashboard-citas-table">
+
+                    <thead>
+                        <tr>
+                            <th>CLIENTE</th>
+                            <th>HORA</th>
+                            <th>BARBERO</th>
+                            <th>ESTADO</th>
+                            <th>ACCION</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var cita in citas)
+                        {
+                            string estado =
+                                (cita.Estado ?? "").Trim();
+
+                            string clase = estado.Equals(
+                                "Activa",
+                                StringComparison.OrdinalIgnoreCase
+                            )
+                                ? "active"
+                                : estado.Equals(
+                                    "Cancelada",
+                                    StringComparison.OrdinalIgnoreCase
+                                )
+                                    ? "cancelled"
+                                    : estado.Equals(
+                                        "Bloqueada",
+                                        StringComparison.OrdinalIgnoreCase
+                                    )
+                                        ? "blocked"
+                                        : "neutral";
+
+                            string nombreCliente =
+                                cita.IdClienteNavigation?.Nombre
+                                ?? "Sin cliente";
+
+                            <tr>
+
+                                <!-- CLIENTE -->
+                                <td data-label="Cliente">
+
+                                    <div class="dashboard-client-cell">
+
+                                        <div class="dashboard-client-avatar">
+                                            @(string.IsNullOrWhiteSpace(nombreCliente)
+                                                ? "?"
+                                                : nombreCliente.Substring(0, 1).ToUpper())
+                                        </div>
+
+                                        <div class="dashboard-client-details">
+                                            <strong>@nombreCliente</strong>
+                                            <span>Cita #@cita.IdCita</span>
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- HORA -->
+                                <td data-label="Hora">
+
+                                    <span class="dashboard-time">
+                                        <i class="bi bi-clock"></i>
+                                        @cita.Hora.ToString("HH:mm")
+                                    </span>
+
+                                </td>
+
+
+                                <!-- BARBERO -->
+                                <td data-label="Barbero">
+
+                                    <span class="dashboard-table-barber">
+                                        <i class="bi bi-scissors"></i>
+                                        @(cita.Barbero ?? "Sin asignar")
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ESTADO -->
+                                <td data-label="Estado">
+
+                                    <span class="dashboard-cita-status @clase">
+                                        <i class="bi bi-circle-fill"></i>
+                                        @(string.IsNullOrWhiteSpace(estado)
+                                            ? "Sin estado"
+                                            : estado)
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ACCION -->
+                                <td data-label="Accion">
+
+                                    <a asp-controller="Citas"
+                                       asp-action="Index"
+                                       class="dashboard-table-action">
+
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                        Ver agenda
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div class="dashboard-empty">
+
+                <i class="bi bi-calendar-x"></i>
+
+                <h3>No hay citas programadas para hoy</h3>
+
+                <p>
+                    Todavia no se han registrado citas
+                    para la fecha actual.
+                </p>
+
+                <a asp-controller="Citas"
+                   asp-action="Index"
+                   class="dashboard-empty-link">
+
+                    <i class="bi bi-calendar-plus"></i>
+                    Ir a gestion de citas
+
+                </a>
+
+            </div>
+        }
+
+    </section>
+
+
+    <!-- ==========================================
+         PIE DEL DASHBOARD
+    ========================================== -->
+
+    <div class="dashboard-update-info">
+
+        <span>
+            <i class="bi bi-clock-history"></i>
+            Ultima actualizacion:
+            <strong>
+                @fechaActual.ToString("dd/MM/yyyy HH:mm:ss")
+            </strong>
+        </span>
+
+        <span>
+            <i class="bi bi-arrow-repeat"></i>
+            Actualizacion automatica cada 60 segundos
+        </span>
+
+    </div>
+
+</div>
+
+<script src="~/js/dashboard.js"
+        asp-append-version="true"></script>

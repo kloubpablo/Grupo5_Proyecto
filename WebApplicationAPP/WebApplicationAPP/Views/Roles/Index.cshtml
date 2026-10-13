@@ -1,105 +1,561 @@
-﻿@model List<WebApplicationAPP.Models.Role>
+﻿
+@model List<WebApplicationAPP.Models.Role>
+@using System.Linq
 
-<h2 class="mb-4">🛡️ Gestión de Roles</h2>
+@{
+    ViewData["Title"] = "Gestion de Roles";
 
-<!-- BOTÓN -->
-<div class="mb-3">
+    var roles = Model ?? new List<WebApplicationAPP.Models.Role>();
 
-    <a class="btn btn-primary"
-           href="/Roles/Crear">
-        ➕ Nuevo Rol
-    </a>
+    var totalRoles = roles.Count;
+    var rolesActivos = roles.Count(r => r.Estado);
+    var rolesInactivos = roles.Count(r => !r.Estado);
+}
+
+<link rel="stylesheet"
+      href="~/css/roles.css"
+      asp-append-version="true" />
+
+<div class="roles-page"
+     id="rolesPage"
+     data-permisos-url="@Url.Action("Permisos", "Roles")"
+     data-toggle-permiso-url="@Url.Action("TogglePermiso", "Roles")"
+     data-toggle-url="@Url.Action("Toggle", "Roles")"
+     data-eliminar-url="@Url.Action("Eliminar", "Roles")">
+
+    <!-- TOKEN DE SEGURIDAD PARA AJAX -->
+
+    <form id="rolesTokenForm" hidden>
+        @Html.AntiForgeryToken()
+    </form>
+
+    <!-- =====================================
+         ENCABEZADO
+    ===================================== -->
+
+    <header class="roles-header">
+
+        <span class="roles-kicker">
+            ADMINISTRACION DEL SISTEMA
+        </span>
+
+        <h1>
+            <i class="bi bi-shield-lock"></i>
+            Gestion de roles
+        </h1>
+
+        <p>
+            Administra los roles y permisos de acceso
+            de Yampi Barber Shop.
+        </p>
+
+    </header>
+
+    <!-- =====================================
+         ESTADISTICAS
+    ===================================== -->
+
+    <div class="roles-stats">
+
+        <div class="roles-stat">
+
+            <i class="bi bi-shield"></i>
+
+            <div>
+                <span>Total de roles</span>
+                <strong id="totalRoles">
+                    @totalRoles
+                </strong>
+            </div>
+
+        </div>
+
+        <div class="roles-stat">
+
+            <i class="bi bi-shield-check"></i>
+
+            <div>
+                <span>Roles activos</span>
+                <strong id="rolesActivos">
+                    @rolesActivos
+                </strong>
+            </div>
+
+        </div>
+
+        <div class="roles-stat">
+
+            <i class="bi bi-shield-x"></i>
+
+            <div>
+                <span>Roles inactivos</span>
+                <strong id="rolesInactivos">
+                    @rolesInactivos
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================
+         BOTON NUEVO ROL
+    ===================================== -->
+
+    <div class="roles-toolbar">
+
+        <button type="button"
+                class="roles-btn-primary"
+                id="abrirCrearRol">
+
+            <i class="bi bi-plus-lg"></i>
+            Nuevo rol
+
+        </button>
+
+    </div>
+
+    <!-- =====================================
+         FORMULARIO CREAR ROL
+    ===================================== -->
+
+    <section class="roles-card roles-drawer closed"
+             id="crearRolContainer">
+
+        <div class="roles-card-header">
+
+            <div>
+
+                <span class="roles-kicker">
+                    NUEVO REGISTRO
+                </span>
+
+                <h2>Crear rol</h2>
+
+                <p>
+                    Registra un nuevo rol para gestionar
+                    los accesos del sistema.
+                </p>
+
+            </div>
+
+            <button type="button"
+                    class="roles-icon-btn"
+                    id="cerrarCrearRol"
+                    aria-label="Cerrar formulario">
+
+                <i class="bi bi-x-lg"></i>
+
+            </button>
+
+        </div>
+
+        <form method="post"
+              action="@Url.Action("Crear", "Roles")"
+              class="roles-form"
+              id="formCrearRol">
+
+            @Html.AntiForgeryToken()
+
+            <div class="roles-field">
+
+                <label for="nombreRol">
+                    Nombre del rol
+                </label>
+
+                <input type="text"
+                       id="nombreRol"
+                       name="nombre"
+                       placeholder="Ej: Administrador, Barbero..."
+                       maxlength="100"
+                       required />
+
+            </div>
+
+            <div class="roles-field" style="margin-top:20px;">
+
+                <label for="descripcionRol">
+                    Descripcion del rol
+                </label>
+
+                <input type="text"
+                       id="descripcionRol"
+                       name="descripcion"
+                       placeholder="Ej: Gestion de citas y clientes..."
+                       maxlength="250" />
+
+            </div>
+
+            <div class="roles-form-actions">
+
+                <button type="button"
+                        class="roles-btn-secondary"
+                        id="cancelarCrearRol">
+
+                    Cancelar
+
+                </button>
+
+                <button type="submit"
+                        class="roles-btn-primary">
+
+                    <i class="bi bi-check-lg"></i>
+                    Guardar rol
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+    <!-- =====================================
+         TABLA DE ROLES
+    ===================================== -->
+
+    <section class="roles-card">
+
+        <div class="roles-card-header">
+
+            <div>
+
+                <span class="roles-kicker">
+                    CONFIGURACION DE ACCESOS
+                </span>
+
+                <h2>Roles registrados</h2>
+
+                <p>
+                    Gestiona los estados y privilegios
+                    de cada rol.
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- BUSCADOR -->
+
+        <div class="roles-search">
+
+            <i class="bi bi-search"></i>
+
+            <input type="search"
+                   id="buscarRoles"
+                   placeholder="Buscar roles por nombre..." />
+
+        </div>
+
+        <!-- TABLA -->
+
+        <div class="roles-table-wrapper">
+
+            <table class="roles-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th style="width:40%;">
+                            Nombre
+                        </th>
+
+                        <th style="width:20%;">
+                            Estado
+                        </th>
+
+                        <th style="width:40%;">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="rolesTableBody">
+
+                    @foreach (var r in roles)
+                    {
+                        <tr class="rol-fila"
+                            data-id="@r.IdRol"
+                            data-nombre="@r.Nombre"
+                            data-estado="@(r.Estado ? "true" : "false")">
+
+                            <!-- NOMBRE -->
+
+                            <td>
+
+                                <div class="roles-person">
+
+                                    <span class="roles-avatar">
+
+                                        <i class="bi bi-shield-lock"></i>
+
+                                    </span>
+
+                                    <strong>
+                                        @r.Nombre
+                                    </strong>
+
+                                </div>
+
+                            </td>
+
+                            <!-- ESTADO -->
+
+                            <td>
+
+                                <span class="roles-status @(r.Estado ? "status-active" : "status-inactive")">
+
+                                    <span class="roles-status-dot"></span>
+
+                                    @(r.Estado ? "Activo" : "Inactivo")
+
+                                </span>
+
+                            </td>
+
+                            <!-- ACCIONES -->
+
+                            <td>
+
+                                <div class="roles-actions">
+
+                                    <!-- PERMISOS -->
+
+                                    <button type="button"
+                                            class="roles-action action-permissions btn-permisos"
+                                            data-id="@r.IdRol"
+                                            data-nombre="@r.Nombre">
+
+                                        <i class="bi bi-key"></i>
+                                        Permisos
+
+                                    </button>
+
+                                    <!-- CAMBIAR ESTADO -->
+
+                                    <button type="button"
+                                            class="roles-action action-toggle btn-toggle-rol"
+                                            data-id="@r.IdRol">
+
+                                        <i class="bi bi-arrow-repeat"></i>
+                                        Estado
+
+                                    </button>
+
+                                    <!-- ELIMINAR -->
+
+                                    <button type="button"
+                                            class="roles-action action-delete btn-eliminar-rol"
+                                            data-id="@r.IdRol"
+                                            data-nombre="@r.Nombre">
+
+                                        <i class="bi bi-trash"></i>
+                                        Eliminar
+
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+            <!-- SIN RESULTADOS -->
+
+            <div class="roles-empty"
+                 id="rolesSinResultados"
+                 hidden>
+
+                <i class="bi bi-search"></i>
+
+                <h3>No se encontraron roles</h3>
+
+                <p>
+                    Prueba con otro nombre.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =====================================
+         MODAL GESTION DE PERMISOS
+    ===================================== -->
+
+    <div class="roles-modal-overlay"
+         id="rolesPermisosModal"
+         hidden>
+
+        <div class="roles-modal"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="rolesPermisosTitulo">
+
+            <!-- ENCABEZADO -->
+
+            <div class="roles-modal-header">
+
+                <div>
+
+                    <span class="roles-kicker">
+                        CONTROL DE ACCESOS
+                    </span>
+
+                    <h2 id="rolesPermisosTitulo">
+
+                        <i class="bi bi-shield-lock"></i>
+                        Gestion de permisos
+
+                    </h2>
+
+                    <p id="rolesPermisosNombre"></p>
+
+                </div>
+
+                <button type="button"
+                        class="roles-icon-btn"
+                        id="cerrarPermisos"
+                        aria-label="Cerrar permisos">
+
+                    <i class="bi bi-x-lg"></i>
+
+                </button>
+
+            </div>
+
+            <!-- CONTENIDO -->
+
+            <div class="roles-modal-content">
+
+                <!-- CARGANDO -->
+
+                <div class="roles-permisos-loading"
+                     id="rolesPermisosLoading">
+
+                    <i class="bi bi-arrow-repeat"></i>
+
+                    Cargando permisos...
+
+                </div>
+
+                <!-- LISTA DE PERMISOS -->
+
+                <div id="rolesPermisosContenido"
+                     hidden>
+
+                    <div class="roles-permisos-lista"
+                         id="rolesPermisosLista">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- PIE -->
+
+            <div class="roles-modal-footer">
+
+                <span id="rolesPermisosResumen">
+                    0 permisos activos
+                </span>
+
+                <button type="button"
+                        class="roles-btn-secondary"
+                        id="terminarPermisos">
+
+                    Cerrar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================
+         MODAL CONFIRMAR ELIMINACION
+    ===================================== -->
+
+    <div class="roles-modal-overlay"
+         id="rolesEliminarModal"
+         hidden>
+
+        <div class="roles-confirm-modal"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="rolesEliminarTitulo">
+
+            <div class="roles-delete-icon">
+
+                <i class="bi bi-trash"></i>
+
+            </div>
+
+            <h2 id="rolesEliminarTitulo">
+                Eliminar rol
+            </h2>
+
+            <p>
+
+                ¿Estas seguro de eliminar el rol
+
+                <strong id="rolesEliminarNombre"></strong>?
+
+            </p>
+
+            <p class="roles-warning">
+                Esta accion no se puede deshacer.
+            </p>
+
+            <div class="roles-confirm-actions">
+
+                <button type="button"
+                        class="roles-btn-secondary"
+                        id="cancelarEliminarRol">
+
+                    Cancelar
+
+                </button>
+
+                <button type="button"
+                        class="roles-btn-danger"
+                        id="confirmarEliminarRol">
+
+                    <i class="bi bi-trash"></i>
+                    Eliminar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================
+         NOTIFICACIONES
+    ===================================== -->
+
+    <div class="roles-toast"
+         id="rolesToast"
+         role="status"
+         aria-live="polite"
+         hidden>
+    </div>
 
 </div>
 
-<!-- TABLA -->
-<table class="table table-bordered table-striped text-center align-middle">
-
-    <thead class="table-dark">
-
-        <tr>
-            <th style="width:40%;">
-                Nombre
-            </th>
-
-            <th style="width:25%;">
-                Estado
-            </th>
-
-            <th style="width:35%;">
-                Acciones
-            </th>
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-        @if (Model == null || Model.Count == 0)
-        {
-            <tr>
-                <td colspan="3">
-                    No hay roles registrados
-                </td>
-            </tr>
-        }
-        else
-        {
-            @foreach (var r in Model)
-            {
-                <tr>
-
-                    <!-- NOMBRE -->
-                    <td>
-                        @r.Nombre
-                    </td>
-
-                    <!-- ESTADO -->
-                    <td>
-
-                        @if (r.Estado)
-                        {
-                            <span class="badge bg-success">
-                                Activo
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-danger">
-                                Inactivo
-                            </span>
-                        }
-
-                    </td>
-
-                    <!-- ACCIONES -->
-                    <td>
-
-                        <div class="d-flex justify-content-center gap-2">
-
-                            <a class="btn btn-warning btn-sm text-dark"
-                                   href="/Roles/Toggle/@r.IdRol">
-                                🔄 Estado
-                            </a>
-
-                            <a class="btn btn-danger btn-sm"
-                                   href="/Roles/Eliminar/@r.IdRol">
-                                🗑 Eliminar
-                            </a>
-
-                            <a class="btn btn-info btn-sm"
-                                href="/Roles/Permisos/@r.IdRol">
-                                🔐 Permisos
-                            </a>
-
-                        </div>
-
-                    </td>
-
-                </tr>
-            }
-        }
-
-    </tbody>
-
-</table>
+<script src="~/js/roles.js"
+        asp-append-version="true">
+</script>

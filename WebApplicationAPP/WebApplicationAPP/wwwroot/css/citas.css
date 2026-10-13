@@ -1,0 +1,3207 @@
+:root {
+    --black: #09090a;
+    --black-2: #0d0d0f;
+    --dark: #121214;
+    --card: #171719;
+    --card-hover: #1c1c1f;
+
+    --gray-1: #242427;
+    --gray-2: #35353a;
+    --gray-3: #77777f;
+    --gray-4: #a5a5aa;
+
+    --white: #f5f5f5;
+    --white-soft: #dadadd;
+
+    --gold: #d4af37;
+    --gold-light: #e4c65a;
+    --gold-dark: #9e7f1e;
+
+    --green: #4ade80;
+    --red: #f87171;
+    --orange: #f59e0b;
+
+    --border: #29292d;
+}
+
+
+/* =========================================================
+   BASE
+========================================================= */
+
+.citas-page {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 45px 50px 70px;
+    box-sizing: border-box;
+    color: var(--white);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+}
+
+.page-kicker {
+    display: block;
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+}
+
+.page-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 0;
+    color: var(--white);
+    font-size: 38px;
+    font-weight: 700;
+}
+
+.page-icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 14px;
+    color: var(--gold);
+    font-size: 23px;
+}
+
+.page-description {
+    margin: 10px 0 0;
+    color: var(--gray-4);
+    font-size: 14px;
+}
+
+.header-decoration {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    color: var(--gold);
+    font-size: 28px;
+    background: var(--card);
+}
+
+
+/* =========================================================
+   ALERTAS
+========================================================= */
+
+.alert-custom {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px 18px;
+    margin-bottom: 25px;
+    border-radius: 12px;
+    border: 1px solid;
+}
+
+.alert-custom .alert-icon {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.alert-custom strong,
+.alert-custom span {
+    display: block;
+}
+
+.alert-custom strong {
+    margin-bottom: 3px;
+}
+
+.alert-custom span {
+    color: var(--gray-4);
+    font-size: 13px;
+}
+
+.alert-success-custom {
+    background: rgba(74, 222, 128, 0.07);
+    border-color: rgba(74, 222, 128, 0.25);
+}
+
+.alert-success-custom .alert-icon {
+    background: rgba(74, 222, 128, 0.12);
+    color: var(--green);
+}
+
+.alert-error-custom {
+    background: rgba(248, 113, 113, 0.07);
+    border-color: rgba(248, 113, 113, 0.25);
+}
+
+.alert-error-custom .alert-icon {
+    background: rgba(248, 113, 113, 0.12);
+    color: var(--red);
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.stat-card {
+    min-height: 105px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    box-sizing: border-box;
+}
+
+.stat-card:hover {
+    border-color: rgba(212, 175, 55, 0.3);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(212, 175, 55, 0.09);
+    color: var(--gold);
+    font-size: 20px;
+}
+
+.stat-info {
+    min-width: 0;
+}
+
+.stat-label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--gray-3);
+    font-size: 12px;
+}
+
+.stat-number {
+    display: block;
+    color: var(--white);
+    font-size: 25px;
+}
+
+
+/* =========================================================
+   CREAR + HORARIOS
+========================================================= */
+
+.top-sections-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: stretch;
+    margin-bottom: 28px;
+}
+
+.top-sections-grid > .content-card {
+    height: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.content-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: visible;
+    box-sizing: border-box;
+}
+
+.card-header {
+    min-height: 105px;
+    padding: 24px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    box-sizing: border-box;
+}
+
+.card-kicker {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.card-header h2 {
+    margin: 0;
+    color: var(--white);
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.card-header h2 i {
+    margin-right: 8px;
+    color: var(--gold);
+}
+
+.card-header p {
+    margin: 7px 0 0;
+    color: var(--gray-3);
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   CREAR CITA
+========================================================= */
+
+.create-card form {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 0;
+}
+
+.form-section {
+    padding: 24px 26px;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.step-number {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 9px;
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.section-title strong {
+    display: block;
+    color: var(--white);
+    font-size: 14px;
+}
+
+.section-title small {
+    display: block;
+    margin-top: 3px;
+    color: var(--gray-3);
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   BARBEROS
+========================================================= */
+
+.barber-select-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.barber-option {
+    position: relative;
+    display: block;
+    cursor: pointer;
+}
+
+.barber-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.barber-option-content {
+    min-height: 67px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-sizing: border-box;
+    transition: 0.2s ease;
+}
+
+.barber-option:hover .barber-option-content {
+    border-color: var(--gray-2);
+}
+
+.barber-option input:checked + .barber-option-content {
+    border-color: var(--gold);
+    background: rgba(212, 175, 55, 0.06);
+    box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.15);
+}
+
+.barber-avatar {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gray-1);
+    border-radius: 50%;
+    color: var(--gold);
+    font-weight: 700;
+}
+
+.barber-details {
+    min-width: 0;
+    flex: 1;
+}
+
+.barber-details strong {
+    display: block;
+    color: var(--white);
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.barber-details span {
+    display: block;
+    margin-top: 3px;
+    color: var(--gray-3);
+    font-size: 10px;
+}
+
+.barber-check {
+    color: var(--gray-2);
+    font-size: 16px;
+}
+
+.barber-option input:checked + .barber-option-content .barber-check {
+    color: var(--gold);
+}
+
+
+/* =========================================================
+   FECHA Y HORA VISUAL
+========================================================= */
+
+.datetime-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.visual-date-field,
+.visual-time-field,
+.edit-barber {
+    min-width: 0;
+}
+
+.visual-date-field label,
+.visual-time-field label,
+.edit-barber label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 8px;
+    color: var(--gray-4);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.visual-date-field label i,
+.visual-time-field label i,
+.edit-barber label i {
+    color: var(--gold);
+}
+
+
+/* =========================================================
+   SELECTOR DE FECHA PERSONALIZADO
+========================================================= */
+
+.custom-date-picker {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+}
+
+.date-picker-trigger {
+    width: 100%;
+    height: 55px;
+    min-height: 55px;
+
+    padding: 0 15px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    color: var(--white);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    outline: none;
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition: 0.2s ease;
+}
+
+.date-picker-trigger:hover {
+    border-color: var(--gray-2);
+}
+
+.date-picker-trigger.active {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.08);
+}
+
+.date-picker-trigger > i:first-child {
+    flex-shrink: 0;
+    color: var(--gold);
+    font-size: 17px;
+}
+
+.date-picker-arrow {
+    margin-left: auto;
+    flex-shrink: 0;
+    color: var(--gray-3);
+    font-size: 11px;
+    transition: transform 0.2s ease;
+}
+
+.date-picker-trigger.active .date-picker-arrow {
+    transform: rotate(180deg);
+}
+
+#selectedDateText,
+#scheduleSelectedDateText {
+    min-width: 0;
+    color: var(--gray-3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#selectedDateText.has-date,
+#scheduleSelectedDateText.has-date {
+    color: var(--white);
+}
+
+
+/* =========================================================
+   CALENDARIO
+========================================================= */
+
+.date-picker-calendar {
+    position: absolute;
+    z-index: 1000;
+
+    top: calc(100% + 10px);
+    left: 0;
+
+    width: 330px;
+    max-width: 100%;
+
+    padding: 18px;
+
+    background: #151517;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(255, 255, 255, 0.02);
+
+    box-sizing: border-box;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+
+    transition:
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        visibility 0.18s ease;
+}
+
+.date-picker-calendar.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   CABECERA DEL CALENDARIO
+========================================================= */
+
+.calendar-header {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+    box-sizing: border-box;
+}
+
+.calendar-header button {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #202024;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    color: var(--gray-4);
+    font-family: inherit;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition: all 0.2s ease;
+}
+
+.calendar-header button:hover {
+    background: var(--gray-1);
+    color: var(--gold);
+    border-color: var(--gold-dark);
+}
+
+.calendar-month {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.calendar-month strong {
+    color: var(--white);
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.calendar-month span {
+    color: var(--gray-3);
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   DIAS DE LA SEMANA
+========================================================= */
+
+.calendar-weekdays {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+
+    margin-bottom: 8px;
+
+    box-sizing: border-box;
+}
+
+.calendar-weekdays span {
+    min-width: 0;
+
+    text-align: center;
+
+    color: var(--gray-3);
+    font-size: 10px;
+    font-weight: 600;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   DIAS DEL CALENDARIO
+========================================================= */
+
+.calendar-days {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+
+    box-sizing: border-box;
+}
+
+.calendar-day {
+    width: 100%;
+    min-width: 0;
+    min-height: 32px;
+    aspect-ratio: 1;
+
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: transparent;
+    color: var(--gray-4);
+
+    font-size: 13px;
+    font-family: inherit;
+    line-height: 1;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.calendar-day:hover {
+    background: #252529;
+    color: var(--white);
+}
+
+.calendar-day.other-month {
+    color: #454549;
+}
+
+.calendar-day.today {
+    border: 1px solid var(--gold-dark);
+    color: var(--gold-light);
+}
+
+.calendar-day.selected {
+    background: var(--gold);
+    color: #111113;
+    font-weight: 700;
+}
+
+.calendar-day.selected:hover {
+    background: var(--gold-light);
+    color: #111113;
+}
+
+.calendar-day:disabled {
+    color: #39393d;
+    cursor: not-allowed;
+    background: transparent;
+}
+
+
+/* =========================================================
+   HORA
+========================================================= */
+
+.time-input-wrapper {
+    position: relative;
+    height: 55px;
+}
+
+.time-input-wrapper > i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    color: var(--gold);
+    pointer-events: none;
+}
+
+.time-input-wrapper input {
+    width: 100%;
+    height: 100%;
+
+    padding: 0 42px;
+
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 600;
+
+    outline: none;
+    box-sizing: border-box;
+
+    cursor: pointer;
+    color-scheme: dark;
+
+    transition: 0.2s ease;
+}
+
+.time-input-wrapper input:hover {
+    border-color: var(--gray-2);
+}
+
+.time-input-wrapper input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.08);
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.input-arrow {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-3);
+    pointer-events: none;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   FOOTER FORMULARIO
+========================================================= */
+
+.form-footer {
+    padding: 20px 26px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    box-sizing: border-box;
+    margin-top: 0;
+}
+
+.form-tip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: var(--gray-3);
+    font-size: 11px;
+}
+
+.form-tip i {
+    color: var(--gold);
+}
+
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.primary-btn,
+.secondary-btn {
+    min-height: 45px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+    padding: 0 18px;
+
+    border-radius: 10px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+
+    box-sizing: border-box;
+}
+
+.primary-btn {
+    border: 1px solid var(--gold);
+    background: var(--gold);
+    color: #111;
+}
+
+.primary-btn:hover {
+    background: var(--gold-light);
+    color: #111;
+    transform: translateY(-1px);
+}
+
+.secondary-btn {
+    border: 1px solid var(--border);
+    background: var(--gray-1);
+    color: var(--white-soft);
+}
+
+.secondary-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(212, 175, 55, 0.06);
+}
+
+
+/* =========================================================
+   HORARIOS
+========================================================= */
+
+.schedule-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.schedule-form {
+    padding: 24px 26px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 17px;
+}
+
+.schedule-date {
+    width: 100%;
+}
+
+.schedule-btn {
+    width: 100%;
+}
+
+.schedule-result {
+    margin: 0 26px 26px;
+
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+.schedule-result-header {
+    padding: 16px 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.schedule-result-header span {
+    display: block;
+    margin-bottom: 4px;
+
+    color: var(--gray-3);
+    font-size: 9px;
+    letter-spacing: 1.5px;
+}
+
+.schedule-result-header strong {
+    color: var(--white);
+    font-size: 14px;
+}
+
+.schedule-date-icon {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: rgba(212, 175, 55, 0.08);
+    color: var(--gold);
+}
+
+.occupied-list {
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.occupied-item {
+    min-height: 55px;
+
+    padding: 9px 10px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    box-sizing: border-box;
+}
+
+.occupied-time {
+    min-width: 60px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.occupied-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.occupied-info strong {
+    display: block;
+    color: var(--white);
+    font-size: 11px;
+}
+
+.occupied-info span {
+    display: block;
+    margin-top: 2px;
+    color: var(--gray-3);
+    font-size: 9px;
+}
+
+.occupied-status {
+    padding: 5px 8px;
+
+    border-radius: 6px;
+
+    background: rgba(248, 113, 113, 0.08);
+    color: var(--red);
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.schedule-empty {
+    padding: 28px 18px;
+    text-align: center;
+}
+
+.schedule-empty-icon {
+    width: 45px;
+    height: 45px;
+
+    margin: 0 auto 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(74, 222, 128, 0.08);
+    color: var(--green);
+
+    font-size: 21px;
+}
+
+.schedule-empty strong {
+    display: block;
+    color: var(--white);
+    font-size: 12px;
+}
+
+.schedule-empty span {
+    display: block;
+    margin-top: 5px;
+    color: var(--gray-3);
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   AGENDA
+========================================================= */
+
+.agenda-card {
+    width: 100%;
+    margin-bottom: 28px;
+}
+
+.agenda-count {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 65px;
+    height: 55px;
+
+    background: rgba(212, 175, 55, 0.07);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 10px;
+}
+
+.agenda-count span {
+    color: var(--gold);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.agenda-count small {
+    color: var(--gray-3);
+    font-size: 9px;
+}
+
+.agenda-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.agenda-table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.agenda-table th,
+.agenda-table td {
+    box-sizing: border-box;
+}
+
+.agenda-table th {
+    height: 45px;
+    padding: 0 18px;
+
+    background: var(--dark);
+    border-bottom: 1px solid var(--border);
+
+    color: var(--gray-3);
+
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+
+    text-align: left;
+}
+
+.agenda-table th:nth-child(1) {
+    width: 25%;
+}
+
+.agenda-table th:nth-child(2) {
+    width: 15%;
+}
+
+.agenda-table th:nth-child(3) {
+    width: 12%;
+}
+
+.agenda-table th:nth-child(4) {
+    width: 17%;
+}
+
+.agenda-table th:nth-child(5) {
+    width: 12%;
+}
+
+.agenda-table th:nth-child(6) {
+    width: 19%;
+}
+
+.agenda-table td {
+    height: 75px;
+    padding: 10px 18px;
+
+    border-bottom: 1px solid var(--border);
+
+    vertical-align: middle;
+}
+
+.agenda-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.agenda-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.015);
+}
+
+
+/* =========================================================
+   CLIENTE
+========================================================= */
+
+.client-cell {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    min-width: 0;
+}
+
+.cliente-avatar {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+
+    color: var(--gold);
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.cliente-avatar.large {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+
+    font-size: 16px;
+}
+
+.client-info {
+    min-width: 0;
+}
+
+.client-info strong {
+    display: block;
+
+    color: var(--white);
+    font-size: 12px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.client-info span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--gray-3);
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   FECHA
+========================================================= */
+
+.date-cell {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--white-soft);
+
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.date-cell i {
+    color: var(--gold);
+}
+
+
+/* =========================================================
+   HORA
+========================================================= */
+
+.time-cell {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    color: var(--gold);
+
+    white-space: nowrap;
+}
+
+.time-cell i {
+    font-size: 13px;
+}
+
+.time-cell strong {
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   BARBERO
+========================================================= */
+
+.barber-cell {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    min-width: 0;
+}
+
+.barber-cell span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: var(--white-soft);
+    font-size: 11px;
+}
+
+.small-barber-avatar {
+    width: 29px;
+    height: 29px;
+    min-width: 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--gray-1);
+    color: var(--gold);
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   ESTADOS
+========================================================= */
+
+.status {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 6px 9px;
+
+    border-radius: 7px;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.status > span {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+}
+
+.status-active {
+    background: rgba(74, 222, 128, 0.08);
+    color: var(--green);
+}
+
+.status-active > span {
+    background: var(--green);
+}
+
+.status-cancelled {
+    background: rgba(248, 113, 113, 0.08);
+    color: var(--red);
+}
+
+.status-cancelled > span {
+    background: var(--red);
+}
+
+.status-blocked {
+    background: rgba(245, 158, 11, 0.08);
+    color: var(--orange);
+}
+
+.status-blocked > span {
+    background: var(--orange);
+}
+
+
+/* =========================================================
+   ACCIONES
+========================================================= */
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 6px;
+}
+
+.table-action {
+    width: 31px;
+    height: 31px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+    border: 1px solid var(--border);
+
+    background: var(--dark);
+    color: var(--gray-4);
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    transition: 0.2s ease;
+}
+
+.table-action:hover {
+    color: var(--gold);
+    border-color: rgba(212, 175, 55, 0.4);
+    background: rgba(212, 175, 55, 0.06);
+}
+
+.action-attend:hover {
+    color: var(--green);
+    border-color: rgba(74, 222, 128, 0.3);
+}
+
+.action-cancel:hover {
+    color: var(--red);
+    border-color: rgba(248, 113, 113, 0.3);
+}
+
+
+/* =========================================================
+   EDITAR
+========================================================= */
+
+.edit-card {
+    margin-bottom: 28px;
+}
+
+.edit-id {
+    padding: 7px 11px;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    color: var(--gold);
+    background: var(--dark);
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.edit-card form {
+    padding: 24px 26px;
+}
+
+.edit-client {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 24px;
+    padding: 13px;
+
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.edit-client span {
+    display: block;
+
+    color: var(--gray-3);
+    font-size: 9px;
+}
+
+.edit-client strong {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--white);
+    font-size: 13px;
+}
+
+.edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    gap: 15px;
+}
+
+.edit-barber select {
+    width: 100%;
+    height: 55px;
+
+    padding: 0 15px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background: var(--dark);
+    color: var(--white);
+
+    outline: none;
+    color-scheme: dark;
+}
+
+.edit-barber select:focus {
+    border-color: var(--gold);
+}
+
+.edit-actions {
+    margin-top: 24px;
+    padding-top: 20px;
+
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    border-top: 1px solid var(--border);
+}
+
+
+/* =========================================================
+   HISTORIAL
+========================================================= */
+
+.history-card {
+    margin-bottom: 28px;
+}
+
+.history-list {
+    padding: 18px 22px 22px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.history-item {
+    width: 100%;
+
+    padding: 15px;
+
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    box-sizing: border-box;
+}
+
+.history-item:hover {
+    border-color: var(--gray-2);
+}
+
+.history-main {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(220px, 1.4fr)
+        minmax(180px, 1fr)
+        120px;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+.history-client {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    min-width: 0;
+}
+
+.history-client strong {
+    display: block;
+
+    color: var(--white);
+    font-size: 12px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-client span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--gray-3);
+    font-size: 10px;
+}
+
+.history-date {
+    display: flex;
+    align-items: center;
+
+    gap: 20px;
+}
+
+.history-date div {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    color: var(--white-soft);
+
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.history-date i {
+    color: var(--gold);
+}
+
+.history-main > .status {
+    justify-self: end;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty-state {
+    padding: 55px 20px;
+    text-align: center;
+}
+
+.empty-icon {
+    width: 58px;
+    height: 58px;
+
+    margin: 0 auto 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--dark);
+    border: 1px solid var(--border);
+
+    color: var(--gray-3);
+
+    font-size: 22px;
+}
+
+.empty-state h3 {
+    margin: 0;
+
+    color: var(--white);
+    font-size: 14px;
+}
+
+.empty-state p {
+    margin: 7px 0 0;
+
+    color: var(--gray-3);
+    font-size: 11px;
+}
+
+.history-empty {
+    padding: 45px 20px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1150px) {
+
+    .citas-page {
+        padding: 35px 30px 60px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .top-sections-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .schedule-card {
+        min-height: auto;
+    }
+
+    .history-main {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .history-main > .status {
+        justify-self: start;
+    }
+}
+
+
+@media (max-width: 800px) {
+
+    .citas-page {
+        padding: 30px 20px 50px;
+    }
+
+    .page-header {
+        align-items: flex-start;
+    }
+
+    .header-decoration {
+        display: none;
+    }
+
+    .page-title {
+        font-size: 31px;
+    }
+
+    .barber-select-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .datetime-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .edit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .history-main {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .history-main > .status {
+        justify-self: start;
+    }
+
+    .history-date {
+        flex-wrap: wrap;
+    }
+
+    .form-footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .form-tip {
+        align-items: flex-start;
+    }
+
+    .primary-btn {
+        width: 100%;
+    }
+
+    .date-picker-calendar {
+        width: 330px;
+        max-width: 100%;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .citas-page {
+        padding: 25px 14px 40px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .page-title {
+        font-size: 27px;
+    }
+
+    .page-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 19px;
+    }
+
+    .card-header {
+        padding: 20px;
+    }
+
+    .form-section,
+    .schedule-form,
+    .edit-card form {
+        padding: 20px;
+    }
+
+    .schedule-result {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .history-list {
+        padding: 15px;
+    }
+
+    .agenda-table {
+        min-width: 850px;
+    }
+
+    .date-picker-calendar {
+        width: 100%;
+        max-width: 100%;
+        padding: 14px;
+    }
+
+    .calendar-days {
+        gap: 3px;
+    }
+
+    .calendar-weekdays {
+        gap: 3px;
+    }
+
+    .calendar-day {
+        min-height: 30px;
+        border-radius: 8px;
+    }
+}
+
+/* =========================================================
+   SELECTORES DE FECHA Y HORA
+========================================================= */
+
+.date-selector-box,
+.time-selector-box {
+    min-width: 0;
+}
+
+.field-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 8px;
+    color: var(--gray-4);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.field-label i {
+    color: var(--gold);
+}
+
+
+/* =========================================================
+   FECHA
+========================================================= */
+
+.date-selectors {
+    display: grid;
+    grid-template-columns: 0.8fr 1.5fr 1fr;
+    gap: 8px;
+}
+
+.date-selectors select,
+.time-selectors select {
+    width: 100%;
+    height: 55px;
+    min-width: 0;
+    padding: 0 12px;
+
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    color: var(--white);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
+    outline: none;
+    cursor: pointer;
+
+    color-scheme: dark;
+
+    box-sizing: border-box;
+
+    transition: 0.2s ease;
+}
+
+.date-selectors select:hover,
+.time-selectors select:hover {
+    border-color: var(--gray-2);
+}
+
+.date-selectors select:focus,
+.time-selectors select:focus {
+    border-color: var(--gold);
+
+    box-shadow:
+        0 0 0 3px rgba(212, 175, 55, 0.08);
+}
+
+
+/* =========================================================
+   BOTON HOY
+========================================================= */
+
+.today-btn {
+    margin-top: 9px;
+
+    height: 34px;
+    padding: 0 12px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    background: rgba(212, 175, 55, 0.07);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 8px;
+
+    color: var(--gold);
+
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.today-btn:hover {
+    background: rgba(212, 175, 55, 0.13);
+    border-color: var(--gold);
+}
+
+
+/* =========================================================
+   HORA
+========================================================= */
+
+.time-selectors {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.time-selectors select {
+    appearance: auto;
+}
+
+
+/* =========================================================
+   FECHA INVALIDA
+========================================================= */
+
+.date-selectors select.invalid {
+    border-color: var(--red);
+
+    box-shadow:
+        0 0 0 3px rgba(248, 113, 113, 0.07);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .date-selectors {
+        grid-template-columns: 1fr 1.5fr 1fr;
+    }
+
+    .date-selectors select,
+    .time-selectors select {
+        height: 52px;
+        padding: 0 9px;
+        font-size: 11px;
+    }
+
+}
+/* =========================================================
+   SELECTORES PERSONALIZADOS
+========================================================= */
+
+.custom-date-selectors,
+.custom-time-selectors {
+    display: grid;
+    gap: 8px;
+}
+
+.custom-date-selectors {
+    grid-template-columns: 0.8fr 1.5fr 1fr;
+}
+
+.custom-time-selectors {
+    grid-template-columns: 1fr 1fr;
+}
+
+
+/* =========================================================
+   SELECTOR
+========================================================= */
+
+.custom-select {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   BOTON PRINCIPAL
+========================================================= */
+
+.custom-select-trigger {
+    width: 100%;
+    height: 55px;
+
+    padding: 0 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #18181b,
+            #111113
+        );
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    color: var(--white);
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    outline: none;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.custom-select-trigger:hover {
+
+    border-color: rgba(212, 175, 55, 0.4);
+
+    background:
+        linear-gradient(
+            145deg,
+            #1c1c20,
+            #151517
+        );
+}
+
+
+.custom-select.open .custom-select-trigger {
+
+    border-color: var(--gold);
+
+    background:
+        linear-gradient(
+            145deg,
+            #1c1c20,
+            #151517
+        );
+
+    box-shadow:
+        0 0 0 3px rgba(212, 175, 55, 0.08),
+        0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+.custom-select-trigger i {
+
+    flex-shrink: 0;
+
+    color: var(--gold);
+
+    font-size: 10px;
+
+    transition:
+        transform 0.2s ease;
+}
+
+
+.custom-select.open .custom-select-trigger i {
+
+    transform: rotate(180deg);
+
+}
+
+
+/* =========================================================
+   VALOR SELECCIONADO
+========================================================= */
+
+.custom-select-value {
+
+    min-width: 0;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    color: var(--gray-3);
+
+}
+
+
+.custom-select.has-value .custom-select-value {
+
+    color: var(--white);
+
+}
+
+
+/* =========================================================
+   MENU
+========================================================= */
+
+.custom-select-menu {
+
+    position: absolute;
+
+    z-index: 5000;
+
+    left: 0;
+    right: 0;
+
+    top: calc(100% + 8px);
+
+    max-height: 250px;
+
+    padding: 7px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1a1a1d,
+            #101012
+        );
+
+    border: 1px solid rgba(212, 175, 55, 0.18);
+
+    border-radius: 13px;
+
+    box-shadow:
+        0 20px 45px rgba(0, 0, 0, 0.55),
+        0 0 0 1px rgba(255, 255, 255, 0.02);
+
+    overflow-y: auto;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform:
+        translateY(-7px)
+        scale(0.98);
+
+    transform-origin: top center;
+
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease,
+        visibility 0.15s ease;
+
+}
+
+
+/* =========================================================
+   MENU ABIERTO
+========================================================= */
+
+.custom-select.open .custom-select-menu {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transform:
+        translateY(0)
+        scale(1);
+
+}
+
+
+/* =========================================================
+   OPCIONES
+========================================================= */
+
+.custom-select-menu button {
+
+    width: 100%;
+
+    min-height: 38px;
+
+    padding: 0 11px;
+
+    display: flex;
+    align-items: center;
+
+    background: transparent;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    color: var(--gray-4);
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        padding 0.15s ease;
+
+}
+
+
+.custom-select-menu button:hover {
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(212, 175, 55, 0.13),
+            rgba(212, 175, 55, 0.04)
+        );
+
+    color: var(--gold-light);
+
+    padding-left: 15px;
+
+}
+
+
+/* =========================================================
+   OPCION SELECCIONADA
+========================================================= */
+
+.custom-select-menu button.selected {
+
+    background:
+        rgba(212, 175, 55, 0.11);
+
+    color: var(--gold);
+
+    font-weight: 700;
+
+}
+
+
+.custom-select-menu button.selected::after {
+
+    content: "\f26a";
+
+    margin-left: auto;
+
+    font-family: "bootstrap-icons";
+
+    color: var(--gold);
+
+    font-size: 12px;
+
+}
+
+
+/* =========================================================
+   SCROLL DEL MENU
+========================================================= */
+
+.custom-select-menu::-webkit-scrollbar {
+
+    width: 5px;
+
+}
+
+.custom-select-menu::-webkit-scrollbar-track {
+
+    background: transparent;
+
+}
+
+.custom-select-menu::-webkit-scrollbar-thumb {
+
+    background: #3a3a3e;
+
+    border-radius: 10px;
+
+}
+
+.custom-select-menu::-webkit-scrollbar-thumb:hover {
+
+    background: var(--gold-dark);
+
+}
+
+
+/* =========================================================
+   BOTON HOY
+========================================================= */
+
+.today-btn {
+
+    margin-top: 9px;
+
+    height: 34px;
+
+    padding: 0 13px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(212, 175, 55, 0.10),
+            rgba(212, 175, 55, 0.04)
+        );
+
+    border: 1px solid rgba(212, 175, 55, 0.25);
+
+    border-radius: 9px;
+
+    color: var(--gold);
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+
+}
+
+
+.today-btn:hover {
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(212, 175, 55, 0.18),
+            rgba(212, 175, 55, 0.07)
+        );
+
+    border-color: var(--gold);
+
+    color: var(--gold-light);
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 15px rgba(212, 175, 55, 0.08);
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .custom-date-selectors {
+        grid-template-columns: 1fr 1.5fr 1fr;
+    }
+
+    .custom-select-trigger {
+        height: 52px;
+        padding: 0 11px;
+        font-size: 11px;
+    }
+
+    .custom-select-menu {
+        max-height: 220px;
+    }
+
+}
+
+.schedule-custom-date {
+    display: grid;
+    grid-template-columns: 0.8fr 1.5fr 1fr;
+    gap: 8px;
+    width: 100%;
+}
+
+.schedule-date .today-btn {
+    margin-top: 9px;
+}
+
+@media (max-width: 600px) {
+
+    .schedule-custom-date {
+        grid-template-columns: 1fr 1.5fr 1fr;
+    }
+
+}
+
+/* =====================================================
+   LISTA DE HORARIOS OCUPADOS
+===================================================== */
+
+.occupied-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+/* Cuando hay varios horarios, permitir scroll */
+
+.occupied-list:has(.occupied-item:nth-child(5)) {
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+
+/* Scrollbar */
+
+.occupied-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.occupied-list::-webkit-scrollbar-track {
+    background: #111113;
+    border-radius: 10px;
+}
+
+.occupied-list::-webkit-scrollbar-thumb {
+    background: rgba(212, 175, 55, 0.45);
+    border-radius: 10px;
+}
+
+.occupied-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(212, 175, 55, 0.7);
+}
+
+/* =========================================================
+   ANIMACIÓN DE DESLIZAMIENTO (GAVETA DESDE ATRÁS)
+========================================================= */
+
+.edit-drawer-container {
+    max-height: 1200px; /* Altura suficiente para que quepa la tarjeta */
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    margin-bottom: 28px;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease, transform 0.4s ease, margin 0.4s ease;
+}
+
+/* Estado oculto */
+.edit-drawer-container.closed {
+    max-height: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    margin-bottom: 0;
+    pointer-events: none;
+}
+
+/* =========================================================
+   ANIMACIÓN DE CARGA PARA HORARIOS (AJAX)
+========================================================= */
+@keyframes spin-custom {
+    100% { transform: rotate(360deg); }
+}
+
+.loading-horarios {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 35px 20px;
+    color: var(--gold);
+}
+
+.loading-horarios i {
+    font-size: 26px;
+    animation: spin-custom 1s linear infinite;
+    margin-bottom: 8px;
+}
+
+.loading-horarios span {
+    color: var(--gray-3);
+    font-size: 11px;
+}
+
+/* =====================================================
+   PAGINACION DEL HISTORIAL
+===================================================== */
+
+.historial-paginacion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    margin-top: 18px;
+    padding-bottom: 22px;
+}
+
+.pagination-numbers {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pagination-btn,
+.pagination-number {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 8px;
+
+    background: rgba(212, 175, 55, 0.06);
+    color: rgba(255, 255, 255, 0.55);
+
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.15s ease;
+}
+
+/* Hover */
+.pagination-btn:hover:not(:disabled),
+.pagination-number:hover {
+    background: rgba(212, 175, 55, 0.14);
+    border-color: rgba(212, 175, 55, 0.55);
+    color: var(--gold);
+}
+
+/* Pagina activa */
+.pagination-number.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #111;
+    box-shadow: 0 3px 10px rgba(212, 175, 55, 0.18);
+}
+
+/* Flechas */
+.pagination-btn i {
+    font-size: 9px;
+}
+
+/* Boton deshabilitado */
+.pagination-btn:disabled {
+    opacity: 0.25;
+    cursor: default;
+}
+
+/* Click */
+.pagination-btn:not(:disabled):active,
+.pagination-number:active {
+    transform: scale(0.92);
+}
+
+
+/* ==========================================
+   CITAS PROGRAMADAS - RESPONSIVE
+========================================== */
+
+/* Contenedor */
+.citas-page .agenda-card {
+    min-width: 0;
+}
+
+.citas-page .agenda-table-wrapper {
+    max-width: 100%;
+}
+
+/* ==========================================
+   TABLETS
+========================================== */
+
+@media (max-width: 1100px) {
+
+    .citas-page .agenda-table th,
+    .citas-page .agenda-table td {
+        padding: 12px 10px;
+        font-size: 13px;
+    }
+}
+
+/* ==========================================
+   CELULARES
+========================================== */
+
+@media (max-width: 650px) {
+
+    /* Evitar scroll horizontal */
+    .citas-page .agenda-table-wrapper {
+        width: 100%;
+        overflow: visible !important;
+        padding: 0 !important;
+    }
+
+    /* Convertir tabla en bloques */
+    .citas-page .agenda-table,
+    .citas-page .agenda-table tbody,
+    .citas-page .agenda-table tr,
+    .citas-page .agenda-table td {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box;
+    }
+
+    /* Ocultar encabezados */
+    .citas-page .agenda-table thead {
+        display: none !important;
+    }
+
+    /* Cada cita sera una tarjeta */
+    .citas-page .agenda-table tbody tr {
+        margin: 0 0 14px !important;
+        padding: 15px !important;
+        background: #1f1f1f !important;
+        border: 1px solid #383838 !important;
+        border-radius: 12px !important;
+        box-shadow: none !important;
+    }
+
+    .citas-page .agenda-table tbody tr:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    /* Cada dato dentro de la tarjeta */
+    .citas-page .agenda-table tbody td {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 11px 0 !important;
+        border: 0 !important;
+        border-bottom: 1px solid #333 !important;
+        background: transparent !important;
+        text-align: right;
+        white-space: normal !important;
+        overflow-wrap: anywhere;
+    }
+
+    .citas-page .agenda-table tbody td:last-child {
+        border-bottom: 0 !important;
+    }
+
+    /* Etiquetas de datos */
+    .citas-page .agenda-table tbody td::before {
+        content: attr(data-label);
+        flex: 0 0 30%;
+        color: #d4af37;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    /* Datos */
+    .citas-page .agenda-table .client-cell,
+    .citas-page .agenda-table .date-cell,
+    .citas-page .agenda-table .time-cell,
+    .citas-page .agenda-table .barber-cell {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        min-width: 0;
+        text-align: right;
+    }
+
+    /* Nombre del cliente */
+    .citas-page .agenda-table .client-info {
+        min-width: 0;
+        text-align: right;
+    }
+
+    .citas-page .agenda-table .client-info strong {
+        white-space: normal !important;
+        overflow-wrap: anywhere;
+    }
+
+    /* Acciones */
+    .citas-page .agenda-table tbody td.agenda-actions-cell {
+        display: block !important;
+        text-align: left;
+        padding-bottom: 0 !important;
+    }
+
+    .citas-page .agenda-table tbody td.agenda-actions-cell::before {
+        display: block;
+        margin-bottom: 12px;
+    }
+
+    .citas-page .agenda-table .action-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .citas-page .agenda-table .table-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        flex: 0 0 40px;
+        padding: 0;
+        border-radius: 9px;
+    }
+}
+
+/* ==========================================
+   CELULARES PEQUENOS
+========================================== */
+
+@media (max-width: 380px) {
+
+    .citas-page .agenda-table tbody tr {
+        padding: 12px !important;
+    }
+
+    .citas-page .agenda-table tbody td::before {
+        flex-basis: 28%;
+        font-size: 11px;
+    }
+
+    .citas-page .agenda-table .action-buttons {
+        gap: 7px;
+    }
+}
+
+
+/* ==========================================
+   CARRUSEL HORIZONTAL DE CITAS
+========================================== */
+
+/* Evitar que la seccion se desborde */
+.citas-page .agenda-card {
+    min-width: 0;
+    max-width: 100%;
+}
+
+/* Contenedor horizontal */
+.citas-page .citas-carousel {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
+
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding: 8px 4px 18px;
+
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 4px;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Barra de desplazamiento */
+.citas-page .citas-carousel::-webkit-scrollbar {
+    height: 6px;
+}
+
+.citas-page .citas-carousel::-webkit-scrollbar-track {
+    background: #222;
+    border-radius: 10px;
+}
+
+.citas-page .citas-carousel::-webkit-scrollbar-thumb {
+    background: #8f762d;
+    border-radius: 10px;
+}
+
+.citas-page .citas-carousel::-webkit-scrollbar-thumb:hover {
+    background: #d4af37;
+}
+
+/* ==========================================
+   TARJETAS
+========================================== */
+
+.citas-page .cita-carousel-card {
+    flex: 0 0 305px;
+    width: 305px;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    padding: 20px;
+
+    background: #1f1f1f;
+    border: 1px solid #383838;
+    border-radius: 14px;
+
+    scroll-snap-align: start;
+    box-sizing: border-box;
+
+    transition: border-color 0.2s ease;
+}
+
+.citas-page .cita-carousel-card:hover {
+    border-color: #d4af37;
+}
+
+/* ==========================================
+   CLIENTE Y ESTADO
+========================================== */
+
+.citas-page .cita-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.citas-page .cita-card-client {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+}
+
+.citas-page .cita-card-client-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.citas-page .cita-card-client-info strong {
+    color: #f5f5f5;
+    font-size: 14px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.citas-page .cita-card-client-info > span {
+    color: #999;
+    font-size: 12px;
+}
+
+/* ==========================================
+   DATOS DE LA CITA
+========================================== */
+
+.citas-page .cita-card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    padding: 16px 0;
+
+    border-top: 1px solid #363636;
+    border-bottom: 1px solid #363636;
+}
+
+.citas-page .cita-card-detail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.citas-page .cita-card-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    color: #999;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.citas-page .cita-card-label i {
+    color: #d4af37;
+    font-size: 15px;
+}
+
+.citas-page .cita-card-detail strong {
+    color: #ededed;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+/* ==========================================
+   ACCIONES
+========================================== */
+
+.citas-page .cita-card-footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.citas-page .cita-card-actions-title {
+    color: #d4af37;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.citas-page .cita-card-footer .action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 8px;
+    width: 100%;
+}
+
+.citas-page .cita-card-footer .table-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+
+    padding: 0;
+    border-radius: 9px;
+}
+
+/* ==========================================
+   CELULARES
+========================================== */
+
+@media (max-width: 650px) {
+
+    .citas-page .citas-carousel {
+        gap: 12px;
+        padding-bottom: 16px;
+    }
+
+    .citas-page .cita-carousel-card {
+        flex: 0 0 min(290px, 85vw);
+        width: min(290px, 85vw);
+        padding: 16px;
+        gap: 14px;
+    }
+
+    .citas-page .cita-card-detail {
+        gap: 8px;
+    }
+}
+
+@media (max-width: 380px) {
+
+    .citas-page .cita-carousel-card {
+        flex-basis: min(270px, 85vw);
+        width: min(270px, 85vw);
+        padding: 14px;
+    }
+}
+
+/* ==========================================
+   IGUALAR ALTURA DE TODAS LAS CITAS
+========================================== */
+
+.citas-page .citas-carousel {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+}
+
+/* Todas las tarjetas con las mismas dimensiones */
+.citas-page .citas-carousel > .cita-carousel-card {
+    flex: 0 0 305px !important;
+    width: 305px !important;
+    min-width: 305px !important;
+    max-width: 305px !important;
+
+    height: 350px !important;
+    min-height: 350px !important;
+    max-height: 350px !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+}
+
+/* Mantener las acciones en la parte inferior */
+.citas-page .cita-carousel-card .cita-card-footer {
+    margin-top: auto !important;
+}
+
+/* Celulares */
+@media (max-width: 650px) {
+    .citas-page .citas-carousel > .cita-carousel-card {
+        flex-basis: min(350px, 85vw) !important;
+        width: min(350px, 85vw) !important;
+        min-width: min(350px, 85vw) !important;
+        max-width: min(350px, 85vw) !important;
+
+        height: 350px !important;
+        min-height: 350px !important;
+        max-height: 350px !important;
+    }
+}
+
+
+/* ==========================================
+   AGENDA RESPONSIVE
+   PC: TABLA
+   TABLET Y CELULAR: CARRUSEL
+========================================== */
+
+/* COMPUTADORA */
+@media (min-width: 1101px) {
+
+    .citas-page .agenda-desktop {
+        display: block !important;
+        width: 100%;
+    }
+
+    .citas-page .agenda-mobile {
+        display: none !important;
+    }
+
+    .citas-page .agenda-desktop .agenda-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .citas-page .agenda-desktop .agenda-table th,
+    .citas-page .agenda-desktop .agenda-table td {
+        vertical-align: middle;
+    }
+}
+
+/* TABLET Y CELULAR */
+@media (max-width: 1100px) {
+
+    .citas-page .agenda-desktop {
+        display: none !important;
+    }
+
+    .citas-page .agenda-mobile {
+        display: block !important;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .citas-page .agenda-mobile .citas-carousel {
+        display: flex !important;
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        flex-wrap: nowrap !important;
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* ==========================================
+   AGENDA - TABLA PC / CARRUSEL MOVIL
+========================================== */
+
+/* COMPUTADORA */
+@media (min-width: 1101px) {
+
+    .citas-page .agenda-desktop {
+        display: block !important;
+        width: 100%;
+    }
+
+    .citas-page .agenda-mobile {
+        display: none !important;
+    }
+
+    .citas-page .agenda-desktop .agenda-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .citas-page .agenda-desktop .agenda-table th,
+    .citas-page .agenda-desktop .agenda-table td {
+        vertical-align: middle;
+    }
+}
+
+/* TABLET Y CELULAR */
+@media (max-width: 1100px) {
+
+    .citas-page .agenda-desktop {
+        display: none !important;
+    }
+
+    .citas-page .agenda-mobile {
+        display: block !important;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .citas-page .agenda-mobile .citas-carousel {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        width: 100%;
+        max-width: 100%;
+    }
+}
