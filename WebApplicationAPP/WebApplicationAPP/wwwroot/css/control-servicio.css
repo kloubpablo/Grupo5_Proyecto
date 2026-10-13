@@ -1,0 +1,321 @@
+
+/* ==========================================
+   YAMPI BARBERSHOP - CONTROL DE SERVICIOS
+========================================== */
+
+.servicios-admin-page {
+    width: 100%;
+    max-width: 1450px;
+    margin: 0 auto;
+    padding: 32px 28px 65px;
+    color: #ededed;
+    box-sizing: border-box;
+}
+
+.servicios-admin-page *,
+.servicios-admin-page *::before,
+.servicios-admin-page *::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   ENCABEZADO
+========================================== */
+
+.servicios-page-header {
+    margin-bottom: 28px;
+    padding-bottom: 26px;
+    border-bottom: 1px solid #353535;
+}
+
+.servicios-kicker {
+    display: block;
+    margin-bottom: 12px;
+    color: #d4af37;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.7px;
+}
+
+.servicios-page-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 12px;
+    color: #f5f5f5;
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 700;
+}
+
+.servicios-header-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    background: #2b261c;
+    border: 1px solid #594923;
+    border-radius: 13px;
+    color: #d4af37;
+    font-size: 24px;
+}
+
+.servicios-page-header p {
+    margin: 0;
+    max-width: 650px;
+    color: #999;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* ==========================================
+   RESUMEN
+========================================== */
+
+.servicios-summary {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    max-width: 360px;
+    margin-bottom: 35px;
+    padding: 20px 24px;
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 13px;
+}
+
+.servicios-summary-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    background: #30291c;
+    border-radius: 11px;
+    color: #d4af37;
+    font-size: 24px;
+}
+
+.servicios-summary > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.servicios-summary span {
+    color: #aaa;
+    font-size: 12px;
+}
+
+.servicios-summary strong {
+    color: #f5f5f5;
+    font-size: 28px;
+}
+
+/* ==========================================
+   SECCION
+========================================== */
+
+.servicios-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.servicios-section-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 10px;
+    color: #f5f5f5;
+    font-size: 21px;
+}
+
+.servicios-section-header h2 i {
+    color: #d4af37;
+}
+
+.servicios-section-header p {
+    margin: 0;
+    color: #999;
+    font-size: 13px;
+}
+
+.servicios-count {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    background: #30291c;
+    border: 1px solid #514224;
+    border-radius: 20px;
+    color: #d4af37;
+    font-size: 12px;
+}
+
+/* ==========================================
+   GRID RESPONSIVE
+========================================== */
+
+.servicios-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    align-items: stretch;
+}
+
+/* ==========================================
+   TARJETAS
+========================================== */
+
+.servicio-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 23px;
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 13px;
+    transition: border-color 0.2s;
+}
+
+.servicio-card:hover {
+    border-color: #8f762d;
+}
+
+.servicio-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.servicio-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    background: #30291c;
+    border: 1px solid #493e26;
+    border-radius: 10px;
+    color: #d4af37;
+    font-size: 20px;
+}
+
+.servicio-label {
+    color: #9e8955;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.servicio-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+}
+
+.servicio-card-body h3 {
+    margin: 0;
+    color: #f5f5f5;
+    font-size: 18px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.servicio-card-body p {
+    margin: 0;
+    color: #aaa;
+    font-size: 13px;
+    line-height: 1.7;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+}
+
+/* ==========================================
+   ESTADO VACIO
+========================================== */
+
+.servicios-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 65px 20px;
+    background: #1e1e1e;
+    border: 1px solid #353535;
+    border-radius: 13px;
+    text-align: center;
+}
+
+.servicios-empty > i {
+    color: #d4af37;
+    font-size: 43px;
+}
+
+.servicios-empty h3 {
+    margin: 0;
+    color: #eee;
+    font-size: 20px;
+}
+
+.servicios-empty p {
+    margin: 0;
+    color: #999;
+    font-size: 13px;
+}
+
+/* ==========================================
+   TABLETS
+========================================== */
+
+@media (max-width: 1050px) {
+
+    .servicios-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* ==========================================
+   CELULARES
+========================================== */
+
+@media (max-width: 650px) {
+
+    .servicios-admin-page {
+        padding: 20px 14px 45px;
+    }
+
+    .servicios-page-header h1 {
+        font-size: 23px;
+    }
+
+    .servicios-header-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+
+    .servicios-summary {
+        max-width: 100%;
+    }
+
+    .servicios-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .servicios-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 15px;
+    }
+
+    .servicio-card {
+        padding: 18px;
+    }
+}
