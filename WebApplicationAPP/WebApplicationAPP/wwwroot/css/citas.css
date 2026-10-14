@@ -24,7 +24,6 @@
     --border: #29292d;
 }
 
-
 /* =========================================================
    BASE
 ========================================================= */
@@ -37,7 +36,6 @@
     box-sizing: border-box;
     color: var(--white);
 }
-
 
 /* =========================================================
    HEADER
@@ -101,7 +99,6 @@
     background: var(--card);
 }
 
-
 /* =========================================================
    ALERTAS
 ========================================================= */
@@ -160,7 +157,6 @@
     color: var(--red);
 }
 
-
 /* =========================================================
    STATS
 ========================================================= */
@@ -217,7 +213,6 @@
     color: var(--white);
     font-size: 25px;
 }
-
 
 /* =========================================================
    CREAR + HORARIOS
@@ -282,7 +277,6 @@
     font-size: 13px;
 }
 
-
 /* =========================================================
    CREAR CITA
 ========================================================= */
@@ -333,7 +327,6 @@
     color: var(--gray-3);
     font-size: 11px;
 }
-
 
 /* =========================================================
    BARBEROS
@@ -423,7 +416,6 @@
     color: var(--gold);
 }
 
-
 /* =========================================================
    FECHA Y HORA VISUAL
 ========================================================= */
@@ -457,7 +449,6 @@
 .edit-barber label i {
     color: var(--gold);
 }
-
 
 /* =========================================================
    SELECTOR DE FECHA PERSONALIZADO
@@ -538,7 +529,6 @@
     color: var(--white);
 }
 
-
 /* =========================================================
    CALENDARIO
 ========================================================= */
@@ -580,7 +570,6 @@
     visibility: visible;
     transform: translateY(0);
 }
-
 
 /* =========================================================
    CABECERA DEL CALENDARIO
@@ -649,7 +638,6 @@
     font-size: 12px;
 }
 
-
 /* =========================================================
    DIAS DE LA SEMANA
 ========================================================= */
@@ -677,7 +665,6 @@
 
     overflow: hidden;
 }
-
 
 /* =========================================================
    DIAS DEL CALENDARIO
@@ -757,7 +744,6 @@
     background: transparent;
 }
 
-
 /* =========================================================
    HORA
 ========================================================= */
@@ -828,7 +814,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     font-size: 11px;
 }
 
-
 /* =========================================================
    FOOTER FORMULARIO
 ========================================================= */
@@ -858,7 +843,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .form-tip i {
     color: var(--gold);
 }
-
 
 /* =========================================================
    BOTONES
@@ -912,7 +896,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     color: var(--gold);
     background: rgba(212, 175, 55, 0.06);
 }
-
 
 /* =========================================================
    HORARIOS
@@ -1093,7 +1076,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     font-size: 10px;
 }
 
-
 /* =========================================================
    AGENDA
 ========================================================= */
@@ -1202,7 +1184,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     background: rgba(255, 255, 255, 0.015);
 }
 
-
 /* =========================================================
    CLIENTE
 ========================================================= */
@@ -1268,7 +1249,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     font-size: 9px;
 }
 
-
 /* =========================================================
    FECHA
 ========================================================= */
@@ -1288,7 +1268,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .date-cell i {
     color: var(--gold);
 }
-
 
 /* =========================================================
    HORA
@@ -1312,7 +1291,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .time-cell strong {
     font-size: 12px;
 }
-
 
 /* =========================================================
    BARBERO
@@ -1353,7 +1331,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     font-size: 10px;
     font-weight: 700;
 }
-
 
 /* =========================================================
    ESTADOS
@@ -1409,7 +1386,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     background: var(--orange);
 }
 
-
 /* =========================================================
    ACCIONES
 ========================================================= */
@@ -1458,7 +1434,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     color: var(--red);
     border-color: rgba(248, 113, 113, 0.3);
 }
-
 
 /* =========================================================
    EDITAR
@@ -1553,7 +1528,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
     border-top: 1px solid var(--border);
 }
-
 
 /* =========================================================
    HISTORIAL
@@ -1659,7 +1633,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     justify-self: end;
 }
 
-
 /* =========================================================
    EMPTY
 ========================================================= */
@@ -1707,7 +1680,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     padding: 45px 20px;
 }
 
-
 /* =========================================================
    RESPONSIVE
 ========================================================= */
@@ -1738,7 +1710,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         justify-self: start;
     }
 }
-
 
 @media (max-width: 800px) {
 
@@ -1801,7 +1772,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         max-width: 100%;
     }
 }
-
 
 @media (max-width: 600px) {
 
@@ -1889,7 +1859,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     color: var(--gold);
 }
 
-
 /* =========================================================
    FECHA
 ========================================================= */
@@ -1939,7 +1908,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         0 0 0 3px rgba(212, 175, 55, 0.08);
 }
 
-
 /* =========================================================
    BOTON HOY
 ========================================================= */
@@ -1975,7 +1943,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     border-color: var(--gold);
 }
 
-
 /* =========================================================
    HORA
 ========================================================= */
@@ -1990,7 +1957,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     appearance: auto;
 }
 
-
 /* =========================================================
    FECHA INVALIDA
 ========================================================= */
@@ -2001,7 +1967,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     box-shadow:
         0 0 0 3px rgba(248, 113, 113, 0.07);
 }
-
 
 /* =========================================================
    RESPONSIVE
@@ -2039,7 +2004,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     grid-template-columns: 1fr 1fr;
 }
 
-
 /* =========================================================
    SELECTOR
 ========================================================= */
@@ -2049,7 +2013,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     width: 100%;
     min-width: 0;
 }
-
 
 /* =========================================================
    BOTON PRINCIPAL
@@ -2096,7 +2059,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         transform 0.2s ease;
 }
 
-
 .custom-select-trigger:hover {
 
     border-color: rgba(212, 175, 55, 0.4);
@@ -2108,7 +2070,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
             #151517
         );
 }
-
 
 .custom-select.open .custom-select-trigger {
 
@@ -2126,7 +2087,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-
 .custom-select-trigger i {
 
     flex-shrink: 0;
@@ -2139,13 +2099,11 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         transform 0.2s ease;
 }
 
-
 .custom-select.open .custom-select-trigger i {
 
     transform: rotate(180deg);
 
 }
-
 
 /* =========================================================
    VALOR SELECCIONADO
@@ -2165,13 +2123,11 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 }
 
-
 .custom-select.has-value .custom-select-value {
 
     color: var(--white);
 
 }
-
 
 /* =========================================================
    MENU
@@ -2225,7 +2181,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 }
 
-
 /* =========================================================
    MENU ABIERTO
 ========================================================= */
@@ -2241,7 +2196,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         scale(1);
 
 }
-
 
 /* =========================================================
    OPCIONES
@@ -2283,7 +2237,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 }
 
-
 .custom-select-menu button:hover {
 
     background:
@@ -2298,7 +2251,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     padding-left: 15px;
 
 }
-
 
 /* =========================================================
    OPCION SELECCIONADA
@@ -2315,7 +2267,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 }
 
-
 .custom-select-menu button.selected::after {
 
     content: "\f26a";
@@ -2329,7 +2280,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     font-size: 12px;
 
 }
-
 
 /* =========================================================
    SCROLL DEL MENU
@@ -2360,7 +2310,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     background: var(--gold-dark);
 
 }
-
 
 /* =========================================================
    BOTON HOY
@@ -2407,7 +2356,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 }
 
-
 .today-btn:hover {
 
     background:
@@ -2427,7 +2375,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         0 5px 15px rgba(212, 175, 55, 0.08);
 
 }
-
 
 /* =========================================================
    RESPONSIVE
@@ -2480,7 +2427,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     gap: 10px;
 }
 
-
 /* Cuando hay varios horarios, permitir scroll */
 
 .occupied-list:has(.occupied-item:nth-child(5)) {
@@ -2488,7 +2434,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     overflow-y: auto;
     padding-right: 6px;
 }
-
 
 /* Scrollbar */
 
@@ -2643,7 +2588,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .pagination-number:active {
     transform: scale(0.92);
 }
-
 
 /* ==========================================
    CITAS PROGRAMADAS - RESPONSIVE
@@ -2818,7 +2762,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         gap: 7px;
     }
 }
-
 
 /* ==========================================
    CARRUSEL HORIZONTAL DE CITAS
@@ -3099,7 +3042,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     }
 }
 
-
 /* ==========================================
    AGENDA RESPONSIVE
    PC: TABLA
@@ -3204,4 +3146,74 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         width: 100%;
         max-width: 100%;
     }
+}
+
+/* ==========================================
+   DISPONIBILIDAD DE CITAS
+========================================== */
+
+/* Ocultar horarios no disponibles */
+.citas-page .custom-select-menu button[hidden] {
+    display: none !important;
+}
+
+/* Evitar seleccionar opciones deshabilitadas */
+.citas-page .custom-select-menu button:disabled {
+    display: none !important;
+    pointer-events: none;
+}
+
+/* Mensajes de disponibilidad */
+.citas-page .cita-validacion-mensaje {
+    margin: 14px 20px;
+    padding: 13px 16px;
+    background: #30251a;
+    border: 1px solid #735728;
+    border-radius: 10px;
+    color: #e4c275;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* No mostrar mensajes vacios */
+.citas-page .cita-validacion-mensaje[hidden] {
+    display: none !important;
+}
+
+/* ==========================================
+   CORRECCION SELECTOR DE MINUTOS
+========================================== */
+
+/* Ocultar opciones que no estan disponibles */
+.citas-page .custom-select-menu button[hidden],
+.citas-page .custom-select-menu button:disabled {
+    display: none !important;
+}
+
+/* No dejar abierto un menu sin opciones */
+.citas-page .custom-select:not(.open)
+.custom-select-menu {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Mostrar visualmente cuando no hay minutos */
+.citas-page .custom-select-trigger[aria-disabled="true"] {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* ==========================================
+   CITAS DE 30 MINUTOS - OPCIONES OCULTAS
+========================================== */
+.citas-page .custom-select-menu button[hidden],
+.citas-page .custom-select-menu button:disabled {
+    display: none !important;
+}
+.citas-page .custom-select-trigger[aria-disabled="true"] {
+    opacity: .65;
+    cursor: not-allowed;
+}
+.citas-page .cita-validacion-mensaje[hidden] {
+    display: none !important;
 }
