@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.IO;
 using WebApplicationAPP.Models;
-
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace WebApplicationAPP.Controllers
 {
@@ -241,9 +243,9 @@ namespace WebApplicationAPP.Controllers
             return View(imagenes);
         }
 
-
         [HttpPost]
-        public IActionResult EditarContacto(
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditarContacto(
             int id,
             string direccion,
             string telefonos,
@@ -255,24 +257,48 @@ namespace WebApplicationAPP.Controllers
             string tiktok,
             string ubicacion)
         {
+            var contacto = _context.Contactos
+                .FirstOrDefault(c => c.Id == id);
 
-
-            var contacto = _context.Contactos.FirstOrDefault(c => c.Id == id);
-
-            if (contacto != null)
+            if (contacto == null)
             {
-                contacto.Direccion = direccion;
-                contacto.Telefonos = telefonos;
-                contacto.Correo = correo;
-                contacto.Horarios = horarios;
-                contacto.Whatsapp = whatsapp;
-                contacto.Instagram = instagram;
-                contacto.Facebook = facebook;
-                contacto.Tiktok = tiktok;
-                contacto.Ubicacion = ubicacion;
-
-                _context.SaveChanges();
+                TempData["Error"] = "No se encontro el contacto.";
+                return RedirectToAction(nameof(ControlContacto));
             }
+
+            string enlace = (ubicacion ?? "").Trim();
+
+            if (!string.IsNullOrWhiteSpace(enlace))
+            {
+                string? mapaEmbed =
+                    await ConvertirGoogleMapsAsync(enlace);
+
+                if (string.IsNullOrWhiteSpace(mapaEmbed))
+                {
+                    TempData["Error"] =
+                        "No se pudo obtener la ubicacion del enlace. " +
+                        "Comprueba que sea un enlace valido de Google Maps.";
+
+                    return RedirectToAction(nameof(ControlContacto));
+                }
+
+                enlace = mapaEmbed;
+            }
+
+            contacto.Direccion = direccion;
+            contacto.Telefonos = telefonos;
+            contacto.Correo = correo;
+            contacto.Horarios = horarios;
+            contacto.Whatsapp = whatsapp;
+            contacto.Instagram = instagram;
+            contacto.Facebook = facebook;
+            contacto.Tiktok = tiktok;
+            contacto.Ubicacion = enlace;
+
+            _context.SaveChanges();
+
+            TempData["Mensaje"] =
+                "Informacion de contacto actualizada correctamente.";
 
             return RedirectToAction(nameof(ControlContacto));
         }
@@ -345,5 +371,141 @@ namespace WebApplicationAPP.Controllers
 
             return RedirectToAction(nameof(ControlGaleria));
         }
+        private static bool EsDominioGoogleMaps(Uri url)
+        {
+            if (url.Scheme != Uri.UriSchemeHttps)
+                return false;
+
+            string host = url.Host.ToLowerInvariant();
+
+            return host == "maps.app.goo.gl"
+                || host == "goo.gl"
+                || host == "google.com"
+                || host.EndsWith(".google.com")
+                || host == "google.co.cr"
+                || host.EndsWith(".google.co.cr");
+        }
+
+        private static string? ObtenerCoordenadas(string enlace)
+        {
+
+            var coordenadasLugar = Regex.Match(
+                enlace,
+                @"!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)"
+            );
+
+            if (coordenadasLugar.Success)
+            {
+                return coordenadasLugar.Groups[1].Value
+                    + ","
+                    + coordenadasLugar.Groups[2].Value;
+            }
+
+            var coordenadasMapa = Regex.Match(
+                enlace,
+                @"@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)"
+            );
+
+            if (coordenadasMapa.Success)
+            {
+                return coordenadasMapa.Groups[1].Value
+                    + ","
+                    + coordenadasMapa.Groups[2].Value;
+            }
+
+            return null;
+        }
+
+        private async Task<string?> ConvertirGoogleMapsAsync(
+            string enlace)
+        {
+            if (!Uri.TryCreate(
+                enlace,
+                UriKind.Absolute,
+                out Uri? url))
+            {
+                return null;
+            }
+
+            if (!EsDominioGoogleMaps(url))
+                return null;
+
+            if (
+                (url.Host == "www.google.com" ||
+                url.Host == "google.com") &&
+                url.AbsolutePath.StartsWith(
+                    "/maps/embed",
+                    StringComparison.OrdinalIgnoreCase)
+            )
+            {
+                return enlace;
+            }
+
+            string urlFinal = enlace;
+
+            if (
+                url.Host == "maps.app.goo.gl" ||
+                url.Host == "goo.gl"
+            )
+            {
+                using var handler = new HttpClientHandler
+                {
+                    AllowAutoRedirect = false
+                };
+
+                using var cliente = new HttpClient(handler)
+                {
+                    Timeout = TimeSpan.FromSeconds(10)
+                };
+
+                Uri actual = url;
+
+                for (int intento = 0; intento < 8; intento++)
+                {
+                    if (!EsDominioGoogleMaps(actual))
+                        return null;
+
+                    using var respuesta = await cliente.GetAsync(
+                        actual,
+                        HttpCompletionOption.ResponseHeadersRead
+                    );
+
+                    int estado = (int)respuesta.StatusCode;
+
+                    if (
+                        estado >= 300 &&
+                        estado < 400 &&
+                        respuesta.Headers.Location != null
+                    )
+                    {
+                        actual = new Uri(
+                            actual,
+                            respuesta.Headers.Location
+                        );
+
+                        continue;
+                    }
+
+                    if (!respuesta.IsSuccessStatusCode)
+                        return null;
+
+                    break;
+                }
+
+                urlFinal = actual.ToString();
+            }
+
+            string? coordenadas =
+                ObtenerCoordenadas(urlFinal);
+
+            if (string.IsNullOrWhiteSpace(coordenadas))
+                return null;
+
+            return "https://www.google.com/maps?q="
+                + Uri.EscapeDataString(coordenadas)
+                + "&output=embed";
+        }
+
+
     }
 }

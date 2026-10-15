@@ -332,12 +332,46 @@
 
             <div class="contacto-map-card">
 
-                @if (!string.IsNullOrWhiteSpace(Model.Ubicacion)
-                     && Uri.TryCreate(Model.Ubicacion, UriKind.Absolute, out var mapaUri)
-                     && mapaUri.Scheme == Uri.UriSchemeHttps
-                     && (mapaUri.Host == "www.google.com"
-                         || mapaUri.Host == "google.com"
-                         || mapaUri.Host == "maps.google.com"))
+                @{
+                    Uri? mapaUri = null;
+
+                    bool mapaValido =
+                        !string.IsNullOrWhiteSpace(Model.Ubicacion) &&
+                        Uri.TryCreate(
+                            Model.Ubicacion,
+                            UriKind.Absolute,
+                            out mapaUri
+                        ) &&
+                        mapaUri != null &&
+                        mapaUri.Scheme == Uri.UriSchemeHttps &&
+                        (
+                            mapaUri.Host == "www.google.com" ||
+                            mapaUri.Host == "google.com"
+                        ) &&
+                        mapaUri.AbsolutePath.StartsWith(
+                            "/maps",
+                            StringComparison.OrdinalIgnoreCase
+                        ) &&
+                        mapaUri.Query.Contains(
+                            "output=embed",
+                            StringComparison.OrdinalIgnoreCase
+                        )
+                        ||
+                        (
+                            mapaUri != null &&
+                            mapaUri.Scheme == Uri.UriSchemeHttps &&
+                            (
+                                mapaUri.Host == "www.google.com" ||
+                                mapaUri.Host == "google.com"
+                            ) &&
+                            mapaUri.AbsolutePath.StartsWith(
+                                "/maps/embed",
+                                StringComparison.OrdinalIgnoreCase
+                            )
+                        );
+                }
+
+                @if (mapaValido)
                 {
                     <iframe src="@Model.Ubicacion"
                             title="Ubicacion de Yampi BarberShop"
@@ -355,14 +389,15 @@
                         <strong>Mapa no disponible</strong>
 
                         <span>
-                            Configura una URL de Google Maps
-                            compatible con la insercion de mapas.
+                            Configura la ubicacion del negocio.
                         </span>
 
                     </div>
                 }
 
             </div>
+
+
 
         </section>
 
@@ -599,10 +634,31 @@
                             URL de Google Maps
                         </label>
 
-                        <textarea id="contactoUbicacion"
-                                  name="ubicacion"
-                                  rows="4"
-                                  class="contacto-input">@Model.Ubicacion</textarea>
+                        
+                        
+                        <div class="contacto-field">
+
+                            <label for="contactoUbicacion">
+                                <i class="bi bi-geo-alt"></i>
+                                Enlace de Google Maps
+                            </label>
+
+                            <input type="url"
+                                id="contactoUbicacion"
+                                name="ubicacion"
+                                value="@Model.Ubicacion"
+                                class="contacto-input"
+                                placeholder="https://maps.app.goo.gl/..." />
+
+                            <small>
+                                Pega un enlace de Google Maps.
+                                El sistema intentara mostrar automaticamente
+                                la ubicacion dentro de la pagina.
+                            </small>
+
+                        </div>
+
+
 
                         <small>
                             Utiliza la URL que aparece dentro
