@@ -2240,3 +2240,65 @@ body #footer.yampi-footer .yampi-footer-contact-item > div {
         justify-content: flex-end;
     }
 }
+
+
+/* ==========================================
+   HEADER FIJO - YAMPI BARBERSHOP
+========================================== */
+
+/* Mantener el header visible en todo momento */
+body #page-wrapper #nav {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+
+    width: 100% !important;
+    height: 88px !important;
+
+    background: #09090a !important;
+    border-bottom: 1px solid #29292d !important;
+
+    z-index: 4000 !important;
+}
+
+/* Evitar que el contenido quede debajo del header */
+body #page-wrapper {
+    padding-top: 88px !important;
+}
+
+/* ==========================================
+   TABLETS Y CELULARES
+========================================== */
+
+@media (max-width: 1250px) {
+
+    body #page-wrapper #nav {
+        height: 68px !important;
+        min-height: 68px !important;
+        max-height: 68px !important;
+    }
+
+    body #page-wrapper {
+        padding-top: 68px !important;
+    }
+
+    /* Mantener el menu lateral por encima del contenido */
+    body #page-wrapper #nav #yampiMenu {
+        z-index: 4200 !important;
+    }
+}
+
+/* ==========================================
+   NAVEGACION POR ANCLAS
+========================================== */
+
+html {
+    scroll-padding-top: 100px;
+}
+
+@media (max-width: 1250px) {
+    html {
+        scroll-padding-top: 80px;
+    }
+}
