@@ -77,6 +77,18 @@ namespace WebApplicationAPP.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public IActionResult Crear()
+        {
+            if (!TienePermiso("Citas/Crear"))
+                return RedirectToAction("Index", "Dashboard");
+
+            ViewBag.Barberos = _context.Usuarios
+                .Where(u => u.IdRol == 7 && u.Estado)
+                .ToList();
+
+            return View();
+        }
         // CREAR CITA
         [HttpPost]
         [ValidateAntiForgeryToken]

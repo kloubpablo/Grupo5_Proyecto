@@ -148,7 +148,23 @@ namespace WebApplicationAPP.Controllers
             if (user.ContraTemp)
                 return RedirectToAction("CambiarContrasena");
 
-            return RedirectToAction("Index", "Dashboard");
+            // REDIRECCIONA SEGÚN EL ROL
+            string rol = user.IdRolNavigation.Nombre;
+
+            if (rol == "Administrador")
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+            else if (rol == "Cliente")
+            {
+                return RedirectToAction("MisCitas", "Citas");
+            }
+            else if (rol == "Barbero")
+            {
+                return RedirectToAction("Index", "Atencion");
+            }
+
+            return RedirectToAction("Index", "Seguridad");
         }
 
         // LOGOUT
@@ -186,7 +202,31 @@ namespace WebApplicationAPP.Controllers
 
             _context.SaveChanges();
 
-            return RedirectToAction("Index", "Dashboard");
+            usuario.PasswordHash = nuevaContrasena;
+            usuario.ContraTemp = false;
+
+            _context.SaveChanges();
+
+            // REDIRECCIONA SEGÚN EL ROL
+            var usuarioActual = _context.Usuarios
+                .Include(u => u.IdRolNavigation)
+                .FirstOrDefault(u => u.IdUsuario == idUsuario);
+
+            if (usuarioActual == null)
+                return RedirectToAction("Index");
+
+            string rol = usuarioActual.IdRolNavigation.Nombre;
+
+            if (rol == "Administrador")
+                return RedirectToAction("Index", "Dashboard");
+
+            if (rol == "Cliente")
+                return RedirectToAction("MisCitas", "Citas");
+
+            if (rol == "Barbero")
+                return RedirectToAction("Index", "Atencion");
+
+            return RedirectToAction("Index", "Seguridad");
         }
 
         // RECUPERAR
