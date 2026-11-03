@@ -91,17 +91,36 @@
 
                 <li>
 
-                    <h1>
+                        @{
+                            var rol = Context.Session.GetString("Rol");
+                        }
 
-                        <a asp-controller="Dashboard"
-
-                           asp-action="Index">
-
-                            💈 Yampi Barbershop
-
-                        </a>
-
-                    </h1>
+                        <h1>
+                            @if (rol == "Administrador")
+                            {
+                                <a asp-controller="Dashboard" asp-action="Index">
+                                    💈 Yampi Barbershop
+                                </a>
+                            }
+                            else if (rol == "Cliente")
+                            {
+                                <a asp-controller="Citas" asp-action="MisCitas">
+                                    💈 Yampi Barbershop
+                                </a>
+                            }
+                            else if (rol == "Barbero")
+                            {
+                                <a asp-controller="Atencion" asp-action="Index">
+                                    💈 Yampi Barbershop
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Home" asp-action="Index">
+                                    💈 Yampi Barbershop
+                                </a>
+                            }
+                        </h1>
 
                 </li>
 

@@ -81,10 +81,10 @@ namespace WebApplicationAPP.Controllers
         public IActionResult Crear()
         {
             if (!TienePermiso("Citas/Crear"))
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("MisCitas", "Citas");
 
             ViewBag.Barberos = _context.Usuarios
-                .Where(u => u.IdRol == 7 && u.Estado)
+                .Where(u => u.IdRol == 2 && u.Estado)
                 .ToList();
 
             return View();
@@ -101,6 +101,7 @@ namespace WebApplicationAPP.Controllers
             {
                 return RedirectToAction("Index", "Dashboard");
             }
+
             // Validar campos obligatorios
             if (fecha == default ||
                 hora == default ||
@@ -179,10 +180,16 @@ namespace WebApplicationAPP.Controllers
             _context.Citas.Add(nuevaCita);
             _context.SaveChanges();
             transaccion.Commit();
+
             TempData["MensajeCita"] =
                 "Cita creada correctamente.";
-            TempData["SeccionCita"] = "agenda";
-            return RedirectToAction("Index");
+
+            if (TienePermiso("Citas/Index"))
+            {
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("MisCitas");
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -268,7 +275,7 @@ namespace WebApplicationAPP.Controllers
         // CANCELAR CITA
         public IActionResult Cancelar(int id)
         {
-            if (!TienePermiso("Citas/Index"))
+            if (!TienePermiso("Citas/Index") && !TienePermiso("Citas/MisCitas"))
             {
                 return RedirectToAction("Index", "Dashboard");
             }
@@ -289,6 +296,9 @@ namespace WebApplicationAPP.Controllers
                 cita.Estado = "Cancelada";
                 _context.SaveChanges();
             }
+            if (HttpContext.Session.GetString("Rol") == "Cliente")
+                return RedirectToAction("MisCitas");
+
             return RedirectToAction("Index");
         }
         // BLOQUEAR HORARIO
