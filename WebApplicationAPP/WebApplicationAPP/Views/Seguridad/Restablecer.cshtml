@@ -1,55 +1,159 @@
+
 @{
     ViewData["Title"] = "Restablecer contraseña";
     Layout = "~/Views/Shared/_LayoutSeguridad.cshtml";
+
     string? token = ViewBag.Token as string;
     string? error = ViewBag.Error as string;
 }
 
-<div class="container d-flex align-items-center justify-content-center py-5"
-     style="min-height:100vh">
-    <div class="w-100 p-4 p-md-5"
-         style="max-width:460px;background:#171719;border:1px solid #29292d;border-radius:18px">
-        <div class="text-center mb-4">
-            <i class="bi bi-shield-lock" style="font-size:2.5rem;color:#d4af37"></i>
-            <h2 class="mt-3 text-white">Nueva contraseña</h2>
-            <p style="color:#a5a5aa">Establece una contraseña nueva para tu cuenta.</p>
+<div class="restablecer-page">
+
+    <div class="restablecer-card">
+
+        <!-- LOGO -->
+        <div class="restablecer-logo">
+            <div class="restablecer-logo-icon">
+                <i class="bi bi-scissors"></i>
+            </div>
+
+            <h1>YAMPI</h1>
+            <span>BARBER SHOP</span>
         </div>
 
+        <div class="restablecer-divider"></div>
+
+        <!-- ENCABEZADO -->
+        <div class="restablecer-header">
+            <div class="restablecer-header-icon">
+                <i class="bi bi-shield-lock"></i>
+            </div>
+
+            <h2>Restablecer contraseña</h2>
+
+            <p>
+                Ingresa tu nueva contraseña para
+                recuperar el acceso a tu cuenta.
+            </p>
+        </div>
+
+        <!-- ERRORES -->
         @if (!string.IsNullOrWhiteSpace(error))
         {
-            <div class="alert alert-danger" role="alert">@error</div>
+            <div class="restablecer-alert" role="alert">
+                <i class="bi bi-exclamation-circle"></i>
+                <span>@error</span>
+            </div>
         }
 
+        <!-- FORMULARIO -->
         @if (!string.IsNullOrWhiteSpace(token))
         {
-            <form asp-controller="Seguridad" asp-action="Restablecer" method="post">
+            <form asp-controller="Seguridad"
+                  asp-action="Restablecer"
+                  method="post"
+                  class="restablecer-form">
+
                 @Html.AntiForgeryToken()
-                <input type="hidden" name="token" value="@token" />
 
-                <div class="mb-3">
-                    <label class="form-label text-white" for="nuevaContrasena">Nueva contraseña</label>
-                    <input class="form-control" type="password" id="nuevaContrasena"
-                           name="nuevaContrasena" autocomplete="new-password" minlength="8" required />
+                <input type="hidden"
+                       name="token"
+                       value="@token" />
+
+                <div class="restablecer-field">
+
+                    <label for="nuevaContrasena">
+                        Nueva contraseña
+                    </label>
+
+                    <div class="restablecer-input-group">
+                        <i class="bi bi-lock"></i>
+
+                        <input type="password"
+                               id="nuevaContrasena"
+                               name="nuevaContrasena"
+                               placeholder="Ingresa tu contraseña"
+                               minlength="8"
+                               autocomplete="new-password"
+                               required />
+
+                        <button type="button"
+                                class="restablecer-eye"
+                                data-toggle-password="nuevaContrasena"
+                                aria-label="Mostrar contraseña"
+                                aria-pressed="false">
+
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+
                 </div>
 
-                <div class="mb-4">
-                    <label class="form-label text-white" for="confirmarContrasena">Confirmar contraseña</label>
-                    <input class="form-control" type="password" id="confirmarContrasena"
-                           name="confirmarContrasena" autocomplete="new-password" minlength="8" required />
+                <div class="restablecer-field">
+
+                    <label for="confirmarContrasena">
+                        Confirmar contraseña
+                    </label>
+
+                    <div class="restablecer-input-group">
+                        <i class="bi bi-lock-fill"></i>
+
+                        <input type="password"
+                               id="confirmarContrasena"
+                               name="confirmarContrasena"
+                               placeholder="Repite tu contraseña"
+                               minlength="8"
+                               autocomplete="new-password"
+                               required />
+
+                        <button type="button"
+                                class="restablecer-eye"
+                                data-toggle-password="confirmarContrasena"
+                                aria-label="Mostrar contraseña"
+                                aria-pressed="false">
+
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+
                 </div>
 
-                <button type="submit" class="btn w-100 fw-semibold"
-                        style="background:#d4af37;color:#09090a">
-                    <i class="bi bi-check-circle me-2"></i>Guardar contraseña
+                <div class="restablecer-info">
+                    <i class="bi bi-info-circle"></i>
+                    <span>
+                        Tu contraseña debe contener
+                        al menos 8 caracteres.
+                    </span>
+                </div>
+
+                <button type="submit"
+                        class="restablecer-submit">
+
+                    <i class="bi bi-check-circle"></i>
+                    Guardar nueva contraseña
+
                 </button>
+
             </form>
         }
 
-        <div class="text-center mt-4">
-            <a asp-controller="Seguridad" asp-action="Index"
-               style="color:#d4af37;text-decoration:none">
-                <i class="bi bi-arrow-left me-1"></i>Volver al inicio de sesión
+        <!-- VOLVER -->
+        <div class="restablecer-bottom">
+
+            <a asp-controller="Seguridad"
+               asp-action="Index">
+
+                <i class="bi bi-arrow-left"></i>
+                Volver al inicio de sesión
+
             </a>
+
         </div>
+
+        <div class="restablecer-footer">
+            <span>Tu estilo, nuestra pasión</span>
+        </div>
+
     </div>
+
 </div>

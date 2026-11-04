@@ -261,3 +261,326 @@ body.seguridad-body {
         min-height: 100dvh;
     }
 }
+
+/* ==========================================
+   YAMPI BARBERSHOP
+   RESTABLECER CONTRASEÑA
+   ========================================== */
+
+.restablecer-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+    padding: 40px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #09090a;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.restablecer-card {
+    width: 100%;
+    max-width: 470px;
+    padding: 40px;
+
+    background: #171719;
+    border: 1px solid #29292d;
+    border-radius: 18px;
+}
+
+/* LOGO */
+
+.restablecer-logo {
+    text-align: center;
+}
+
+.restablecer-logo-icon {
+    color: #d4af37;
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.restablecer-logo h1 {
+    margin: 0;
+    color: #d4af37;
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: 5px;
+}
+
+.restablecer-logo span {
+    display: block;
+    margin-top: 4px;
+
+    color: #dadadd;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 4px;
+}
+
+.restablecer-divider {
+    width: 100%;
+    height: 1px;
+
+    margin: 28px 0;
+
+    background: #35353a;
+}
+
+/* ENCABEZADO */
+
+.restablecer-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.restablecer-header-icon {
+    width: 55px;
+    height: 55px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #9e7f1e;
+    border-radius: 14px;
+
+    color: #d4af37;
+    font-size: 25px;
+}
+
+.restablecer-header h2 {
+    color: #f5f5f5;
+    font-size: 23px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.restablecer-header p {
+    color: #a5a5aa;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* FORMULARIO */
+
+.restablecer-form {
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+}
+
+.restablecer-field label {
+    display: block;
+    margin-bottom: 9px;
+
+    color: #dadadd;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.restablecer-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.restablecer-input-group > i {
+    position: absolute;
+    left: 15px;
+
+    color: #77777f;
+    font-size: 17px;
+
+    pointer-events: none;
+}
+
+.restablecer-input-group input {
+    width: 100%;
+    min-height: 50px;
+
+    padding: 12px 48px 12px 44px;
+
+    background: #0d0d0f;
+    border: 1px solid #35353a;
+    border-radius: 9px;
+
+    color: #f5f5f5;
+    font-family: inherit;
+    font-size: 14px;
+
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.restablecer-input-group input::placeholder {
+    color: #77777f;
+}
+
+.restablecer-input-group input:focus {
+    border-color: #d4af37;
+}
+
+.restablecer-eye {
+    position: absolute;
+    right: 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+
+    color: #a5a5aa;
+    font-size: 17px;
+
+    cursor: pointer;
+}
+
+.restablecer-eye:hover {
+    color: #d4af37;
+}
+
+.restablecer-eye:focus-visible {
+    outline: 2px solid #d4af37;
+    outline-offset: 2px;
+}
+
+/* INFORMACION */
+
+.restablecer-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+
+    color: #a5a5aa;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.restablecer-info i {
+    color: #d4af37;
+    font-size: 15px;
+}
+
+/* BOTON PRINCIPAL */
+
+.restablecer-submit {
+    width: 100%;
+    min-height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    background: #d4af37;
+    border: 1px solid #d4af37;
+    border-radius: 9px;
+
+    color: #09090a;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.restablecer-submit:hover {
+    background: #e4c65a;
+}
+
+.restablecer-submit:focus-visible {
+    outline: 2px solid #f5f5f5;
+    outline-offset: 3px;
+}
+
+/* ERRORES */
+
+.restablecer-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    margin-bottom: 22px;
+    padding: 13px 15px;
+
+    background: #301b1d;
+    border: 1px solid #71363b;
+    border-radius: 9px;
+
+    color: #ffb8bf;
+    font-size: 13px;
+}
+
+/* ENLACE VOLVER */
+
+.restablecer-bottom {
+    margin-top: 28px;
+    text-align: center;
+}
+
+.restablecer-bottom a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    color: #d4af37;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.restablecer-bottom a:hover {
+    color: #e4c65a;
+}
+
+/* FOOTER INTERNO */
+
+.restablecer-footer {
+    margin-top: 30px;
+    padding-top: 22px;
+
+    border-top: 1px solid #29292d;
+    text-align: center;
+}
+
+.restablecer-footer span {
+    color: #77777f;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 576px) {
+    .restablecer-page {
+        padding: 20px 14px;
+    }
+
+    .restablecer-card {
+        padding: 30px 22px;
+        border-radius: 14px;
+    }
+
+    .restablecer-logo h1 {
+        font-size: 29px;
+    }
+
+    .restablecer-header h2 {
+        font-size: 21px;
+    }
+}
