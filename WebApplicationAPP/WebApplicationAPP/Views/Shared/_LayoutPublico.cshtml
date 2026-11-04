@@ -1,155 +1,37 @@
-﻿
 @using WebApplicationAPP.Models
-@inject YampiBarbershopContext Db
 @using Microsoft.EntityFrameworkCore
-@inject WebApplicationAPP.Models.YampiBarbershopContext _context
-
+@inject YampiBarbershopContext PublicDb
+@{
+    string? titulo = ViewData["Title"]?.ToString();
+    var footerContacto = (ViewData.Model as InicioPublicoViewModel)?.Contacto
+        ?? await PublicDb.Contactos.AsNoTracking().FirstOrDefaultAsync();
+}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <title>@ViewData["Title"] - Yampi Barbershop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#09090a" />
+    <link rel="icon" type="image/png" href="~/assets/css/images/yampi.png" />
+    <title>@(string.IsNullOrWhiteSpace(titulo) ? "Yampi BarberShop" : titulo + " - Yampi BarberShop")</title>
 
-    <link rel="stylesheet" href="~/assets/css/main.css" />
+    <!-- Misma libreria de iconos utilizada por Citas y el layout administrativo -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-
-
-    <style>
-            body {
-                background-color: #0f172a !important;
-                color: white;
-            }
-
-            #header {
-                background: #020617 !important;
-                border-bottom: 2px solid #facc15;
-                text-align: center;
-                padding: 15px 0;
-            }
-
-                #header h1 a {
-                    color: #facc15 !important;
-                    font-weight: bold;
-                    font-size: 20px;
-                    text-decoration: none;
-                }
-
-            #nav {
-                background-color: #020617 !important;
-                text-align: center;
-                padding: 1px 0;
-            }
-
-                #nav ul {
-                    list-style: none;
-                    padding: 0;
-                    margin: 0;
-                }
-
-                    #nav ul li {
-                        display: inline-block;
-                        margin: 0 15px;
-                    }
-
-                        #nav ul li a {
-                            color: #facc15 !important;
-                            font-weight: 500;
-                            text-decoration: none;
-                            padding: 6px 8px;
-                            transition: 0.3s;
-                        }
-
-                            #nav ul li a:hover {
-                                background-color: #facc15;
-                                color: black !important;
-                                border-radius: 1px;
-                            }
-
-            #main .container {
-                background-color: #1e293b;
-                padding: 25px;
-                border-radius: 15px;
-                margin-top: 20px;
-            }
-    </style>
+    <link rel="stylesheet" href="~/css/inicio-publico.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/footer-publico.css" asp-append-version="true" />
 </head>
-<body class="is-preload">
-
+<body class="yp-body">
     <div id="page-wrapper">
-        <h1 id="logo" style="display:none;">
-            Yampi BarberShop
-        </h1>
-        <nav id="nav">
-            <ul>
-                <li>
-                    <a asp-controller="YampiBarberShop" asp-action="Index">
-                        Yampi BarberShop
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="YampiBarberShop" asp-action="Servicios">
-                        Servicios
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="YampiBarberShop" asp-action="Galeria">
-                        Galería
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="YampiBarberShop" asp-action="Nosotros">
-                        Nosotros
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="YampiBarberShop" asp-action="Contactenos">
-                        Contactenos
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Seguridad" asp-action="Index">
-                        Iniciar Sesión
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <main>
+        @await Html.PartialAsync("_YampiPublicNav")
+        <div id="publicoMain">
             @RenderBody()
-        </main>
-
-        <!-- FOOTER -->
-        <footer id="footer">
-            <div class="container">
-
-                <section>
-                    <h2 class="major"><span>Yampi BarberShop</span></h2>
-                    <p>
-                        Sistema de gestión integral de la barbería:
-                        Clientes, Citas, Servicios, Usuarios y Reportes.
-                    </p>
-                </section>
-
-                <div id="copyright">
-                    <ul class="menu">
-                        <li>&copy; 2026 Yampi BarberShop</li>
-                    </ul>
-                </div>
-
-            </div>
-        </footer>
-
+        </div>
+        @await Html.PartialAsync("_YampiPublicFooter", footerContacto)
     </div>
-
-    <script src="~/assets/js/jquery.min.js"></script>
-    <script src="~/assets/js/jquery.dropotron.min.js"></script>
-    <script src="~/assets/js/jquery.scrolly.min.js"></script>
-    <script src="~/assets/js/browser.min.js"></script>
-    <script src="~/assets/js/breakpoints.min.js"></script>
-    <script src="~/assets/js/util.js"></script>
-    <script src="~/assets/js/main.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="~/js/inicio-publico.js" asp-append-version="true" defer></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

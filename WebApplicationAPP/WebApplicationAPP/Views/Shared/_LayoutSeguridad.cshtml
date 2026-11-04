@@ -1,0 +1,66 @@
+
+@{
+    var titulo = ViewData["Title"]?.ToString();
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <meta name="theme-color" content="#09090a" />
+
+    <title>
+        @(string.IsNullOrWhiteSpace(titulo)
+            ? "Yampi BarberShop"
+            : titulo + " - Yampi BarberShop")
+    </title>
+
+    <!-- Icono de la pagina -->
+    <link rel="icon"
+          type="image/png"
+          href="~/assets/css/images/yampi.png" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Estilos generales -->
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <!-- Estilo del modulo de Seguridad -->
+    <link rel="stylesheet"
+          href="~/css/seguridad.css"
+          asp-append-version="true" />
+
+</head>
+
+<body class="seguridad-body">
+
+    <!-- CONTENIDO SIN HEADER NI FOOTER -->
+    <main id="seguridadMain">
+
+        @RenderBody()
+
+    </main>
+
+    <!-- Bootstrap -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript de Seguridad -->
+    <script src="~/js/seguridad.js"
+            asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

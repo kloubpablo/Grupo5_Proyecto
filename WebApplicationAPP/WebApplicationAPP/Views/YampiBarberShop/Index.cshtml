@@ -1,105 +1,326 @@
-﻿@{
-    ViewData["Title"] = "Inicio";
-    Layout = "~/Views/Shared/_LayoutPublico.cshtml";
+﻿@model WebApplicationAPP.Models.InicioPublicoViewModel
+@using System.Globalization
+
+@functions {
+    private static string? RedSocialSegura(string? texto, string dominio, bool arroba = false)
+    {
+        if (string.IsNullOrWhiteSpace(texto)) return null;
+        string valor = texto.Trim();
+
+        if (Uri.TryCreate(valor, UriKind.Absolute, out Uri? uri))
+        {
+            bool dominioValido = uri.Host.Equals(dominio, StringComparison.OrdinalIgnoreCase)
+                || uri.Host.EndsWith("." + dominio, StringComparison.OrdinalIgnoreCase);
+            return uri.Scheme == Uri.UriSchemeHttps && dominioValido ? uri.ToString() : null;
+        }
+
+        string cuenta = valor.TrimStart('@');
+        if (cuenta.Length is < 1 or > 64 ||
+            cuenta.Any(c => !char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '-'))
+            return null;
+
+        return "https://www." + dominio + "/" + (arroba ? "@" : "")
+            + Uri.EscapeDataString(cuenta);
+    }
+
+    private static string? WhatsappSeguro(string? texto)
+    {
+        if (string.IsNullOrWhiteSpace(texto)) return null;
+        string valor = texto.Trim();
+        if (Uri.TryCreate(valor, UriKind.Absolute, out Uri? uri))
+        {
+            bool permitido = uri.Host.Equals("wa.me", StringComparison.OrdinalIgnoreCase)
+                || uri.Host.Equals("api.whatsapp.com", StringComparison.OrdinalIgnoreCase);
+            return uri.Scheme == Uri.UriSchemeHttps && permitido ? uri.ToString() : null;
+        }
+
+        string numero = new string(valor.Where(char.IsDigit).ToArray());
+        if (numero.Length == 8) numero = "506" + numero;
+        return numero.Length is >= 10 and <= 15 ? "https://wa.me/" + numero : null;
+    }
 }
-<link rel="stylesheet" href="~/assets/css/main.css" />
-<style>
-    body {
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
+
+@{
+    ViewData["Title"] = "Yampi BarberShop | Tu estilo, nuestra pasión";
+    Layout = "~/Views/Shared/_LayoutPublico.cshtml";
+
+    var servicios = Model.Servicios ?? new List<WebApplicationAPP.Models.Servicio>();
+    var imagenes = Model.ImagenesGaleria ?? new List<string>();
+    var gruposImagenes = imagenes.Chunk(4).ToList();
+    var contacto = Model.Contacto;
+    var culturaCR = CultureInfo.GetCultureInfo("es-CR");
+
+    string? instagram = RedSocialSegura(contacto?.Instagram, "instagram.com");
+    string? facebook = RedSocialSegura(contacto?.Facebook, "facebook.com");
+    string? tiktok = RedSocialSegura(contacto?.Tiktok, "tiktok.com", true);
+    string? whatsapp = WhatsappSeguro(contacto?.Whatsapp);
+
+    string? mapaUrl = null;
+    if (Uri.TryCreate(contacto?.Ubicacion, UriKind.Absolute, out Uri? uriMapa)
+        && uriMapa.Scheme == Uri.UriSchemeHttps
+        && (uriMapa.Host.Equals("google.com", StringComparison.OrdinalIgnoreCase)
+            || uriMapa.Host.EndsWith(".google.com", StringComparison.OrdinalIgnoreCase)
+            || uriMapa.Host.Equals("google.co.cr", StringComparison.OrdinalIgnoreCase)
+            || uriMapa.Host.EndsWith(".google.co.cr", StringComparison.OrdinalIgnoreCase))
+        && uriMapa.AbsolutePath.StartsWith("/maps", StringComparison.OrdinalIgnoreCase))
+    {
+        mapaUrl = uriMapa.ToString();
     }
+}
 
-    .hero-section {
-        min-height: 100vh;
-        background: linear-gradient( rgba(2, 6, 23, 0.75), rgba(15, 23, 42, 0.85) ), url(https://images.unsplash.com/photo-1759134248487-e8baaf31e33e?q=80&w=2113&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        color: white;
-        padding: 2rem;
+<main class="yp-landing" id="ypLanding">
+
+    <!-- 01 · HERO: pantalla completa, tres fotografias automaticas -->
+    <section class="yp-hero yp-anchor" id="inicio" aria-label="Bienvenidos a Yampi BarberShop">
+        <div class="yp-hero-media" aria-hidden="true">
+            <div class="yp-hero-slide is-active">
+                <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&amp;fit=crop&amp;w=2000&amp;q=85"
+                     alt="" fetchpriority="high" decoding="async" />
+            </div>
+            <div class="yp-hero-slide">
+                <img src="https://images.unsplash.com/photo-1640301133857-c4bc5789c1bb?auto=format&amp;fit=crop&amp;w=2000&amp;q=85"
+                     alt="" loading="lazy" decoding="async" />
+            </div>
+            <div class="yp-hero-slide">
+                <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&amp;fit=crop&amp;w=2000&amp;q=85"
+                     alt="" loading="lazy" decoding="async" />
+            </div>
+        </div>
+        <div class="yp-hero-shade" aria-hidden="true"></div>
+        <div class="yp-hero-bottom-fade" aria-hidden="true"></div>
+
+        <div class="yp-container yp-hero-inner">
+            <div class="yp-hero-copy">
+                <div class="yp-eyebrow yp-eyebrow-light"><span class="yp-line"></span> BIENVENIDO A YAMPI BARBERSHOP</div>
+                <h1>Tu estilo.<br /><em>Nuestra pasión.</em></h1>
+                <p>Estilo, precisión y calidad en cada corte. Descubre una experiencia de barbería donde cada detalle cuenta.</p>
+                <div class="yp-hero-actions">
+                    <a class="yp-btn yp-btn-gold" href="/Seguridad">Reservar una cita <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    <a class="yp-btn yp-btn-outline-light" href="#servicios">Descubrir servicios <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
+                </div>
+                <div class="yp-hero-tags" aria-label="Nuestros valores">
+                    <span>Precisión</span><i></i><span>Estilo</span><i></i><span>Atención personalizada</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="yp-hero-bottom-controls" aria-label="Controles de imágenes de portada">
+            <span class="yp-hero-counter" id="ypHeroCounter">01 / 03</span>
+            <div class="yp-hero-dots" id="ypHeroDots">
+                <button class="is-active" type="button" data-hero-dot="0" aria-label="Fotografía 1" aria-current="true"></button>
+                <button type="button" data-hero-dot="1" aria-label="Fotografía 2"></button>
+                <button type="button" data-hero-dot="2" aria-label="Fotografía 3"></button>
+            </div>
+            <button class="yp-hero-next" type="button" id="ypHeroNext" aria-label="Siguiente fotografía">→</button>
+        </div>
+        <a href="#servicios" class="yp-hero-scroll" aria-label="Ir a servicios">DESLIZA PARA EXPLORAR <span>↓</span></a>
+    </section>
+
+    <!-- 02 · SERVICIOS: precios reales de la BD -->
+    <section class="yp-services yp-section yp-anchor" id="servicios" aria-labelledby="ypServicesTitle">
+        <div class="yp-container">
+            <div class="yp-section-intro yp-reveal">
+                <div>
+                    <span class="yp-eyebrow">01 / NUESTROS SERVICIOS</span>
+                    <h2 id="ypServicesTitle">El detalle marca <em>la diferencia.</em></h2>
+                </div>
+                <p>Una selección de servicios para que cada visita se adapte a tu estilo. Conoce nuestras opciones y sus precios.</p>
+            </div>
+
+            @if (servicios.Count == 0)
+            {
+                <div class="yp-empty">Próximamente podrás consultar nuestros servicios aquí.</div>
+            }
+            else
+            {
+                <div class="yp-services-grid" id="ypServicesGrid">
+                    @for (int i = 0; i < servicios.Count; i++)
+                    {
+                        var servicio = servicios[i];
+                        <article class="yp-service-card yp-reveal @(i >= 6 ? "yp-service-extra" : "")">
+                            <div class="yp-service-top">
+                                <span class="yp-service-number">@((i + 1).ToString("D2"))</span>
+                                <span class="yp-service-mark" aria-hidden="true"><i class="bi bi-scissors"></i></span>
+                            </div>
+                            <div>
+                                <h3>@servicio.Nombre</h3>
+                                <p>@servicio.Descripcion</p>
+                            </div>
+                            <div class="yp-service-bottom">
+                                <span>PRECIO DEL SERVICIO</span>
+                                <strong>₡@servicio.Precio.ToString("N2", culturaCR)</strong>
+                            </div>
+                        </article>
+                    }
+                </div>
+                @if (servicios.Count > 6)
+                {
+                    <div class="yp-service-more-wrap">
+                        <button class="yp-btn yp-btn-ghost" type="button" id="ypMoreServices" aria-expanded="false">Ver todos los servicios <span>↓</span></button>
+                    </div>
+                }
+            }
+        </div>
+    </section>
+
+    <!-- 03 · GALERIA: grupos de 4, sin mostrar la siguiente pagina hasta pulsar flecha -->
+    <section class="yp-gallery yp-section yp-anchor" id="galeria" aria-labelledby="ypGalleryTitle">
+        <div class="yp-container">
+            <div class="yp-section-intro yp-reveal yp-gallery-heading">
+                <div>
+                    <span class="yp-eyebrow">02 / GALERÍA DE TRABAJOS</span>
+                    <h2 id="ypGalleryTitle">Cortes que <em>hablan por sí solos.</em></h2>
+                </div>
+                <p>Conoce nuestros trabajos. Selecciona una fotografía para verla ampliada.</p>
+            </div>
+
+            @if (imagenes.Count == 0)
+            {
+                <div class="yp-empty">Próximamente publicaremos fotografías de nuestros trabajos.</div>
+            }
+            else
+            {
+                <div class="yp-gallery-topline">
+                    <span>@imagenes.Count @(imagenes.Count == 1 ? "FOTOGRAFÍA" : "FOTOGRAFÍAS")</span>
+                    <div class="yp-gallery-controls" aria-label="Páginas de la galería">
+                        <span id="ypGalleryPageNumber" aria-live="polite">01 / @gruposImagenes.Count.ToString("D2")</span>
+                        <button type="button" id="ypGalleryPrev" aria-label="Mostrar las cuatro fotografías anteriores" disabled>←</button>
+                        <button type="button" id="ypGalleryNext" aria-label="Mostrar las siguientes cuatro fotografías" disabled="@(gruposImagenes.Count <= 1)">→</button>
+                    </div>
+                </div>
+
+                <div class="yp-gallery-pages" id="ypGalleryPages" data-total-pages="@gruposImagenes.Count">
+                    @for (int pagina = 0; pagina < gruposImagenes.Count; pagina++)
+                    {
+                        var grupo = gruposImagenes[pagina];
+                        <div class="yp-gallery-page @(pagina == 0 ? "is-active" : "")" data-gallery-page="@pagina" aria-hidden="@(pagina > 0 ? "true" : "false")">
+                            @for (int j = 0; j < grupo.Length; j++)
+                            {
+                                int numero = pagina * 4 + j;
+                                string url = Url.Content("~/imagenes/galeria/" + Uri.EscapeDataString(grupo[j]));
+                                <button type="button" class="yp-gallery-card" data-gallery-full="@url" data-gallery-index="@numero" aria-label="Ampliar fotografía @(numero + 1)">
+                                    <img src="@url" alt="Trabajo de Yampi BarberShop @(numero + 1)" loading="lazy" decoding="async" />
+                                    <span class="yp-gallery-card-overlay">
+                                        <small>YAMPI BARBERSHOP</small>
+                                        <span class="yp-gallery-zoom" aria-hidden="true">↗</span>
+                                    </span>
+                                </button>
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="yp-gallery-bottomline"><span>FOTOGRAFÍAS AMPLIABLES</span><span>01 — @imagenes.Count.ToString("D2")</span></div>
+            }
+        </div>
+    </section>
+
+    <!-- 04 · NOSOTROS: proposito, sin inventar historia empresarial -->
+    <section class="yp-about yp-anchor" id="nosotros" aria-labelledby="ypAboutTitle">
+        <div class="yp-about-photo" role="img" aria-label="Espacio de barbería con ambiente cálido">
+            <img src="https://images.unsplash.com/photo-1512690459411-b9245aed614b?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="" loading="lazy" decoding="async" />
+        </div>
+        <div class="yp-about-copy">
+            <div class="yp-about-copy-inner yp-reveal">
+                <span class="yp-eyebrow">03 / SOBRE NOSOTROS</span>
+                <h2 id="ypAboutTitle">Más que una barbería.<br /><em>Una experiencia.</em></h2>
+                <p>En Yampi BarberShop buscamos ofrecer un espacio donde cada persona pueda sentirse cómoda, expresar su estilo y recibir una atención cuidada en cada detalle.</p>
+                <p>Creemos en la combinación de técnica, dedicación y trato cercano. Nuestro propósito es que cada visita se sienta especial, desde que llegas hasta el último detalle de tu corte.</p>
+                <div class="yp-about-values">
+                    <div><span>01</span><strong>Precisión</strong></div>
+                    <div><span>02</span><strong>Compromiso</strong></div>
+                    <div><span>03</span><strong>Estilo propio</strong></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 05 · CONTACTO: datos de Contactos y mapa guardado por admin -->
+    <section class="yp-contact yp-section yp-anchor" id="contacto" aria-labelledby="ypContactTitle">
+        <div class="yp-container">
+            <div class="yp-section-intro yp-reveal">
+                <div>
+                    <span class="yp-eyebrow">04 / CONTÁCTENOS</span>
+                    <h2 id="ypContactTitle">Te esperamos <em>en Yampi.</em></h2>
+                </div>
+                <p>¿Quieres conocer más? Encuentra nuestros datos de contacto, horarios y ubicación.</p>
+            </div>
+            <div class="yp-contact-grid">
+                <div class="yp-contact-info yp-reveal">
+                    <div class="yp-contact-info-head"><span>INFORMACIÓN DE CONTACTO</span><span>↗</span></div>
+                    @if (contacto == null)
+                    {
+                        <p class="yp-empty-inline">La información de contacto estará disponible próximamente.</p>
+                    }
+                    else
+                    {
+                        @if (!string.IsNullOrWhiteSpace(contacto.Direccion))
+                        {
+                            <div class="yp-contact-line"><span class="yp-contact-icon"><i class="bi bi-geo-alt"></i></span><div><small>DIRECCIÓN</small><p>@contacto.Direccion</p></div></div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(contacto.Telefonos))
+                        {
+                            <div class="yp-contact-line"><span class="yp-contact-icon"><i class="bi bi-telephone"></i></span><div><small>TELÉFONO</small><p>@contacto.Telefonos</p></div></div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(contacto.Whatsapp))
+                        {
+                            <div class="yp-contact-line"><span class="yp-contact-icon"><i class="bi bi-whatsapp"></i></span><div><small>WHATSAPP</small>
+                                @if (whatsapp != null) { <a href="@whatsapp" target="_blank" rel="noopener noreferrer">@contacto.Whatsapp ↗</a> }
+                                else { <p>@contacto.Whatsapp</p> }
+                            </div></div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(contacto.Correo))
+                        {
+                            <div class="yp-contact-line"><span class="yp-contact-icon"><i class="bi bi-envelope"></i></span><div><small>CORREO ELECTRÓNICO</small><p>@contacto.Correo</p></div></div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(contacto.Horarios))
+                        {
+                            <div class="yp-contact-line"><span class="yp-contact-icon"><i class="bi bi-clock"></i></span><div><small>HORARIO DE ATENCIÓN</small><p>@contacto.Horarios</p></div></div>
+                        }
+                        @if (instagram != null || facebook != null || tiktok != null)
+                        {
+                            <div class="yp-socials" aria-label="Redes sociales">
+                                @if (instagram != null) { <a href="@instagram" target="_blank" rel="noopener noreferrer"><i class="bi bi-instagram" aria-hidden="true"></i> Instagram <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a> }
+                                @if (facebook != null) { <a href="@facebook" target="_blank" rel="noopener noreferrer"><i class="bi bi-facebook" aria-hidden="true"></i> Facebook <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a> }
+                                @if (tiktok != null) { <a href="@tiktok" target="_blank" rel="noopener noreferrer"><i class="bi bi-tiktok" aria-hidden="true"></i> TikTok <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a> }
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="yp-contact-map yp-reveal">
+                    @if (mapaUrl != null)
+                    {
+                        <iframe src="@mapaUrl" title="Ubicación de Yampi BarberShop en Google Maps" loading="lazy"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    }
+                    else
+                    {
+                        <div class="yp-contact-map-empty"><span><i class="bi bi-geo-alt"></i></span><strong>Ubicación</strong><p>El mapa aparecerá cuando se configure desde el panel de contacto.</p></div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 06 · CTA FINAL -->
+    <section class="yp-cta" aria-labelledby="ypCtaTitle">
+        <div class="yp-container yp-cta-inner yp-reveal">
+            <span class="yp-eyebrow">TU PRÓXIMO CORTE COMIENZA AQUÍ</span>
+            <h2 id="ypCtaTitle">¿Listo para tu <em>próximo estilo?</em></h2>
+            <p>Tu siguiente visita a Yampi BarberShop está a un paso.</p>
+            <a class="yp-btn yp-btn-gold" href="/Seguridad">Iniciar sesión y reservar <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        </div>
+    </section>
+
+    @if (whatsapp != null)
+    {
+        <a class="yp-whatsapp-float" href="@whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Escribir a Yampi BarberShop por WhatsApp" title="WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a>
     }
+</main>
 
-    .hero-content {
-        max-width: 800px;
-    }
-
-        .hero-content h1 {
-            font-size: 4rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #facc15;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
-        }
-
-        .hero-content p {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: #e2e8f0;
-        }
-
-    .btn-reservar {
-        display: inline-block;
-        margin-top: 20px;
-        padding: 12px 30px;
-        background-color: #facc15;
-        color: #020617;
-        font-weight: bold;
-        text-decoration: none;
-        border-radius: 8px;
-        transition: 0.3s;
-    }
-
-        .btn-reservar:hover {
-            background-color: #eab308;
-            color: #020617;
-            transform: scale(1.05);
-        }
-
-    .info-section {
-        background-color: #0f172a;
-        color: white;
-        padding: 60px 20px;
-        text-align: center;
-    }
-
-        .info-section h2 {
-            color: #facc15;
-            margin-bottom: 20px;
-        }
-
-        .info-section p {
-            max-width: 900px;
-            margin: auto;
-            color: #cbd5e1;
-        }
-</style>
-
-<div class="hero-section">
-    <div class="hero-content">
-        <h1>Yampi BarberShop</h1>
-
-        <p>
-            Estilo, precisión y calidad en cada corte.
-        </p>
-
-        <p>
-            La mejor experiencia de barbería en Costa Rica.
-        </p>
-
-    </div>
-</div>
-
-<div class="info-section">
-    <h2>¿Por qué elegirnos?</h2>
-
-    <p>
-        En Yampi BarberShop contamos con barberos profesionales, atención personalizada
-        y los mejores productos para el cuidado de tu cabello y barba. Nuestro objetivo
-        es que cada cliente salga con una imagen renovada y una experiencia excepcional.
-    </p>
+<!-- Lightbox - fuera del main para quedar por encima de cualquier encabezado -->
+<div class="yp-lightbox" id="ypLightbox" role="dialog" aria-modal="true" aria-label="Fotografía ampliada" hidden>
+    <button type="button" class="yp-lightbox-close" id="ypLightboxClose" aria-label="Cerrar fotografía">×</button>
+    <button type="button" class="yp-lightbox-prev" id="ypLightboxPrev" aria-label="Fotografía anterior">←</button>
+    <figure class="yp-lightbox-figure"><img id="ypLightboxImage" alt="Fotografía ampliada" /><figcaption id="ypLightboxCaption"></figcaption></figure>
+    <button type="button" class="yp-lightbox-next" id="ypLightboxNext" aria-label="Fotografía siguiente">→</button>
 </div>

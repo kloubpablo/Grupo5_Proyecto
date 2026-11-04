@@ -1,159 +1,95 @@
 ﻿@{
     ViewData["Title"] = "Registro";
-    Layout = "~/Views/Shared/_LayoutPublico.cshtml";
+    Layout = "~/Views/Shared/_LayoutSeguridad.cshtml";
 }
 
-<style>
-    .registro-container {
-        min-height: calc(100vh - 250px);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 40px 20px;
-    }
+<link rel="stylesheet" href="~/css/seguridad.css" asp-append-version="true" />
 
-    .registro-box {
-        width: 100%;
-        max-width: 500px;
-    }
+<section class="seg-page" aria-labelledby="segTitulo">
+    <div class="seg-shell">
+        @await Html.PartialAsync("_SeguridadPresentacion")
 
-    .registro-card {
-        background-color: #1e293b;
-        border-radius: 15px;
-        padding: 35px;
-        box-shadow: 0 0 25px rgba(0,0,0,0.3);
-    }
+        <div class="seg-form-panel">
+            <div class="seg-form-inner">
+                <header class="seg-heading">
+                    <div class="seg-heading-icon" aria-hidden="true"><i class="bi bi-person-plus"></i></div>
+                    <span class="seg-kicker">ÚNETE A YAMPI</span>
+                    <h1 id="segTitulo">Crea tu cuenta</h1>
+                    <p>Regístrate para consultar y reservar tus próximas citas.</p>
+                </header>
 
-        .registro-card h2 span {
-            color: #facc15;
-        }
+                @if (ViewBag.Error != null)
+                {
+                    <div class="seg-alert seg-alert-error" role="alert">
+                        <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+                        <span>@ViewBag.Error</span>
+                    </div>
+                }
 
-        .registro-card p {
-            color: #cbd5e1;
-        }
+                <form asp-controller="Seguridad" asp-action="Registrar" method="post" asp-antiforgery="true" class="seg-form" data-confirm-form>
+                    <div class="seg-field">
+                        <label for="segNombre">Nombre completo</label>
+                        <div class="seg-input-wrap">
+                            <i class="bi bi-person-vcard" aria-hidden="true"></i>
+                            <input id="segNombre" name="nombre" type="text" autocomplete="name" maxlength="150"
+                                   placeholder="Tu nombre y apellidos" required />
+                        </div>
+                    </div>
+                    <div class="seg-field">
+                        <label for="segUsername">Nombre de usuario</label>
+                        <div class="seg-input-wrap">
+                            <i class="bi bi-person" aria-hidden="true"></i>
+                            <input id="segUsername" name="username" type="text" autocomplete="username" maxlength="100"
+                                   placeholder="Elige un nombre de usuario" required />
+                        </div>
+                    </div>
+                    <div class="seg-field">
+                        <label for="segCorreo">Correo electrónico</label>
+                        <div class="seg-input-wrap">
+                            <i class="bi bi-envelope" aria-hidden="true"></i>
+                            <input id="segCorreo" name="correo" type="email" autocomplete="email" maxlength="254"
+                                   placeholder="correo@ejemplo.com" required />
+                        </div>
+                    </div>
+                    <div class="seg-fields-two">
+                        <div class="seg-field">
+                            <label for="segPassword">Contraseña</label>
+                            <div class="seg-input-wrap seg-password-wrap">
+                                <i class="bi bi-lock" aria-hidden="true"></i>
+                                <input id="segPassword" name="password" type="password" autocomplete="new-password"
+                                       placeholder="Contraseña" minlength="8" required />
+                                <button class="seg-show-password" type="button" data-toggle-password="segPassword"
+                                        aria-label="Mostrar contraseña" aria-pressed="false" title="Mostrar contraseña">
+                                    <i class="bi bi-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="seg-field">
+                            <label for="segConfirmar">Confirmar contraseña</label>
+                            <div class="seg-input-wrap seg-password-wrap">
+                                <i class="bi bi-shield-lock" aria-hidden="true"></i>
+                                <input id="segConfirmar" name="confirmPassword" type="password" autocomplete="new-password"
+                                       placeholder="Repite la contraseña" minlength="8" required />
+                                <button class="seg-show-password" type="button" data-toggle-password="segConfirmar"
+                                        aria-label="Mostrar contraseña" aria-pressed="false" title="Mostrar contraseña">
+                                    <i class="bi bi-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="seg-field-hint"><i class="bi bi-info-circle" aria-hidden="true"></i> Usa una contraseña de al menos 8 caracteres.</p>
+                    <button type="submit" class="seg-submit">
+                        <i class="bi bi-person-check" aria-hidden="true"></i>
+                        <span class="seg-submit-copy">Crear cuenta</span>
+                        <i class="bi bi-arrow-right seg-submit-arrow" aria-hidden="true"></i>
+                    </button>
+                </form>
 
-        .registro-card label {
-            color: white;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .registro-card input {
-            background-color: #020617 !important;
-            color: white !important;
-            border: 1px solid #334155 !important;
-        }
-
-            .registro-card input:focus {
-                border-color: #facc15 !important;
-                box-shadow: none !important;
-            }
-
-    .links {
-        margin-top: 20px;
-        text-align: center;
-    }
-
-        .links a {
-            color: #facc15;
-            text-decoration: none;
-        }
-
-            .links a:hover {
-                text-decoration: underline;
-            }
-</style>
-
-<div class="registro-container">
-
-    <div class="registro-box">
-
-        <div class="registro-card">
-
-            <header class="text-center mb-4">
-                <h2 class="major">
-                    <span>💈 Registro de Cliente</span>
-                </h2>
-
-                <p>
-                    Cree su cuenta para agendar citas
-                </p>
-            </header>
-
-            @if (ViewBag.Error != null)
-            {
-                <div class="alert alert-danger text-center">
-                    @ViewBag.Error
+                <div class="seg-form-bottom">
+                    <p>¿Ya tienes una cuenta? <a asp-controller="Seguridad" asp-action="Index">Iniciar sesión</a></p>
+                    <a class="seg-home-link" asp-controller="YampiBarberShop" asp-action="Index"><i class="bi bi-arrow-left" aria-hidden="true"></i> Volver al inicio</a>
                 </div>
-            }
-
-            <form asp-controller="Seguridad"
-                  asp-action="Registrar"
-                  method="post">
-
-                <div class="mb-3">
-                    <label>Nombre Completo</label>
-
-                    <input class="form-control"
-                           type="text"
-                           name="nombre"
-                           required />
-                </div>
-
-                <div class="mb-3">
-                    <label>Nombre de Usuario</label>
-
-                    <input class="form-control"
-                           type="text"
-                           name="username"
-                           required />
-                </div>
-
-                <div class="mb-3">
-                    <label>Correo Electrónico</label>
-
-                    <input class="form-control"
-                           type="email"
-                           name="correo"
-                           required />
-                </div>
-
-                <div class="mb-3">
-                    <label>Contraseña</label>
-
-                    <input class="form-control"
-                           type="password"
-                           name="password"
-                           required />
-                </div>
-
-                <div class="mb-3">
-                    <label>Confirmar Contraseña</label>
-
-                    <input class="form-control"
-                           type="password"
-                           name="confirmPassword"
-                           required />
-                </div>
-
-                <button type="submit"
-                        class="button primary w-100">
-                    📝 Crear Cuenta
-                </button>
-
-            </form>
-
-            <div class="links">
-
-                <a asp-controller="Seguridad"
-                   asp-action="Index">
-                    ← Volver al Login
-                </a>
-
             </div>
-
         </div>
-
     </div>
-
-</div>
+</section>

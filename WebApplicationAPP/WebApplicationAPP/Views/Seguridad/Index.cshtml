@@ -1,139 +1,74 @@
 ﻿@{
     ViewData["Title"] = "Login";
-    Layout = "~/Views/Shared/_LayoutPublico.cshtml";
+    Layout = "~/Views/Shared/_LayoutSeguridad.cshtml";
 }
 
-<style>
-    .login-container {
-        min-height: calc(100vh - 250px);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 40px 20px;
-    }
+<link rel="stylesheet" href="~/css/seguridad.css" asp-append-version="true" />
 
-    .login-box {
-        width: 100%;
-        max-width: 450px;
-    }
+<section class="seg-page" aria-labelledby="segTitulo">
+    <div class="seg-shell">
+        @await Html.PartialAsync("_SeguridadPresentacion")
 
-    .login-card {
-        background-color: #1e293b;
-        border-radius: 15px;
-        padding: 35px;
-        box-shadow: 0 0 25px rgba(0,0,0,0.3);
-    }
+        <div class="seg-form-panel">
+            <div class="seg-form-inner">
+                <header class="seg-heading">
+                    <div class="seg-heading-icon" aria-hidden="true"><i class="bi bi-box-arrow-in-right"></i></div>
+                    <span class="seg-kicker">ACCESO A TU CUENTA</span>
+                    <h1 id="segTitulo">Bienvenido de nuevo</h1>
+                    <p>Ingresa tus datos para administrar tus próximas citas.</p>
+                </header>
 
-        .login-card h2 span {
-            color: #facc15;
-        }
+                @if (TempData["Mensaje"] != null)
+                {
+                    <div class="seg-alert seg-alert-success" role="status">
+                        <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                        <span>@TempData["Mensaje"]</span>
+                    </div>
+                }
+                @if (ViewBag.Error != null)
+                {
+                    <div class="seg-alert seg-alert-error" role="alert">
+                        <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+                        <span>@ViewBag.Error</span>
+                    </div>
+                }
 
-        .login-card p {
-            color: #cbd5e1;
-        }
+                <form asp-controller="Seguridad" asp-action="Index" method="post" asp-antiforgery="true" class="seg-form">
+                    <div class="seg-field">
+                        <label for="segUsuario">Nombre de usuario</label>
+                        <div class="seg-input-wrap">
+                            <i class="bi bi-person" aria-hidden="true"></i>
+                            <input id="segUsuario" name="usuario" type="text" autocomplete="username"
+                                   placeholder="Escribe tu usuario" maxlength="100" required autofocus />
+                        </div>
+                    </div>
+                    <div class="seg-field">
+                        <div class="seg-label-row">
+                            <label for="segPassword">Contraseña</label>
+                            <a asp-controller="Seguridad" asp-action="Recuperar" class="seg-small-link">¿La olvidaste?</a>
+                        </div>
+                        <div class="seg-input-wrap seg-password-wrap">
+                            <i class="bi bi-lock" aria-hidden="true"></i>
+                            <input id="segPassword" name="password" type="password" autocomplete="current-password"
+                                   placeholder="Ingresa tu contraseña" required />
+                            <button class="seg-show-password" type="button" data-toggle-password="segPassword"
+                                    aria-label="Mostrar contraseña" aria-pressed="false" title="Mostrar contraseña">
+                                <i class="bi bi-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="seg-submit">
+                        <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
+                        <span class="seg-submit-copy">Iniciar sesión</span>
+                        <i class="bi bi-arrow-right seg-submit-arrow" aria-hidden="true"></i>
+                    </button>
+                </form>
 
-        .login-card label {
-            color: white;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .login-card input {
-            background-color: #020617 !important;
-            color: white !important;
-            border: 1px solid #334155 !important;
-        }
-
-            .login-card input:focus {
-                border-color: #facc15 !important;
-                box-shadow: none !important;
-            }
-
-    .links {
-        margin-top: 20px;
-        text-align: center;
-    }
-
-        .links a {
-            display: block;
-            margin-top: 10px;
-            color: #facc15;
-            text-decoration: none;
-        }
-
-            .links a:hover {
-                text-decoration: underline;
-            }
-</style>
-
-<div class="login-container">
-
-    <div class="login-box">
-
-        <div class="login-card">
-
-            <header class="text-center mb-4">
-                <h2 class="major">
-                    <span>💈 YAMPI BARBERSHOP</span>
-                </h2>
-
-                <p>
-                    Inicio de sesión
-                </p>
-            </header>
-
-            @if (ViewBag.Error != null)
-            {
-                <div class="alert alert-danger text-center">
-                    @ViewBag.Error
+                <div class="seg-form-bottom">
+                    <p>¿Todavía no tienes una cuenta? <a asp-controller="Seguridad" asp-action="Registrar">Regístrate aquí</a></p>
+                    <a class="seg-home-link" asp-controller="YampiBarberShop" asp-action="Index"><i class="bi bi-arrow-left" aria-hidden="true"></i> Volver al inicio</a>
                 </div>
-            }
-
-            <form asp-controller="Seguridad"
-                  asp-action="Index"
-                  method="post">
-
-                <div class="mb-3">
-                    <label>Usuario</label>
-
-                    <input class="form-control"
-                           type="text"
-                           name="usuario"
-                           required />
-                </div>
-
-                <div class="mb-3">
-                    <label>Contraseña</label>
-
-                    <input class="form-control"
-                           type="password"
-                           name="password"
-                           required />
-                </div>
-
-                <button type="submit"
-                        class="button primary w-100">
-                    🔐 Ingresar
-                </button>
-
-            </form>
-
-            <div class="links">
-
-                <a asp-controller="Seguridad"
-                   asp-action="Recuperar">
-                    ¿Olvidaste tu contraseña?
-                </a>
-
-                <a asp-controller="Seguridad"
-                   asp-action="Registrar">
-                    Registrarse
-                </a>
-
             </div>
-
         </div>
-
     </div>
-
-</div>
+</section>

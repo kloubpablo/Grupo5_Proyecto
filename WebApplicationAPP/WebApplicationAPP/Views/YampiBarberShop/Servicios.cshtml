@@ -1,121 +1,204 @@
 ﻿@model IEnumerable<WebApplicationAPP.Models.Servicio>
+@using System.Globalization
+
 @{
     ViewData["Title"] = "Servicios";
     Layout = "~/Views/Shared/_LayoutPublico.cshtml";
+
+    var servicios = Model?.ToList()
+        ?? new List<WebApplicationAPP.Models.Servicio>();
+
+    var culturaCR = CultureInfo.GetCultureInfo("es-CR");
 }
 
-<style>
-    .servicios-section {
-        min-height: 100vh;
-        background: linear-gradient( rgba(2, 6, 23, 0.85), rgba(15, 23, 42, 0.90) ), url(https://images.unsplash.com/photo-1759134248487-e8baaf31e33e?q=80&w=2113&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
-        background-size: cover;
-        background-position: center;
-        padding: 80px 20px;
-    }
+<link rel="stylesheet" href="~/css/servicios-publico.css" asp-append-version="true" />
 
-    .titulo-principal {
-        text-align: center;
-        color: #facc15;
-        font-size: 3rem;
-        margin-bottom: 15px;
-        font-weight: bold;
-    }
+<div class="servicios-publico-page">
 
-    .subtitulo {
-        text-align: center;
-        color: #cbd5e1;
-        margin-bottom: 50px;
-        font-size: 1.1rem;
-    }
+    <!-- ==========================================
+         ENCABEZADO
+    ========================================== -->
 
-    .servicios-grid {
-        max-width: 1200px;
-        margin: auto;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 25px;
-    }
+    <section class="servicios-publico-header">
 
-    .servicio-card {
-        background: rgba(30, 41, 59, 0.95);
-        border: 2px solid #334155;
-        border-radius: 15px;
-        padding: 30px;
-        transition: 0.3s;
-        text-align: center;
-    }
+        <div class="servicios-publico-header-content">
 
-        .servicio-card:hover {
-            transform: translateY(-8px);
-            border-color: #facc15;
-        }
-
-    .servicio-icono {
-        font-size: 3rem;
-        margin-bottom: 15px;
-    }
-
-    .servicio-card h3 {
-        color: #facc15;
-        margin-bottom: 15px;
-    }
-
-    .servicio-card p {
-        color: #e2e8f0;
-        margin-bottom: 15px;
-    }
-
-    .precio {
-        font-size: 1.3rem;
-        font-weight: bold;
-        color: #facc15;
-    }
-
-    @@media(max-width: 992px) {
-        .servicios-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @@media(max-width: 768px) {
-        .servicios-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .titulo-principal {
-            font-size: 2.2rem;
-        }
-    }
-</style>
-
-<section class="servicios-section">
-
-    <h1 class="titulo-principal">
-        Nuestros Servicios
-    </h1>
-
-    <p class="subtitulo">
-        Calidad, estilo y atención profesional para que siempre luzcas tu mejor versión.
-    </p>
-
-    <div class="servicios-grid">
-        @foreach(var servicios in Model)
-        {
-            <div class="servicio-card">
-                <div class="servicio-icono">
-                    <img src="~/imagenes/tijeras.png" />
-                </div>
-                <h3>
-                    @servicios.Nombre
-                </h3>
-                <p>
-                    @servicios.Descripcion
-                </p>
-                <p class="precio">
-                    ₡@servicios.Precio.ToString("F2")
-                </p>
+            <div class="servicios-publico-header-icon">
+                <i class="bi bi-scissors"></i>
             </div>
-        }
-    </div>
 
-</section>
+            <h1>
+                Nuestros <span>Servicios</span>
+            </h1>
+
+            <p>
+                Conoce nuestros servicios de barberia,
+                pensados para ofrecerte una atencion
+                de calidad y un estilo que se adapte a ti.
+            </p>
+
+            <div class="servicios-publico-header-line"></div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+         CATALOGO DE SERVICIOS
+    ========================================== -->
+
+    <section class="servicios-publico-section">
+
+        <div class="servicios-publico-container">
+
+            <div class="servicios-publico-section-header">
+
+                <div>
+
+                    <span class="servicios-publico-kicker">
+                        CATALOGO DE SERVICIOS
+                    </span>
+
+                    <h2>
+                        <i class="bi bi-grid-3x3-gap"></i>
+                        Descubre lo que ofrecemos
+                    </h2>
+
+                    <p>
+                        Explora nuestros servicios y encuentra
+                        la opcion ideal para tu proxima visita.
+                    </p>
+
+                </div>
+
+                <span class="servicios-publico-count">
+                    <i class="bi bi-scissors"></i>
+                    @servicios.Count servicios
+                </span>
+
+            </div>
+
+            @if (!servicios.Any())
+            {
+                <!-- SIN SERVICIOS -->
+
+                <div class="servicios-publico-empty">
+
+                    <div class="servicios-publico-empty-icon">
+                        <i class="bi bi-scissors"></i>
+                    </div>
+
+                    <h3>
+                        Proximamente nuevos servicios
+                    </h3>
+
+                    <p>
+                        Estamos preparando nuestro catalogo.
+                        Vuelve pronto para conocer
+                        todos nuestros servicios.
+                    </p>
+
+                </div>
+            }
+            else
+            {
+                <!-- TARJETAS -->
+
+                <div class="servicios-publico-grid">
+
+                    @foreach (var servicio in servicios)
+                    {
+                        <article class="servicios-publico-card">
+
+                            <div class="servicios-publico-card-top">
+
+                                <div class="servicios-publico-card-icon">
+                                    <i class="bi bi-scissors"></i>
+                                </div>
+
+                                <span class="servicios-publico-card-label">
+                                    SERVICIO
+                                </span>
+
+                            </div>
+
+                            <div class="servicios-publico-card-body">
+
+                                <h3>
+                                    @(string.IsNullOrWhiteSpace(servicio.Nombre)
+                                        ? "Servicio de barberia"
+                                        : servicio.Nombre)
+                                </h3>
+
+                                <p>
+                                    @(string.IsNullOrWhiteSpace(servicio.Descripcion)
+                                        ? "Consulta con nuestro equipo para obtener mas informacion."
+                                        : servicio.Descripcion)
+                                </p>
+
+                            </div>
+
+                            <div class="servicios-publico-card-footer">
+
+                                <div class="servicios-publico-price">
+
+                                    <span>
+                                        Precio del servicio
+                                    </span>
+
+                                    <strong>
+                                        ₡@servicio.Precio.ToString("N2", culturaCR)
+                                    </strong>
+
+                                </div>
+
+                                <span class="servicios-publico-card-decoration">
+                                    <i class="bi bi-arrow-up-right"></i>
+                                </span>
+
+                            </div>
+
+                        </article>
+                    }
+
+                </div>
+            }
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+         SECCION FINAL
+    ========================================== -->
+
+    <section class="servicios-publico-bottom">
+
+        <div class="servicios-publico-bottom-content">
+
+            <div class="servicios-publico-bottom-icon">
+                <i class="bi bi-calendar-check"></i>
+            </div>
+
+            <h2>
+                ¿Listo para tu proximo corte?
+            </h2>
+
+            <p>
+                Reserva tu cita y disfruta de nuestros
+                servicios en Yampi BarberShop.
+            </p>
+
+            <a href="/Seguridad" class="servicios-publico-book-btn">
+
+                <i class="bi bi-calendar-plus"></i>
+                Reservar una cita
+                <i class="bi bi-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </section>
+
+</div>

@@ -1,34 +1,68 @@
 ﻿@{
     ViewData["Title"] = "Cambiar Contraseña";
+    Layout = "~/Views/Shared/_LayoutSeguridad.cshtml";
 }
 
-<h2>Cambiar Contraseña</h2>
+<link rel="stylesheet" href="~/css/seguridad.css" asp-append-version="true" />
 
-<form asp-action="CambiarContrasena"
-      method="post">
+<section class="seg-page" aria-labelledby="segTitulo">
+    <div class="seg-shell">
+        @await Html.PartialAsync("_SeguridadPresentacion")
 
-    <input type="password"
-           name="nuevaContrasena"
-           class="form-control mb-3"
-           placeholder="Nueva contraseña"
-           required />
+        <div class="seg-form-panel">
+            <div class="seg-form-inner">
+                <header class="seg-heading">
+                    <div class="seg-heading-icon" aria-hidden="true"><i class="bi bi-shield-lock"></i></div>
+                    <span class="seg-kicker">SEGURIDAD DE TU CUENTA</span>
+                    <h1 id="segTitulo">Cambia tu contraseña</h1>
+                    <p>Establece una contraseña nueva para seguir utilizando tu cuenta.</p>
+                </header>
 
-    <input type="password"
-           name="confirmarContrasena"
-           class="form-control mb-3"
-           placeholder="Confirmar contraseña"
-           required />
+                @if (ViewBag.Error != null)
+                {
+                    <div class="seg-alert seg-alert-error" role="alert">
+                        <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+                        <span>@ViewBag.Error</span>
+                    </div>
+                }
 
-    <button type="submit"
-            class="btn btn-success">
-        Guardar
-    </button>
+                <form asp-controller="Seguridad" asp-action="CambiarContrasena" method="post" asp-antiforgery="true" class="seg-form" data-confirm-form>
+                    <div class="seg-field">
+                        <label for="segNuevaContrasena">Nueva contraseña</label>
+                        <div class="seg-input-wrap seg-password-wrap">
+                            <i class="bi bi-lock" aria-hidden="true"></i>
+                            <input id="segNuevaContrasena" name="nuevaContrasena" type="password"
+                                   autocomplete="new-password" placeholder="Escribe tu nueva contraseña" minlength="8" required />
+                            <button class="seg-show-password" type="button" data-toggle-password="segNuevaContrasena"
+                                    aria-label="Mostrar contraseña" aria-pressed="false" title="Mostrar contraseña">
+                                <i class="bi bi-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="seg-field">
+                        <label for="segConfirmarContrasena">Confirmar nueva contraseña</label>
+                        <div class="seg-input-wrap seg-password-wrap">
+                            <i class="bi bi-shield-check" aria-hidden="true"></i>
+                            <input id="segConfirmarContrasena" name="confirmarContrasena" type="password"
+                                   autocomplete="new-password" placeholder="Repite tu nueva contraseña" minlength="8" required />
+                            <button class="seg-show-password" type="button" data-toggle-password="segConfirmarContrasena"
+                                    aria-label="Mostrar contraseña" aria-pressed="false" title="Mostrar contraseña">
+                                <i class="bi bi-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="seg-field-hint"><i class="bi bi-info-circle" aria-hidden="true"></i> Mínimo 8 caracteres. No reutilices tu contraseña temporal.</p>
+                    <button type="submit" class="seg-submit">
+                        <i class="bi bi-check-circle" aria-hidden="true"></i>
+                        <span class="seg-submit-copy">Guardar contraseña</span>
+                        <i class="bi bi-arrow-right seg-submit-arrow" aria-hidden="true"></i>
+                    </button>
+                </form>
 
-    @if (ViewBag.Error != null)
-    {
-        <p style="color:red;">
-            @ViewBag.Error
-        </p>
-    }
-
-</form>
+                <div class="seg-form-bottom">
+                    <p>Tu contraseña protege el acceso a tus reservas y a tu perfil.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,481 @@
+
+/* =========================================================
+   YAMPI BARBERSHOP - SERVICIOS PUBLICOS
+   Negro / Dorado / Sin degradados
+========================================================= */
+
+.servicios-publico-page {
+    --sp-black: #09090a;
+    --sp-dark: #121214;
+    --sp-card: #171719;
+    --sp-card-hover: #1c1c1f;
+    --sp-border: #29292d;
+    --sp-gold: #d4af37;
+    --sp-gold-light: #e4c65a;
+    --sp-white: #f5f5f5;
+    --sp-muted: #a5a5aa;
+    --sp-muted-dark: #77777f;
+
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: var(--sp-black);
+    color: var(--sp-white);
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.servicios-publico-page *,
+.servicios-publico-page *::before,
+.servicios-publico-page *::after {
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   ENCABEZADO PRINCIPAL
+========================================================= */
+
+.servicios-publico-header {
+    position: relative;
+    width: 100%;
+    padding: 95px 24px 85px;
+    background: #0d0d0f;
+    border-bottom: 1px solid var(--sp-border);
+}
+
+.servicios-publico-header-content {
+    width: 100%;
+    max-width: 850px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.servicios-publico-kicker {
+    display: inline-block;
+    color: var(--sp-gold);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    line-height: 1.6;
+}
+
+.servicios-publico-header-icon {
+    display: grid;
+    place-items: center;
+    width: 75px;
+    height: 75px;
+    margin: 25px auto;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 18px;
+    background: rgba(212, 175, 55, 0.08);
+    color: var(--sp-gold);
+    font-size: 32px;
+}
+
+.servicios-publico-header h1 {
+    margin: 0;
+    color: var(--sp-white);
+    font-size: clamp(35px, 5vw, 56px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.2;
+}
+
+.servicios-publico-header h1 span {
+    color: var(--sp-gold);
+}
+
+.servicios-publico-header p {
+    max-width: 650px;
+    margin: 22px auto 0;
+    color: var(--sp-muted);
+    font-size: 15px;
+    line-height: 1.9;
+}
+
+.servicios-publico-header-line {
+    width: 65px;
+    height: 3px;
+    margin: 30px auto 0;
+    background: var(--sp-gold);
+    border-radius: 5px;
+}
+
+/* =========================================================
+   CONTENEDOR DEL CATALOGO
+========================================================= */
+
+.servicios-publico-section {
+    padding: 75px 24px 100px;
+    background: var(--sp-black);
+}
+
+.servicios-publico-container {
+    max-width: 1250px;
+    margin: 0 auto;
+}
+
+.servicios-publico-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 30px;
+    margin-bottom: 35px;
+}
+
+.servicios-publico-section-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0 8px;
+    color: var(--sp-white);
+    font-size: clamp(24px, 3vw, 30px);
+    font-weight: 750;
+    line-height: 1.3;
+}
+
+.servicios-publico-section-header h2 i {
+    color: var(--sp-gold);
+    font-size: 25px;
+}
+
+.servicios-publico-section-header p {
+    margin: 0;
+    color: var(--sp-muted);
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.servicios-publico-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-shrink: 0;
+    min-height: 38px;
+    padding: 8px 14px;
+    background: var(--sp-card);
+    border: 1px solid var(--sp-border);
+    border-radius: 9px;
+    color: var(--sp-gold);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   TARJETAS DE SERVICIOS
+========================================================= */
+
+.servicios-publico-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.servicios-publico-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 295px;
+    padding: 25px;
+    background: var(--sp-card);
+    border: 1px solid var(--sp-border);
+    border-radius: 16px;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.servicios-publico-card:hover {
+    background: var(--sp-card-hover);
+    border-color: rgba(212, 175, 55, 0.5);
+    transform: translateY(-4px);
+}
+
+.servicios-publico-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 28px;
+}
+
+.servicios-publico-card-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    background: rgba(212, 175, 55, 0.09);
+    border: 1px solid rgba(212, 175, 55, 0.23);
+    border-radius: 12px;
+    color: var(--sp-gold);
+    font-size: 23px;
+}
+
+.servicios-publico-card-label {
+    color: var(--sp-muted-dark);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.servicios-publico-card-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.servicios-publico-card-body h3 {
+    margin: 0 0 14px;
+    color: var(--sp-white);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.servicios-publico-card-body p {
+    margin: 0;
+    color: var(--sp-muted);
+    font-size: 13px;
+    line-height: 1.9;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   PRECIO
+========================================================= */
+
+.servicios-publico-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--sp-border);
+}
+
+.servicios-publico-price {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.servicios-publico-price span {
+    color: var(--sp-muted-dark);
+    font-size: 11px;
+}
+
+.servicios-publico-price strong {
+    color: var(--sp-gold);
+    font-size: 23px;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.servicios-publico-card-decoration {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 9px;
+    color: var(--sp-gold);
+    font-size: 16px;
+}
+
+/* =========================================================
+   SIN SERVICIOS
+========================================================= */
+
+.servicios-publico-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
+    padding: 45px 25px;
+    background: var(--sp-card);
+    border: 1px dashed #424247;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.servicios-publico-empty-icon {
+    display: grid;
+    place-items: center;
+    width: 75px;
+    height: 75px;
+    margin-bottom: 25px;
+    background: rgba(212, 175, 55, 0.08);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 16px;
+    color: var(--sp-gold);
+    font-size: 32px;
+}
+
+.servicios-publico-empty h3 {
+    margin: 0 0 12px;
+    color: var(--sp-white);
+    font-size: 22px;
+}
+
+.servicios-publico-empty p {
+    max-width: 430px;
+    margin: 0;
+    color: var(--sp-muted);
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+/* =========================================================
+   SECCION FINAL / RESERVACION
+========================================================= */
+
+.servicios-publico-bottom {
+    padding: 75px 24px 90px;
+    background: #111113;
+    border-top: 1px solid var(--sp-border);
+}
+
+.servicios-publico-bottom-content {
+    max-width: 750px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.servicios-publico-bottom-icon {
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 22px;
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 14px;
+    background: rgba(212, 175, 55, 0.08);
+    color: var(--sp-gold);
+    font-size: 26px;
+}
+
+.servicios-publico-bottom h2 {
+    margin: 0 0 15px;
+    color: var(--sp-white);
+    font-size: clamp(25px, 3.5vw, 36px);
+    font-weight: 750;
+}
+
+.servicios-publico-bottom p {
+    margin: 0 auto 30px;
+    max-width: 550px;
+    color: var(--sp-muted);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.servicios-publico-book-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 49px;
+    padding: 13px 24px;
+    background: var(--sp-gold);
+    border: 1px solid var(--sp-gold);
+    border-radius: 10px;
+    color: #09090a;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.servicios-publico-book-btn:hover {
+    background: var(--sp-gold-light);
+    border-color: var(--sp-gold-light);
+    color: #09090a;
+    transform: translateY(-2px);
+}
+
+.servicios-publico-book-btn:focus-visible {
+    outline: 2px solid var(--sp-gold-light);
+    outline-offset: 4px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1050px) {
+
+    .servicios-publico-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .servicios-publico-header {
+        padding: 75px 24px 65px;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .servicios-publico-header {
+        padding: 65px 20px 60px;
+    }
+
+    .servicios-publico-header-icon {
+        width: 65px;
+        height: 65px;
+        font-size: 27px;
+    }
+
+    .servicios-publico-header p {
+        font-size: 13px;
+    }
+
+    .servicios-publico-section {
+        padding: 55px 18px 70px;
+    }
+
+    .servicios-publico-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    .servicios-publico-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .servicios-publico-card {
+        min-height: 0;
+        padding: 23px;
+    }
+
+    .servicios-publico-bottom {
+        padding: 65px 20px 75px;
+    }
+
+    .servicios-publico-book-btn {
+        width: 100%;
+        max-width: 350px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .servicios-publico-page *,
+    .servicios-publico-page *::before,
+    .servicios-publico-page *::after {
+        transition: none !important;
+        transform: none !important;
+    }
+}

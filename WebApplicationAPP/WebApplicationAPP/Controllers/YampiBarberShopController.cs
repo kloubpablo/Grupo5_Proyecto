@@ -31,9 +31,43 @@ namespace WebApplicationAPP.Controllers
         // Yampi BarberShop
         // ============================
 
-        public IActionResult Index()
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var modelo = new InicioPublicoViewModel
+            {
+                Servicios = await _context.Servicios
+                    .AsNoTracking()
+                    .OrderBy(s => s.Nombre)
+                    .ToListAsync(),
+
+                Contacto = await _context.Contactos
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync()
+            };
+
+            string carpeta = Path.Combine(_env.WebRootPath, "imagenes", "galeria");
+
+            if (Directory.Exists(carpeta))
+            {
+                var extensiones = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ".jpg", ".jpeg", ".png", ".webp", ".gif"
+        };
+
+                modelo.ImagenesGaleria = Directory.EnumerateFiles(carpeta)
+                    .Where(ruta => extensiones.Contains(Path.GetExtension(ruta)))
+                    .Select(Path.GetFileName)
+                    .OfType<string>()
+                    .OrderBy(nombre =>
+                        int.TryParse(Path.GetFileNameWithoutExtension(nombre), out int numero)
+                            ? numero : int.MaxValue)
+                    .ThenBy(nombre => nombre, StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+            }
+
+            return View(modelo);
         }
 
         public IActionResult Privacy()
@@ -54,17 +88,62 @@ namespace WebApplicationAPP.Controllers
         // Galeria
         // ============================
 
+
+        // ============================
+        // Galeria publica
+        // ============================
+
         public IActionResult Galeria()
         {
-            ViewBag.Total = Directory.GetFiles(
-                Path.Combine(
-                    _env.WebRootPath,
-                    "imagenes",
-                    "galeria")
-                ).Length;
+            string carpeta = Path.Combine(
+                _env.WebRootPath,
+                "imagenes",
+                "galeria"
+            );
 
-            return View();
+            var imagenes = new List<string>();
+
+            // Comprobar que exista la carpeta
+            if (Directory.Exists(carpeta))
+            {
+                string[] extensionesPermitidas =
+                {
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".webp",
+            ".gif"
+        };
+
+                // Obtener los nombres reales de las imagenes
+                imagenes = Directory.GetFiles(carpeta)
+                    .Where(archivo =>
+                        extensionesPermitidas.Contains(
+                            Path.GetExtension(archivo).ToLowerInvariant()
+                        )
+                    )
+                    .Select(Path.GetFileName)
+                    .OfType<string>()
+                    .OrderBy(nombre =>
+                    {
+                        string nombreSinExtension =
+                            Path.GetFileNameWithoutExtension(nombre);
+
+                        return int.TryParse(
+                            nombreSinExtension,
+                            out int numero
+                        )
+                            ? numero
+                            : int.MaxValue;
+                    })
+                    .ThenBy(nombre => nombre)
+                    .ToList();
+            }
+
+            // Enviar las imagenes directamente a la vista
+            return View(imagenes);
         }
+
         // ============================
         // Nosotros
         // ============================

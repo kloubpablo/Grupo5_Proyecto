@@ -1,0 +1,28 @@
+﻿@* Barra publica: sustituye SOLO la navegacion antigua de _LayoutPublico.cshtml por <partial name="_YampiPublicNav" /> *@
+@{
+    string inicioUrl = Url.Action("Index", "YampiBarberShop") ?? "/YampiBarberShop";
+}
+<header class="yp-header" id="ypHeader">
+    <div class="yp-header-inner">
+        <a class="yp-brand" href="@inicioUrl#inicio" aria-label="Yampi BarberShop, volver al inicio">
+            <span class="yp-brand-symbol" aria-hidden="true"><i class="bi bi-scissors"></i></span>
+            <span class="yp-brand-name">Yampi <small>BARBERSHOP</small></span>
+        </a>
+
+        <button class="yp-menu-toggle" id="ypMenuToggle" type="button"
+                aria-label="Abrir menú" aria-controls="ypMainMenu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+
+        <nav class="yp-menu" id="ypMainMenu" aria-label="Navegación pública">
+            <a class="yp-nav-link" href="@inicioUrl#inicio" data-yp-section="inicio">Inicio</a>
+            <a class="yp-nav-link" href="@inicioUrl#servicios" data-yp-section="servicios">Servicios</a>
+            <a class="yp-nav-link" href="@inicioUrl#galeria" data-yp-section="galeria">Galería</a>
+            <a class="yp-nav-link" href="@inicioUrl#nosotros" data-yp-section="nosotros">Nosotros</a>
+            <a class="yp-nav-link" href="@inicioUrl#contacto" data-yp-section="contacto">Contáctenos</a>
+            <a class="yp-nav-link yp-nav-login-mobile" href="/Seguridad">Iniciar sesión</a>
+        </nav>
+
+        <a class="yp-header-book" href="/Seguridad"><i class="bi bi-calendar-plus" aria-hidden="true"></i> Reservar cita</a>
+    </div>
+</header>

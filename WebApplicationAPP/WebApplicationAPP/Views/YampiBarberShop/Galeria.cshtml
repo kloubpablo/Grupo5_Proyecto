@@ -1,76 +1,292 @@
-﻿@{
+﻿
+@model IEnumerable<string>
+
+@{
     ViewData["Title"] = "Galería";
     Layout = "~/Views/Shared/_LayoutPublico.cshtml";
+
+    var imagenes = Model?.ToList() ?? new List<string>();
 }
 
-<style>
-    .galeria-container {
-        max-width: 1400px;
-        margin: 40px auto;
-        padding: 20px;
-    }
+<link rel="stylesheet"
+      href="~/css/galeria-publico.css"
+      asp-append-version="true" />
 
-    .galeria-titulo {
-        text-align: center;
-        color: #facc15;
-        margin-bottom: 40px;
-        font-size: 3rem;
-    }
+<div class="galeria-pro-page">
 
-    .galeria-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-    }
+    <!-- ==========================================
+         PRESENTACION
+    ========================================== -->
 
-    .imagen-card {
-        background: #1e293b;
-        border-radius: 10px;
-        overflow: hidden;
-        border: 2px solid #334155;
-        transition: 0.3s;
-    }
+    <section class="galeria-pro-intro">
 
-        .imagen-card:hover {
-            transform: scale(1.03);
-            border-color: #facc15;
-        }
+        <div class="galeria-pro-container">
 
-        .imagen-card img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            display: block;
-        }
+            <div class="galeria-pro-intro-top">
 
-    @@media(max-width: 992px) {
-        .galeria-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
+                <span class="galeria-pro-eyebrow">
+                    <span class="galeria-pro-dot"></span>
+                    YAMPI BARBERSHOP
+                </span>
 
-    @@media(max-width: 768px) {
-        .galeria-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
+                <span class="galeria-pro-index">
+                    PORTAFOLIO / GALERIA
+                </span>
 
-<div class="galeria-container">
-
-    <h1 class="galeria-titulo">Galería Yampi BarberShop</h1>
-
-    <div class="galeria-grid">
-
-        @for (int i = 1; i <= ViewBag.Total; i++)
-        {
-            <div class="imagen-card">
-                <img src="~/imagenes/galeria/@(i).jpg"
-                     alt="Trabajo @(i)">
-                
             </div>
-        }
+
+            <div class="galeria-pro-intro-content">
+
+                <div class="galeria-pro-title-group">
+
+                    <h1>
+                        El arte esta
+                        <span>en los detalles.</span>
+                    </h1>
+
+                </div>
+
+                <div class="galeria-pro-description">
+
+                    <p>
+                        Cada corte tiene su propio estilo.
+                        Explora nuestra galeria y conoce
+                        algunos de los trabajos que realizamos
+                        en Yampi BarberShop.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="galeria-pro-intro-bottom">
+
+                <span>
+                    <i class="bi bi-grid-3x3-gap"></i>
+                    NUESTROS TRABAJOS
+                </span>
+
+                <span>
+                    @imagenes.Count
+                    @(imagenes.Count == 1 ? "FOTOGRAFIA" : "FOTOGRAFIAS")
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+         PORTAFOLIO FOTOGRAFICO
+    ========================================== -->
+
+    <section class="galeria-pro-gallery">
+
+        <div class="galeria-pro-container">
+
+            @if (!imagenes.Any())
+            {
+                <div class="galeria-pro-empty">
+
+                    <i class="bi bi-images"></i>
+
+                    <h2>
+                        Pronto veras nuestros trabajos
+                    </h2>
+
+                    <p>
+                        Estamos preparando nuevas fotografias
+                        para compartir contigo.
+                    </p>
+
+                </div>
+            }
+            else
+            {
+                <div class="galeria-pro-grid"
+                     data-count="@imagenes.Count">
+
+                    @for (int i = 0; i < imagenes.Count; i++)
+                    {
+                        string nombreArchivo = imagenes[i];
+
+                        string urlImagen = Url.Content(
+                            "~/imagenes/galeria/" +
+                            Uri.EscapeDataString(nombreArchivo)
+                        );
+
+                        bool destacada = i == 0 && imagenes.Count >= 3;
+
+                        <button type="button"
+                                class="galeria-pro-item @(destacada ? "galeria-pro-featured" : "")"
+                                data-galeria-imagen="@urlImagen"
+                                data-galeria-indice="@i"
+                                aria-label="Ampliar trabajo @(i + 1)">
+
+                            <img src="@urlImagen"
+                                 alt="Trabajo de Yampi BarberShop @(i + 1)"
+                                 loading="@(i < 3 ? "eager" : "lazy")"
+                                 decoding="async" />
+
+                            <span class="galeria-pro-image-info">
+
+                                <span class="galeria-pro-image-text">
+
+                                    <small>
+                                        YAMPI BARBERSHOP
+                                    </small>
+
+                                    <strong>
+                                        Trabajo @(i + 1)
+                                    </strong>
+
+                                </span>
+
+                                <span class="galeria-pro-image-action">
+                                    <i class="bi bi-arrows-fullscreen"></i>
+                                </span>
+
+                            </span>
+
+                        </button>
+                    }
+
+                </div>
+
+                <div class="galeria-pro-gallery-footer">
+
+                    <div class="galeria-pro-gallery-note">
+
+                        <i class="bi bi-arrows-fullscreen"></i>
+
+                        <span>
+                            Selecciona una fotografia para verla
+                            en pantalla completa.
+                        </span>
+
+                    </div>
+
+                    <span class="galeria-pro-gallery-total">
+                        @imagenes.Count
+                        @(imagenes.Count == 1 ? "trabajo" : "trabajos")
+                    </span>
+
+                </div>
+            }
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+         RESERVACION
+    ========================================== -->
+
+    <section class="galeria-pro-reservation">
+
+        <div class="galeria-pro-container">
+
+            <div class="galeria-pro-reservation-box">
+
+                <div class="galeria-pro-reservation-content">
+
+                    <span class="galeria-pro-eyebrow">
+                        TU PROXIMA VISITA
+                    </span>
+
+                    <h2>
+                        Tu estilo comienza aqui.
+                    </h2>
+
+                    <p>
+                        Descubre nuestros servicios
+                        y reserva tu proxima cita.
+                    </p>
+
+                </div>
+
+                <div class="galeria-pro-reservation-actions">
+
+                    <a asp-controller="YampiBarberShop"
+                       asp-action="Servicios"
+                       class="galeria-pro-btn-outline">
+
+                        Ver servicios
+                        <i class="bi bi-arrow-up-right"></i>
+
+                    </a>
+
+                    <a href="/Seguridad"
+                       class="galeria-pro-btn-primary">
+
+                        Reservar una cita
+                        <i class="bi bi-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+         VISOR DE FOTOGRAFIAS
+    ========================================== -->
+
+    <div id="galeriaVisor"
+         class="galeria-publico-visor"
+         role="dialog"
+         aria-modal="true"
+         aria-label="Visor de fotografias"
+         aria-hidden="true"
+         hidden>
+
+        <button type="button"
+                id="galeriaCerrar"
+                class="galeria-publico-visor-cerrar"
+                aria-label="Cerrar fotografia">
+
+            <i class="bi bi-x-lg"></i>
+
+        </button>
+
+        <button type="button"
+                id="galeriaAnterior"
+                class="galeria-publico-visor-navegacion"
+                aria-label="Fotografia anterior">
+
+            <i class="bi bi-chevron-left"></i>
+
+        </button>
+
+        <div class="galeria-publico-visor-contenido">
+
+            <img id="galeriaImagenGrande"
+                 src=""
+                 alt="Fotografia ampliada" />
+
+            <span id="galeriaContador"
+                  class="galeria-publico-visor-contador">
+            </span>
+
+        </div>
+
+        <button type="button"
+                id="galeriaSiguiente"
+                class="galeria-publico-visor-navegacion"
+                aria-label="Fotografia siguiente">
+
+            <i class="bi bi-chevron-right"></i>
+
+        </button>
 
     </div>
 
 </div>
+
+<script src="~/js/galeria-publico.js"
+        asp-append-version="true"></script>

@@ -1,0 +1,203 @@
+@model WebApplicationAPP.Models.Contacto
+@using System
+@using System.Linq
+
+@functions {
+    private static string? WhatsappSeguro(string? texto)
+    {
+        if (string.IsNullOrWhiteSpace(texto)) return null;
+        var valor = texto.Trim();
+        if (Uri.TryCreate(valor, UriKind.Absolute, out var uri))
+        {
+            return uri.Scheme == Uri.UriSchemeHttps &&
+                   (uri.Host.Equals("wa.me", StringComparison.OrdinalIgnoreCase) ||
+                    uri.Host.Equals("api.whatsapp.com", StringComparison.OrdinalIgnoreCase))
+                ? uri.ToString() : null;
+        }
+        string numero = new string(valor.Where(char.IsDigit).ToArray());
+        if (numero.Length == 8) numero = "506" + numero;
+        return numero.Length >= 10 && numero.Length <= 15 ? "https://wa.me/" + numero : null;
+    }
+
+    private static string? RedSocialSegura(string? texto, string dominio, bool arroba = false)
+    {
+        if (string.IsNullOrWhiteSpace(texto)) return null;
+        string valor = texto.Trim();
+        if (Uri.TryCreate(valor, UriKind.Absolute, out var uri))
+        {
+            bool valido = uri.Host.Equals(dominio, StringComparison.OrdinalIgnoreCase)
+                || uri.Host.EndsWith("." + dominio, StringComparison.OrdinalIgnoreCase);
+            return valido && uri.Scheme == Uri.UriSchemeHttps ? uri.ToString() : null;
+        }
+        string usuario = valor.TrimStart('@');
+        if (usuario.Length == 0 || usuario.Length > 64 ||
+            usuario.Any(c => !char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '-'))
+            return null;
+        return "https://www." + dominio + "/" + (arroba ? "@" : "") + Uri.EscapeDataString(usuario);
+    }
+}
+@{
+    var contacto = Model;
+    string? telefono = contacto?.Telefonos;
+    string numeroTelefono = new string((telefono ?? "").Where(char.IsDigit).ToArray());
+    if (numeroTelefono.Length == 8) numeroTelefono = "506" + numeroTelefono;
+    string? telUrl = numeroTelefono.Length >= 8 && numeroTelefono.Length <= 15
+        ? "tel:+" + numeroTelefono : null;
+    string? whatsUrl = WhatsappSeguro(contacto?.Whatsapp);
+    string? instaUrl = RedSocialSegura(contacto?.Instagram, "instagram.com");
+    string? faceUrl = RedSocialSegura(contacto?.Facebook, "facebook.com");
+    string? tikUrl = RedSocialSegura(contacto?.Tiktok, "tiktok.com", true);
+}
+<footer id="footer" class="yampi-footer">
+    <div class="yampi-footer-container">
+        <div class="yampi-footer-grid">
+            <!-- Marca: misma estructura e icono que el footer con sesion -->
+            <div class="yampi-footer-brand">
+                <div class="yampi-footer-logo">
+                    <span class="yampi-footer-logo-icon" aria-hidden="true"><i class="bi bi-scissors"></i></span>
+                    <div class="yampi-footer-logo-text">
+                        <h2>YAMPI</h2><span>BARBER SHOP</span>
+                    </div>
+                </div>
+                <p class="yampi-footer-description">
+                    Tu estilo, nuestra pasión. Un espacio dedicado al cuidado personal,
+                    la buena atención y los detalles que marcan la diferencia.
+                </p>
+                <div class="yampi-footer-location">
+                    <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+                    <span>@(string.IsNullOrWhiteSpace(contacto?.Direccion) ? "Costa Rica" : contacto.Direccion)</span>
+                </div>
+            </div>
+
+            <div class="yampi-footer-column">
+                <h3>Contacto</h3>
+                <div class="yampi-footer-heading-line"></div>
+                <div class="yampi-footer-contact-list">
+                    @if (!string.IsNullOrWhiteSpace(contacto?.Direccion))
+                    {
+                        <div class="yampi-footer-contact-item">
+                            <span class="yampi-footer-contact-icon"><i class="bi bi-geo-alt" aria-hidden="true"></i></span>
+                            <div><strong>Dirección</strong>
+                                <p>@contacto.Direccion</p>
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(telefono))
+                    {
+                        <div class="yampi-footer-contact-item">
+                            <span class="yampi-footer-contact-icon"><i class="bi bi-telephone"
+                                                                           aria-hidden="true"></i></span>
+                                <div><strong>Teléfono</strong>
+                                    @if (telUrl != null)
+                                    {
+                                        <a href="@telUrl">@telefono</a>
+                                    }
+                                    else
+                                    {
+
+                                        <p>@telefono</p>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(contacto?.Whatsapp))
+                        {
+                            <div class="yampi-footer-contact-item">
+                                <span class="yampi-footer-contact-icon"><i class="bi bi-whatsapp" aria-hidden="true"></i></span>
+                                <div><strong>WhatsApp</strong>
+                                    @if (whatsUrl != null)
+                                    {
+                                        <a href="@whatsUrl" target="_blank"
+                                           rel="noopener noreferrer">@contacto.Whatsapp</a>
+                                    }
+                                    else
+                                    {
+
+                                        <p>@contacto.Whatsapp</p>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        @if (contacto == null)
+                        {
+                            <p class="yampi-footer-description">Los datos de contacto estarán disponibles próximamente.</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="yampi-footer-column">
+                    <h3>Horario de atención</h3>
+                    <div class="yampi-footer-heading-line"></div>
+                    <p class="yampi-footer-hours-description">Consulta nuestros horarios y organiza tu próxima visita.</p>
+                
+                    <div class="yampi-footer-hours">
+
+                        <div class="yampi-footer-hours-row">
+                            <span>Lunes a sábado</span>
+                            <strong>7:00 AM - 9:00 PM</strong>
+                        </div>
+
+                        <div class="yampi-footer-hours-row">
+                            <span>Domingo</span>
+                            <strong>Cerrado</strong>
+                        </div>
+
+                    </div>
+
+                    <div class="yampi-footer-hours-note">
+                        <i class="bi bi-clock" aria-hidden="true"></i>
+                        <span>Reserva tu cita desde el sistema al iniciar sesión.</span>
+                    </div>
+                </div>
+
+                <div class="yampi-footer-column">
+                    <h3>Síguenos</h3>
+                    <div class="yampi-footer-heading-line"></div>
+                    <p class="yampi-footer-social-description">Conecta con nosotros a través de nuestras redes sociales.</p>
+                    <div class="yampi-footer-social-list">
+                        @if (instaUrl != null)
+                        {
+                            <a href="@instaUrl" target="_blank" rel="noopener noreferrer" class="yampi-footer-social-link">
+                                <span class="yampi-footer-social-icon"><i class="bi bi-instagram"></i></span>
+                                <span
+                                class="yampi-footer-social-info"><strong>Instagram</strong><small>@(contacto?.Instagram)</small></span>
+                                <i class="bi bi-arrow-up-right yampi-footer-social-arrow" aria-hidden="true"></i>
+                            </a>
+                        }
+                        @if (faceUrl != null)
+                        {
+                            <a href="@faceUrl" target="_blank" rel="noopener noreferrer" class="yampi-footer-social-link">
+                                <span class="yampi-footer-social-icon"><i class="bi bi-facebook"></i></span>
+                                <span
+                                class="yampi-footer-social-info"><strong>Facebook</strong><small>@(contacto?.Facebook)</small></span>
+                                <i class="bi bi-arrow-up-right yampi-footer-social-arrow" aria-hidden="true"></i>
+                            </a>
+                        }
+                        @if (tikUrl != null)
+                        {
+                            <a href="@tikUrl" target="_blank" rel="noopener noreferrer" class="yampi-footer-social-link">
+                                <span class="yampi-footer-social-icon"><i class="bi bi-tiktok"></i></span>
+                                <span
+                                class="yampi-footer-social-info"><strong>TikTok</strong><small>@(contacto?.Tiktok)</small></span>
+                                <i class="bi bi-arrow-up-right yampi-footer-social-arrow" aria-hidden="true"></i>
+                            </a>
+                        }
+                        @if (instaUrl == null && faceUrl == null && tikUrl == null)
+                        {
+                            <span class="yampi-footer-social-description">Próximamente en redes sociales.</span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="yampi-footer-divider"></div>
+            <div class="yampi-footer-bottom">
+                <div class="yampi-footer-copyright"><span>&copy; @DateTime.Now.Year Yampi BarberShop. Todos los derechos
+                    reservados.</span></div>
+                    <div class="yampi-footer-bottom-right">
+                        <span><i class="bi bi-geo-alt" aria-hidden="true"></i> Costa Rica</span>
+                        <span class="yampi-footer-bottom-separator"></span>
+                        <span class="yampi-footer-bottom-brand">YAMPI BARBER SHOP</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
