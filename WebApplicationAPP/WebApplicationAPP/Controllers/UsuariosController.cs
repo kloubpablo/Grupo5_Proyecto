@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using WebApplicationAPP.Models;
 
 namespace WebApplicationAPP.Controllers
@@ -8,10 +9,12 @@ namespace WebApplicationAPP.Controllers
     public class UsuariosController : Controller
     {
         private readonly YampiBarbershopContext _context;
+        private readonly IPasswordHasher<Usuario> _hasher;
 
-        public UsuariosController(YampiBarbershopContext context)
+        public UsuariosController(YampiBarbershopContext context, IPasswordHasher<Usuario> hasher)
         {
             _context = context;
+            _hasher = hasher;
         }
 
         // ==========================================
@@ -150,13 +153,14 @@ namespace WebApplicationAPP.Controllers
 
                 // Compatible con la autenticacion actual.
                 // Pendiente migrar a hash seguro en todo el proyecto.
-                PasswordHash = password,
+                PasswordHash = "",
 
                 IdRol = idRol,
                 ContraTemp = false,
                 Estado = true
             };
 
+            usuario.PasswordHash = _hasher.HashPassword(usuario, password);
             _context.Usuarios.Add(usuario);
             _context.SaveChanges();
 
@@ -252,7 +256,7 @@ namespace WebApplicationAPP.Controllers
                     return Error("Las contraseñas no coinciden");
 
                 // Compatible con el sistema actual.
-                usuario.PasswordHash = password;
+                usuario.PasswordHash = _hasher.HashPassword(usuario, password);
             }
 
             usuario.Nombre = nombre;
@@ -463,7 +467,7 @@ namespace WebApplicationAPP.Controllers
                 }
 
                 // Compatible con el sistema actual.
-                usuario.PasswordHash = password;
+                usuario.PasswordHash = _hasher.HashPassword(usuario, password);
             }
 
             usuario.Nombre = nombre;

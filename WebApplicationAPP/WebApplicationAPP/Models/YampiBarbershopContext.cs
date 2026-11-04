@@ -51,6 +51,8 @@ public partial class YampiBarbershopContext : DbContext
 
     public virtual DbSet<Servicio> Servicios { get; set; }
 
+    public virtual DbSet<RecuperacionContrasena> RecuperacionesContrasena { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

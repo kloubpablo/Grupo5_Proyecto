@@ -1,9 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using WebApplicationAPP.Models;
+using Microsoft.AspNetCore.Identity;
+using WebApplicationAPP.Security;
+using WebApplicationAPP.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient<GmailApiEmailSender>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(25);
+});
 
+builder.Services.AddScoped<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
 // MVC
 builder.Services.AddControllersWithViews()
     .AddRazorRuntimeCompilation();
@@ -23,6 +32,12 @@ builder.Services.AddDbContext<YampiBarbershopContext>(options =>
         new MariaDbServerVersion(new Version(11, 4, 12))));
 
 var app = builder.Build();
+
+if (args.Contains("--migrate-passwords", StringComparer.OrdinalIgnoreCase))
+{
+    await MigrarContrasenas.EjecutarAsync(app.Services);
+    return;
+}
 
 // ERRORES
 if (!app.Environment.IsDevelopment())
