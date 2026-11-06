@@ -1,232 +1,312 @@
-/* Complemento del estilo original de Citas: buscador negro/dorado */
-.selector-cliente { margin-bottom: 24px; }
+/* YAMPI | Modulo: clientes-buscador.css. Estructura propia sobre yampi-global.css. */
+.selector-cliente {
+  margin-bottom: 24px;
+}
+
 .selector-cliente .cliente-buscador {
-    position: relative;
-    padding: 20px;
-    border: 1px solid #383838;
-    border-radius: 14px;
-    background: #191919;
-    font-family: "Segoe UI", sans-serif;
+  position: relative;
+  padding: 20px;
+  border: 1px solid var(--y-card);
+  border-radius: 14px;
+  background: var(--y-surface);
+  font-family: "Segoe UI", sans-serif;
 }
+
 .selector-cliente .cliente-buscador label {
-    display: block;
-    margin-bottom: 8px;
-    color: #d4af37;
-    font-size: 14px;
-    font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+  color: var(--y-gold);
+  font-size: 14px;
+  font-weight: 600;
 }
+
 .selector-cliente .cliente-input-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0 14px;
-    background: #252525;
-    border: 1px solid #4b4b4b;
-    border-radius: 10px;
-    color: #d4af37;
-    transition: border-color .15s ease, box-shadow .15s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  background: var(--y-surface);
+  border: 1px solid var(--y-border);
+  border-radius: 10px;
+  color: var(--y-gold);
+  transition: border-color .15s ease, box-shadow .15s ease;
 }
+
 .selector-cliente .cliente-input-wrapper:focus-within {
-    border-color: #d4af37;
-    box-shadow: 0 0 0 3px rgba(212,175,55,.13);
+  border-color: var(--y-gold);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, .13);
 }
+
 .selector-cliente .cliente-input {
-    flex: 1;
-    min-width: 0;
-    width: 100%;
-    padding: 13px 0;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    color: #f6f6f6;
-    font: inherit;
-    font-size: 14px;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  padding: 13px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--y-text);
+  font: inherit;
+  font-size: 14px;
 }
-.selector-cliente .cliente-input::placeholder { color: #999; }
+
+.selector-cliente .cliente-input::placeholder {
+  color: var(--y-muted);
+}
+
 .selector-cliente .cliente-estado {
-    margin-top: 8px;
-    color: #b5b5b5;
-    font-size: 12px;
+  margin-top: 8px;
+  color: var(--y-muted);
+  font-size: 12px;
 }
+
 .selector-cliente .cliente-resultados {
-    margin-top: 10px;
-    max-height: 300px;
-    overflow-y: auto;
-    background: #222;
-    border: 1px solid #484848;
-    border-radius: 10px;
+  margin-top: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--y-surface);
+  border: 1px solid var(--y-border);
+  border-radius: 10px;
 }
+
 .selector-cliente .cliente-resultado {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    padding: 13px 15px;
-    border: 0;
-    border-bottom: 1px solid #3a3a3a;
-    background: transparent;
-    color: #eee;
-    text-align: left;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 15px;
+  border: 0;
+  border-bottom: 1px solid var(--y-card);
+  background: transparent;
+  color: var(--y-text);
+  text-align: left;
+  cursor: pointer;
 }
-.selector-cliente .cliente-resultado:last-child { border-bottom: 0; }
+
+.selector-cliente .cliente-resultado:last-child {
+  border-bottom: 0;
+}
+
 .selector-cliente .cliente-resultado:hover,
 .selector-cliente .cliente-resultado:focus-visible {
-    background: #373020;
-    outline: 2px solid #d4af37;
-    outline-offset: -2px;
+  background: var(--y-card);
+  outline: 2px solid var(--y-gold);
+  outline-offset: -2px;
 }
-.selector-cliente .cliente-resultado > i { color: #d4af37; font-size: 22px; }
-.selector-cliente .cliente-resultado-datos { display: flex; flex-direction: column; gap: 3px; }
-.selector-cliente .cliente-resultado-datos strong { font-size: 14px; }
-.selector-cliente .cliente-resultado-datos small { color: #aaa; font-size: 12px; }
+
+.selector-cliente .cliente-resultado>i {
+  color: var(--y-gold);
+  font-size: 22px;
+}
+
+.selector-cliente .cliente-resultado-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.selector-cliente .cliente-resultado-datos strong {
+  font-size: 14px;
+}
+
+.selector-cliente .cliente-resultado-datos small {
+  color: var(--y-muted);
+  font-size: 12px;
+}
+
 .selector-cliente .cliente-seleccionado {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 12px;
-    padding: 14px;
-    border: 1px solid #897333;
-    border-radius: 10px;
-    background: #29271f;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 14px;
+  border: 1px solid var(--y-gold);
+  border-radius: 10px;
+  background: var(--y-surface);
 }
+
 .selector-cliente .cliente-avatar {
-    display: grid;
-    place-items: center;
-    flex: 0 0 40px;
-    width: 40px;
-    height: 40px;
-    background: rgba(212,175,55,.13);
-    border-radius: 50%;
-    color: #d4af37;
-    font-size: 20px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  background: rgba(212, 175, 55, .13);
+  border-radius: 50%;
+  color: var(--y-gold);
+  font-size: 20px;
 }
+
 .selector-cliente .cliente-seleccionado-info {
-    display: flex;
-    flex: 1;
-    min-width: 0;
-    flex-direction: column;
-    gap: 3px;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
 }
-.selector-cliente .cliente-seleccionado-info strong { color: #fff; font-size: 14px; }
-.selector-cliente .cliente-seleccionado-info small { color: #bcbcbc; font-size: 12px; }
+
+.selector-cliente .cliente-seleccionado-info strong {
+  color: var(--y-text);
+  font-size: 14px;
+}
+
+.selector-cliente .cliente-seleccionado-info small {
+  color: var(--y-muted);
+  font-size: 12px;
+}
+
 .selector-cliente .cliente-cambiar {
-    padding: 8px 12px;
-    border: 1px solid #d4af37;
-    border-radius: 8px;
-    background: transparent;
-    color: #d4af37;
-    cursor: pointer;
+  padding: 8px 12px;
+  border: 1px solid var(--y-gold);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--y-gold);
+  cursor: pointer;
 }
-.selector-cliente .cliente-cambiar:hover { background: #d4af37; color: #171717; }
+
+.selector-cliente .cliente-cambiar:hover {
+  background: var(--y-gold);
+  color: var(--y-deep);
+}
+
 .selector-cliente .cliente-btn-nuevo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    margin-top: 15px;
-    padding: 12px;
-    border: 1px dashed #897333;
-    border-radius: 10px;
-    background: transparent;
-    color: #d4af37;
-    font-weight: 600;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  border: 1px dashed var(--y-gold);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--y-gold);
+  font-weight: 600;
+  cursor: pointer;
 }
-.selector-cliente .cliente-btn-nuevo:hover { background: rgba(212,175,55,.08); }
+
+.selector-cliente .cliente-btn-nuevo:hover {
+  background: rgba(212, 175, 55, .08);
+}
+
 .selector-cliente .cliente-registro {
-    margin-top: 15px;
-    padding: 18px;
-    border: 1px solid #424242;
-    border-radius: 12px;
-    background: #202020;
+  margin-top: 15px;
+  padding: 18px;
+  border: 1px solid var(--y-border);
+  border-radius: 12px;
+  background: var(--y-surface);
 }
+
 .selector-cliente .cliente-registro h3 {
-    margin: 0 0 16px;
-    color: #d4af37;
-    font-size: 16px;
+  margin: 0 0 16px;
+  color: var(--y-gold);
+  font-size: 16px;
 }
+
 .selector-cliente .cliente-registro input {
-    display: block;
-    width: 100%;
-    margin-bottom: 13px;
-    padding: 12px 14px;
-    border: 1px solid #484848;
-    border-radius: 9px;
-    background: #292929;
-    color: #fff;
-    outline: 0;
-    color-scheme: dark;
+  display: block;
+  width: 100%;
+  margin-bottom: 13px;
+  padding: 12px 14px;
+  border: 1px solid var(--y-border);
+  border-radius: 9px;
+  background: var(--y-card);
+  color: var(--y-text);
+  outline: 0;
+  color-scheme: dark;
 }
+
 .selector-cliente .cliente-registro input:focus {
-    border-color: #d4af37;
-    box-shadow: 0 0 0 3px rgba(212,175,55,.13);
+  border-color: var(--y-gold);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, .13);
 }
-.selector-cliente .cliente-registro-acciones { display: flex; gap: 10px; }
+
+.selector-cliente .cliente-registro-acciones {
+  display: flex;
+  gap: 10px;
+}
+
 .selector-cliente .cliente-btn-guardar,
-.selector-cliente .cliente-btn-cancelar { padding: 12px; border-radius: 9px; cursor: pointer; }
-.selector-cliente .cliente-btn-guardar {
-    flex: 1;
-    border: 0;
-    background: #d4af37;
-    color: #171717;
-    font-weight: 700;
-}
-.selector-cliente .cliente-btn-guardar:hover { background: #e6c765; }
-.selector-cliente .cliente-btn-guardar:disabled { opacity: .6; cursor: wait; }
 .selector-cliente .cliente-btn-cancelar {
-    border: 1px solid #555;
-    background: #303030;
-    color: #eee;
+  padding: 12px;
+  border-radius: 9px;
+  cursor: pointer;
 }
-.selector-cliente .cliente-error { margin-bottom: 12px; color: #ff9b9b; font-size: 13px; }
-.selector-cliente [hidden] { display: none !important; }
+
+.selector-cliente .cliente-btn-guardar {
+  flex: 1;
+  border: 0;
+  background: var(--y-gold);
+  color: var(--y-deep);
+  font-weight: 700;
+}
+
+.selector-cliente .cliente-btn-guardar:hover {
+  background: var(--y-gold);
+}
+
+.selector-cliente .cliente-btn-guardar:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.selector-cliente .cliente-btn-cancelar {
+  border: 1px solid var(--y-border);
+  background: var(--y-card);
+  color: var(--y-text);
+}
+
+.selector-cliente .cliente-error {
+  margin-bottom: 12px;
+  color: var(--y-danger);
+  font-size: 13px;
+}
+
+.selector-cliente [hidden] {
+  display: none !important;
+}
+
 @media (max-width: 600px) {
-    .selector-cliente .cliente-buscador { padding: 14px; }
-    .selector-cliente .cliente-registro-acciones { flex-direction: column; }
-    .selector-cliente .cliente-seleccionado { flex-wrap: wrap; }
+  .selector-cliente .cliente-buscador {
+    padding: 14px;
+  }
+
+  .selector-cliente .cliente-registro-acciones {
+    flex-direction: column;
+  }
+
+  .selector-cliente .cliente-seleccionado {
+    flex-wrap: wrap;
+  }
 }
-
-
-/* ==========================================
-   SCROLLBAR PERSONALIZADO - YAMPI BARBERSHOP
-   ========================================== */
 
 .cliente-resultados {
-    max-height: 300px;
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    /* Firefox */
-    scrollbar-width: thin;
-    scrollbar-color: #a88a32 #202020;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--y-gold) var(--y-surface);
 }
 
-/* Chrome, Edge y Safari */
 .cliente-resultados::-webkit-scrollbar {
-    width: 7px;
+  width: 7px;
 }
 
 .cliente-resultados::-webkit-scrollbar-track {
-    background: #202020;
-    border-radius: 10px;
+  background: var(--y-surface);
+  border-radius: 10px;
 }
 
 .cliente-resultados::-webkit-scrollbar-thumb {
-    background: linear-gradient(
-        180deg,
-        #d4af37 0%,
-        #a88a32 100%
-    );
-    border-radius: 10px;
-    border: 1px solid #202020;
+  background: var(--y-card);
+  border-radius: 10px;
+  border: 1px solid var(--y-surface);
 }
 
 .cliente-resultados::-webkit-scrollbar-thumb:hover {
-    background: #f0cc59;
+  background: var(--y-gold);
 }
 
 .cliente-resultados::-webkit-scrollbar-corner {
-    background: #202020;
+  background: var(--y-surface);
 }

@@ -1,22 +1,22 @@
+/* YAMPI | Site base (las reglas visuales viven en yampi-global.css). */
 html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin: 0;
+}
+
+:where(.validation-summary-errors, .field-validation-error, .text-danger) {
+    color: var(--y-danger);
+}
+
+:where(.validation-summary-errors) ul {
+    margin-bottom: 0;
+}
+
+:where(.form-check-input):checked {
+    background-color: var(--y-gold);
+    border-color: var(--y-gold);
 }

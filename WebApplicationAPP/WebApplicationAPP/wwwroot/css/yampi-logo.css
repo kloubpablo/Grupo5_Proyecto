@@ -1,125 +1,102 @@
-/* Identidad visual compartida: barra publica y barra privada. */
-/* Mantener este archivo DESPUES de inicio-publico.css o yampi-responsive-global.css. */
-
-.yp-header a.yp-brand.yampi-logo,
-body #page-wrapper nav#nav a.yampi-nav-brand.yampi-logo {
-    box-sizing: border-box !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    flex: 0 0 auto !important;
-    gap: 10px !important;
-    min-width: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    color: #d4af37 !important;
-    background: transparent !important;
-    text-decoration: none !important;
-    white-space: nowrap !important;
-    font-family: inherit !important;
-    font-weight: 400 !important;
-    line-height: normal !important;
+/* YAMPI | Logotipo unico en encabezados publico y privado. */
+#page-wrapper :is(a.yp-brand.yampi-logo, a.yampi-nav-brand.yampi-logo) {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+    background: none;
+    color: var(--y-gold);
+    text-decoration: none;
+    white-space: nowrap;
+    font-family: inherit;
+    line-height: normal;
 }
 
-.yp-header a.yampi-logo .yampi-logo-icon,
-body #page-wrapper nav#nav a.yampi-logo .yampi-logo-icon {
-    box-sizing: border-box !important;
-    display: inline-grid !important;
-    place-items: center !important;
-    flex: 0 0 42px !important;
-    width: 42px !important;
-    height: 42px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 1px solid rgba(212,175,55,.30) !important;
-    border-radius: 12px !important;
-    background: rgba(212,175,55,.10) !important;
-    color: #d4af37 !important;
-    line-height: 1 !important;
-}
-.yp-header a.yampi-logo .yampi-logo-icon i,
-body #page-wrapper nav#nav a.yampi-logo .yampi-logo-icon i {
-    display: inline-block !important;
-    font-size: 21px !important;
-    font-style: normal !important;
-    line-height: 1 !important;
-    color: inherit !important;
+#page-wrapper a.yampi-logo .yampi-logo-icon {
+    display: grid;
+    flex: 0 0 42px;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(212, 175, 55, .32);
+    border-radius: 12px;
+    background: var(--y-gold-tint);
+    color: var(--y-gold);
 }
 
-.yp-header a.yampi-logo .yampi-logo-text,
-body #page-wrapper nav#nav a.yampi-logo .yampi-logo-text {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    justify-content: center !important;
-    flex: 0 1 auto !important;
-    gap: 3px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    min-width: 0 !important;
-    background: transparent !important;
-    line-height: 1 !important;
-    text-align: left !important;
-}
-.yp-header a.yampi-logo .yampi-logo-text strong,
-body #page-wrapper nav#nav a.yampi-logo .yampi-logo-text strong {
-    display: block !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif !important;
-    font-size: 19px !important;
-    font-weight: 800 !important;
-    letter-spacing: .1px !important;
-    line-height: 1.02 !important;
-    text-transform: uppercase !important;
-    color: #d4af37 !important;
-}
-.yp-header a.yampi-logo .yampi-logo-text small,
-body #page-wrapper nav#nav a.yampi-logo .yampi-logo-text small {
-    display: block !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif !important;
-    font-size: 9px !important;
-    font-weight: 650 !important;
-    letter-spacing: .19em !important;
-    line-height: 1.1 !important;
-    text-transform: uppercase !important;
-    color: #a5a5aa !important;
-}
-.yp-header a.yampi-logo:hover .yampi-logo-text strong,
-body #page-wrapper nav#nav a.yampi-logo:hover .yampi-logo-text strong {
-    color: #efd16a !important;
+#page-wrapper a.yampi-logo .yampi-logo-icon .bi {
+    font-size: 21px;
+    line-height: 1;
 }
 
-/* En telefono el nombre completo sigue visible y deja sitio a menu + perfil. */
+#page-wrapper a.yampi-logo .yampi-logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+    justify-content: center;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    line-height: 1.05;
+}
+
+#page-wrapper a.yampi-logo .yampi-logo-text strong {
+    display: block;
+    margin: 0;
+    padding: 0;
+    color: var(--y-gold);
+    font-size: 19px;
+    line-height: 1.03;
+    font-weight: 830;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+#page-wrapper a.yampi-logo .yampi-logo-text small {
+    display: block;
+    margin: 0;
+    padding: 0;
+    color: var(--y-muted);
+    font-size: 9px;
+    line-height: 1.1;
+    font-weight: 720;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+}
+
+#page-wrapper a.yampi-logo:hover .yampi-logo-text strong {
+    color: var(--y-gold-light);
+}
+
 @media (max-width: 767px) {
-    .yp-header a.yampi-logo,
-    body #page-wrapper nav#nav a.yampi-nav-brand.yampi-logo {
-        gap: 7px !important;
-        max-width: calc(100% - 112px) !important;
+    #page-wrapper :is(a.yp-brand.yampi-logo, a.yampi-nav-brand.yampi-logo) {
+        max-width: calc(100% - 112px);
+        gap: 7px;
     }
-    .yp-header a.yampi-logo .yampi-logo-icon,
-    body #page-wrapper nav#nav a.yampi-logo .yampi-logo-icon {
-        width: 36px !important;
-        height: 36px !important;
-        flex-basis: 36px !important;
-        border-radius: 10px !important;
+
+    #page-wrapper a.yampi-logo .yampi-logo-icon {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+        border-radius: 10px;
     }
-    .yp-header a.yampi-logo .yampi-logo-icon i,
-    body #page-wrapper nav#nav a.yampi-logo .yampi-logo-icon i { font-size: 18px !important; }
-    .yp-header a.yampi-logo .yampi-logo-text strong,
-    body #page-wrapper nav#nav a.yampi-logo .yampi-logo-text strong { font-size: 17px !important; }
-    .yp-header a.yampi-logo .yampi-logo-text small,
-    body #page-wrapper nav#nav a.yampi-logo .yampi-logo-text small { font-size: 8px !important; }
-}
-@media (max-width: 360px) {
-    .yp-header a.yampi-logo .yampi-logo-icon,
-    body #page-wrapper nav#nav a.yampi-logo .yampi-logo-icon {
-        width: 32px !important;
-        height: 32px !important;
-        flex-basis: 32px !important;
+
+    #page-wrapper a.yampi-logo .yampi-logo-icon .bi {
+        font-size: 18px;
     }
-    .yp-header a.yampi-logo .yampi-logo-text strong,
-    body #page-wrapper nav#nav a.yampi-logo .yampi-logo-text strong { font-size: 16px !important; }
+
+    #page-wrapper a.yampi-logo .yampi-logo-text strong {
+        font-size: clamp(15px, 4.6vw, 19px);
+        letter-spacing: .09em;
+    }
+
+    #page-wrapper a.yampi-logo .yampi-logo-text small {
+        font-size: clamp(7px, 2vw, 9px);
+        letter-spacing: .17em;
+    }
 }

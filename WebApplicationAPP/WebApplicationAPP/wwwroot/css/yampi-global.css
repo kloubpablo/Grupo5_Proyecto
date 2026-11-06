@@ -1,0 +1,464 @@
+/* ========================================================================
+   YAMPI DESIGN SYSTEM — 2026
+   Identidad compartida: negro, carbon, dorado. CERO degradados.
+   Capa base de TODOS los layouts; los modulos solo definen su estructura.
+   ======================================================================== */
+:root {
+  color-scheme: dark;
+  --y-bg: #0b0c0e;
+  --y-deep: #101215;
+  --y-surface: #14171a;
+  --y-card: #1a1e22;
+  --y-card-hover: #21262b;
+  --y-elevated: #272c32;
+  --y-border: #34393f;
+  --y-border-soft: #292e34;
+  --y-gold: #d4af37;
+  --y-gold-light: #e6c965;
+  --y-gold-dark: #a88422;
+  --y-gold-tint: rgba(212, 175, 55, .09);
+  --y-text: #f6f5f0;
+  --y-text-soft: #d9d9d7;
+  --y-muted: #a7adb4;
+  --y-muted-dark: #828a94;
+  --y-success: #60c597;
+  --y-danger: #eb8585;
+  --y-warning: #e6c965;
+  --y-radius-xs: 7px;
+  --y-radius-sm: 10px;
+  --y-radius: 15px;
+  --y-radius-lg: 22px;
+  --y-shadow: 0 16px 42px rgba(0, 0, 0, .18);
+  --y-ease: cubic-bezier(.22, 1, .36, 1);
+  --y-speed: 200ms;
+  accent-color: var(--y-gold);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+  scroll-padding-top: 84px;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background: var(--y-bg);
+  color: var(--y-text);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+body,
+#page-wrapper {
+  min-height: 100vh;
+}
+
+::selection {
+  color: var(--y-bg);
+  background: var(--y-gold);
+}
+
+img,
+video,
+svg,
+canvas {
+  max-width: 100%;
+}
+
+a {
+  color: var(--y-gold);
+  text-decoration: none;
+  transition: color var(--y-speed) ease;
+}
+
+a:hover {
+  color: var(--y-gold-light);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--y-gold);
+  outline-offset: 3px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+:where(input, select, textarea) {
+  color-scheme: dark;
+}
+
+:where(.text-muted, .form-text, small.text-secondary) {
+  color: var(--y-muted) !important;
+}
+
+:where(.text-primary, .text-info) {
+  color: var(--y-gold) !important;
+}
+
+:where(.bg-primary, .bg-info) {
+  background-color: var(--y-gold) !important;
+  color: var(--y-bg) !important;
+}
+
+:where(.border-primary) {
+  border-color: var(--y-gold) !important;
+}
+
+:where(.btn, button, a)>.bi {
+  flex-shrink: 0;
+}
+
+/* Layout de administracion: ancho completo, respiracion en cada resolucion */
+body:not(.yp-body):not(.seguridad-body) #main {
+  min-width: 0;
+  width: 100%;
+  padding: clamp(20px, 2.8vw, 42px) clamp(14px, 2.7vw, 46px) 76px;
+}
+
+body:not(.yp-body):not(.seguridad-body) #main> :first-child {
+  margin-top: 0;
+}
+
+body:not(.yp-body):not(.seguridad-body) #main>* {
+  min-width: 0;
+}
+
+body:not(.yp-body):not(.seguridad-body) #main :is(.dashboard-page, .dashboard-barbero-page, .citas-page, .atencion-page, .pagos-page, .clientes-page, .usuarios-page, .roles-page, .reportes-page, .perfil-page, .galeria-admin-page, .servicios-admin-page, .contacto-admin-page) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Arquitectura visual: encabezados compactos y consistentes. */
+body #main :is(.page-header, .dashboard-header, .atencion-header, .pagos-header, .clientes-header, .usuarios-header, .roles-header, .rep-header, .perfil-header, .galeria-page-header, .servicios-page-header, .contacto-page-header) {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin: 0 0 28px;
+  padding: clamp(21px, 2.2vw, 34px);
+  background: var(--y-surface);
+  border: 1px solid var(--y-border-soft);
+  border-radius: var(--y-radius-lg);
+  overflow: hidden;
+}
+
+body #main :is(.page-header, .dashboard-header, .atencion-header, .pagos-header, .clientes-header, .usuarios-header, .roles-header, .rep-header, .perfil-header, .galeria-page-header, .servicios-page-header, .contacto-page-header)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: var(--y-gold);
+  pointer-events: none;
+}
+
+body #main :is(.page-header, .dashboard-header, .atencion-header, .pagos-header, .clientes-header, .usuarios-header, .roles-header, .rep-header, .perfil-header, .galeria-page-header, .servicios-page-header, .contacto-page-header) h1 {
+  margin: 5px 0 8px;
+  color: var(--y-text);
+  font-size: clamp(23px, 2.45vw, 34px);
+  font-weight: 760;
+  letter-spacing: -.04em;
+  line-height: 1.16;
+}
+
+body #main :is(.page-header, .dashboard-header, .atencion-header, .pagos-header, .clientes-header, .usuarios-header, .roles-header, .rep-header, .perfil-header, .galeria-page-header, .servicios-page-header, .contacto-page-header) p {
+  margin: 0;
+  max-width: 760px;
+  color: var(--y-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+body #main :is(.page-kicker, .dashboard-kicker, .atencion-kicker, .pagos-kicker, .roles-kicker, .usuarios-kicker, .rep-kicker, .perfil-kicker, .galeria-kicker, .servicios-kicker, .contacto-kicker, .section-kicker) {
+  color: var(--y-gold);
+  font-size: 10px;
+  font-weight: 780;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+body #main :is(.page-icon, .dashboard-header-icon, .atencion-title-icon, .pagos-title-icon, .rep-title-icon, .perfil-title-icon, .galeria-header-icon, .servicios-header-icon, .contacto-header-icon) {
+  color: var(--y-gold);
+}
+
+/* Superficies: cards, tablas, filtros, contenido. No agregar reglas de posicionamiento aqui. */
+body #main :is(.content-card, .dashboard-panel, .dashboard-stat-card, .atencion-card, .atencion-stat-card, .atencion-info-card,
+  .pagos-card, .pagos-stat-card, .clientes-card, .clientes-list-card, .usuarios-card, .usuarios-stat, .roles-card, .roles-stat,
+  .rep-card, .rep-stat-card, .perfil-card, .galeria-card, .galeria-summary, .servicio-card, .servicios-summary,
+  .contacto-info-card, .contacto-social-card, .contacto-map-card) {
+  background: var(--y-card);
+  border: 1px solid var(--y-border-soft);
+  border-radius: var(--y-radius);
+  box-shadow: none;
+}
+
+body #main :is(.dashboard-stat-card, .atencion-stat-card, .pagos-stat-card, .usuarios-stat, .roles-stat, .rep-stat-card,
+  .galeria-card, .servicio-card, .clientes-card) {
+  transition: border-color var(--y-speed) ease, background-color var(--y-speed) ease, transform var(--y-speed) var(--y-ease);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  body #main :is(.dashboard-stat-card, .atencion-stat-card, .pagos-stat-card, .usuarios-stat, .roles-stat, .rep-stat-card, .galeria-card, .servicio-card):hover {
+    border-color: rgba(212, 175, 55, .38);
+    transform: translateY(-2px);
+  }
+}
+
+body #main :is(.card-header, .dashboard-panel-header, .atencion-card-header, .pagos-card-header, .clientes-card-header, .usuarios-card-header, .roles-card-header) {
+  background: transparent;
+  border-bottom-color: var(--y-border-soft);
+}
+
+/* Elementos de formulario: estado claro, focos accesibles, una sola escala. */
+body #main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select, .form-control, .form-select),
+.seguridad-body :is(input:not([type="checkbox"]):not([type="radio"]), textarea, select) {
+  min-height: 43px;
+  background-color: var(--y-deep);
+  border: 1px solid var(--y-border);
+  border-radius: var(--y-radius-sm);
+  color: var(--y-text);
+  transition: border-color var(--y-speed) ease, box-shadow var(--y-speed) ease;
+}
+
+body #main :is(input, textarea, select)::placeholder {
+  color: var(--y-muted-dark);
+  opacity: 1;
+}
+
+body #main :is(input, textarea, select):focus,
+.seguridad-body :is(input, textarea, select):focus {
+  background-color: var(--y-deep);
+  color: var(--y-text);
+  border-color: var(--y-gold);
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, .12);
+}
+
+body #main :is(input, textarea, select):disabled {
+  background-color: #14171a;
+}
+
+body #main :is(label, .form-label) {
+  color: var(--y-text-soft);
+  font-weight: 620;
+}
+
+body #main :is(.form-control, .form-select) {
+  padding: 10px 13px;
+}
+
+/* Botonera transversal: conservamos clases propias y eventos JS. */
+body #main :is(.primary-btn, .atencion-btn-primary, .pagos-btn-primary, .clientes-btn-primary, .usuarios-btn-primary,
+  .roles-btn-primary, .rep-btn-primary, .servicios-btn-primary, .galeria-btn-primary, .contacto-btn-primary, .perfil-save-button) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 43px;
+  padding: 11px 18px;
+  border-radius: var(--y-radius-sm);
+  background: var(--y-gold);
+  border: 1px solid var(--y-gold);
+  color: #0b0c0e;
+  font-weight: 750;
+  text-decoration: none;
+  transition: background-color var(--y-speed) ease, border-color var(--y-speed) ease, transform var(--y-speed) var(--y-ease);
+}
+
+body #main :is(.primary-btn, .atencion-btn-primary, .pagos-btn-primary, .clientes-btn-primary, .usuarios-btn-primary,
+  .roles-btn-primary, .rep-btn-primary, .servicios-btn-primary, .galeria-btn-primary, .contacto-btn-primary, .perfil-save-button):hover:not(:disabled) {
+  background: var(--y-gold-light);
+  border-color: var(--y-gold-light);
+  color: #0b0c0e;
+}
+
+body #main :is(.secondary-btn, .atencion-btn-secondary, .pagos-btn-secondary, .clientes-btn-secondary, .usuarios-btn-secondary,
+  .roles-btn-secondary, .rep-btn-outline, .servicios-btn-secondary, .contacto-btn-secondary) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 10px 17px;
+  border: 1px solid var(--y-border);
+  border-radius: var(--y-radius-sm);
+  background: var(--y-elevated);
+  color: var(--y-text-soft);
+  text-decoration: none;
+  font-weight: 650;
+}
+
+body #main :is(.secondary-btn, .atencion-btn-secondary, .pagos-btn-secondary, .clientes-btn-secondary, .usuarios-btn-secondary,
+  .roles-btn-secondary, .rep-btn-outline, .contacto-btn-secondary):hover:not(:disabled) {
+  background: var(--y-card-hover);
+  border-color: var(--y-gold);
+  color: var(--y-gold-light);
+}
+
+body #main :is(.btn-danger, .roles-btn-danger, .usuarios-btn-danger, .pagos-btn-danger) {
+  border-radius: var(--y-radius-sm);
+}
+
+body #main :is(.alert, .alert-custom, .usuarios-toast, .roles-toast, .galeria-alert, .servicios-alert, .contacto-alert) {
+  border-radius: var(--y-radius-sm);
+}
+
+/* Tablas: encabezados discretos, jerarquia, overflow horizontal en telefonos. */
+body #main :is(.agenda-table-wrapper, .atencion-table-wrapper, .pagos-table-wrapper, .clientes-table-wrapper,
+  .usuarios-table-wrapper, .roles-table-wrapper, .rep-table-wrapper, .dashboard-table-container, .table-responsive) {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-color: var(--y-border) var(--y-deep);
+}
+
+body #main :is(.agenda-table, .atencion-table, .pagos-table, .clientes-table, .usuarios-table,
+  .roles-table, .rep-table, .dashboard-citas-table) {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+body #main :is(.agenda-table, .atencion-table, .pagos-table, .clientes-table, .usuarios-table,
+  .roles-table, .rep-table, .dashboard-citas-table) thead th {
+  background: var(--y-deep);
+  color: var(--y-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--y-border);
+  white-space: nowrap;
+}
+
+body #main :is(.agenda-table, .atencion-table, .pagos-table, .clientes-table, .usuarios-table,
+  .roles-table, .rep-table, .dashboard-citas-table) tbody tr {
+  transition: background-color var(--y-speed) ease;
+}
+
+body #main :is(.agenda-table, .atencion-table, .pagos-table, .clientes-table, .usuarios-table,
+  .roles-table, .rep-table, .dashboard-citas-table) tbody tr:hover {
+  background: rgba(212, 175, 55, .035);
+}
+
+body #main :is(.agenda-table, .atencion-table, .pagos-table, .clientes-table, .usuarios-table,
+  .roles-table, .rep-table, .dashboard-citas-table) :is(td, th) {
+  vertical-align: middle;
+}
+
+/* Overlays existentes conservan sus IDs, visibilidad y JS. */
+body #main :is(.pagos-modal, .pagos-cierre-modal, .usuarios-modal, .roles-modal, .atencion-pago-modal, .servicio-modal, .galeria-modal) {
+  background: var(--y-card);
+  border: 1px solid var(--y-border);
+  border-radius: var(--y-radius-lg);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .42);
+}
+
+body #main :is(.pagos-modal-overlay, .usuarios-modal-overlay, .roles-modal-overlay, .atencion-pago-overlay) {
+  background-color: rgba(2, 3, 4, .78);
+}
+
+body #main :is(.stats-grid, .dashboard-stats-grid, .atencion-stats, .pagos-stats, .usuarios-stats, .roles-stats, .rep-stats,
+  .dashboard-overview-grid, .dashboard-barbers-grid, .top-sections-grid, .atencion-bottom-grid, .rep-charts-grid)>* {
+  min-width: 0;
+}
+
+/* Bootstrap: eliminar azules predeterminados y degradados decorativos de superficies. */
+.btn-primary {
+  --bs-btn-color: #0b0c0e;
+  --bs-btn-bg: #d4af37;
+  --bs-btn-border-color: #d4af37;
+  --bs-btn-hover-color: #0b0c0e;
+  --bs-btn-hover-bg: #e6c965;
+  --bs-btn-hover-border-color: #e6c965;
+  --bs-btn-active-bg: #a88422;
+  --bs-btn-active-border-color: #a88422;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: #d4af37;
+  --bs-btn-border-color: #d4af37;
+  --bs-btn-hover-color: #0b0c0e;
+  --bs-btn-hover-bg: #d4af37;
+  --bs-btn-hover-border-color: #d4af37;
+}
+
+.modal-content,
+.dropdown-menu {
+  --bs-modal-bg: #1a1e22;
+  --bs-modal-color: #f6f5f0;
+  --bs-modal-border-color: #34393f;
+  background: var(--y-card);
+  color: var(--y-text);
+  border-color: var(--y-border);
+  border-radius: var(--y-radius);
+}
+
+@media (max-width: 767px) {
+  body:not(.yp-body):not(.seguridad-body) #main {
+    padding: 18px 12px 48px;
+  }
+
+  body #main :is(.page-header, .dashboard-header, .atencion-header, .pagos-header, .clientes-header, .usuarios-header, .roles-header, .rep-header, .perfil-header, .galeria-page-header, .servicios-page-header, .contacto-page-header) {
+    padding: 19px 16px;
+    border-radius: var(--y-radius);
+  }
+
+  body #main :is(.page-header, .dashboard-header, .atencion-header, .pagos-header, .clientes-header, .usuarios-header, .roles-header, .rep-header, .perfil-header, .galeria-page-header, .servicios-page-header, .contacto-page-header) h1 {
+    font-size: clamp(22px, 6vw, 28px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Evitar doble padding: cada modulo hereda el espacio de #main. */
+body:not(.yp-body):not(.seguridad-body) #main :is(.dashboard-page, .dashboard-barbero-page, .citas-page, .atencion-page, .pagos-page, .clientes-page,
+  .usuarios-page, .roles-page, .reportes-page, .perfil-page, .galeria-admin-page, .servicios-admin-page, .contacto-admin-page) {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  margin-inline: 0;
+}

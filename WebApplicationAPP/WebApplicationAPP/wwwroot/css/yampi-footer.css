@@ -1,0 +1,329 @@
+/* YAMPI | Pie de pagina compartido por pagina publica y administracion. */
+#footer.yampi-footer {
+    flex: 0 0 auto;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: #101215;
+    color: var(--y-muted);
+    border-top: 1px solid var(--y-border-soft);
+    font-size: 13px;
+    line-height: 1.75;
+}
+
+#footer.yampi-footer * {
+    box-sizing: border-box;
+}
+
+#footer.yampi-footer .yampi-footer-container {
+    width: min(calc(100% - 64px), 1460px);
+    margin: 0 auto;
+    padding: 58px 0 0;
+}
+
+#footer.yampi-footer .yampi-footer-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1.15fr 1fr 1.1fr;
+    align-items: start;
+    gap: clamp(22px, 3vw, 48px);
+    padding-bottom: 42px;
+}
+
+#footer.yampi-footer :is(.yampi-footer-column, .yampi-footer-brand) {
+    min-width: 0;
+}
+
+#footer.yampi-footer .yampi-footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+#footer.yampi-footer .yampi-footer-logo-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    border: 1px solid rgba(212, 175, 55, .32);
+    background: var(--y-gold-tint);
+    color: var(--y-gold);
+    font-size: 22px;
+}
+
+#footer.yampi-footer .yampi-footer-logo-text {
+    min-width: 0;
+}
+
+#footer.yampi-footer .yampi-footer-logo-text h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 23px;
+    font-weight: 830;
+    line-height: 1;
+    letter-spacing: .07em;
+    color: var(--y-gold);
+}
+
+#footer.yampi-footer .yampi-footer-logo-text>span {
+    display: block;
+    margin-top: 4px;
+    font-size: 9px;
+    font-weight: 750;
+    letter-spacing: .19em;
+    color: var(--y-muted);
+}
+
+#footer.yampi-footer :is(.yampi-footer-description, .yampi-footer-hours-description, .yampi-footer-social-description) {
+    color: var(--y-muted);
+    font-size: 13px;
+    line-height: 1.85;
+    margin: 0 0 20px;
+}
+
+#footer.yampi-footer .yampi-footer-location {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    color: var(--y-text-soft);
+    font-size: 12px;
+}
+
+#footer.yampi-footer .yampi-footer-location i {
+    color: var(--y-gold);
+}
+
+#footer.yampi-footer .yampi-footer-column>h3 {
+    margin: 4px 0 12px;
+    color: var(--y-text);
+    font-size: 15px;
+    font-weight: 740;
+    letter-spacing: -.01em;
+}
+
+#footer.yampi-footer .yampi-footer-heading-line {
+    width: 28px;
+    height: 2px;
+    margin: 0 0 20px;
+    background: var(--y-gold);
+    border-radius: 3px;
+}
+
+#footer.yampi-footer .yampi-footer-contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#footer.yampi-footer .yampi-footer-contact-item {
+    display: flex;
+    gap: 11px;
+    align-items: flex-start;
+}
+
+#footer.yampi-footer .yampi-footer-contact-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--y-gold-tint);
+    color: var(--y-gold);
+    border: 1px solid rgba(212, 175, 55, .2);
+}
+
+#footer.yampi-footer .yampi-footer-contact-item>div {
+    flex: 1;
+    min-width: 0;
+}
+
+#footer.yampi-footer .yampi-footer-contact-item strong {
+    display: block;
+    margin-bottom: 1px;
+    font-size: 11px;
+    color: var(--y-text);
+    font-weight: 720;
+}
+
+#footer.yampi-footer .yampi-footer-contact-item :is(a, p) {
+    display: block;
+    color: var(--y-muted);
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+#footer.yampi-footer a {
+    color: var(--y-muted);
+    text-decoration: none;
+}
+
+#footer.yampi-footer a:hover {
+    color: var(--y-gold-light);
+}
+
+#footer.yampi-footer .yampi-footer-hours {
+    border: 1px solid var(--y-border-soft);
+    border-radius: 12px;
+    padding: 14px;
+    background: var(--y-card);
+}
+
+#footer.yampi-footer .yampi-footer-hours-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 9px;
+    padding: 2px 0;
+    font-size: 12px;
+}
+
+#footer.yampi-footer .yampi-footer-hours-row strong {
+    color: var(--y-gold);
+    font-weight: 720;
+}
+
+#footer.yampi-footer .yampi-footer-hours-note {
+    display: flex;
+    align-items: start;
+    gap: 9px;
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--y-muted);
+}
+
+#footer.yampi-footer .yampi-footer-hours-note i {
+    color: var(--y-gold);
+}
+
+#footer.yampi-footer .yampi-footer-social-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+#footer.yampi-footer .yampi-footer-social-link {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 11px 12px;
+    border: 1px solid var(--y-border-soft);
+    border-radius: 11px;
+    background: var(--y-card);
+    transition: border-color .2s ease, transform .2s ease;
+}
+
+#footer.yampi-footer .yampi-footer-social-link:hover {
+    border-color: rgba(212, 175, 55, .38);
+    transform: translateX(2px);
+}
+
+#footer.yampi-footer .yampi-footer-social-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    color: var(--y-gold);
+    background: var(--y-gold-tint);
+    font-size: 15px;
+}
+
+#footer.yampi-footer .yampi-footer-social-info {
+    flex: 1;
+    min-width: 0;
+}
+
+#footer.yampi-footer .yampi-footer-social-info strong {
+    display: block;
+    color: var(--y-text);
+    font-size: 12px;
+    font-weight: 710;
+}
+
+#footer.yampi-footer .yampi-footer-social-info small {
+    display: block;
+    color: var(--y-muted);
+    font-size: 11px;
+}
+
+#footer.yampi-footer .yampi-footer-social-arrow {
+    color: var(--y-gold);
+}
+
+#footer.yampi-footer .yampi-footer-divider {
+    border-top: 1px solid var(--y-border-soft);
+}
+
+#footer.yampi-footer .yampi-footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 0 28px;
+}
+
+#footer.yampi-footer .yampi-footer-copyright {
+    color: var(--y-muted);
+    font-size: 11px;
+}
+
+#footer.yampi-footer .yampi-footer-bottom-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    color: var(--y-muted);
+    font-size: 11px;
+}
+
+#footer.yampi-footer .yampi-footer-bottom-right i,
+#footer.yampi-footer .yampi-footer-bottom-brand {
+    color: var(--y-gold);
+}
+
+#footer.yampi-footer .yampi-footer-bottom-separator {
+    width: 3px;
+    height: 3px;
+    background: var(--y-muted-dark);
+    border-radius: 50%;
+}
+
+@media (max-width: 1160px) {
+    #footer.yampi-footer .yampi-footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    #footer.yampi-footer .yampi-footer-container {
+        width: calc(100% - 34px);
+        padding-top: 42px;
+    }
+
+    #footer.yampi-footer .yampi-footer-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+        padding-bottom: 32px;
+    }
+
+    #footer.yampi-footer .yampi-footer-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #footer.yampi-footer .yampi-footer-social-link {
+        transition: none;
+    }
+
+    #footer.yampi-footer .yampi-footer-social-link:hover {
+        transform: none;
+    }
+}

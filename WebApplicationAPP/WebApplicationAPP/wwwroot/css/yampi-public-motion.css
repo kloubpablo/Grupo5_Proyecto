@@ -1,0 +1,368 @@
+/* ======================================================================
+   YAMPI | Editorial publico 2026. Movimiento sobrio, sin degradados.
+   La animacion nunca bloquea contenido y respeta movimiento reducido.
+   ====================================================================== */
+.yp-body #publicoMain {
+  overflow: clip;
+}
+
+.yp-header {
+  background: rgba(11, 12, 14, .97);
+  border-bottom-color: var(--y-border-soft);
+  backdrop-filter: none;
+}
+
+.yp-header-inner {
+  max-width: 1510px;
+}
+
+.yp-header-book,
+.yp-btn {
+  border-radius: 11px;
+  font-weight: 740;
+}
+
+.yp-header-book {
+  background: var(--y-gold);
+  border-color: var(--y-gold);
+  color: var(--y-bg) !important;
+}
+
+.yp-header-book:hover {
+  background: var(--y-gold-light);
+  border-color: var(--y-gold-light);
+}
+
+.yp-btn-gold {
+  background: var(--y-gold);
+  color: var(--y-bg) !important;
+  border-color: var(--y-gold);
+}
+
+.yp-btn-gold:hover {
+  background: var(--y-gold-light);
+  border-color: var(--y-gold-light);
+  color: var(--y-bg) !important;
+}
+
+.yp-btn-outline-light {
+  border-color: rgba(246, 245, 240, .55);
+  background: rgba(11, 12, 14, .28);
+}
+
+.yp-btn-outline-light:hover {
+  background: var(--y-gold-tint);
+  border-color: var(--y-gold);
+}
+
+.yp-hero {
+  min-height: clamp(620px, 89svh, 900px);
+  background: var(--y-deep);
+}
+
+.yp-hero-bottom-fade {
+  display: none;
+}
+
+.yp-hero-shade {
+  background: rgba(6, 7, 9, .60);
+}
+
+.yp-hero-slide img {
+  filter: saturate(.72) contrast(1.04);
+  transform: scale(1.035);
+  transition: transform 8s ease-out, filter 1.2s ease;
+}
+
+.yp-hero-slide.is-active img {
+  transform: scale(1);
+  filter: saturate(.82) contrast(1.07);
+}
+
+.yp-hero h1 {
+  font-size: clamp(48px, 6.8vw, 102px);
+  font-weight: 840;
+  letter-spacing: -.055em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+.yp-hero-copy>p {
+  color: var(--y-text-soft);
+  font-size: clamp(14px, 1.36vw, 18px);
+}
+
+.yp-hero .yp-eyebrow {
+  color: var(--y-gold-light);
+}
+
+.yp-hero .yp-btn {
+  min-height: 52px;
+  padding: 13px 25px;
+}
+
+.yp-hero-tags {
+  gap: 15px;
+  color: var(--y-text-soft);
+}
+
+.yp-hero-dots button {
+  border-radius: 2px;
+}
+
+.yp-section {
+  padding-block: clamp(72px, 7.6vw, 112px);
+}
+
+.yp-section-intro h2,
+.yp-about-copy h2,
+.yp-cta h2 {
+  color: var(--y-text);
+  font-weight: 800;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+
+.yp-service-card {
+  min-height: 260px;
+  border-radius: 17px;
+  background: var(--y-card);
+  border-color: var(--y-border-soft);
+  box-shadow: none;
+  transition: transform .3s var(--y-ease), border-color .3s ease, background-color .3s ease;
+}
+
+.yp-service-card:hover {
+  background: var(--y-card-hover);
+  border-color: rgba(212, 175, 55, .52);
+  transform: translateY(-5px);
+}
+
+.yp-service-mark {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  background: var(--y-gold-tint);
+  border: 1px solid rgba(212, 175, 55, .22);
+  font-size: 22px;
+}
+
+.yp-service-card h3 {
+  color: var(--y-text);
+  font-size: 21px;
+  font-weight: 760;
+}
+
+.yp-service-card p {
+  color: var(--y-muted);
+}
+
+.yp-service-bottom {
+  border-top-color: var(--y-border-soft);
+}
+
+.yp-service-bottom strong {
+  font-weight: 770;
+}
+
+.yp-gallery {
+  background: var(--y-deep);
+  border-color: var(--y-border-soft);
+}
+
+.yp-gallery-card {
+  border-radius: 14px;
+  border-color: var(--y-border-soft);
+  box-shadow: none;
+}
+
+.yp-gallery-card:hover {
+  border-color: rgba(212, 175, 55, .62);
+}
+
+.yp-gallery-card img {
+  transition: transform .65s var(--y-ease), filter .6s ease;
+  filter: saturate(.83);
+}
+
+.yp-gallery-card:hover img {
+  transform: scale(1.07);
+  filter: saturate(1);
+}
+
+.yp-gallery-card-overlay {
+  background: rgba(11, 12, 14, .83);
+}
+
+.yp-about {
+  background: var(--y-bg);
+}
+
+.yp-about-photo img {
+  filter: saturate(.73);
+  transition: transform 1s var(--y-ease);
+}
+
+.yp-about-photo:hover img {
+  transform: scale(1.035);
+}
+
+.yp-contact-info,
+.yp-contact-map {
+  background: var(--y-card);
+  border: 1px solid var(--y-border-soft);
+  border-radius: 17px;
+}
+
+.yp-contact-icon {
+  background: var(--y-gold-tint);
+  border-color: rgba(212, 175, 55, .25);
+  border-radius: 12px;
+}
+
+.yp-socials a {
+  background: var(--y-deep);
+  border-color: var(--y-border);
+  border-radius: 10px;
+  transition: border-color .2s ease, transform .2s ease;
+}
+
+.yp-socials a:hover {
+  border-color: var(--y-gold);
+  transform: translateY(-2px);
+}
+
+.yp-cta {
+  background: #151719;
+  border-top: 1px solid var(--y-border-soft);
+}
+
+.yp-cta p {
+  color: var(--y-muted);
+}
+
+.yp-whatsapp-float {
+  box-shadow: 0 13px 38px rgba(0, 0, 0, .4);
+  transition: transform .2s var(--y-ease);
+}
+
+.yp-whatsapp-float:hover {
+  transform: translateY(-3px);
+}
+
+/* Animaciones editoriales en la portada, sin ocultar elementos importantes. */
+@media (prefers-reduced-motion: no-preference) {
+  .yp-hero .yp-eyebrow {
+    animation: yampi-enter .68s .05s both;
+  }
+
+  .yp-hero h1 {
+    animation: yampi-enter .84s .14s both;
+  }
+
+  .yp-hero-copy>p {
+    animation: yampi-enter .84s .27s both;
+  }
+
+  .yp-hero-actions {
+    animation: yampi-enter .8s .36s both;
+  }
+
+  .yp-hero-tags {
+    animation: yampi-enter .76s .47s both;
+  }
+
+  .yp-landing.yp-js .yp-reveal {
+    transition: opacity .7s var(--y-ease), transform .7s var(--y-ease);
+  }
+}
+
+@keyframes yampi-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 800px) {
+  .yp-header-inner {
+    gap: 14px;
+  }
+
+  .yp-hero {
+    min-height: 690px;
+  }
+}
+
+@media (max-width: 550px) {
+  .yp-header-inner {
+    padding-inline: 15px;
+  }
+
+  .yp-hero {
+    min-height: 650px;
+  }
+
+  .yp-hero-inner {
+    padding-top: 40px;
+  }
+
+  .yp-hero h1 {
+    font-size: clamp(43px, 10.2vw, 59px);
+  }
+
+  .yp-hero-actions {
+    display: flex;
+    width: min(100%, 330px);
+    max-width: none;
+    margin-inline: auto;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .yp-hero-actions .yp-btn {
+    width: 100%;
+    margin: 0;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .yp-hero-tags {
+    margin-top: 30px;
+  }
+
+  .yp-service-card {
+    min-height: 230px;
+  }
+
+  .yp-gallery-card {
+    border-radius: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .yp-hero-slide img,
+  .yp-service-card,
+  .yp-gallery-card img,
+  .yp-about-photo img,
+  .yp-whatsapp-float {
+    transition: none;
+  }
+
+  .yp-hero .yp-eyebrow,
+  .yp-hero h1,
+  .yp-hero-copy>p,
+  .yp-hero-actions,
+  .yp-hero-tags {
+    animation: none;
+  }
+}

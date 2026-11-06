@@ -1,0 +1,132 @@
+/* YAMPI | Paginas publicas secundarias: Nosotros y Contactenos. */
+.nosotros-section,
+.contacto-section {
+    min-height: min(100svh, 900px);
+    padding: clamp(50px, 7vw, 96px) clamp(16px, 3vw, 40px);
+    background: var(--y-bg);
+    color: var(--y-text);
+}
+
+.nosotros-card {
+    width: min(100%, 1040px);
+    margin: auto;
+    padding: clamp(26px, 4.5vw, 56px);
+    background: var(--y-card);
+    border: 1px solid var(--y-border-soft);
+    border-radius: 21px;
+}
+
+.nosotros-section .titulo-principal,
+.contacto-section .titulo-principal {
+    margin-bottom: 10px;
+    color: var(--y-gold);
+    font-size: clamp(32px, 4vw, 50px);
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: -.04em;
+}
+
+.nosotros-section .subtitulo,
+.contacto-section .subtitulo {
+    margin: 0 auto 42px;
+    color: var(--y-muted);
+    font-size: 15px;
+    line-height: 1.8;
+    text-align: center;
+}
+
+.nosotros-section .titulo-historia {
+    margin-bottom: 26px;
+    color: var(--y-text);
+    font-size: clamp(23px, 3vw, 34px);
+    font-weight: 760;
+    text-align: center;
+}
+
+.nosotros-card p {
+    margin: 0 0 20px;
+    color: var(--y-text-soft);
+    font-size: 15px;
+    line-height: 1.9;
+}
+
+.contacto-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+    width: min(100%, 1400px);
+    margin: auto;
+}
+
+.contacto-section .info-card,
+.contacto-section .mapa-card {
+    min-width: 0;
+    padding: clamp(21px, 2.7vw, 34px);
+    background: var(--y-card);
+    border: 1px solid var(--y-border-soft);
+    border-radius: 17px;
+}
+
+.contacto-section :is(.info-card, .mapa-card) h3 {
+    margin: 0 0 24px;
+    color: var(--y-gold);
+    font-size: 21px;
+    font-weight: 760;
+    text-align: center;
+}
+
+.contacto-section .info-item {
+    margin-bottom: 24px;
+}
+
+.contacto-section .info-item h5 {
+    margin-bottom: 6px;
+    color: var(--y-gold);
+    font-weight: 720;
+}
+
+.contacto-section .info-item :is(p, a) {
+    margin: 0;
+    color: var(--y-text-soft);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.contacto-section .info-item a:hover {
+    color: var(--y-gold-light);
+}
+
+.contacto-section .mapa-container {
+    overflow: hidden;
+    border: 1px solid var(--y-border);
+    border-radius: 12px;
+}
+
+.contacto-section .mapa-container iframe {
+    display: block;
+    width: 100%;
+    height: 500px;
+    border: 0;
+}
+
+@media (max-width: 900px) {
+    .contacto-container {
+        grid-template-columns: 1fr;
+    }
+
+    .contacto-section .mapa-container iframe {
+        height: 380px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .nosotros-section,
+    .contacto-section {
+        padding-inline: 14px;
+    }
+
+    .contacto-section .subtitulo {
+        margin-bottom: 26px;
+    }
+}

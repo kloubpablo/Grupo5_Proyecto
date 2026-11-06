@@ -1,103 +1,10 @@
-﻿@model WebApplicationAPP.Models.Contacto
+@model WebApplicationAPP.Models.Contacto
 @{
     ViewData["Title"] = "Contáctenos";
     Layout = "~/Views/Shared/_LayoutPublico.cshtml";
 }
 
-<style>
-    .contacto-section {
-        min-height: 100vh;
-        background: linear-gradient( rgba(2, 6, 23, 0.85), rgba(15, 23, 42, 0.90) );
-        background-size: cover;
-        background-position: center;
-        padding: 80px 20px;
-    }
-
-    .titulo-principal {
-        text-align: center;
-        color: #facc15;
-        font-size: 3rem;
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
-
-    .subtitulo {
-        text-align: center;
-        color: #cbd5e1;
-        margin-bottom: 50px;
-    }
-
-    .contacto-container {
-        max-width: 1400px;
-        margin: auto;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
-    }
-
-    .info-card,
-    .mapa-card {
-        background: rgba(30, 41, 59, 0.95);
-        border: 2px solid #334155;
-        border-radius: 15px;
-        padding: 35px;
-    }
-
-        .info-card h3,
-        .mapa-card h3 {
-            color: #facc15;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-    .info-item {
-        margin-bottom: 25px;
-    }
-
-        .info-item h5 {
-            color: #facc15;
-            margin-bottom: 8px;
-        }
-
-        .info-item p,
-        .info-item a {
-            color: #e2e8f0;
-            text-decoration: none;
-            margin: 0;
-        }
-
-            .info-item a:hover {
-                color: #facc15;
-            }
-
-    .mapa-container {
-        overflow: hidden;
-        border-radius: 10px;
-        border: 2px solid #334155;
-    }
-
-        .mapa-container iframe {
-            width: 100%;
-            height: 500px;
-            border: 0;
-        }
-
-    @@media(max-width: 992px) {
-        .contacto-container {
-            grid-template-columns: 1fr;
-        }
-
-        .mapa-container iframe {
-            height: 400px;
-        }
-    }
-
-    @@media(max-width: 768px) {
-        .titulo-principal {
-            font-size: 2.2rem;
-        }
-    }
-</style>
+<link rel="stylesheet" href="~/css/paginas-publicas.css" asp-append-version="true" />
 
 <section class="contacto-section">
 

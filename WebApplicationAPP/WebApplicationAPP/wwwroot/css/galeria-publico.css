@@ -1,679 +1,627 @@
-
-/* =========================================================
-   YAMPI BARBERSHOP
-   GALERIA PUBLICA - PORTAFOLIO PREMIUM
-   NEGRO / DORADO / SIN DEGRADADOS
-========================================================= */
-
+/* YAMPI | Modulo: galeria-publico.css. Estructura propia sobre yampi-global.css. */
 .galeria-pro-page {
-    --gp-black: #09090a;
-    --gp-dark: #101012;
-    --gp-card: #171719;
-    --gp-border: #29292d;
-    --gp-gold: #d4af37;
-    --gp-gold-light: #e4c65a;
-    --gp-white: #f5f5f5;
-    --gp-muted: #a5a5aa;
-
-    width: 100%;
-    min-height: 100vh;
-    margin: 0;
-    background: var(--gp-black);
-    color: var(--gp-white);
-    font-family: inherit;
+  --gp-black: var(--y-bg);
+  --gp-dark: var(--y-surface);
+  --gp-card: var(--y-card);
+  --gp-border: var(--y-border);
+  --gp-gold: var(--y-gold);
+  --gp-gold-light: var(--y-gold-light);
+  --gp-white: var(--y-text);
+  --gp-muted: var(--y-muted);
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--gp-black);
+  color: var(--gp-white);
+  font-family: inherit;
 }
 
 .galeria-pro-page *,
 .galeria-pro-page *::before,
 .galeria-pro-page *::after {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .galeria-pro-container {
-    width: min(100% - 64px, 1400px);
-    margin: 0 auto;
+  width: min(100% - 64px, 1400px);
+  margin: 0 auto;
 }
 
-/* =========================================================
-   ENCABEZADO EDITORIAL
-========================================================= */
-
 .galeria-pro-intro {
-    background: var(--gp-black);
-    padding: 85px 0 0;
+  background: var(--gp-black);
+  padding: 85px 0 0;
 }
 
 .galeria-pro-intro-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 45px;
 }
 
 .galeria-pro-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--gp-gold);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2.2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--gp-gold);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.2px;
 }
 
 .galeria-pro-dot {
-    display: block;
-    flex: 0 0 7px;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--gp-gold);
+  display: block;
+  flex: 0 0 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gp-gold);
 }
 
 .galeria-pro-index {
-    color: #77777f;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
+  color: var(--y-muted-dark);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
 }
 
 .galeria-pro-intro-content {
-    display: grid;
-    grid-template-columns: 1.4fr 0.6fr;
-    align-items: end;
-    gap: 50px;
-    padding-bottom: 65px;
+  display: grid;
+  grid-template-columns: 1.4fr 0.6fr;
+  align-items: end;
+  gap: 50px;
+  padding-bottom: 65px;
 }
 
 .galeria-pro-title-group h1 {
-    margin: 0;
-    color: var(--gp-white);
-    font-size: clamp(48px, 6.4vw, 90px);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -3px;
+  margin: 0;
+  color: var(--gp-white);
+  font-size: clamp(48px, 6.4vw, 90px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -3px;
 }
 
 .galeria-pro-title-group h1 span {
-    display: block;
-    color: var(--gp-gold);
+  display: block;
+  color: var(--gp-gold);
 }
 
 .galeria-pro-description {
-    padding-bottom: 8px;
+  padding-bottom: 8px;
 }
 
 .galeria-pro-description p {
-    max-width: 360px;
-    margin: 0;
-    color: var(--gp-muted);
-    font-size: 14px;
-    line-height: 1.9;
+  max-width: 360px;
+  margin: 0;
+  color: var(--gp-muted);
+  font-size: 14px;
+  line-height: 1.9;
 }
 
 .galeria-pro-intro-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 19px 0;
-    border-top: 1px solid var(--gp-border);
-    border-bottom: 1px solid var(--gp-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 19px 0;
+  border-top: 1px solid var(--gp-border);
+  border-bottom: 1px solid var(--gp-border);
 }
 
-.galeria-pro-intro-bottom > span {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--gp-muted);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
+.galeria-pro-intro-bottom>span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--gp-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
 }
 
 .galeria-pro-intro-bottom i {
-    color: var(--gp-gold);
-    font-size: 16px;
+  color: var(--gp-gold);
+  font-size: 16px;
 }
-
-/* =========================================================
-   GALERIA
-========================================================= */
 
 .galeria-pro-gallery {
-    padding: 28px 0 100px;
-    background: var(--gp-black);
+  padding: 28px 0 100px;
+  background: var(--gp-black);
 }
 
-/* Grid asimetrico */
 .galeria-pro-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-auto-rows: 205px;
-    grid-auto-flow: dense;
-    gap: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 205px;
+  grid-auto-flow: dense;
+  gap: 14px;
 }
 
-/* Tarjeta principal */
 .galeria-pro-featured {
-    grid-column: span 2;
-    grid-row: span 2;
+  grid-column: span 2;
+  grid-row: span 2;
 }
 
-/* Fotografias */
 .galeria-pro-item {
-    position: relative;
-    display: block;
-    min-width: 0;
-    min-height: 0;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    overflow: hidden;
-    appearance: none;
-    background: #19191c;
-    border: 1px solid #343438;
-    border-radius: 9px;
-    cursor: zoom-in;
-    text-align: left;
-    isolation: isolate;
-    transition: border-color .25s ease;
+  position: relative;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  appearance: none;
+  background: var(--y-surface);
+  border: 1px solid var(--y-card);
+  border-radius: 9px;
+  cursor: zoom-in;
+  text-align: left;
+  isolation: isolate;
+  transition: border-color .25s ease;
 }
 
 .galeria-pro-item:hover {
-    border-color: var(--gp-gold);
+  border-color: var(--gp-gold);
 }
 
-.galeria-pro-item > img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    transition: transform .45s ease;
+.galeria-pro-item>img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform .45s ease;
 }
 
-.galeria-pro-item:hover > img {
-    transform: scale(1.055);
+.galeria-pro-item:hover>img {
+  transform: scale(1.055);
 }
 
-/* Informacion sobre cada foto */
 .galeria-pro-image-info {
-    position: absolute;
-    z-index: 2;
-    right: 14px;
-    bottom: 14px;
-    left: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    gap: 12px;
-    pointer-events: none;
+  position: absolute;
+  z-index: 2;
+  right: 14px;
+  bottom: 14px;
+  left: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 12px;
+  pointer-events: none;
 }
 
 .galeria-pro-image-text {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 0;
-    padding: 9px 12px;
-    background: rgba(9, 9, 10, .9);
-    border: 1px solid rgba(212, 175, 55, .23);
-    border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding: 9px 12px;
+  background: rgba(8, 9, 11, .9);
+  border: 1px solid rgba(212, 175, 55, .23);
+  border-radius: 7px;
 }
 
 .galeria-pro-image-text small {
-    color: var(--gp-gold);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 1.3px;
+  color: var(--gp-gold);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
 }
 
 .galeria-pro-image-text strong {
-    color: var(--gp-white);
-    font-size: 13px;
-    font-weight: 700;
+  color: var(--gp-white);
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .galeria-pro-image-action {
-    display: grid;
-    place-items: center;
-    flex: 0 0 38px;
-    width: 38px;
-    height: 38px;
-    background: rgba(9, 9, 10, .92);
-    border: 1px solid rgba(212, 175, 55, .35);
-    border-radius: 8px;
-    color: var(--gp-gold);
-    font-size: 16px;
-    transition: background-color .2s ease;
+  display: grid;
+  place-items: center;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  background: rgba(8, 9, 11, .92);
+  border: 1px solid rgba(212, 175, 55, .35);
+  border-radius: 8px;
+  color: var(--gp-gold);
+  font-size: 16px;
+  transition: background-color .2s ease;
 }
 
 .galeria-pro-item:hover .galeria-pro-image-action {
-    background: var(--gp-gold);
-    color: var(--gp-black);
+  background: var(--gp-gold);
+  color: var(--gp-black);
 }
 
 .galeria-pro-item:focus-visible {
-    outline: 2px solid var(--gp-gold);
-    outline-offset: 4px;
+  outline: 2px solid var(--gp-gold);
+  outline-offset: 4px;
 }
 
-/* Cuando solo hay una o dos fotos */
 .galeria-pro-grid[data-count="1"] {
-    grid-template-columns: 1fr;
-    grid-auto-rows: minmax(350px, 540px);
+  grid-template-columns: 1fr;
+  grid-auto-rows: minmax(350px, 540px);
 }
 
 .galeria-pro-grid[data-count="2"] {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-rows: 400px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 400px;
 }
 
-/* =========================================================
-   PIE DE LA GALERIA
-========================================================= */
-
 .galeria-pro-gallery-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    margin-top: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-top: 25px;
 }
 
 .galeria-pro-gallery-note {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #85858d;
-    font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--y-muted-dark);
+  font-size: 12px;
 }
 
 .galeria-pro-gallery-note i {
-    color: var(--gp-gold);
-    font-size: 15px;
+  color: var(--gp-gold);
+  font-size: 15px;
 }
 
 .galeria-pro-gallery-total {
-    color: #85858d;
-    font-size: 11px;
-    white-space: nowrap;
+  color: var(--y-muted-dark);
+  font-size: 11px;
+  white-space: nowrap;
 }
-
-/* =========================================================
-   GALERIA VACIA
-========================================================= */
 
 .galeria-pro-empty {
-    min-height: 360px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 13px;
-    padding: 35px;
-    background: var(--gp-card);
-    border: 1px dashed #45454a;
-    border-radius: 12px;
-    text-align: center;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  padding: 35px;
+  background: var(--gp-card);
+  border: 1px dashed var(--y-border);
+  border-radius: 12px;
+  text-align: center;
 }
 
-.galeria-pro-empty > i {
-    margin-bottom: 15px;
-    color: var(--gp-gold);
-    font-size: 40px;
+.galeria-pro-empty>i {
+  margin-bottom: 15px;
+  color: var(--gp-gold);
+  font-size: 40px;
 }
 
 .galeria-pro-empty h2 {
-    margin: 0;
-    color: var(--gp-white);
-    font-size: 24px;
-    font-weight: 700;
+  margin: 0;
+  color: var(--gp-white);
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .galeria-pro-empty p {
-    max-width: 420px;
-    margin: 0;
-    color: var(--gp-muted);
-    font-size: 13px;
-    line-height: 1.8;
+  max-width: 420px;
+  margin: 0;
+  color: var(--gp-muted);
+  font-size: 13px;
+  line-height: 1.8;
 }
 
-/* =========================================================
-   RESERVACION
-========================================================= */
-
 .galeria-pro-reservation {
-    padding: 65px 0 85px;
-    background: #101012;
-    border-top: 1px solid var(--gp-border);
+  padding: 65px 0 85px;
+  background: var(--y-deep);
+  border-top: 1px solid var(--gp-border);
 }
 
 .galeria-pro-reservation-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 35px;
 }
 
 .galeria-pro-reservation-content {
-    min-width: 0;
+  min-width: 0;
 }
 
 .galeria-pro-reservation-content h2 {
-    margin: 12px 0 10px;
-    color: var(--gp-white);
-    font-size: clamp(27px, 3vw, 39px);
-    font-weight: 800;
-    line-height: 1.2;
+  margin: 12px 0 10px;
+  color: var(--gp-white);
+  font-size: clamp(27px, 3vw, 39px);
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .galeria-pro-reservation-content p {
-    margin: 0;
-    color: var(--gp-muted);
-    font-size: 13px;
-    line-height: 1.8;
+  margin: 0;
+  color: var(--gp-muted);
+  font-size: 13px;
+  line-height: 1.8;
 }
 
 .galeria-pro-reservation-actions {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .galeria-pro-btn-primary,
 .galeria-pro-btn-outline {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    gap: 11px;
-    min-height: 48px;
-    padding: 13px 22px;
-    border-radius: 9px;
-    font-size: 13px;
-    font-weight: 750;
-    text-decoration: none;
-    white-space: nowrap;
-    transition:
-        color .2s ease,
-        background-color .2s ease,
-        border-color .2s ease,
-        transform .2s ease;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 11px;
+  min-height: 48px;
+  padding: 13px 22px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 750;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color .2s ease,
+    background-color .2s ease,
+    border-color .2s ease,
+    transform .2s ease;
 }
 
 .galeria-pro-btn-primary {
-    background: var(--gp-gold);
-    border: 1px solid var(--gp-gold);
-    color: #09090a;
+  background: var(--gp-gold);
+  border: 1px solid var(--gp-gold);
+  color: var(--y-bg);
 }
 
 .galeria-pro-btn-primary:hover {
-    background: var(--gp-gold-light);
-    border-color: var(--gp-gold-light);
-    color: #09090a;
-    transform: translateY(-2px);
+  background: var(--gp-gold-light);
+  border-color: var(--gp-gold-light);
+  color: var(--y-bg);
+  transform: translateY(-2px);
 }
 
 .galeria-pro-btn-outline {
-    background: transparent;
-    border: 1px solid #49494e;
-    color: var(--gp-white);
+  background: transparent;
+  border: 1px solid var(--y-border);
+  color: var(--gp-white);
 }
 
 .galeria-pro-btn-outline:hover {
-    background: #202023;
-    border-color: var(--gp-gold);
-    color: var(--gp-gold);
+  background: var(--y-surface);
+  border-color: var(--gp-gold);
+  color: var(--gp-gold);
 }
 
 .galeria-pro-btn-primary:focus-visible,
 .galeria-pro-btn-outline:focus-visible {
-    outline: 2px solid var(--gp-gold);
-    outline-offset: 4px;
+  outline: 2px solid var(--gp-gold);
+  outline-offset: 4px;
 }
 
-/* =========================================================
-   VISOR DE FOTOGRAFIAS
-========================================================= */
-
 .galeria-publico-visor {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 60px 25px 30px;
-    background: rgba(0, 0, 0, .97);
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 60px 25px 30px;
+  background: rgba(8, 9, 11, .97);
 }
 
 .galeria-publico-visor[hidden] {
-    display: none !important;
+  display: none !important;
 }
 
 .galeria-publico-visor-contenido {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    min-width: 0;
-    max-height: 100%;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  max-height: 100%;
+  gap: 20px;
 }
 
 .galeria-publico-visor-contenido img {
-    display: block;
-    max-width: 100%;
-    max-height: calc(100dvh - 150px);
-    object-fit: contain;
-    border-radius: 8px;
+  display: block;
+  max-width: 100%;
+  max-height: calc(100dvh - 150px);
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 .galeria-publico-visor-contador {
-    color: var(--gp-muted);
-    font-size: 12px;
-    font-weight: 600;
+  color: var(--gp-muted);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .galeria-publico-visor-cerrar,
 .galeria-publico-visor-navegacion {
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    width: 48px;
-    height: 48px;
-    padding: 0;
-    background: #19191c;
-    border: 1px solid #38383d;
-    border-radius: 11px;
-    color: var(--gp-white);
-    cursor: pointer;
-    font-size: 22px;
-    transition:
-        color .2s ease,
-        border-color .2s ease,
-        background-color .2s ease;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  background: var(--y-surface);
+  border: 1px solid var(--y-card);
+  border-radius: 11px;
+  color: var(--gp-white);
+  cursor: pointer;
+  font-size: 22px;
+  transition: color .2s ease,
+    border-color .2s ease,
+    background-color .2s ease;
 }
 
 .galeria-publico-visor-cerrar:hover,
 .galeria-publico-visor-navegacion:hover {
-    color: var(--gp-gold);
-    border-color: var(--gp-gold);
-    background: #242427;
+  color: var(--gp-gold);
+  border-color: var(--gp-gold);
+  background: var(--y-surface);
 }
 
 .galeria-publico-visor-cerrar {
-    position: absolute;
-    top: 20px;
-    right: 25px;
+  position: absolute;
+  top: 20px;
+  right: 25px;
 }
 
 .galeria-publico-visor-cerrar:focus-visible,
 .galeria-publico-visor-navegacion:focus-visible {
-    outline: 2px solid var(--gp-gold);
-    outline-offset: 4px;
+  outline: 2px solid var(--gp-gold);
+  outline-offset: 4px;
 }
-
-/* =========================================================
-   TABLETS
-========================================================= */
 
 @media (max-width: 1050px) {
+  .galeria-pro-intro-content {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding-bottom: 45px;
+  }
 
-    .galeria-pro-intro-content {
-        grid-template-columns: 1fr;
-        gap: 22px;
-        padding-bottom: 45px;
-    }
+  .galeria-pro-description p {
+    max-width: 620px;
+  }
 
-    .galeria-pro-description p {
-        max-width: 620px;
-    }
+  .galeria-pro-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 235px;
+  }
 
-    .galeria-pro-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-auto-rows: 235px;
-    }
+  .galeria-pro-featured {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
 
-    .galeria-pro-featured {
-        grid-column: span 2;
-        grid-row: span 2;
-    }
-
-    .galeria-pro-reservation-box {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .galeria-pro-reservation-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
-
-/* =========================================================
-   MOVILES
-========================================================= */
 
 @media (max-width: 650px) {
+  .galeria-pro-container {
+    width: calc(100% - 32px);
+  }
 
-    .galeria-pro-container {
-        width: calc(100% - 32px);
-    }
+  .galeria-pro-intro {
+    padding-top: 55px;
+  }
 
-    .galeria-pro-intro {
-        padding-top: 55px;
-    }
+  .galeria-pro-intro-top {
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 35px;
+  }
 
-    .galeria-pro-intro-top {
-        align-items: flex-start;
-        gap: 12px;
-        margin-bottom: 35px;
-    }
+  .galeria-pro-eyebrow {
+    font-size: 9px;
+    letter-spacing: 1.4px;
+  }
 
-    .galeria-pro-eyebrow {
-        font-size: 9px;
-        letter-spacing: 1.4px;
-    }
+  .galeria-pro-index {
+    font-size: 9px;
+  }
 
-    .galeria-pro-index {
-        font-size: 9px;
-    }
+  .galeria-pro-title-group h1 {
+    font-size: clamp(42px, 10vw, 58px);
+    letter-spacing: -1.5px;
+  }
 
-    .galeria-pro-title-group h1 {
-        font-size: clamp(42px, 10vw, 58px);
-        letter-spacing: -1.5px;
-    }
+  .galeria-pro-description p {
+    font-size: 13px;
+  }
 
-    .galeria-pro-description p {
-        font-size: 13px;
-    }
+  .galeria-pro-intro-bottom>span {
+    font-size: 9px;
+  }
 
-    .galeria-pro-intro-bottom > span {
-        font-size: 9px;
-    }
+  .galeria-pro-gallery {
+    padding: 16px 0 65px;
+  }
 
-    .galeria-pro-gallery {
-        padding: 16px 0 65px;
-    }
+  .galeria-pro-grid,
+  .galeria-pro-grid[data-count="1"],
+  .galeria-pro-grid[data-count="2"] {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    gap: 12px;
+  }
 
-    .galeria-pro-grid,
-    .galeria-pro-grid[data-count="1"],
-    .galeria-pro-grid[data-count="2"] {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-auto-rows: auto;
-        gap: 12px;
-    }
+  .galeria-pro-item,
+  .galeria-pro-featured {
+    grid-column: auto;
+    grid-row: auto;
+    aspect-ratio: 4 / 3;
+    min-height: 250px;
+  }
 
-    .galeria-pro-item,
-    .galeria-pro-featured {
-        grid-column: auto;
-        grid-row: auto;
-        aspect-ratio: 4 / 3;
-        min-height: 250px;
-    }
+  .galeria-pro-image-text small {
+    font-size: 8px;
+  }
 
-    .galeria-pro-image-text small {
-        font-size: 8px;
-    }
+  .galeria-pro-image-text strong {
+    font-size: 12px;
+  }
 
-    .galeria-pro-image-text strong {
-        font-size: 12px;
-    }
+  .galeria-pro-gallery-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
 
-    .galeria-pro-gallery-footer {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 10px;
-    }
+  .galeria-pro-reservation {
+    padding: 55px 0 65px;
+  }
 
-    .galeria-pro-reservation {
-        padding: 55px 0 65px;
-    }
+  .galeria-pro-reservation-content h2 {
+    font-size: 28px;
+  }
 
-    .galeria-pro-reservation-content h2 {
-        font-size: 28px;
-    }
+  .galeria-pro-reservation-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
 
-    .galeria-pro-reservation-actions {
-        flex-direction: column;
-        align-items: stretch;
-        width: 100%;
-    }
+  .galeria-pro-reservation-actions a {
+    width: 100%;
+  }
 
-    .galeria-pro-reservation-actions a {
-        width: 100%;
-    }
+  .galeria-publico-visor {
+    padding: 70px 10px 30px;
+    gap: 5px;
+  }
 
-    .galeria-publico-visor {
-        padding: 70px 10px 30px;
-        gap: 5px;
-    }
+  .galeria-publico-visor-navegacion {
+    width: 35px;
+    height: 45px;
+    font-size: 17px;
+  }
 
-    .galeria-publico-visor-navegacion {
-        width: 35px;
-        height: 45px;
-        font-size: 17px;
-    }
-
-    .galeria-publico-visor-cerrar {
-        top: 15px;
-        right: 15px;
-        width: 43px;
-        height: 43px;
-    }
+  .galeria-publico-visor-cerrar {
+    top: 15px;
+    right: 15px;
+    width: 43px;
+    height: 43px;
+  }
 }
-
-/* =========================================================
-   ACCESIBILIDAD
-========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
 
-    .galeria-pro-page *,
-    .galeria-pro-page *::before,
-    .galeria-pro-page *::after {
-        transition: none !important;
-        transform: none !important;
-    }
+  .galeria-pro-page *,
+  .galeria-pro-page *::before,
+  .galeria-pro-page *::after {
+    transition: none !important;
+    transform: none !important;
+  }
 }
