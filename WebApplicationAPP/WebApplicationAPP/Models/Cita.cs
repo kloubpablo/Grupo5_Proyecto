@@ -9,6 +9,11 @@ public partial class Cita
 
     public int IdCliente { get; set; }
 
+    public int? IdBarbero { get; set; }
+
+    public virtual Usuario? BarberoUsuario { get; set; }
+
+
     public DateOnly Fecha { get; set; }
 
     public TimeOnly Hora { get; set; }

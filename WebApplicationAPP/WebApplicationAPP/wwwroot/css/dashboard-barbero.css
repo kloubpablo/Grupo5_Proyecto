@@ -1,0 +1,28 @@
+/* Dashboard personal: se apoya en dashboard.css existente */
+.dashboard-barbero-page .dashboard-barbero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0;
+}
+.dashboard-barbero-page .dashboard-barbero-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    text-decoration: none;
+}
+.dashboard-barbero-page .dashboard-barbero-historico {
+    color: #999;
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 16px 0 0;
+}
+@media (max-width: 600px) {
+    .dashboard-barbero-page .dashboard-barbero-actions {
+        flex-direction: column;
+    }
+    .dashboard-barbero-page .dashboard-barbero-actions a {
+        width: 100%;
+    }
+}

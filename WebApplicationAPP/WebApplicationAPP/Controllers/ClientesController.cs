@@ -17,16 +17,23 @@ namespace WebApplicationAPP.Controllers
         //PERMISOS CENTRALIZADO
         private bool TienePermiso(string permiso)
         {
-            var rol = HttpContext.Session.GetString("Rol") ?? "";
-            return PermisosHelper.TienePermiso(_context, rol, permiso);
+            int? id = HttpContext.Session.GetInt32("IdUsuario");
+            if (!id.HasValue) return false;
+            var usuario = _context.Usuarios.AsNoTracking()
+                .Include(u => u.IdRolNavigation)
+                .FirstOrDefault(u => u.IdUsuario == id.Value && u.Estado && !u.ContraTemp && u.IdRolNavigation.Estado);
+            if (usuario == null || usuario.IdRolNavigation.Nombre == "Cliente") return false;
+            return PermisosHelper.TienePermiso(_context, usuario, permiso);
         }
 
         //LISTA DE CLIENTES
         public IActionResult Index(string buscar)
         {
             if (!TienePermiso("Clientes/Index"))
-                return RedirectToAction("Index", "Dashboard");
+                return StatusCode(403);
 
+            ViewBag.PuedeCrear = TienePermiso("Clientes/Crear");
+            ViewBag.PuedeEditar = TienePermiso("Clientes/Editar");
             var clientes = _context.Clientes.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(buscar))
@@ -43,17 +50,17 @@ namespace WebApplicationAPP.Controllers
         public IActionResult Crear()
         {
             if (!TienePermiso("Clientes/Crear"))
-                return RedirectToAction("Index", "Dashboard");
+                return StatusCode(403);
 
             return View();
         }
 
         // CREAR CLIENTE///
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Crear(string nombre, string telefono)
         {
             if (!TienePermiso("Clientes/Crear"))
-                return RedirectToAction("Index", "Dashboard");
+                return StatusCode(403);
 
             if (string.IsNullOrWhiteSpace(nombre) ||
                 string.IsNullOrWhiteSpace(telefono))
@@ -88,7 +95,7 @@ namespace WebApplicationAPP.Controllers
         public IActionResult Editar(int id)
         {
             if (!TienePermiso("Clientes/Editar"))
-                return RedirectToAction("Index", "Dashboard");
+                return StatusCode(403);
 
             var cliente = _context.Clientes
                 .FirstOrDefault(c => c.IdCliente == id);
@@ -100,11 +107,11 @@ namespace WebApplicationAPP.Controllers
         }
 
         ///EDITAR CLIENTE///////
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Editar(int id, string nombre, string telefono)
         {
             if (!TienePermiso("Clientes/Editar"))
-                return RedirectToAction("Index", "Dashboard");
+                return StatusCode(403);
 
             var cliente = _context.Clientes
                 .FirstOrDefault(c => c.IdCliente == id);

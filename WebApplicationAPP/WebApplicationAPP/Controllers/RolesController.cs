@@ -15,15 +15,18 @@ namespace WebApplicationAPP.Controllers
             _context = context;
         }
 
-        private bool TienePermiso(string permiso)
+        // Administrar permisos es una operacion exclusiva de Administrador.
+        // No se delega mediante rolesprivilegios, para evitar autoasignaciones.
+        private bool EsAdministradorActual()
         {
-            var rol = HttpContext.Session.GetString("Rol");
-
-            if (string.IsNullOrEmpty(rol))
-                return false;
-
-            return PermisosHelper.TienePermiso(_context, rol, permiso);
+            int? id = HttpContext.Session.GetInt32("IdUsuario");
+            return id.HasValue && _context.Usuarios.AsNoTracking()
+                .Any(u => u.IdUsuario == id.Value && u.Estado && !u.ContraTemp &&
+                    u.IdRolNavigation.Estado && u.IdRolNavigation.Nombre == "Administrador");
         }
+
+        // La politica de compatibilidad se define en un solo archivo:
+        // Helpers/PoliticaPermisos.cs. Nunca delegar operaciones de seguridad.
 
         private IActionResult SinPermiso()
         {
@@ -50,7 +53,7 @@ namespace WebApplicationAPP.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            if (!TienePermiso("Roles/Index"))
+            if (!EsAdministradorActual())
                 return RedirectToAction("Index", "Dashboard");
 
             var roles = _context.Roles
@@ -67,7 +70,7 @@ namespace WebApplicationAPP.Controllers
         [HttpGet]
         public IActionResult Crear()
         {
-            if (!TienePermiso("Roles/Crear"))
+            if (!EsAdministradorActual())
                 return RedirectToAction("Index", "Dashboard");
 
             return RedirectToAction(nameof(Index));
@@ -81,43 +84,8 @@ namespace WebApplicationAPP.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Crear(string nombre, string? descripcion)
         {
-            if (!TienePermiso("Roles/Crear"))
-                return SinPermiso();
-
-            nombre = nombre?.Trim() ?? "";
-            descripcion = descripcion?.Trim() ?? "";
-
-            if (string.IsNullOrWhiteSpace(nombre))
-                return Error("Debe ingresar el nombre del rol");
-
-            bool existe = _context.Roles.Any(r =>
-                r.Nombre == nombre);
-
-            if (existe)
-                return Error("El rol ya existe");
-
-            var rol = new Role
-            {
-                Nombre = nombre,
-                Descripcion = descripcion,
-                Estado = true
-            };
-
-            _context.Roles.Add(rol);
-            _context.SaveChanges();
-
-            return Json(new
-            {
-                ok = true,
-                mensaje = "Rol creado correctamente",
-                rol = new
-                {
-                    idRol = rol.IdRol,
-                    nombre = rol.Nombre,
-                    descripcion = rol.Descripcion,
-                    estado = rol.Estado
-                }
-            });
+            if (!EsAdministradorActual()) return SinPermiso();
+            return Error("Los roles personalizados requieren primero definir su tipo de cuenta y sus restricciones. Por seguridad, administra los perfiles existentes.");
         }
 
         // ==========================================
@@ -128,7 +96,7 @@ namespace WebApplicationAPP.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Toggle(int id)
         {
-            if (!TienePermiso("Roles/Index"))
+            if (!EsAdministradorActual())
                 return SinPermiso();
 
             var rol = _context.Roles
@@ -140,6 +108,9 @@ namespace WebApplicationAPP.Controllers
                     ok = false,
                     mensaje = "Rol no encontrado"
                 });
+
+            if (rol.Nombre == "Administrador")
+                return Error("El rol Administrador esta protegido y no se puede modificar desde este modulo.");
 
             rol.Estado = !rol.Estado;
 
@@ -164,7 +135,7 @@ namespace WebApplicationAPP.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Eliminar(int id)
         {
-            if (!TienePermiso("Roles/Index"))
+            if (!EsAdministradorActual())
                 return SinPermiso();
 
             var rol = _context.Roles
@@ -176,6 +147,10 @@ namespace WebApplicationAPP.Controllers
                     ok = false,
                     mensaje = "Rol no encontrado"
                 });
+
+            if (PoliticaPermisos.EsAdministrador(rol.Nombre) ||
+                PoliticaPermisos.EsTipoConfigurado(rol.Nombre))
+                return Error("Los roles principales no se pueden eliminar; modifica su estado o sus permisos.");
 
             try
             {
@@ -204,7 +179,7 @@ namespace WebApplicationAPP.Controllers
         [HttpGet]
         public IActionResult Permisos(int id)
         {
-            if (!TienePermiso("Roles/Permisos"))
+            if (!EsAdministradorActual())
                 return SinPermiso();
 
             var rol = _context.Roles
@@ -218,25 +193,35 @@ namespace WebApplicationAPP.Controllers
                     mensaje = "Rol no encontrado"
                 });
 
-            var permisos = _context.Privilegios
-                .AsNoTracking()
-                .OrderBy(p => p.Nombre)
-                .ToList()
+            bool protegido = PoliticaPermisos.EsAdministrador(rol.Nombre);
+            bool compatible = PoliticaPermisos.EsTipoConfigurado(rol.Nombre);
+            var asignados = rol.IdPrivilegios.Select(p => p.IdPrivilegio).ToHashSet();
+            var permisos = _context.Privilegios.AsNoTracking()
+                .OrderBy(p => p.Nombre).ToList()
+                // Unicamente se ofrecen acciones que tienen sentido para este tipo de cuenta.
+                .Where(p => PoliticaPermisos.PuedeAsignar(rol.Nombre, p.Nombre))
                 .Select(p => new
                 {
                     idPrivilegio = p.IdPrivilegio,
                     nombre = p.Nombre,
                     descripcion = p.Descripcion ?? "",
-                    seleccionado = rol.IdPrivilegios.Any(x =>
-                        x.IdPrivilegio == p.IdPrivilegio)
-                })
-                .ToList();
+                    seleccionado = asignados.Contains(p.IdPrivilegio),
+                    editable = true,
+                    requiere = PoliticaPermisos.DependenciasDe(p.Nombre)
+                }).ToList();
 
             return Json(new
             {
                 ok = true,
                 idRol = rol.IdRol,
                 nombreRol = rol.Nombre,
+                protegido,
+                compatible,
+                mensaje = protegido
+                    ? "El Administrador conserva acceso global y no se configura desde esta pantalla."
+                    : compatible
+                        ? "Solo se muestran permisos compatibles con este rol."
+                        : "Este tipo de rol no tiene una politica de acceso definida.",
                 permisos
             });
         }
@@ -251,7 +236,7 @@ namespace WebApplicationAPP.Controllers
             int idRol,
             int idPrivilegio)
         {
-            if (!TienePermiso("Roles/Permisos"))
+            if (!EsAdministradorActual())
                 return SinPermiso();
 
             var rol = _context.Roles
@@ -265,6 +250,9 @@ namespace WebApplicationAPP.Controllers
                     mensaje = "Rol no encontrado"
                 });
 
+            if (rol.Nombre == "Administrador")
+                return Error("El rol Administrador esta protegido y no se puede modificar desde este modulo.");
+
             var permiso = _context.Privilegios
                 .FirstOrDefault(p =>
                     p.IdPrivilegio == idPrivilegio);
@@ -275,6 +263,28 @@ namespace WebApplicationAPP.Controllers
                     ok = false,
                     mensaje = "Permiso no encontrado"
                 });
+
+            // La validacion real esta en servidor, no en la lista del navegador.
+            if (!PoliticaPermisos.PuedeAsignar(rol.Nombre, permiso.Nombre))
+                return Error("Este permiso no corresponde al rol seleccionado.");
+
+            bool yaAsignado = rol.IdPrivilegios.Any(p => p.IdPrivilegio == idPrivilegio);
+            var activos = rol.IdPrivilegios.Select(p => p.Nombre)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            if (!yaAsignado)
+            {
+                var faltantes = PoliticaPermisos.DependenciasDe(permiso.Nombre)
+                    .Where(req => !activos.Contains(req)).ToList();
+                if (faltantes.Count > 0)
+                    return Error("Activa primero: " + string.Join(", ", faltantes));
+            }
+            else
+            {
+                var dependientes = PoliticaPermisos.DependientesActivos(activos, permiso.Nombre);
+                if (dependientes.Count > 0)
+                    return Error("Desactiva primero: " + string.Join(", ", dependientes));
+            }
 
             bool seleccionado;
 

@@ -103,10 +103,16 @@
     ===================================== -->
 
     <div class="roles-toolbar">
+        <p class="roles-pista">
+            Configura los permisos de <strong>Cliente</strong> y <strong>Barbero</strong>.
+            El Administrador esta protegido. Los roles personalizados requieren un tipo de cuenta
+            definido antes de habilitar su creacion.
+        </p>
 
         <button type="button"
                 class="roles-btn-primary"
-                id="abrirCrearRol">
+                id="abrirCrearRol"
+                hidden>
 
             <i class="bi bi-plus-lg"></i>
             Nuevo rol
@@ -336,6 +342,8 @@
 
                                     <!-- CAMBIAR ESTADO -->
 
+                                    @if (r.Nombre != "Administrador")
+                                    {
                                     <button type="button"
                                             class="roles-action action-toggle btn-toggle-rol"
                                             data-id="@r.IdRol">
@@ -344,9 +352,13 @@
                                         Estado
 
                                     </button>
+                                    }
+
 
                                     <!-- ELIMINAR -->
 
+                                    @if (r.Nombre != "Administrador" && r.Nombre != "Cliente" && r.Nombre != "Barbero")
+                                    {
                                     <button type="button"
                                             class="roles-action action-delete btn-eliminar-rol"
                                             data-id="@r.IdRol"
@@ -356,6 +368,8 @@
                                         Eliminar
 
                                     </button>
+                                    }
+
 
                                 </div>
 
@@ -453,6 +467,7 @@
                 <div id="rolesPermisosContenido"
                      hidden>
 
+                    <p class="roles-pista" id="rolesPermisosMensaje"></p>
                     <div class="roles-permisos-lista"
                          id="rolesPermisosLista">
                     </div>

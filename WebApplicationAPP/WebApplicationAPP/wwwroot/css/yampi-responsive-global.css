@@ -1,0 +1,841 @@
+/* YAMPI - Barra corregida y responsive general
+   Probada junto con main.css y layout.css de Yampi.
+   Mantiene enlaces y permisos Razor originales; no usa zoom ni escala artificial. */
+
+/* Evita que el layout interno desborde la ventana */
+body #page-wrapper,
+body #main,
+body #main>* {
+    min-width: 0;
+}
+
+/* La plantilla reservaba 68-88px para un header fijo.
+   Nuestro header es relativo y ocupa su propio espacio: quitar la franja fantasma. */
+body #page-wrapper {
+    padding-top: 0 !important;
+}
+
+body #main img,
+body #main video,
+body #main canvas {
+    max-width: 100%;
+}
+
+body #main :is(.dashboard-page, .citas-page, .atencion-page, .pagos-page,
+    .clientes-page, .usuarios-page, .roles-page, .reportes-page,
+    .perfil-page, .rep-page) {
+    min-width: 0;
+    max-width: 100%;
+}
+
+body #main :is(.dashboard-stats-grid, .dashboard-overview-grid, .dashboard-barbers-grid,
+    .stats-grid, .top-sections-grid, .atencion-stats, .atencion-bottom-grid,
+    .pagos-stats, .pagos-cierre-stats, .usuarios-stats, .roles-stats,
+    .rep-stats, .rep-mini-stats, .rep-charts-grid,
+    .clientes-form-grid, .usuarios-form-grid, .perfil-form-grid,
+    .rep-date-grid, .barber-select-grid, .datetime-grid)>* {
+    min-width: 0;
+}
+
+body #main :is(.agenda-table-wrapper, .atencion-table-wrapper, .pagos-table-wrapper,
+    .clientes-table-wrapper, .usuarios-table-wrapper, .roles-table-wrapper,
+    .rep-table-wrapper, .table-responsive, .dashboard-table-wrapper,
+    .dashboard-citas-table-wrapper) {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* RESET DE LA PLANTILLA HTML5 UP. main.css aplica #nav li span:
+   display:block, top:-6px, padding horizontal y color gris.
+   Esa era la causa del logo separado y el texto gris en la captura. */
+body #page-wrapper #nav li,
+body #page-wrapper #nav li:hover,
+body #page-wrapper #nav li.active {
+    top: auto !important;
+    float: none !important;
+}
+
+body #page-wrapper #nav li span,
+body #page-wrapper #nav li:hover span {
+    position: static !important;
+    display: inline !important;
+    top: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: inherit !important;
+    line-height: inherit !important;
+}
+
+body #page-wrapper #nav li a,
+body #page-wrapper #nav li:hover a {
+    top: auto !important;
+}
+
+/* Una sola fila. La marca y el perfil son fijos;
+   JS solo mueve los <li> que no caben al menu contextual. */
+body #page-wrapper nav#nav.yampi-nav {
+    box-sizing: border-box !important;
+    position: relative !important;
+    display: flex !important;
+    flex-flow: row nowrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: clamp(10px, 1.3vw, 22px) !important;
+    width: 100% !important;
+    height: 76px !important;
+    min-height: 76px !important;
+    max-height: 76px !important;
+    padding: 0 clamp(14px, 1.65vw, 28px) !important;
+    overflow: visible !important;
+    background: #09090a !important;
+    border-bottom: 1px solid #2b2926 !important;
+    line-height: normal !important;
+    z-index: 4010 !important;
+    text-align: left !important;
+}
+
+/* El logo ya no esta dentro de ul/li/h1: se renderiza como una unidad. */
+body #page-wrapper #nav a.yampi-nav-brand {
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 9px !important;
+    margin: 0 !important;
+    padding: 4px 0 !important;
+    min-width: 0 !important;
+    white-space: nowrap !important;
+    background: none !important;
+    color: #d4af37 !important;
+    text-decoration: none !important;
+    font-family: inherit !important;
+    font-size: clamp(17px, 1.3vw, 22px) !important;
+    line-height: 1 !important;
+    font-weight: 800 !important;
+    letter-spacing: .2px !important;
+}
+
+body #page-wrapper #nav a.yampi-nav-brand>i {
+    flex: 0 0 auto !important;
+    color: #e0bd43 !important;
+    font-size: 1.12em !important;
+    line-height: 1 !important;
+}
+
+body #page-wrapper #nav a.yampi-nav-brand>span {
+    position: static !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: inherit !important;
+    background: transparent !important;
+    line-height: 1 !important;
+}
+
+body #page-wrapper #nav a.yampi-nav-brand .yampi-brand-full {
+    display: inline !important;
+}
+
+body #page-wrapper #nav a.yampi-nav-brand .yampi-brand-compact {
+    display: none !important;
+}
+
+body #page-wrapper #nav a.yampi-nav-brand:is(:hover, :focus-visible) {
+    color: #f0d16a !important;
+}
+
+body #page-wrapper #nav>ul#yampiPrimaryNav {
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex: 0 1 auto !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    flex-flow: row nowrap !important;
+    gap: clamp(2px, .42vw, 9px) !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    list-style: none !important;
+}
+
+body #page-wrapper #nav>ul#yampiPrimaryNav>li {
+    box-sizing: border-box !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: max-content !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+body #page-wrapper #nav>ul#yampiPrimaryNav>li:first-child {
+    margin-right: 0 !important;
+}
+
+body #page-wrapper #nav>ul#yampiPrimaryNav>li> :is(a, button) {
+    box-sizing: border-box !important;
+    position: static !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px !important;
+    width: auto !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 clamp(6px, .5vw, 11px) !important;
+    margin: 0 !important;
+    border: 1px solid transparent !important;
+    border-radius: 10px !important;
+    background: none !important;
+    box-shadow: none !important;
+    color: #ebebed !important;
+    font-family: inherit !important;
+    font-size: clamp(13px, .88vw, 15px) !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+    line-height: 1.15 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    text-decoration: none !important;
+    text-transform: uppercase !important;
+    cursor: pointer;
+}
+
+body #page-wrapper #nav>ul#yampiPrimaryNav>li> :is(a, button):is(:hover, :focus-visible),
+body #page-wrapper #nav>ul#yampiPrimaryNav>li.active> :is(a, button) {
+    color: #f1cf5b !important;
+    border-color: #423920 !important;
+    background: #211d15 !important;
+}
+
+body #page-wrapper #nav>ul#yampiPrimaryNav>li> :is(a, button)>i:first-child {
+    font-size: 1.22em !important;
+    flex: 0 0 auto !important;
+    line-height: 1 !important;
+}
+
+body #page-wrapper #nav .yampi-controls-chevron {
+    font-size: .8em !important;
+    transition: transform .17s ease;
+}
+
+body #page-wrapper #nav .yampi-controls-toggle[aria-expanded="true"] .yampi-controls-chevron {
+    transform: rotate(180deg);
+}
+
+/* Acciones siempre fijas en el extremo derecho */
+body #page-wrapper #nav .yampi-priority-actions {
+    box-sizing: border-box !important;
+    position: relative !important;
+    display: flex !important;
+    flex: 0 0 auto !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    margin: 0 0 0 auto !important;
+    padding: 0 !important;
+    z-index: 4300 !important;
+}
+
+body #page-wrapper #nav .yampi-more-wrap,
+body #page-wrapper #nav .yampi-profile-slot {
+    position: relative !important;
+    flex: 0 0 auto !important;
+}
+
+body #page-wrapper #nav .yampi-more-wrap[hidden] {
+    display: none !important;
+}
+
+body #page-wrapper #nav :is(.yampi-more-toggle, .yampi-profile-toggle) {
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 46px !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 1px solid #423b30 !important;
+    border-radius: 12px !important;
+    background: #1a1a1c !important;
+    box-shadow: none !important;
+    color: #e4c65a !important;
+    cursor: pointer;
+}
+
+body #page-wrapper #nav :is(.yampi-more-toggle, .yampi-profile-toggle) i {
+    font-size: 23px !important;
+    line-height: 1 !important;
+}
+
+body #page-wrapper #nav :is(.yampi-more-toggle, .yampi-profile-toggle):is(:hover, :focus-visible),
+body #page-wrapper #nav :is(.yampi-more-toggle, .yampi-profile-toggle)[aria-expanded="true"] {
+    background: #2b2418 !important;
+    color: #f5d779 !important;
+    border-color: #cba941 !important;
+}
+
+/* Respetar atributo hidden incluso con estilos del tema y !important. */
+body #page-wrapper #nav [hidden] {
+    display: none !important;
+}
+
+/* Menu de accesos adicionales y perfil: tarjeta centrada visualmente */
+body #page-wrapper #nav :is(ul#yampiMenu, ul#yampiProfileMenu) {
+    box-sizing: border-box !important;
+    position: absolute !important;
+    top: calc(100% + 11px) !important;
+    right: 0 !important;
+    left: auto !important;
+    display: block !important;
+    width: min(290px, calc(100vw - 20px)) !important;
+    min-width: 0 !important;
+    max-width: calc(100vw - 20px) !important;
+    max-height: min(70dvh, 600px) !important;
+    margin: 0 !important;
+    padding: 12px 10px !important;
+    border: 1px solid #50442b !important;
+    border-radius: 16px !important;
+    background: #171719 !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .65) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    list-style: none !important;
+    z-index: 4400 !important;
+}
+
+body #page-wrapper #nav :is(ul#yampiMenu, ul#yampiProfileMenu)::before {
+    content: "";
+    display: block;
+    width: 54px;
+    height: 2px;
+    border-radius: 20px;
+    margin: 0 auto 10px;
+    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+}
+
+body #page-wrapper #nav :is(ul#yampiMenu, ul#yampiProfileMenu)>li {
+    box-sizing: border-box !important;
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    margin: 4px 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+body #page-wrapper #nav :is(ul#yampiMenu, ul#yampiProfileMenu)>li> :is(a, button),
+body #page-wrapper #nav ul#yampiMenu .yampi-controls-submenu a {
+    box-sizing: border-box !important;
+    position: static !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 44px !important;
+    margin: 0 !important;
+    padding: 11px 12px !important;
+    border: 1px solid transparent !important;
+    border-radius: 10px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #eeeef1 !important;
+    font-family: inherit !important;
+    font-size: 14px !important;
+    font-weight: 650 !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    white-space: normal !important;
+    cursor: pointer;
+}
+
+body #page-wrapper #nav :is(ul#yampiMenu, ul#yampiProfileMenu)>li> :is(a, button):is(:hover, :focus-visible),
+body #page-wrapper #nav ul#yampiMenu .yampi-controls-submenu a:is(:hover, :focus-visible) {
+    border-color: #584728 !important;
+    background: #2d2618 !important;
+    color: #f5d471 !important;
+}
+
+body #page-wrapper #nav :is(ul#yampiMenu, ul#yampiProfileMenu)>li> :is(a, button)>i:first-child,
+body #page-wrapper #nav ul#yampiMenu .yampi-controls-submenu a>i:first-child {
+    flex: 0 0 auto;
+    color: #e4c65a !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+}
+
+/* Controles externos en barra y, cuando desborda, acordeon del popover */
+body #page-wrapper #nav li.yampi-controls-item {
+    position: relative !important;
+}
+
+body #page-wrapper #nav ul#yampiControlsMenu {
+    box-sizing: border-box !important;
+    position: absolute !important;
+    display: block !important;
+    top: calc(100% + 8px) !important;
+    right: 0 !important;
+    left: auto !important;
+    width: 270px !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 7px !important;
+    border: 1px solid #50442b !important;
+    border-radius: 12px !important;
+    background: #1b1b1e !important;
+    box-shadow: 0 16px 34px rgba(0, 0, 0, .65) !important;
+    list-style: none !important;
+    z-index: 4450 !important;
+}
+
+body #page-wrapper #nav ul#yampiControlsMenu>li {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 2px 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+body #page-wrapper #nav ul#yampiControlsMenu>li>a {
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    min-height: 42px !important;
+    padding: 10px !important;
+    margin: 0 !important;
+    border-radius: 9px !important;
+    background: none !important;
+    color: #eeeef0 !important;
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+    text-decoration: none !important;
+}
+
+body #page-wrapper #nav ul#yampiControlsMenu>li>a:is(:hover, :focus-visible) {
+    background: #302819 !important;
+    color: #f6d575 !important;
+}
+
+body #page-wrapper #nav ul#yampiMenu ul#yampiControlsMenu {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 4px 0 6px !important;
+    padding: 5px !important;
+    box-shadow: none !important;
+    background: #202023 !important;
+    border-color: #34312a !important;
+}
+
+/* Principal: Nunca esconder nombres para simular que caben. La lista
+   solo se reduce cuando no hay espacio fisico para el texto completo. */
+@media (max-width:1100px) {
+    body #page-wrapper #nav a.yampi-nav-brand .yampi-brand-full {
+        display: none !important;
+    }
+
+    body #page-wrapper #nav a.yampi-nav-brand .yampi-brand-compact {
+        display: inline !important;
+    }
+}
+
+@media (max-width:520px) {
+    body #page-wrapper nav#nav.yampi-nav {
+        gap: 8px !important;
+        height: 68px !important;
+        min-height: 68px !important;
+        max-height: 68px !important;
+        padding: 0 10px !important;
+    }
+
+    body #page-wrapper #nav a.yampi-nav-brand {
+        font-size: 17px !important;
+        gap: 6px !important;
+    }
+
+    body #page-wrapper #nav :is(.yampi-more-toggle, .yampi-profile-toggle) {
+        width: 42px !important;
+        height: 42px !important;
+        min-height: 42px !important;
+    }
+
+    body #page-wrapper #nav>ul#yampiPrimaryNav>li> :is(a, button) {
+        padding: 0 5px !important;
+        font-size: 12px !important;
+    }
+}
+
+@media (prefers-reduced-motion:reduce) {
+    body #page-wrapper #nav .yampi-controls-chevron {
+        transition: none !important;
+    }
+}
+
+
+/* CRITICO: estas reglas DEBEN ganarle a los paneles con selector :is(#id).
+   De lo contrario [hidden] pierde, los paneles ocupan espacio y JS mueve TODOS los enlaces. */
+body #page-wrapper nav#nav.yampi-nav #yampiMenu[hidden],
+body #page-wrapper nav#nav.yampi-nav #yampiProfileMenu[hidden],
+body #page-wrapper nav#nav.yampi-nav #yampiControlsMenu[hidden],
+body #page-wrapper nav#nav.yampi-nav #yampiMoreWrap[hidden] {
+    display: none !important;
+}
+
+/* ============================================================================
+   LAPTOP / ZOOM 125-150 %: menos margen, acciones que se acomodan, sin cortar.
+   ============================================================================ */
+@media (max-width: 1500px) {
+
+    body #main :is(.dashboard-page, .citas-page, .atencion-page, .pagos-page,
+        .clientes-page, .usuarios-page, .roles-page, .reportes-page,
+        .perfil-page, .rep-page) {
+        width: 100% !important;
+        padding-left: clamp(16px, 2.4vw, 34px) !important;
+        padding-right: clamp(16px, 2.4vw, 34px) !important;
+    }
+
+    body #main :is(.dashboard-header, .page-header, .atencion-header, .pagos-header,
+        .clientes-header, .usuarios-header, .roles-header, .rep-header,
+        .perfil-header) {
+        flex-wrap: wrap !important;
+        gap: 16px !important;
+    }
+
+    body #main :is(.dashboard-header-actions, .pagos-toolbar, .clientes-toolbar,
+        .usuarios-toolbar, .roles-toolbar, .rep-header-actions,
+        .atencion-toolbar, .atencion-history-toolbar) {
+        max-width: 100%;
+        flex-wrap: wrap !important;
+    }
+
+    body #main :is(.dashboard-overview-grid, .top-sections-grid) {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    body #main :is(.rep-charts-grid, .atencion-bottom-grid) {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    body #main :is(.citas-page .stats-grid, .pagos-cierre-stats, .rep-stats) {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    body #main :is(.dashboard-stats-grid, .atencion-stats, .pagos-stats,
+        .usuarios-stats, .roles-stats) {
+        gap: 14px !important;
+    }
+}
+
+@media (max-width: 1150px) {
+
+    body #main :is(.dashboard-page, .citas-page, .atencion-page, .pagos-page,
+        .clientes-page, .usuarios-page, .roles-page, .reportes-page,
+        .perfil-page, .rep-page) {
+        padding-top: 25px !important;
+        padding-bottom: 44px !important;
+    }
+
+    body #main :is(.dashboard-stats-grid, .dashboard-barbers-grid,
+        .atencion-stats, .pagos-stats, .usuarios-stats, .roles-stats,
+        .rep-mini-stats) {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    body #main :is(.clientes-form-grid, .usuarios-form-grid, .perfil-form-grid,
+        .rep-date-grid, .barber-select-grid, .datetime-grid) {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    body #main :is(.dashboard-header-actions, .rep-header-actions) {
+        margin-left: 0;
+    }
+
+    body #main :is(.dashboard-header, .page-header) {
+        margin-bottom: 24px !important;
+    }
+
+    body #main :is(.dashboard-header h1, .page-header h1) {
+        font-size: clamp(23px, 2.8vw, 31px) !important;
+    }
+}
+
+@media (max-width: 800px) {
+
+    body #main :is(.dashboard-page, .citas-page, .atencion-page, .pagos-page,
+        .clientes-page, .usuarios-page, .roles-page, .reportes-page,
+        .perfil-page, .rep-page) {
+        padding: 20px 14px 38px !important;
+    }
+
+    body #main :is(.clientes-form-grid, .usuarios-form-grid, .perfil-form-grid,
+        .rep-date-grid, .barber-select-grid, .datetime-grid,
+        .pagos-method-grid, .pagos-cierre-modal-grid) {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    body #main :is(.dashboard-header, .page-header, .atencion-header,
+        .pagos-header, .clientes-header, .usuarios-header,
+        .roles-header, .rep-header, .perfil-header) {
+        align-items: flex-start !important;
+        flex-direction: column !important;
+    }
+
+    body #main :is(.dashboard-header-actions, .pagos-toolbar, .clientes-toolbar,
+        .usuarios-toolbar, .roles-toolbar, .rep-header-actions,
+        .atencion-toolbar, .atencion-history-toolbar) {
+        width: 100%;
+        justify-content: flex-start !important;
+    }
+
+    body #main :is(.dashboard-date, .dashboard-refresh-btn) {
+        min-width: 0 !important;
+    }
+
+    body #main :is(.citas-page .stats-grid, .pagos-cierre-stats, .rep-stats) {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    body #main :is(.agenda-table, .atencion-table, .atencion-history-table,
+        .pagos-table, .clientes-table, .usuarios-table, .roles-table,
+        .rep-table) {
+        min-width: 650px;
+    }
+
+    body #main :is(.roles-modal, .roles-confirm-modal, .usuarios-modal,
+        .pagos-modal, .pagos-cierre-modal, .atencion-pago-modal,
+        .perfil-card) {
+        max-width: calc(100vw - 24px) !important;
+        max-height: calc(100dvh - 28px) !important;
+        overflow-y: auto;
+    }
+
+    body #main :is(.dashboard-section-heading, .dashboard-panel-header,
+        .atencion-card-header, .pagos-card-header, .clientes-card-header,
+        .usuarios-card-header, .roles-card-header) {
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+    }
+}
+
+@media (max-width: 560px) {
+
+    body #main :is(.dashboard-stats-grid, .dashboard-barbers-grid,
+        .citas-page .stats-grid, .atencion-stats, .pagos-stats,
+        .pagos-cierre-stats, .usuarios-stats, .roles-stats,
+        .rep-stats, .rep-mini-stats) {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    body #main :is(.dashboard-header-actions, .rep-header-actions,
+        .clientes-form-actions, .usuarios-form-actions,
+        .roles-form-actions, .atencion-form-actions,
+        .pagos-modal-actions, .perfil-form-actions) {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 10px !important;
+    }
+
+    body #main :is(.dashboard-refresh-btn, .dashboard-date) {
+        flex: 1 1 100%;
+        justify-content: center !important;
+    }
+
+    body #main :is(.dashboard-stat-card, .atencion-stat-card,
+        .pagos-stat-card) {
+        padding: 16px !important;
+    }
+
+    body #main :is(.dashboard-header h1, .page-header h1) {
+        font-size: 24px !important;
+    }
+
+    body #main :is(.dashboard-header-icon, .atencion-header-icon) {
+        width: 48px !important;
+        height: 48px !important;
+        flex-basis: 48px !important;
+    }
+}
+
+
+
+
+/* ============================================================================
+   YAMPI: NAVEGACION PARA TELEFONOS (<= 767px CSS)
+   Solo en telefono: Logo                         Hamburguesa | Perfil
+   El panel de navegacion se abre desde el borde derecho de la pantalla.
+   En laptop/escritorio se conserva el overflow inteligente, con icono y texto.
+   ============================================================================ */
+@media (max-width: 767px) {
+    body.yampi-mobile-nav-open {
+        overflow: hidden !important;
+    }
+
+    body #page-wrapper nav#nav.yampi-nav {
+        justify-content: space-between !important;
+        gap: 8px !important;
+        height: 68px !important;
+        min-height: 68px !important;
+        max-height: 68px !important;
+        padding: 0 12px !important;
+    }
+
+    /* La lista original queda vacia; los enlaces reales se MUEVEN al lateral. */
+    body #page-wrapper #nav>ul#yampiPrimaryNav {
+        display: none !important;
+    }
+
+    body #page-wrapper #nav a.yampi-nav-brand {
+        flex: 0 1 auto !important;
+        gap: 7px !important;
+        min-width: 0 !important;
+        max-width: calc(100% - 112px) !important;
+        font-size: 17px !important;
+    }
+
+    body #page-wrapper #nav a.yampi-nav-brand .yampi-brand-full {
+        display: none !important;
+    }
+
+    body #page-wrapper #nav a.yampi-nav-brand .yampi-brand-compact {
+        display: inline !important;
+    }
+
+    body #page-wrapper #nav .yampi-priority-actions {
+        flex: 0 0 auto !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+        height: 100% !important;
+        margin-left: auto !important;
+    }
+
+    body #page-wrapper #nav :is(.yampi-more-toggle, .yampi-profile-toggle) {
+        width: 42px !important;
+        height: 42px !important;
+        min-height: 42px !important;
+    }
+
+    body #page-wrapper #nav .yampi-more-menu#yampiMenu {
+        position: fixed !important;
+        top: 68px !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        left: auto !important;
+        display: block !important;
+        width: min(340px, 88vw) !important;
+        min-width: 0 !important;
+        max-width: 88vw !important;
+        height: calc(100dvh - 68px) !important;
+        max-height: calc(100dvh - 68px) !important;
+        overflow-y: auto !important;
+        overscroll-behavior: contain;
+        margin: 0 !important;
+        padding: 20px 14px max(20px, env(safe-area-inset-bottom)) !important;
+        border-radius: 18px 0 0 0 !important;
+        border-right: none !important;
+        background: #161618 !important;
+        box-shadow: -18px 16px 42px rgba(0, 0, 0, .65) !important;
+        z-index: 4510 !important;
+        animation: yampi-drawer-in .2s ease-out both;
+    }
+
+    body #page-wrapper #nav #yampiMenu>li> :is(a, button) {
+        justify-content: center !important;
+        min-height: 48px !important;
+        gap: 11px !important;
+        border-radius: 12px !important;
+    }
+
+    /* Fondo semitransparente; al tocar fuera se cierra el lateral. */
+    body #page-wrapper #nav #yampiNavBackdrop:not([hidden]) {
+        position: fixed !important;
+        inset: 68px 0 0 !important;
+        display: block !important;
+        background: rgba(0, 0, 0, .58) !important;
+        z-index: 4050 !important;
+    }
+
+    body #page-wrapper #nav #yampiNavBackdrop[hidden],
+    body #page-wrapper #nav #yampiMenu[hidden] {
+        display: none !important;
+    }
+}
+
+@keyframes yampi-drawer-in {
+    from {
+        opacity: .5;
+        transform: translateX(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+    body #page-wrapper #nav .yampi-more-menu#yampiMenu {
+        animation: none !important;
+    }
+}
+
+/* Conservar el centrado acordado en laptop y escritorio. */
+@media (min-width: 768px) {
+    body #page-wrapper #nav>ul#yampiPrimaryNav {
+        flex: 1 1 0% !important;
+        justify-content: center !important;
+        min-width: 0 !important;
+    }
+
+    body #page-wrapper #nav .yampi-priority-actions {
+        margin-left: 0 !important;
+    }
+}
+
+
+/* Mostrar nombre completo en telefonos */
+@media (max-width: 767px) {
+
+    body #page-wrapper #nav a.yampi-nav-brand .yampi-brand-full {
+        display: inline !important;
+    }
+
+    body #page-wrapper #nav a.yampi-nav-brand .yampi-brand-compact {
+        display: none !important;
+    }
+
+    body #page-wrapper #nav a.yampi-nav-brand {
+        font-size: 15px !important;
+        white-space: nowrap !important;
+    }
+}

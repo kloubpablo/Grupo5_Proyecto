@@ -16,6 +16,15 @@ namespace WebApplicationAPP.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly YampiBarbershopContext _context;
+        // Autorizacion real de administracion: nunca confiar solo en un boton o en el Rol de Session.
+        private bool EsAdministradorActual()
+        {
+            int? id = HttpContext.Session.GetInt32("IdUsuario");
+            return id.HasValue && _context.Usuarios.AsNoTracking()
+                .Any(u => u.IdUsuario == id.Value && u.Estado && !u.ContraTemp &&
+                    u.IdRolNavigation.Estado && u.IdRolNavigation.Nombre == "Administrador");
+        }
+
 
         public YampiBarberShopController(
             ILogger<HomeController> logger,
@@ -166,8 +175,11 @@ namespace WebApplicationAPP.Controllers
         // Eliminar Servicio
         // ============================
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult EliminarServicio(int id)
         {
+            if (!EsAdministradorActual()) return StatusCode(403);
             var servicio = _context.Servicios
                 .FirstOrDefault(s => s.Id == id);
 
@@ -187,6 +199,7 @@ namespace WebApplicationAPP.Controllers
         [HttpGet]
         public IActionResult EditarServicio(int id)
         {
+            if (!EsAdministradorActual()) return StatusCode(403);
             var servicio = _context.Servicios
                 .FirstOrDefault(s => s.Id == id);
 
@@ -199,12 +212,14 @@ namespace WebApplicationAPP.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult EditarServicio(
             int id,
             string nombre,
             decimal precio,
             string descripcion)
         {
+            if (!EsAdministradorActual()) return StatusCode(403);
             var servicio = _context.Servicios
                 .FirstOrDefault(s => s.Id == id);
 
@@ -225,15 +240,18 @@ namespace WebApplicationAPP.Controllers
         [HttpGet]
         public IActionResult AgregarServicio()
         {
+            if (!EsAdministradorActual()) return StatusCode(403);
             return View();
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AgregarServicio(
             string nombre,
             decimal precio,
             string descripcion)
         {
+            if (!EsAdministradorActual()) return StatusCode(403);
             if (string.IsNullOrEmpty(nombre) ||
                 precio <= 0 ||
                 string.IsNullOrEmpty(descripcion))
@@ -259,6 +277,7 @@ namespace WebApplicationAPP.Controllers
 
         public IActionResult ControlServicio()
         {
+            if (!EsAdministradorActual()) return StatusCode(403);
             var servicios = _context.Servicios.ToList();
             return View(servicios);
         }
@@ -279,6 +298,7 @@ namespace WebApplicationAPP.Controllers
 
         public IActionResult ControlContacto()
         {
+            if (!EsAdministradorActual()) return StatusCode(403);
             var contacto = _context.Contactos.FirstOrDefault();
 
             return View(contacto);
@@ -291,6 +311,7 @@ namespace WebApplicationAPP.Controllers
         [HttpGet]
         public IActionResult EditarContacto(int id)
         {
+            if (!EsAdministradorActual()) return StatusCode(403);
 
 
             var contacto = _context.Contactos.FirstOrDefault(c => c.Id == id);
@@ -309,6 +330,7 @@ namespace WebApplicationAPP.Controllers
         // ============================
         public IActionResult ControlGaleria()
         {
+            if (!EsAdministradorActual()) return StatusCode(403);
             string ruta = Path.Combine(
                 _env.WebRootPath,
                 "imagenes",
@@ -336,6 +358,7 @@ namespace WebApplicationAPP.Controllers
             string tiktok,
             string ubicacion)
         {
+            if (!EsAdministradorActual()) return StatusCode(403);
             var contacto = _context.Contactos
                 .FirstOrDefault(c => c.Id == id);
 
@@ -389,14 +412,32 @@ namespace WebApplicationAPP.Controllers
         [HttpGet]
         public IActionResult AgregarImagen()
         {
+            if (!EsAdministradorActual()) return StatusCode(403);
             return View();
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AgregarImagen(IFormFile archivo)
         {
+            if (!EsAdministradorActual()) return StatusCode(403);
             if (archivo != null)
             {
+                string ext = Path.GetExtension(archivo.FileName);
+                if (archivo.Length == 0 || archivo.Length > 5 * 1024 * 1024 ||
+                    !(ext.Equals(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                      ext.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)) ||
+                    archivo.ContentType != "image/jpeg")
+                    return BadRequest("Solo se aceptan imagenes JPEG de hasta 5 MB.");
+
+                using (var entrada = archivo.OpenReadStream())
+                {
+                    byte[] encabezado = new byte[3];
+                    if (await entrada.ReadAsync(encabezado, 0, 3) != 3 ||
+                        encabezado[0] != 0xFF || encabezado[1] != 0xD8 || encabezado[2] != 0xFF)
+                        return BadRequest("El archivo no contiene una imagen JPEG valida.");
+                }
+
                 string carpeta = Path.Combine(
                     _env.WebRootPath,
                     "imagenes",
@@ -435,8 +476,17 @@ namespace WebApplicationAPP.Controllers
         // Eliminar Imagen
         // ============================
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult EliminarImagen(string nombre)
         {
+            if (!EsAdministradorActual()) return StatusCode(403);
+            if (string.IsNullOrWhiteSpace(nombre) ||
+                nombre != Path.GetFileName(nombre) ||
+                !(nombre.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                  nombre.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase)))
+                return BadRequest("Nombre de imagen invalido.");
+
             string ruta = Path.Combine(
                 _env.WebRootPath,
                 "imagenes",

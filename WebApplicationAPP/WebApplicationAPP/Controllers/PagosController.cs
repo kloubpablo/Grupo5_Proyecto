@@ -1,369 +1,180 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApplicationAPP.Models;
 using WebApplicationAPP.Helpers;
+using WebApplicationAPP.Models;
+using WebApplicationAPP.Services;
 
-namespace WebApplicationAPP.Controllers
+namespace WebApplicationAPP.Controllers;
+
+public class PagosController : Controller
 {
-    public class PagosController : Controller
+    private readonly YampiBarbershopContext _db;
+    public PagosController(YampiBarbershopContext db) => _db = db;
+
+    private Usuario? Actual()
     {
-        private readonly YampiBarbershopContext _context;
+        int? id = HttpContext.Session.GetInt32("IdUsuario");
+        if (!id.HasValue) return null;
+        return _db.Usuarios.AsNoTracking().Include(u => u.IdRolNavigation)
+            .FirstOrDefault(u => u.IdUsuario == id && u.Estado && !u.ContraTemp &&
+                 u.IdRolNavigation.Estado &&
+                 (u.IdRolNavigation.Nombre == "Administrador" || u.IdRolNavigation.Nombre == "Barbero"));
+    }
 
-        public PagosController(YampiBarbershopContext context)
+    private bool Permiso(Usuario u, string clave) => AgendaBarberoService.EsAdministrador(u) ||
+        PermisosHelper.TienePermiso(_db, u, clave);
+
+    private IActionResult SinAcceso(Usuario? u) =>
+        u == null ? RedirectToAction("Index", "Seguridad") : StatusCode(403);
+
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        var u = Actual();
+        if (u == null) return SinAcceso(u);
+        if (!Permiso(u, "Pagos/Index")) return StatusCode(403);
+
+        bool esAdmin = AgendaBarberoService.EsAdministrador(u);
+        IQueryable<Pago> consulta = _db.Pagos.AsNoTracking()
+            .Include(p => p.IdClienteNavigation);
+
+        if (!esAdmin)
         {
-            _context = context;
+            if (u.IdRolNavigation.Nombre != "Barbero") return StatusCode(403);
+            // Filtro aplicado ANTES de materializar la lista. Nunca traer toda la caja.
+            // Los pagos historicos/manuales sin IdAtencion NO son atribuibles por nombre.
+            int idBarbero = u.IdUsuario;
+            consulta = consulta.Where(p => p.IdAtencion.HasValue &&
+                p.Atencion != null && p.Atencion.IdBarbero == idBarbero);
         }
 
-        private bool TienePermiso(string permiso)
+        ViewBag.EsBarbero = !esAdmin;
+        var pagos = await consulta.OrderByDescending(p => p.Fecha)
+            .ThenByDescending(p => p.IdPago).ToListAsync();
+        return View(pagos);
+    }
+
+    [HttpGet]
+    public IActionResult Registrar(int? idAtencion)
+    {
+        var u = Actual();
+        if (u == null || !Permiso(u, "Pagos/Crear")) return SinAcceso(u);
+        if (!idAtencion.HasValue && !AgendaBarberoService.EsAdministrador(u))
+            return StatusCode(403);
+        ViewBag.IdAtencion = idAtencion;
+        if (!idAtencion.HasValue)
+            ViewBag.Clientes = _db.Clientes.AsNoTracking().OrderBy(c => c.Nombre).ToList();
+        if (idAtencion.HasValue)
         {
-            var rol = HttpContext.Session.GetString("Rol");
-
-            if (string.IsNullOrEmpty(rol))
-                return false;
-
-            return PermisosHelper.TienePermiso(_context, rol, permiso);
+            var a = _db.Atencions.AsNoTracking().Include(x => x.IdClienteNavigation)
+                .FirstOrDefault(x => x.IdAtencion == idAtencion.Value);
+            if (a == null) return NotFound();
+            if (!AgendaBarberoService.PuedeGestionar(u, a.IdBarbero)) return StatusCode(403);
+            if (a.Estado != "En servicio") return BadRequest("La atencion no esta en servicio.");
+            ViewBag.ClienteAtencion = a.IdClienteNavigation.Nombre;
         }
+        return View();
+    }
 
-        //LISTA DE PAGOS
-        
-        public IActionResult Index()
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Registrar(int? idCliente, decimal monto, string? metodo, int? idAtencion)
+    {
+        var u = Actual();
+        if (u == null || !Permiso(u, "Pagos/Crear")) return SinAcceso(u);
+
+        if (idAtencion.HasValue)
         {
-            if (!TienePermiso("Pagos/Index"))
-                return RedirectToAction("Index", "Dashboard");
-
-            var pagos = _context.Pagos
-                .Include(p => p.IdClienteNavigation)
-                .OrderByDescending(p => p.Fecha)
-                .ToList();
-
-            return View(pagos);
-        }
-
-
-        //REGISTRAR (GET)
-        public IActionResult Registrar(int? idAtencion)
-        {
-            if (!TienePermiso("Pagos/Crear"))
-                return RedirectToAction("Index", "Dashboard");
-
-            ViewBag.IdAtencion = idAtencion;
-
-            //Si el pago viene desde una atención,
-            //se obtiene automáticamente el cliente.
-            if (idAtencion.HasValue)
-            {
-                var atencion = _context.Atencions
-                    .Include(a => a.IdClienteNavigation)
-                    .FirstOrDefault(a => a.IdAtencion == idAtencion.Value);
-
-                if (atencion == null)
-                    return RedirectToAction("Index", "Atencion");
-
-                if (atencion.Estado != "En servicio")
-                {
-                    return RedirectToAction("Index", "Atencion");
-                }
-
-                ViewBag.ClienteAtencion = atencion.IdClienteNavigation.Nombre;
-            }
-
-            return View();
-        }
-
-        //REGISTRAR (POST)
-        [HttpPost]
-        public IActionResult Registrar(
-            string cliente,
-            decimal monto,
-            string metodo,
-            int? idAtencion)
-        {
-            if (!TienePermiso("Pagos/Crear"))
-                return RedirectToAction("Index", "Dashboard");
-
-            ViewBag.IdAtencion = idAtencion;
-
-            //Si viene desde una atención,
-            //obtenemos nuevamente el cliente desde la BD.
-            Atencion? atencion = null;
-
-            if (idAtencion.HasValue)
-            {
-                atencion = _context.Atencions
-                    .Include(a => a.IdClienteNavigation)
-                    .FirstOrDefault(a => a.IdAtencion == idAtencion.Value);
-
-                if (atencion == null)
-                    return RedirectToAction("Index", "Atencion");
-
-                if (atencion.Estado != "En servicio")
-                {
-                    return RedirectToAction("Index", "Atencion");
-                }
-
-                cliente = atencion.IdClienteNavigation.Nombre;
-                ViewBag.ClienteAtencion = cliente;
-            }
-
-            if (string.IsNullOrWhiteSpace(cliente) ||
-                monto <= 0 ||
-                string.IsNullOrWhiteSpace(metodo))
-            {
-                ViewBag.Error = "Debe completar todos los datos correctamente";
-                return View();
-            }
-
-            var clienteExistente = _context.Clientes
-                .FirstOrDefault(c => c.Nombre == cliente);
-
-            if (clienteExistente == null)
-            {
-                //Este comportamiento se mantiene para los pagos
-                //registrados manualmente.
-                clienteExistente = new Cliente
-                {
-                    Nombre = cliente,
-                    Telefono = "00000000",
-                    FechaRegistro = DateTime.Now
-                };
-
-                _context.Clientes.Add(clienteExistente);
-                _context.SaveChanges();
-            }
-
-            var pago = new Pago
-            {
-                IdCliente = clienteExistente.IdCliente,
-                Monto = monto,
-                Metodo = metodo,
-                Fecha = DateOnly.FromDateTime(DateTime.Now)
-            };
-
-            _context.Pagos.Add(pago);
-
-            //Si el pago pertenece a una atención,
-            //finalizamos la atención y, si tiene cita,
-            //también finalizamos la cita.
-            if (atencion != null)
-            {
-                atencion.Estado = "Finalizado";
-                atencion.HoraFin = TimeOnly.FromDateTime(DateTime.Now);
-
-                if (atencion.IdCita.HasValue)
-                {
-                    var cita = _context.Citas
-                        .FirstOrDefault(c => c.IdCita == atencion.IdCita.Value);
-
-                    if (cita != null)
-                    {
-                        cita.Estado = "Finalizada";
-                    }
-                }
-            }
-
-            _context.SaveChanges();
-
-            if (atencion != null)
-            {
-                return RedirectToAction("Index", "Atencion");
-            }
-
-            return RedirectToAction("Index");
-        }
-
-       
-        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RegistrarAjax(
-            int idAtencion,
-            decimal monto,
-            string metodo)
-        {
-            // VALIDAR PERMISOS
-            if (!TienePermiso("Pagos/Crear"))
-            {
-                return StatusCode(403, new
-                {
-                    ok = false,
-                    mensaje = "No tienes permiso para registrar pagos."
-                });
-            }
-
-            // VALIDAR DATOS
-            if (idAtencion <= 0 || monto <= 0)
-            {
-                return BadRequest(new
-                {
-                    ok = false,
-                    mensaje = "El monto y la atencion deben ser validos."
-                });
-            }
-
-            if (metodo != "Efectivo" && metodo != "Tarjeta")
-            {
-                return BadRequest(new
-                {
-                    ok = false,
-                    mensaje = "Selecciona un metodo de pago valido."
-                });
-            }
-
-            // BUSCAR ATENCION
-            var atencion = await _context.Atencions
-                .Include(a => a.IdClienteNavigation)
-                .FirstOrDefaultAsync(a => a.IdAtencion == idAtencion);
-
-            if (atencion == null)
-            {
-                return NotFound(new
-                {
-                    ok = false,
-                    mensaje = "La atencion no existe."
-                });
-            }
-
-            if (atencion.Estado != "En servicio")
-            {
-                return BadRequest(new
-                {
-                    ok = false,
-                    mensaje = "La atencion no esta en servicio o ya fue finalizada."
-                });
-            }
-
-            // TRANSACCION
-            await using var transaccion =
-                await _context.Database.BeginTransactionAsync();
-
             try
             {
-                // REGISTRAR PAGO
-                var pago = new Pago
+                var resultado = await CobroAtencionService.CobrarAsync(_db,
+                    idAtencion.Value, monto, metodo ?? "", u);
+                if (resultado.Ok)
                 {
-                    IdCliente = atencion.IdCliente,
-                    Monto = monto,
-                    Metodo = metodo,
-                    Fecha = DateOnly.FromDateTime(DateTime.Now)
-                };
-
-                _context.Pagos.Add(pago);
-
-                // FINALIZAR ATENCION
-                atencion.Estado = "Finalizado";
-                atencion.HoraFin =
-                    TimeOnly.FromDateTime(DateTime.Now);
-
-                // FINALIZAR CITA ASOCIADA
-                if (atencion.IdCita.HasValue)
-                {
-                    var cita = await _context.Citas
-                        .FirstOrDefaultAsync(
-                            c => c.IdCita == atencion.IdCita.Value
-                        );
-
-                    if (cita != null)
-                    {
-                        cita.Estado = "Finalizada";
-                    }
+                    TempData["ExitoAtencion"] = resultado.Mensaje;
+                    return RedirectToAction("Index", "Atencion");
                 }
-
-                await _context.SaveChangesAsync();
-                await transaccion.CommitAsync();
-
-                return Json(new
-                {
-                    ok = true,
-                    mensaje = "Pago registrado y atencion finalizada correctamente.",
-                    idAtencion = atencion.IdAtencion,
-                    cliente = atencion.IdClienteNavigation?.Nombre ?? "",
-                    monto = pago.Monto,
-                    metodo = pago.Metodo,
-                    horaFin = atencion.HoraFin?.ToString("HH:mm")
-                });
+                ViewBag.Error = resultado.Mensaje;
             }
-            catch (Exception)
+            catch (DbUpdateException)
             {
-                await transaccion.RollbackAsync();
-
-                return StatusCode(500, new
-                {
-                    ok = false,
-                    mensaje = "Ocurrio un error al registrar el pago."
-                });
+                ViewBag.Error = "La atencion fue modificada o ya tiene un pago. Recarga la pagina.";
             }
-        }
-
-
-
-        //CIERRE DE CAJA
-        public IActionResult Cierre()
-        {
-            if (!TienePermiso("Pagos/Index"))
-                return RedirectToAction("Index", "Dashboard");
-
-
-            var hoy = DateOnly.FromDateTime(DateTime.Now);
-
-
-            var pagosHoy = _context.Pagos
-                .Where(p => p.Fecha == hoy && !p.Cerrado)
-                .ToList();
-
-
-            ViewBag.Fecha = DateTime.Now.ToString("dd/MM/yyyy");
-
-            ViewBag.Total = pagosHoy.Sum(p => p.Monto);
-
-            ViewBag.CantidadPagos = pagosHoy.Count;
-
-
-            ViewBag.MetodoMasUsado = pagosHoy
-                .GroupBy(p => p.Metodo)
-                .OrderByDescending(g => g.Count())
-                .Select(g => g.Key)
-                .FirstOrDefault() ?? "Sin registros";
-
-
-            ViewBag.TotalEfectivo = pagosHoy
-                .Where(p => p.Metodo == "Efectivo")
-                .Sum(p => p.Monto);
-
-
-            ViewBag.TotalTarjeta = pagosHoy
-                .Where(p => p.Metodo == "Tarjeta")
-                .Sum(p => p.Monto);
-
-
+            ViewBag.IdAtencion = idAtencion;
+            // No confiar en cliente del POST; solo se presenta informacion desde la BD.
+            ViewBag.ClienteAtencion = _db.Atencions.AsNoTracking()
+                .Where(a => a.IdAtencion == idAtencion.Value)
+                .Select(a => a.IdClienteNavigation.Nombre).FirstOrDefault();
             return View();
         }
 
-        [HttpPost]
-        public IActionResult AplicarCierre()
+        if (!AgendaBarberoService.EsAdministrador(u)) return StatusCode(403);
+        if (!idCliente.HasValue || !_db.Clientes.Any(c => c.IdCliente == idCliente.Value) ||
+            monto <= 0 || monto > 99999999.99m || decimal.Round(monto, 2) != monto ||
+            (metodo != "Efectivo" && metodo != "Tarjeta"))
         {
-
-            if (!TienePermiso("Pagos/Index"))
-                return RedirectToAction("Index", "Dashboard");
-
-
-            var hoy = DateOnly.FromDateTime(DateTime.Now);
-
-
-            var pagos = _context.Pagos
-                .Where(p => p.Fecha == hoy && !p.Cerrado)
-                .ToList();
-
-
-            foreach (var pago in pagos)
-            {
-                pago.Cerrado = true;
-            }
-
-
-            _context.SaveChanges();
-
-
-            return RedirectToAction("Index");
+            ViewBag.Clientes = _db.Clientes.AsNoTracking().OrderBy(c => c.Nombre).ToList();
+            ViewBag.Error = "Selecciona un cliente existente, un monto y un metodo valido.";
+            return View();
         }
+        // Nunca se asocia a un cliente solo porque coincida su nombre.
+        _db.Pagos.Add(new Pago
+        {
+            IdCliente = idCliente.Value,
+            Monto = monto,
+            Metodo = metodo!,
+            Fecha = DateOnly.FromDateTime(AgendaBarberoService.AhoraCostaRica())
+        });
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> RegistrarAjax(int idAtencion, decimal monto, string? metodo)
+    {
+        var u = Actual();
+        if (u == null || !Permiso(u, "Pagos/Crear"))
+            return StatusCode(403, new { ok = false, mensaje = "Acceso denegado." });
+        try
+        {
+            var resultado = await CobroAtencionService.CobrarAsync(_db,
+                idAtencion, monto, metodo ?? "", u);
+            if (!resultado.Ok) return BadRequest(new { ok = false, mensaje = resultado.Mensaje });
+            return Json(new { ok = true, mensaje = resultado.Mensaje, idPago = resultado.IdPago });
+        }
+        catch (DbUpdateException)
+        {
+            return Conflict(new { ok = false, mensaje = "La atencion ya fue cobrada o modificada." });
+        }
+    }
+
+    [HttpGet]
+    public IActionResult Cierre()
+    {
+        var u = Actual();
+        if (u == null || !AgendaBarberoService.EsAdministrador(u)) return SinAcceso(u);
+        var ahora = AgendaBarberoService.AhoraCostaRica();
+        var hoy = DateOnly.FromDateTime(ahora);
+        var pagosHoy = _db.Pagos.AsNoTracking().Where(p => p.Fecha == hoy && !p.Cerrado).ToList();
+        ViewBag.Fecha = ahora.ToString("dd/MM/yyyy");
+        ViewBag.Total = pagosHoy.Sum(p => p.Monto);
+        ViewBag.CantidadPagos = pagosHoy.Count;
+        ViewBag.MetodoMasUsado = pagosHoy.GroupBy(p => p.Metodo)
+            .OrderByDescending(g => g.Count()).Select(g => g.Key).FirstOrDefault() ?? "Sin registros";
+        ViewBag.TotalEfectivo = pagosHoy.Where(p => p.Metodo == "Efectivo").Sum(p => p.Monto);
+        ViewBag.TotalTarjeta = pagosHoy.Where(p => p.Metodo == "Tarjeta").Sum(p => p.Monto);
+        return View();
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult AplicarCierre()
+    {
+        var u = Actual();
+        if (u == null || !AgendaBarberoService.EsAdministrador(u)) return SinAcceso(u);
+        var hoy = DateOnly.FromDateTime(AgendaBarberoService.AhoraCostaRica());
+        var pagos = _db.Pagos.Where(p => p.Fecha == hoy && !p.Cerrado).ToList();
+        foreach (var pago in pagos) pago.Cerrado = true;
+        _db.SaveChanges();
+        TempData["ExitoCaja"] = "Cierre de caja realizado.";
+        return RedirectToAction(nameof(Index));
     }
 }

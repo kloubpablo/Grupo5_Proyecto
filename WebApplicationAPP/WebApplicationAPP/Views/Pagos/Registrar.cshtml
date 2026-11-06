@@ -14,6 +14,7 @@
     }
 
     <form method="post">
+        @Html.AntiForgeryToken()
 
         <input type="hidden"
                name="idAtencion"
@@ -35,10 +36,16 @@
             }
             else
             {
-                <input class="form-control"
-                       type="text"
-                       name="cliente"
-                       placeholder="Nombre del cliente" />
+                <select class="form-select" name="idCliente" required>
+                    <option value="">Selecciona un cliente existente</option>
+                    @if (ViewBag.Clientes != null)
+                    {
+                        foreach (var c in ViewBag.Clientes)
+                        {
+                            <option value="@c.IdCliente">@c.Nombre (#@c.IdCliente)</option>
+                        }
+                    }
+                </select>
             }
 
         </div>

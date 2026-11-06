@@ -3,8 +3,6 @@ using System.Buffers.Binary;
 
 namespace WebApplicationAPP.Security;
 
-// Solo se utiliza para identificar hashes de ASP.NET Identity ya migrados.
-// No compara contrasenas: esa tarea corresponde a PasswordHasher<Usuario>.
 public static class PasswordHashUtil
 {
     public static bool EsHashIdentity(string? valor)

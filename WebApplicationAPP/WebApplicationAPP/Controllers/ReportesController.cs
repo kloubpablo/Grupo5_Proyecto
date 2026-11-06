@@ -9,26 +9,28 @@ namespace WebApplicationAPP.Controllers
     public class ReportesController : Controller
     {
         private readonly YampiBarbershopContext _context;
+        // Autorizacion real de administracion: nunca confiar solo en un boton o en el Rol de Session.
+        private bool EsAdministradorActual()
+        {
+            int? id = HttpContext.Session.GetInt32("IdUsuario");
+            return id.HasValue && _context.Usuarios.AsNoTracking()
+                .Any(u => u.IdUsuario == id.Value && u.Estado && !u.ContraTemp &&
+                    u.IdRolNavigation.Estado && u.IdRolNavigation.Nombre == "Administrador");
+        }
+
 
         public ReportesController(YampiBarbershopContext context)
         {
             _context = context;
         }
 
-        private bool TienePermiso(string permiso)
-        {
-            var rol = HttpContext.Session.GetString("Rol");
-
-            if (string.IsNullOrEmpty(rol))
-                return false;
-
-            return PermisosHelper.TienePermiso(_context, rol, permiso);
-        }
+        private bool TienePermiso(string permiso) => EsAdministradorActual();
 
         //DASHBOARD DE REPORTES
 
         public IActionResult Index()
         {
+            if (!EsAdministradorActual()) return StatusCode(403);
             // Mantener aqui tu validacion de permisos actual
 
             var pagos = _context.Pagos

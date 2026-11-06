@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function obtenerBarbero(config) {
         return config.form?.querySelector(
-            'input[name="barbero"]:checked, input[name="Barbero"]:checked'
+            'input[name="idBarbero"]:checked, input[name="IdBarbero"]:checked'
         )?.value.trim() || "";
     }
 
@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function consultarOcupadas(config) {
         const params = new URLSearchParams({
-            barbero: obtenerBarbero(config),
+            idBarbero: obtenerBarbero(config),
             fecha: config.fecha.value
         });
 
@@ -387,6 +387,18 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        // El guardado nativo al final usa HTMLFormElement.prototype.submit,
+        // por eso el cliente se valida aqui ANTES del envio definitivo.
+        if (!config.editar) {
+            const selectorCliente = config.form.querySelector("#seccionBuscarCliente");
+            const idCliente = config.form.querySelector('input[name="idCliente"]');
+            if (selectorCliente && (!idCliente || !/^[1-9]\d*$/.test(idCliente.value))) {
+                mostrarMensaje(config, "Selecciona un cliente o registra uno nuevo antes de continuar.");
+                document.getElementById("buscarCliente")?.focus();
+                return;
+            }
+        }
+
         config.enviando = true;
         const boton = config.form.querySelector('button[type="submit"]');
         if (boton) boton.disabled = true;
@@ -435,7 +447,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Cuando se selecciona otro barbero.
         config.form.addEventListener("change", event => {
             if (event.target.matches(
-                'input[name="barbero"], input[name="Barbero"]'
+                'input[name="idBarbero"], input[name="IdBarbero"]'
             )) sincronizar(config);
         });
 

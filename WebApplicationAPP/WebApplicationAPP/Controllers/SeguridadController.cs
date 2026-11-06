@@ -139,6 +139,7 @@ namespace WebApplicationAPP.Controllers
 
             _context.Clientes.Add(new Cliente
             {
+                Usuario = usuario, // EF enlaza por PK al guardar (sin comparar nombres).
                 Nombre = nombre,
                 Telefono = "00000000",
                 Email = correo,
@@ -184,7 +185,7 @@ namespace WebApplicationAPP.Controllers
                 .Include(u => u.IdRolNavigation)
                 .FirstOrDefault(u =>
                     u.Username == usuario &&
-                    u.Estado);
+                    u.Estado && u.IdRolNavigation.Estado);
 
             if (user == null)
             {

@@ -1,0 +1,52 @@
+/* Componentes de Pagos personal y busqueda del modal administrativo */
+.pagos-personal-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 12px 0;
+    padding: 12px 14px;
+    border: 1px solid #554822;
+    border-radius: 9px;
+    background: #24211a;
+    color: #cfba78;
+    line-height: 1.6;
+    font-size: 13px;
+}
+.pagos-clientes-opciones {
+    max-height: 210px;
+    overflow-y: auto;
+    border: 1px solid #67572d;
+    border-radius: 9px;
+    margin-top: 8px;
+    background: #1d1d1d;
+    scrollbar-color: #a88a32 #202020;
+    scrollbar-width: thin;
+}
+.pagos-clientes-opciones button {
+    display: block;
+    text-align: left;
+    width: 100%;
+    padding: 11px 12px;
+    border: 0;
+    background: transparent;
+    color: #eee;
+    cursor: pointer;
+}
+.pagos-clientes-opciones button:hover,
+.pagos-clientes-opciones button:focus-visible {
+    color: #e8c85d;
+    background: #312b20;
+    outline: 2px solid #d4af37;
+}
+.pagos-clientes-opciones small {
+    display: block;
+    color: #a8a8a8;
+    margin-top: 3px;
+}
+.pagos-cliente-ayuda {
+    display: block;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 5px;
+}
+.pagos-clientes-opciones[hidden] { display: none !important; }

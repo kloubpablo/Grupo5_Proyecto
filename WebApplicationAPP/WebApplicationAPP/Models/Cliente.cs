@@ -7,6 +7,11 @@ public partial class Cliente
 {
     public int IdCliente { get; set; }
 
+    // Nullable para conservar clientes existentes sin cuenta vinculada.
+    public int? IdUsuario { get; set; }
+
+    public virtual Usuario? Usuario { get; set; }
+
     public string Nombre { get; set; } = null!;
 
     public string Telefono { get; set; } = null!;

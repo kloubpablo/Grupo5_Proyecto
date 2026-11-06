@@ -356,6 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (consulta !== consultaActual) return;
 
             $("rolesPermisosNombre").textContent = datos.nombreRol;
+            $("rolesPermisosMensaje").textContent = datos.mensaje || "";
             renderizarPermisos(datos.permisos);
 
             loading.hidden = true;
@@ -372,7 +373,27 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderizarPermisos(permisos) {
         lista.replaceChildren();
 
+        if (!permisos.length) {
+            const aviso = document.createElement("p");
+            aviso.className = "roles-permisos-vacio";
+            aviso.textContent = "No hay permisos configurables para este tipo de rol.";
+            lista.appendChild(aviso);
+            actualizarResumen();
+            return;
+        }
+
+        let grupoActual = null;
         permisos.forEach(permiso => {
+            const grupo = permiso.nombre.split("/")[0];
+            if (grupo !== grupoActual) {
+                grupoActual = grupo;
+                const titulo = document.createElement("h3");
+                titulo.className = "roles-permisos-grupo";
+                const nombresGrupos = { Atencion: "Atención", Citas: "Citas",
+                    Clientes: "Clientes", Dashboard: "Dashboard", Pagos: "Pagos" };
+                titulo.textContent = nombresGrupos[grupo] || grupo;
+                lista.appendChild(titulo);
+            }
             const item = document.createElement("div");
             item.className = "roles-permiso";
 
@@ -399,11 +420,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 : "Inactivo";
 
             textos.append(nombre, estado);
+            if (permiso.requiere && permiso.requiere.length) {
+                const requisito = document.createElement("small");
+                requisito.className = "roles-permiso-requisito";
+                requisito.textContent = "Requiere: " + permiso.requiere.join(", ");
+                textos.append(requisito);
+            }
             info.append(icono, textos);
 
             const boton = document.createElement("button");
             boton.type = "button";
             boton.className = "roles-permiso-toggle";
+            if (permiso.editable === false) {
+                boton.disabled = true;
+                boton.title = "Permiso reservado a Administrador";
+                estado.textContent = "Reservado a Administrador";
+            }
             boton.setAttribute("role", "switch");
             boton.setAttribute(
                 "aria-checked",
@@ -454,7 +486,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } catch (error) {
                 notificar(error.message, true);
             } finally {
-                boton.disabled = false;
+                boton.disabled = permiso.editable === false;
                 boton.classList.remove("is-loading");
                 boton.removeAttribute("aria-busy");
             }

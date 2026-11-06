@@ -6,6 +6,8 @@
 
     var clienteEditar = ViewBag.ClienteEditar as WebApplicationAPP.Models.Cliente;
     var totalClientes = Model?.Count ?? 0;
+    bool puedeCrearCliente = ViewBag.PuedeCrear is bool && (bool)ViewBag.PuedeCrear;
+    bool puedeEditarCliente = ViewBag.PuedeEditar is bool && (bool)ViewBag.PuedeEditar;
 }
 
 <link rel="stylesheet"
@@ -70,6 +72,8 @@
          BOTON NUEVO CLIENTE
     ===================================================== -->
 
+    @if (puedeCrearCliente)
+    {
     <div class="clientes-toolbar">
 
         <button type="button"
@@ -191,10 +195,14 @@
 
     </div>
 
+    }
+
     <!-- =====================================================
          GAVETA EDITAR CLIENTE
     ===================================================== -->
 
+    @if (puedeEditarCliente)
+    {
     <div id="editarClienteContainer"
          class="clientes-edit-container @(clienteEditar == null ? "closed" : "")">
 
@@ -299,6 +307,8 @@
         </section>
 
     </div>
+
+    }
 
     <!-- =====================================================
          CLIENTES REGISTRADOS
@@ -470,6 +480,8 @@
 
                                 <td>
 
+                                    @if (puedeEditarCliente)
+                                    {
                                     <button type="button"
                                             class="clientes-edit-btn btn-editar-cliente"
                                             data-id="@c.IdCliente"
@@ -482,6 +494,8 @@
                                         Editar
 
                                     </button>
+                                    }
+
 
                                 </td>
 

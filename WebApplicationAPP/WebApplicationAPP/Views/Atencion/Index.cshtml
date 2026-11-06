@@ -6,6 +6,19 @@
     ViewData["Title"] = "Registro de Atencion";
 
     var atenciones = Model ?? new List<WebApplicationAPP.Models.Atencion>();
+    var proximas = ViewBag.CitasAgenda as List<WebApplicationAPP.Models.Cita>
+        ?? new List<WebApplicationAPP.Models.Cita>();
+    bool admin = ViewBag.EsAdministrador is bool esAdmin && esAdmin;
+    bool puedeAgregar = ViewBag.PuedeAgregar is bool b && b;
+    bool puedeIniciar = ViewBag.PuedeIniciar is bool c && c;
+    bool puedeRecibir = ViewBag.PuedeRecibir is bool d && d;
+    bool puedeCobrar = ViewBag.PuedeCobrar is bool e && e;
+    bool verHistorial = ViewBag.VerHistorial is bool h && h;
+    bool puedeCancelarIngreso = ViewBag.PuedeCancelarIngreso is bool ci && ci;
+    var barberos = ViewBag.Barberos as List<WebApplicationAPP.Models.Usuario>
+        ?? new List<WebApplicationAPP.Models.Usuario>();
+    DateOnly hoy = ViewBag.Hoy is DateOnly dh ? dh : DateOnly.FromDateTime(DateTime.Today);
+
 
     var activas = atenciones
         .Where(a => a.Estado == "En espera" || a.Estado == "En servicio")
@@ -14,7 +27,7 @@
         .ToList();
 
     var historial = atenciones
-        .Where(a => a.Estado == "Finalizado")
+        .Where(a => a.Estado == "Finalizado" || a.Estado == "Cancelado")
         .OrderByDescending(a => a.IdAtencion)
         .ToList();
 
@@ -28,8 +41,18 @@
 <link rel="stylesheet"
       href="~/css/atencion.css"
       asp-append-version="true" />
+<link rel="stylesheet" href="~/css/barbero-flujo.css" asp-append-version="true" />
 
 <div class="atencion-page">
+    @if (TempData["ErrorAtencion"] != null)
+    {
+        <div class="alert alert-danger" role="alert">@TempData["ErrorAtencion"]</div>
+    }
+    @if (TempData["ExitoAtencion"] != null)
+    {
+        <div class="alert alert-success" role="status">@TempData["ExitoAtencion"]</div>
+    }
+
 
     <!-- ENCABEZADO -->
 
@@ -90,83 +113,135 @@
         </div>
     </div>
 
-    <!-- BOTON AGREGAR CLIENTE -->
-
-    <div class="atencion-toolbar">
-        <button type="button"
-                id="abrirCrearAtencion"
-                class="atencion-btn-primary"
-                aria-controls="crearAtencionContainer"
-                aria-expanded="false">
-
-            <i class="bi bi-person-plus"></i>
-
-            <span id="textoCrearAtencion">Agregar cliente</span>
-
-            <i class="bi bi-chevron-down atencion-chevron"></i>
-        </button>
-    </div>
-
-    <!-- GAVETA AGREGAR CLIENTE -->
-
-    <div id="crearAtencionContainer"
-         class="atencion-drawer closed">
-
-        <section class="atencion-card">
-
-            <div class="atencion-card-header">
-                <div>
-                    <span class="atencion-card-kicker">NUEVO INGRESO</span>
-
-                    <h2>
-                        <i class="bi bi-person-plus"></i>
-                        Agregar a lista de atencion
-                    </h2>
-
-                    <p>
-                        Registra un cliente para ponerlo
-                        en la lista de espera.
-                    </p>
+    <!-- INGRESOS PRESENCIALES -->
+    @if (puedeAgregar)
+    {
+        <div class="atencion-toolbar">
+            <button type="button" id="abrirCrearAtencion" class="atencion-btn-primary"
+                    aria-controls="crearAtencionContainer" aria-expanded="false">
+                <i class="bi bi-person-plus"></i>
+                <span id="textoCrearAtencion">Cliente sin cita</span>
+                <i class="bi bi-chevron-down atencion-chevron"></i>
+            </button>
+        </div>
+        <div id="crearAtencionContainer" class="atencion-drawer closed">
+            <section class="atencion-card">
+                <div class="atencion-card-header">
+                    <div>
+                        <span class="atencion-card-kicker">INGRESO PRESENCIAL</span>
+                        <h2><i class="bi bi-person-plus"></i> Reservar turno e ingresar cliente</h2>
+                        <p>El horario se bloquea tambien para los clientes que reservan en la web.</p>
+                    </div>
                 </div>
+                <form method="post" action="@Url.Action("Agregar", "Atencion")"
+                      class="atencion-form" id="formIngresoPresencial"
+                      data-ocupados-url="@Url.Action("HorariosOcupados", "Atencion")"
+                      data-barbero-id="@ViewBag.MiBarberoId">
+                    @Html.AntiForgeryToken()
+                    <div class="atencion-field">
+                        <label for="nombreCliente">Nombre del cliente</label>
+                        <input type="text" id="nombreCliente" name="nombre" minlength="2"
+                               maxlength="100" required placeholder="Nombre completo" />
+                    </div>
+                    <div class="atencion-field">
+                        <label for="telefonoCliente">Telefono (opcional)</label>
+                        <input type="tel" id="telefonoCliente" name="telefono" maxlength="20"
+                               placeholder="Telefono" />
+                    </div>
+                    @if (admin)
+                    {
+                        <div class="atencion-field">
+                            <label for="ingresoBarbero">Barbero responsable</label>
+                            <select id="ingresoBarbero" name="idBarbero" required>
+                                <option value="">Selecciona un barbero</option>
+                                @foreach (var b in barberos)
+                                {
+                                    <option value="@b.IdUsuario">@b.Nombre (#@b.IdUsuario)</option>
+                                }
+                            </select>
+                        </div>
+                    }
+                    <div class="atencion-field">
+                        <label for="fechaIngreso">Fecha</label>
+                        <input type="date" name="fecha" id="fechaIngreso"
+                               min="@hoy.ToString("yyyy-MM-dd")" max="@hoy.ToString("yyyy-MM-dd")"
+                               value="@hoy.ToString("yyyy-MM-dd")" required />
+                    </div>
+                    <div class="atencion-field">
+                        <label for="horaIngreso">Horario de 30 minutos</label>
+                        <select name="hora" id="horaIngreso" required>
+                            <option value="">Selecciona hora</option>
+                            @for (int i = 0; i < 28; i++)
+                            {
+                                var slot = new TimeOnly(7, 0).AddMinutes(30 * i);
+                                <option value="@slot.ToString("HH:mm")">@slot.ToString("HH:mm")</option>
+                            }
+                        </select>
+                        <small>Solo se permiten turnos de hoy que no hayan terminado.</small>
+                    </div>
+                    <div class="atencion-form-actions">
+                        <button type="button" id="cerrarCrearAtencion" class="atencion-btn-secondary">Cancelar</button>
+                        <button type="submit" class="atencion-btn-primary"><i class="bi bi-check-lg"></i> Reservar e ingresar</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    }
+
+    <!-- AGENDA: LAS CITAS APARECEN SIN CREAR ATENCION AUTOMATICA -->
+    <section class="atencion-card atencion-list-card">
+        <div class="atencion-card-header">
+            <div>
+                <span class="atencion-card-kicker">AGENDA DEL BARBERO</span>
+                <h2><i class="bi bi-calendar-check"></i> Reservas por recibir</h2>
+                <p>Reservas online y administrativas. Registra la llegada para pasar a la lista de espera.</p>
             </div>
-
-            <form method="post"
-                  action="@Url.Action("Agregar", "Atencion")"
-                  class="atencion-form">
-
-                @Html.AntiForgeryToken()
-
-                <div class="atencion-field">
-                    <label for="nombreCliente">
-                        <i class="bi bi-person"></i>
-                        Nombre del cliente
-                    </label>
-
-                    <input type="text"
-                           id="nombreCliente"
-                           name="nombre"
-                           placeholder="Ingrese el nombre del cliente"
-                           maxlength="150"
-                           required />
-                </div>
-
-                <div class="atencion-form-actions">
-                    <button type="button"
-                            id="cerrarCrearAtencion"
-                            class="atencion-btn-secondary">
-                        <i class="bi bi-x-lg"></i>
-                        Cancelar
-                    </button>
-
-                    <button type="submit"
-                            class="atencion-btn-primary">
-                        <i class="bi bi-check-lg"></i>
-                        Agregar a lista
-                    </button>
-                </div>
-            </form>
-        </section>
-    </div>
+            <div class="atencion-count"><strong>@proximas.Count</strong><span>Reservas</span></div>
+        </div>
+        @if (proximas.Count == 0)
+        {
+            <div class="atencion-empty"><h3>No hay reservas futuras pendientes</h3></div>
+        }
+        else
+        {
+            <div class="atencion-table-wrapper">
+                <table class="atencion-table">
+                    <thead><tr>
+                        <th>Cliente</th><th>Fecha</th><th>Hora</th>
+                        @if (admin) { <th>Barbero</th> }
+                        <th>Acciones</th>
+                    </tr></thead>
+                    <tbody>
+                    @foreach (var cita in proximas)
+                    {
+                        <tr>
+                            <td><strong>@cita.IdClienteNavigation?.Nombre</strong></td>
+                            <td>@cita.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td>@cita.Hora.ToString("HH:mm")</td>
+                            @if (admin) { <td>@cita.Barbero</td> }
+                            <td>
+                                @if (puedeRecibir && cita.Fecha == hoy)
+                                {
+                                    <form method="post" action="@Url.Action("RegistrarDesdeCita", "Atencion")">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@cita.IdCita" />
+                                        <button type="submit" class="atencion-action-btn action-start">
+                                            <i class="bi bi-box-arrow-in-right"></i> Registrar llegada
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="atencion-muted">@(cita.Fecha == hoy ? "Solo consulta" : "Proxima reserva")</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
 
     <!-- LISTA DE ATENCION -->
 
@@ -291,13 +366,29 @@
                                 <td>
                                     @if (a.Estado == "En espera")
                                     {
-                                        <a class="atencion-action-btn action-start"
-                                           href="@Url.Action("Iniciar", "Atencion", new { id = a.IdAtencion })">
-                                            <i class="bi bi-play-fill"></i>
-                                            Iniciar
-                                        </a>
+                                        @if (puedeIniciar)
+                                        {
+                                            <form method="post" action="@Url.Action("Iniciar", "Atencion")">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@a.IdAtencion" />
+                                                <button type="submit" class="atencion-action-btn action-start">
+                                                    <i class="bi bi-play-fill"></i> Iniciar
+                                                </button>
+                                            </form>
+                                        }
+                                        @if (puedeCancelarIngreso)
+                                        {
+                                            <form method="post" action="@Url.Action("Cancelar", "Atencion")"
+                                                  onsubmit="return confirm('¿Retirar el ingreso y liberar el horario?');">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@a.IdAtencion" />
+                                                <button type="submit" class="atencion-action-btn action-finish">
+                                                    <i class="bi bi-x-circle"></i> Retirar
+                                                </button>
+                                            </form>
+                                        }
                                     }
-                                    else if (a.Estado == "En servicio")
+                                    else if (a.Estado == "En servicio" && puedeCobrar)
                                     {
                                         <button type="button"
                                                 class="atencion-action-btn action-finish btn-finalizar-pago"
@@ -316,6 +407,8 @@
         }
     </section>
 
+    @if (verHistorial)
+    {
     <!-- BOTON HISTORIAL -->
 
     <div class="atencion-history-toolbar">
@@ -355,7 +448,7 @@
                         Historial de atencion
                     </h2>
 
-                    <p>Consulta los servicios finalizados.</p>
+                    <p>Consulta servicios finalizados e ingresos retirados.</p>
                 </div>
 
                 <button type="button"
@@ -454,7 +547,7 @@
                                     <td>
                                         <span class="atencion-status status-finished">
                                             <span></span>
-                                            Finalizado
+                                            @a.Estado
                                         </span>
                                     </td>
 
@@ -519,6 +612,8 @@
             }
         </section>
     </div>
+
+    }
 
     <!-- INFORMACION INFERIOR -->
 
@@ -736,3 +831,5 @@
 
 <script src="~/js/atencion.js"
         asp-append-version="true"></script>
+
+<script src="~/js/agenda-barbero.js" asp-append-version="true" defer></script>

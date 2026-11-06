@@ -7,6 +7,7 @@
 
 @{
     ViewData["Title"] = "Dashboard";
+    var resumenBarbero = ViewBag.ResumenBarbero as DashboardBarberoVM;
 
     var citas = ViewBag.CitasProgramadas as List<Cita>
         ?? new List<Cita>();
@@ -53,6 +54,123 @@
       href="~/css/dashboard.css"
       asp-append-version="true" />
 
+<link rel="stylesheet" href="~/css/dashboard-barbero.css" asp-append-version="true" />
+
+@if (resumenBarbero != null)
+{
+    var personal = resumenBarbero;
+    int maximoPersonal = personal.CantidadesGrafico.Any()
+        ? Math.Max(1, personal.CantidadesGrafico.Max()) : 1;
+
+    <div class="dashboard-page dashboard-barbero-page">
+        <section class="dashboard-header">
+            <div class="dashboard-header-info">
+                <span class="dashboard-kicker">PANEL PERSONAL</span>
+                <h1><span class="dashboard-header-icon"><i class="bi bi-scissors"></i></span>Mi Dashboard</h1>
+                <p>Resumen de tus citas, atenciones y cobros registrados. Solo se muestran tus datos.</p>
+            </div>
+            <div class="dashboard-header-actions">
+                <div class="dashboard-date"><i class="bi bi-calendar3"></i> @personal.Fecha.ToString("dd/MM/yyyy")</div>
+                <button type="button" id="btnActualizarDashboard" class="dashboard-refresh-btn">
+                    <i class="bi bi-arrow-clockwise"></i> Actualizar
+                </button>
+            </div>
+        </section>
+
+        <section class="dashboard-section">
+            <div class="dashboard-section-heading"><div><span class="dashboard-kicker">MIS INDICADORES</span>
+                <h2><i class="bi bi-speedometer2"></i>Mi actividad</h2></div></div>
+            <div class="dashboard-stats-grid">
+                <article class="dashboard-stat-card"><div class="dashboard-stat-top"><div class="dashboard-stat-icon"><i class="bi bi-calendar-check"></i></div><span class="dashboard-stat-tag">HOY</span></div>
+                    <div class="dashboard-stat-body"><span>Mis citas de hoy</span><strong>@personal.CitasHoy</strong></div>
+                    <div class="dashboard-stat-bottom">@personal.CitasActivasHoy activas · @personal.CitasCanceladasHoy canceladas</div></article>
+                <article class="dashboard-stat-card"><div class="dashboard-stat-top"><div class="dashboard-stat-icon"><i class="bi bi-cash-coin"></i></div><span class="dashboard-stat-tag">HOY</span></div>
+                    <div class="dashboard-stat-body"><span>Cobrado por mis servicios</span><strong class="dashboard-money">₡@personal.IngresosHoy.ToString("N2", culturaCR)</strong></div>
+                    <div class="dashboard-stat-bottom">@personal.PagosHoy pagos vinculados a mis atenciones</div></article>
+                <article class="dashboard-stat-card"><div class="dashboard-stat-top"><div class="dashboard-stat-icon"><i class="bi bi-calendar-month"></i></div><span class="dashboard-stat-tag">MES</span></div>
+                    <div class="dashboard-stat-body"><span>Ingresos generados este mes</span><strong class="dashboard-money">₡@personal.IngresosMes.ToString("N2", culturaCR)</strong></div>
+                    <div class="dashboard-stat-bottom">No equivale a salario ni comisiones</div></article>
+                <article class="dashboard-stat-card"><div class="dashboard-stat-top"><div class="dashboard-stat-icon"><i class="bi bi-check2-circle"></i></div><span class="dashboard-stat-tag">HISTÓRICO</span></div>
+                    <div class="dashboard-stat-body"><span>Atenciones finalizadas</span><strong>@personal.AtencionesFinalizadas</strong></div>
+                    <div class="dashboard-stat-bottom">Solo servicios vinculados a tu usuario</div></article>
+            </div>
+        </section>
+
+        <section class="dashboard-overview-grid">
+            <div class="dashboard-panel">
+                <div class="dashboard-panel-header"><div><span class="dashboard-kicker">ÚLTIMOS 7 DÍAS</span>
+                    <h2><i class="bi bi-bar-chart"></i> Mis citas</h2>
+                    <p>Citas asignadas a ti, agrupadas por fecha.</p></div></div>
+                <div class="dashboard-chart">
+                    @for (int i = 0; i < personal.DiasGrafico.Count; i++)
+                    {
+                        int numero = personal.CantidadesGrafico[i];
+                        int altura = numero == 0 ? 2 : Math.Max(8, (int)Math.Round((double)numero / maximoPersonal * 100));
+                        <div class="dashboard-chart-column">
+                            <span class="dashboard-chart-value">@numero</span>
+                            <div class="dashboard-chart-track"><div class="dashboard-chart-bar @(numero == 0 ? "dashboard-chart-zero" : "")"
+                                style="height: @(altura)%" title="@numero citas"></div></div>
+                            <span class="dashboard-chart-label">@personal.DiasGrafico[i]</span>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="dashboard-panel">
+                <div class="dashboard-panel-header"><div><span class="dashboard-kicker">MIS SERVICIOS</span>
+                    <h2><i class="bi bi-clipboard-check"></i> Estado de la jornada</h2></div></div>
+                <div class="dashboard-operation-list">
+                    <div class="dashboard-operation-item"><div class="dashboard-operation-icon"><i class="bi bi-hourglass-split"></i></div>
+                        <div class="dashboard-operation-info"><strong>En espera</strong><span>Clientes pendientes de iniciar</span></div><b>@personal.AtencionesEnEspera</b></div>
+                    <div class="dashboard-operation-item"><div class="dashboard-operation-icon"><i class="bi bi-scissors"></i></div>
+                        <div class="dashboard-operation-info"><strong>En servicio</strong><span>Atenciones iniciadas</span></div><b>@personal.AtencionesEnServicio</b></div>
+                    <div class="dashboard-operation-item"><div class="dashboard-operation-icon"><i class="bi bi-calendar-event"></i></div>
+                        <div class="dashboard-operation-info"><strong>Próximas citas activas</strong><span>Desde hoy en adelante</span></div><b>@personal.CitasProximas</b></div>
+                    <div class="dashboard-operation-item"><div class="dashboard-operation-icon"><i class="bi bi-calendar-x"></i></div>
+                        <div class="dashboard-operation-info"><strong>Cancelaciones este mes</strong><span>Mis citas canceladas</span></div><b>@personal.CitasCanceladasMes</b></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard-section">
+            <div class="dashboard-section-heading"><div><span class="dashboard-kicker">MI AGENDA</span>
+                <h2><i class="bi bi-calendar2-week"></i>Citas de hoy</h2>
+                <p>Solo las reservaciones vinculadas a tu cuenta de barbero.</p></div>
+                <span class="dashboard-section-count">@personal.CitasHoy citas</span></div>
+            @if (personal.AgendaHoy.Any())
+            {
+                <div class="dashboard-table-container">
+                    <table class="dashboard-citas-table"><thead><tr><th>CLIENTE</th><th>HORA</th><th>ESTADO</th><th>ACCIÓN</th></tr></thead><tbody>
+                    @foreach (var cita in personal.AgendaHoy)
+                    {
+                        string nombre = cita.IdClienteNavigation?.Nombre ?? "Cliente";
+                        string clase = cita.Estado == "Activa" ? "active" : cita.Estado == "Cancelada" ? "cancelled" : cita.Estado == "Bloqueada" ? "blocked" : "neutral";
+                        <tr>
+                            <td data-label="Cliente"><div class="dashboard-client-cell"><div class="dashboard-client-avatar">@(nombre.Length > 0 ? nombre.Substring(0, 1).ToUpper() : "?")</div>
+                                <div class="dashboard-client-details"><strong>@nombre</strong><span>Cita #@cita.IdCita</span></div></div></td>
+                            <td data-label="Hora"><span class="dashboard-time"><i class="bi bi-clock"></i> @cita.Hora.ToString("HH:mm")</span></td>
+                            <td data-label="Estado"><span class="dashboard-cita-status @clase">@cita.Estado</span></td>
+                            <td data-label="Acción"><a asp-controller="Atencion" asp-action="Index" class="dashboard-table-action">
+                                <i class="bi bi-arrow-up-right-square"></i> Abrir Atención</a></td>
+                        </tr>
+                    }
+                    </tbody></table>
+                </div>
+            }
+            else
+            {
+                <div class="dashboard-empty"><i class="bi bi-calendar-x"></i><h3>No tienes citas hoy</h3>
+                    <p>Las nuevas reservaciones asignadas a ti aparecerán aquí.</p></div>
+            }
+        </section>
+        <div class="dashboard-barbero-actions">
+            <a asp-controller="Atencion" asp-action="Index" class="dashboard-empty-link"><i class="bi bi-scissors"></i> Ir a Atención</a>
+            <a asp-controller="Pagos" asp-action="Index" class="dashboard-empty-link"><i class="bi bi-wallet2"></i> Ver mis pagos</a>
+        </div>
+        <p class="dashboard-barbero-historico">Los pagos antiguos sin atención vinculada no pueden atribuirse automáticamente a un barbero.</p>
+    </div>
+}
+else
+{
 <div class="dashboard-page">
 
     <!-- ==========================================
@@ -832,3 +950,4 @@
 
 <script src="~/js/dashboard.js"
         asp-append-version="true"></script>
+}

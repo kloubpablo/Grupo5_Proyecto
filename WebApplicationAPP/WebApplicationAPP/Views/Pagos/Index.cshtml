@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Pagos";
+    bool esBarbero = ViewBag.EsBarbero is bool esPropio && esPropio;
 
     var pagos = Model ?? new List<WebApplicationAPP.Models.Pago>();
 
@@ -10,11 +11,11 @@
     decimal totalGeneral = pagos.Sum(p => p.Monto);
 
     // Fecha actual
-    var fechaActual = DateOnly.FromDateTime(DateTime.Today);
+    var fechaActual = DateOnly.FromDateTime(WebApplicationAPP.Services.AgendaBarberoService.AhoraCostaRica());
 
     // Solo pagos de hoy que siguen abiertos
     var pagosHoy = pagos
-        .Where(p => p.Fecha == fechaActual && !p.Cerrado)
+        .Where(p => p.Fecha == fechaActual && (esBarbero || !p.Cerrado))
         .ToList();
 
     // Saldo actual de caja
@@ -64,13 +65,14 @@
                     <i class="bi bi-wallet2"></i>
                 </span>
 
-                Gestion de Pagos
+                @(esBarbero ? "Mis Pagos" : "Gestion de Pagos")
 
             </h1>
 
             <p>
-                Administra los pagos registrados
-                y controla los ingresos de caja.
+                @(esBarbero
+                    ? "Consulta exclusivamente los cobros de tus propias atenciones."
+                    : "Administra los pagos registrados y controla los ingresos de caja.")
             </p>
 
         </div>
@@ -134,7 +136,7 @@
 
             <div>
 
-                <span>Total acumulado</span>
+                <span>@(esBarbero ? "Total de mis cobros" : "Total acumulado")</span>
 
                 <strong>
                     ₡@totalGeneral.ToString("N2")
@@ -154,7 +156,7 @@
 
             <div>
 
-                <span>Caja actual</span>
+                <span>@(esBarbero ? "Cobrado hoy" : "Caja actual")</span>
 
                 <strong>
                     ₡@totalHoy.ToString("N2")
@@ -174,7 +176,7 @@
 
             <div>
 
-                <span>Pagos pendientes de cierre</span>
+                <span>@(esBarbero ? "Mis pagos de hoy" : "Pagos pendientes de cierre")</span>
 
                 <strong>
                     @cantidadHoy
@@ -190,6 +192,16 @@
          BOTONES PRINCIPALES
     ========================================== -->
 
+    @if (esBarbero)
+    {
+        <div class="pagos-toolbar">
+            <a asp-controller="Atencion" asp-action="Index" class="pagos-btn-primary">
+                <i class="bi bi-scissors"></i> Ir a mis atenciones
+            </a>
+        </div>
+    }
+    else
+    {
     <div class="pagos-toolbar">
 
         <button type="button"
@@ -218,6 +230,8 @@
 
     </div>
 
+    }
+
     <!-- ==========================================
          HISTORIAL DE PAGOS
     ========================================== -->
@@ -241,8 +255,9 @@
                 </h2>
 
                 <p>
-                    Consulta todos los pagos,
-                    incluyendo los que ya fueron cerrados.
+                    @(esBarbero
+                        ? "Historial de cobros de tus propias atenciones."
+                        : "Consulta todos los pagos, incluyendo los que ya fueron cerrados.")
                 </p>
 
             </div>
@@ -269,6 +284,13 @@
             </div>
 
         </div>
+
+        @if (esBarbero)
+        {
+            <p class="pagos-personal-info"><i class="bi bi-shield-check"></i>
+                Solo se muestran pagos vinculados a atenciones asignadas a tu usuario.
+                Los pagos antiguos sin atención asociada no aparecen aquí.</p>
+        }
 
         <!-- TABLA -->
 
@@ -499,6 +521,8 @@
 
 </div>
 
+@if (!esBarbero)
+{
 <!-- ==========================================
      MODAL REGISTRAR PAGO
 ========================================== -->
@@ -575,11 +599,19 @@
 
                 </label>
 
-                <input type="text"
+                <input type="search"
                        id="pagoCliente"
-                       name="cliente"
-                       placeholder="Nombre del cliente"
+                       placeholder="Buscar por nombre, telefono o ID..."
+                       autocomplete="off"
+                       aria-label="Buscar cliente para el pago"
+                       aria-controls="opcionesClientePago"
+                       aria-expanded="false"
                        required />
+                <input type="hidden" name="idCliente" id="pagoClienteId" />
+                <div id="opcionesClientePago" class="pagos-clientes-opciones" hidden></div>
+                <small id="estadoClientePago" class="pagos-cliente-ayuda" aria-live="polite">
+                    Selecciona un cliente de los resultados.
+                </small>
 
             </div>
 
@@ -1001,5 +1033,11 @@
 
 </div>
 
+}
+
+<link rel="stylesheet" href="~/css/pagos-personal.css" asp-append-version="true" />
+
 <script src="~/js/pagos.js"
         asp-append-version="true"></script>
+
+<script src="~/js/pagos-clientes.js" asp-append-version="true"></script>

@@ -3,10 +3,6 @@ using System.Net;
 
 namespace WebApplicationAPP.Services;
 
-/// <summary>
-/// Plantilla de correo independiente de los estilos CSS del sitio.
-/// No requiere imagenes ni fuentes externas para mostrarse correctamente.
-/// </summary>
 public static class PlantillaCorreoRecuperacion
 {
     public static string Crear(string nombre, string enlace)

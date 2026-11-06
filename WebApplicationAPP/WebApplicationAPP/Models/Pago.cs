@@ -9,6 +9,11 @@ public partial class Pago
 
     public int IdCliente { get; set; }
 
+    public int? IdAtencion { get; set; }
+
+    public virtual Atencion? Atencion { get; set; }
+
+
     public decimal Monto { get; set; }
 
     public string Metodo { get; set; } = null!;

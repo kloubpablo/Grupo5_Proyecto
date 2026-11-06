@@ -420,14 +420,12 @@
 
                 </button>
 
-                <a id="btnConfirmarEliminar"
-                   href="#"
-                   class="galeria-btn-confirm-delete">
-
-                    <i class="bi bi-trash3"></i>
-                    Eliminar imagen
-
-                </a>
+                <form asp-controller="YampiBarberShop" asp-action="EliminarImagen" method="post" asp-antiforgery="true" id="formEliminarImagen">
+                    <input type="hidden" name="nombre" id="inputNombreEliminar" />
+                    <button type="submit" id="btnConfirmarEliminar" class="galeria-btn-confirm-delete">
+                        <i class="bi bi-trash3"></i> Eliminar imagen
+                    </button>
+                </form>
 
             </div>
 

@@ -23,8 +23,10 @@ namespace WebApplicationAPP.Controllers
 
         private bool EsAdmin()
         {
-            return HttpContext.Session.GetString("Rol")
-                == "Administrador";
+            int? id = HttpContext.Session.GetInt32("IdUsuario");
+            return id.HasValue && _context.Usuarios.AsNoTracking()
+                .Any(u => u.IdUsuario == id.Value && u.Estado && !u.ContraTemp &&
+                    u.IdRolNavigation.Estado && u.IdRolNavigation.Nombre == "Administrador");
         }
 
         private IActionResult SinPermiso()
@@ -386,14 +388,14 @@ namespace WebApplicationAPP.Controllers
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
 
             if (idUsuario == null)
-                return RedirectToAction("Login", "Auth");
+                return RedirectToAction("Index", "Seguridad");
 
             var usuario = _context.Usuarios
                 .Include(u => u.IdRolNavigation)
                 .FirstOrDefault(u => u.IdUsuario == idUsuario.Value);
 
             if (usuario == null)
-                return RedirectToAction("Login", "Auth");
+                return RedirectToAction("Index", "Seguridad");
 
             return View(usuario);
         }
@@ -414,14 +416,14 @@ namespace WebApplicationAPP.Controllers
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
 
             if (idUsuario == null)
-                return RedirectToAction("Login", "Auth");
+                return RedirectToAction("Index", "Seguridad");
 
             var usuario = _context.Usuarios
                 .Include(u => u.IdRolNavigation)
                 .FirstOrDefault(u => u.IdUsuario == idUsuario.Value);
 
             if (usuario == null)
-                return RedirectToAction("Login", "Auth");
+                return RedirectToAction("Index", "Seguridad");
 
             nombre = nombre?.Trim() ?? "";
             username = username?.Trim() ?? "";

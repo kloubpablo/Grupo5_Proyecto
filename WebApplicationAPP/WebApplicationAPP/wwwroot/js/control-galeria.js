@@ -217,7 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (modalEliminar && nombreEliminar && btnEliminar) {
 
-        const urlEliminar = modalEliminar.dataset.deleteUrl;
+        const inputNombreEliminar = document.getElementById("inputNombreEliminar");
 
         modalEliminar.addEventListener(
             "show.bs.modal",
@@ -225,8 +225,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const boton = event.relatedTarget;
 
-                if (!boton || !urlEliminar) {
-                    btnEliminar.removeAttribute("href");
+                if (!boton || !inputNombreEliminar) {
+                    btnEliminar.disabled = true;
                     return;
                 }
 
@@ -235,23 +235,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
                 if (!nombreImagen) {
-                    btnEliminar.removeAttribute("href");
+                    inputNombreEliminar.value = "";
+                    btnEliminar.disabled = true;
                     return;
                 }
 
                 // Mostrar nombre en el modal
                 nombreEliminar.textContent = nombreImagen;
 
-                // Crear URL de eliminacion
-                const separador = urlEliminar.includes("?")
-                    ? "&"
-                    : "?";
-
-                btnEliminar.href =
-                    urlEliminar +
-                    separador +
-                    "nombre=" +
-                    encodeURIComponent(nombreImagen);
+                // La eliminacion ahora es POST con antiforgery, no un enlace GET.
+                inputNombreEliminar.value = nombreImagen;
+                btnEliminar.disabled = false;
 
             }
         );

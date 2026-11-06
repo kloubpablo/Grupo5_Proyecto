@@ -1,4 +1,8 @@
-﻿@using WebApplicationAPP.Models
+﻿@using System
+@using System.Collections.Generic
+@using System.Linq
+@using WebApplicationAPP.Models
+@using WebApplicationAPP.Helpers
 
 @using Microsoft.EntityFrameworkCore
 
@@ -7,10 +11,24 @@
 
 @{
 
-    var rol = Context.Session.GetString("Rol");
-
+    var usuarioSesionId = Context.Session.GetInt32("IdUsuario");
+    var usuarioNav = usuarioSesionId.HasValue
+        ? Db.Usuarios.AsNoTracking().Include(u => u.IdRolNavigation)
+            .FirstOrDefault(u => u.IdUsuario == usuarioSesionId.Value && u.Estado && !u.ContraTemp && u.IdRolNavigation.Estado)
+        : null;
+    var rol = usuarioNav?.IdRolNavigation.Nombre;
     var esAdmin = rol == "Administrador";
-
+    var permisosNav = usuarioNav == null || esAdmin
+        ? new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        : PermisosHelper.ObtenerPermisos(Db, usuarioNav);
+    bool mostrarDashboard = esAdmin || permisosNav.Contains("Dashboard/Index");
+    bool mostrarCitas = esAdmin || new[] { "Citas/Crear", "Citas/MisCitas", "Citas/HorariosDisponibles" }
+        .Any(p => permisosNav.Contains(p));
+    bool mostrarAtencion = esAdmin || permisosNav.Contains("Atencion/Index");
+    bool mostrarPagos = esAdmin || permisosNav.Contains("Pagos/Index");
+    bool mostrarClientes = esAdmin || permisosNav.Contains("Clientes/Index");
+    var controladorInicio = mostrarDashboard ? "Dashboard" : mostrarCitas ? "Citas" :
+        mostrarAtencion ? "Atencion" : mostrarPagos ? "Pagos" : "Home";
 }
 
 <!DOCTYPE html>
@@ -59,6 +77,9 @@
 
         asp-append-version="true" />
 
+    <!-- Correcciones globales para pantallas con escalado y resoluciones menores -->
+    <link rel="stylesheet" href="~/css/yampi-responsive-global.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/yampi-logo.css" asp-append-version="true" />
 </head>
 
 <body>
@@ -71,58 +92,18 @@
 
         ================================================== -->
 
-        <nav id="nav" aria-label="Navegacion principal">
+        <nav id="nav" class="yampi-nav" aria-label="Navegacion principal">
 
-            <!-- Encabezado para telefonos y tablets -->
-            <div class="yampi-mobile-bar">
-                <a class="yampi-mobile-brand" asp-controller="Dashboard" asp-action="Index">
-                    <span aria-hidden="true">💈</span> Yampi BarberShop
-                </a>
-                <button id="yampiMenuToggle" class="yampi-menu-toggle"
-                        type="button" aria-label="Abrir menu"
-                        aria-controls="yampiMenu" aria-expanded="false">
-                    <i class="bi bi-list" aria-hidden="true"></i>
-                </button>
-            </div>
+            <!-- Marca independiente de la lista: la plantilla antigua no puede separarla -->
+            <a class="yampi-nav-brand yampi-logo" asp-controller="@controladorInicio" asp-action="Index" aria-label="Yampi BarberShop - Inicio">
+                <span class="yampi-logo-icon" aria-hidden="true"><i class="bi bi-scissors"></i></span>
+                <span class="yampi-logo-text">
+                    <strong>YAMPI</strong>
+                    <small>BARBERSHOP</small>
+                </span>
+            </a>
 
-            <ul id="yampiMenu" class="yampi-nav-list">
-
-                <!-- LOGO -->
-
-                <li>
-
-                        @{
-                            var rol = Context.Session.GetString("Rol");
-                        }
-
-                        <h1>
-                            @if (rol == "Administrador")
-                            {
-                                <a asp-controller="Dashboard" asp-action="Index">
-                                    💈 Yampi Barbershop
-                                </a>
-                            }
-                            else if (rol == "Cliente")
-                            {
-                                <a asp-controller="Citas" asp-action="MisCitas">
-                                    💈 Yampi Barbershop
-                                </a>
-                            }
-                            else if (rol == "Barbero")
-                            {
-                                <a asp-controller="Atencion" asp-action="Index">
-                                    💈 Yampi Barbershop
-                                </a>
-                            }
-                            else
-                            {
-                                <a asp-controller="Home" asp-action="Index">
-                                    💈 Yampi Barbershop
-                                </a>
-                            }
-                        </h1>
-
-                </li>
+            <ul id="yampiPrimaryNav" class="yampi-priority-links" aria-label="Accesos principales">
 
                 @if (!string.IsNullOrEmpty(rol))
 
@@ -130,15 +111,7 @@
 
                     <!-- INICIO -->
 
-                    if (esAdmin ||
-
-                        WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(
-
-                            Db,
-
-                            rol,
-
-                            "Dashboard/Index"))
+                    if (mostrarDashboard)
 
                     {
 
@@ -150,7 +123,7 @@
 
                                 <i class="bi bi-house"></i>
 
-                                Inicio
+                                @(rol == "Barbero" ? "Mi Dashboard" : "Inicio")
 
                             </a>
 
@@ -160,15 +133,7 @@
 
                     <!-- CLIENTES -->
 
-                    if (esAdmin ||
-
-                        WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(
-
-                            Db,
-
-                            rol,
-
-                            "Clientes/Index"))
+                    if (mostrarClientes)
 
                     {
 
@@ -190,16 +155,7 @@
 
                     <!-- CITAS -->
 
-                    if (esAdmin ||
-
-                        WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(
-
-                            Db,
-
-                            rol,
-
-                            "Citas/Index"))
-
+                    if (mostrarCitas)
                     {
 
                         <li>
@@ -220,15 +176,7 @@
 
                     <!-- ATENCION -->
 
-                    if (esAdmin ||
-
-                        WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(
-
-                            Db,
-
-                            rol,
-
-                            "Atencion/Index"))
+                    if (mostrarAtencion)
 
                     {
 
@@ -250,15 +198,7 @@
 
                     <!-- PAGOS -->
 
-                    if (esAdmin ||
-
-                        WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(
-
-                            Db,
-
-                            rol,
-
-                            "Pagos/Index"))
+                    if (mostrarPagos)
 
                     {
 
@@ -270,7 +210,7 @@
 
                                 <i class="bi bi-credit-card"></i>
 
-                                Pagos
+                                @(rol == "Barbero" ? "Mis Pagos" : "Pagos")
 
                             </a>
 
@@ -280,15 +220,7 @@
 
                     <!-- REPORTES -->
 
-                    if (esAdmin ||
-
-                        WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(
-
-                            Db,
-
-                            rol,
-
-                            "Reportes/Index"))
+                    if (esAdmin)
 
                     {
 
@@ -310,15 +242,7 @@
 
                     <!-- ROLES -->
 
-                    if (esAdmin ||
-
-                        WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(
-
-                            Db,
-
-                            rol,
-
-                            "Roles/Index"))
+                    if (esAdmin)
 
                     {
 
@@ -340,15 +264,7 @@
 
                     <!-- USUARIOS -->
 
-                    if (esAdmin ||
-
-                        WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(
-
-                            Db,
-
-                            rol,
-
-                            "Usuarios/Index"))
+                    if (esAdmin)
 
                     {
 
@@ -369,159 +285,84 @@
                     }
 
                     <!-- CONTROLES EXTERNOS -->
-
-                    if (esAdmin ||
-
-                        WebApplicationAPP.Helpers.PermisosHelper.TienePermiso(
-
-                            Db,
-
-                            rol,
-
-                            "Usuarios/Index"))
-
+                    if (esAdmin)
                     {
-
-                        <li class="dropdown">
-
-                            <a href="#"
-
-                               class="dropdown-toggle"
-
-                               data-bs-toggle="dropdown"
-
-                               aria-expanded="false">
-
-                                <i class="bi bi-tools"></i>
-
-                                Controles externos
-
-                            </a>
-
-                            <ul class="dropdown-menu">
-
+                        <li class="yampi-controls-item">
+                            <button type="button" id="yampiControlsToggle"
+                                    class="yampi-controls-toggle"
+                                    aria-controls="yampiControlsMenu"
+                                    aria-expanded="false">
+                                <i class="bi bi-tools" aria-hidden="true"></i>
+                                <span>Controles externos</span>
+                                <i class="bi bi-chevron-down yampi-controls-chevron" aria-hidden="true"></i>
+                            </button>
+                            <ul id="yampiControlsMenu" class="yampi-controls-submenu" hidden>
                                 <li>
-
-                                    <a asp-controller="YampiBarberShop"
-
-                                       asp-action="ControlGaleria">
-
-                                        <i class="bi bi-images"></i>
-
+                                    <a asp-controller="YampiBarberShop" asp-action="ControlGaleria">
+                                        <i class="bi bi-images" aria-hidden="true"></i>
                                         Control Galería
-
                                     </a>
-
                                 </li>
-
                                 <li>
-
-                                    <a asp-controller="YampiBarberShop"
-
-                                       asp-action="ControlServicio">
-
-                                        <i class="bi bi-scissors"></i>
-
+                                    <a asp-controller="YampiBarberShop" asp-action="ControlServicio">
+                                        <i class="bi bi-scissors" aria-hidden="true"></i>
                                         Control Servicios
-
                                     </a>
-
                                 </li>
-
                                 <li>
-
-                                    <a asp-controller="YampiBarberShop"
-
-                                       asp-action="ControlContacto">
-
-                                        <i class="bi bi-telephone"></i>
-
+                                    <a asp-controller="YampiBarberShop" asp-action="ControlContacto">
+                                        <i class="bi bi-telephone" aria-hidden="true"></i>
                                         Control Contacto
-
                                     </a>
-
                                 </li>
-
                             </ul>
-
                         </li>
-
                     }
-
-                    <!-- OPCIONES DEL CLIENTE -->
-
-                    @if (rol == "Cliente")
-
-                    {
-
-                        <li>
-
-                            <a asp-controller="Citas"
-
-                               asp-action="MisCitas">
-
-                                <i class="bi bi-calendar-check"></i>
-
-                                Mis Citas
-
-                            </a>
-
-                        </li>
-
-                        <li>
-
-                            <a asp-controller="Citas"
-
-                               asp-action="Crear">
-
-                                <i class="bi bi-plus-lg"></i>
-
-                                Agendar Cita
-
-                            </a>
-
-                        </li>
-
-                    }
-
-                    <!-- SALIR -->
-
-                    <li>
-
-                        <a asp-controller="Seguridad"
-
-                           asp-action="Logout">
-
-                            <i class="bi bi-box-arrow-right"></i>
-
-                            Salir
-
-                        </a>
-
-                    </li>
-
-                    <!-- PERFIL -->
-
-                    <li>
-
-                        <a asp-controller="Usuarios"
-
-                           asp-action="Perfil"
-
-                           title="Perfil">
-
-                            <i class="bi bi-person"></i>
-
-                        </a>
-
-                    </li>
-
                 }
 
             </ul>
 
+            <div class="yampi-priority-actions">
+                <!-- Solo aparece si realmente hay enlaces sin espacio en la barra -->
+                <div class="yampi-more-wrap" id="yampiMoreWrap" hidden>
+                    <button id="yampiMenuToggle" class="yampi-more-toggle" type="button"
+                            aria-label="Abrir menú de navegación" aria-controls="yampiMenu"
+                            aria-expanded="false" title="Navegación">
+                        <i class="bi bi-list" aria-hidden="true"></i>
+                    </button>
+                    <ul id="yampiMenu" class="yampi-more-menu"
+                        aria-label="Opciones adicionales de navegación" hidden></ul>
+                </div>
+                @if (usuarioNav != null)
+                {
+                    <!-- Perfil permanece a la derecha; salir se mantiene accesible sin ocupar el menú -->
+                    <div id="yampiProfileSlot" class="yampi-profile-slot">
+                        <button id="yampiProfileToggle" type="button" class="yampi-profile-toggle"
+                                aria-label="Abrir opciones de perfil" aria-controls="yampiProfileMenu"
+                                aria-expanded="false" title="Mi perfil">
+                            <i class="bi bi-person" aria-hidden="true"></i>
+                        </button>
+                        <ul id="yampiProfileMenu" class="yampi-profile-menu" hidden>
+                            <li>
+                                <a asp-controller="Usuarios" asp-action="Perfil">
+                                    <i class="bi bi-person-circle" aria-hidden="true"></i>
+                                    Mi perfil
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Seguridad" asp-action="Logout">
+                                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                                    Salir
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </div>
+
+            <!-- Fondo para cerrar el panel lateral solo en telefonos -->
+            <div id="yampiNavBackdrop" class="yampi-nav-backdrop" hidden></div>
         </nav>
-        <div id="yampiMenuBackdrop" class="yampi-menu-backdrop" hidden></div>
 
         <!-- =================================================
 
@@ -924,7 +765,7 @@
 
     <script src="~/assets/js/jquery.min.js"></script>
 
-    <script src="~/assets/js/jquery.dropotron.min.js"></script>
+    @* Dropdowns gestionados por Bootstrap y navegacion prioritaria; evitar menus duplicados de Dropotron. *@
 
     <script src="~/assets/js/jquery.scrolly.min.js"></script>
 

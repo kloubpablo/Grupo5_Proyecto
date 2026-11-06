@@ -3217,3 +3217,76 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .citas-page .cita-validacion-mensaje[hidden] {
     display: none !important;
 }
+
+/* ===== Citas: portal unificado con informacion limitada por usuario ===== */
+.citas-inline-form { display: inline-flex; padding: 0; margin: 0; }
+.citas-inline-form button { font: inherit; }
+.cliente-citas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(245px, 1fr)); gap: 16px; padding: 24px; }
+.cliente-cita-card { border: 1px solid var(--border); border-radius: 14px; background: var(--black-2); padding: 20px; }
+.cliente-cita-cabecera { display:flex; justify-content:space-between; align-items:center; color:var(--gray-4); margin-bottom: 15px; }
+.cliente-cita-card h3 { color: var(--white); font-size: 19px; margin: 0 0 12px; }
+.cliente-cita-card p { color: var(--white-soft); margin: 8px 0; }
+.cliente-cita-card p i { color: var(--gold); margin-right: 8px; }
+.cliente-cita-acciones { display:flex; gap: 12px; flex-wrap:wrap; margin-top: 17px; }
+.cliente-cita-acciones .table-action { width:auto; min-width:90px; padding: 9px 13px; gap: 6px; display: inline-flex; align-items:center; justify-content:center; }
+.disponibilidad-grupos { padding: 18px; display:grid; gap:14px; }
+.disponibilidad-grupo { padding: 15px; background: var(--black-2); border: 1px solid var(--border); border-radius:12px; }
+.disponibilidad-grupo > strong { display: block; color: var(--white); margin-bottom: 12px; }
+.disponibilidad-grupo > strong i { color:var(--gold); margin-right: 8px; }
+.disponibilidad-horas { display:flex; flex-wrap:wrap; gap: 8px; }
+.hora-libre { border: 1px solid #5c4d24; color: var(--gold-light); border-radius:8px; padding: 6px 10px; font-size: 13px; }
+.disponibilidad-vacia { color: var(--gray-4); margin: 0; }
+.status-finalizada { color: var(--gold-light); background: #262319; }
+@media(max-width:576px) { .cliente-citas-grid { padding:14px; grid-template-columns: 1fr; } }
+
+/* ========================================
+   SELECTOR DE CLIENTES - YAMPI BARBERSHOP
+   ======================================== */
+
+.selector-cliente {
+    margin-bottom: 20px;
+}
+
+.selector-cliente label {
+    display: block;
+    margin-bottom: 10px;
+    color: #d4af37;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.selector-cliente select {
+    width: 100%;
+    padding: 13px 16px;
+    background-color: #1c1c1c;
+    color: #f5f5f5;
+    border: 1px solid #454545;
+    border-radius: 10px;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    cursor: pointer;
+    color-scheme: dark;
+}
+
+.selector-cliente select:hover {
+    border-color: #d4af37;
+}
+
+.selector-cliente select:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, .15);
+}
+
+.selector-cliente select option {
+    background-color: #202020;
+    color: #fff;
+}
+
+.selector-cliente .form-text {
+    color: #999;
+    margin-top: 8px;
+    font-size: 12px;
+}
+

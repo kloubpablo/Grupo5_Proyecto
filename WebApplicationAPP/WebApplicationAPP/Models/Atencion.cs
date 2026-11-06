@@ -9,6 +9,11 @@ public partial class Atencion
 
     public int IdCliente { get; set; }
 
+    public int? IdBarbero { get; set; }
+
+    public virtual Usuario? BarberoUsuario { get; set; }
+
+
     public int? IdCita { get; set; }
 
     public string Estado { get; set; } = null!;

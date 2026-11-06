@@ -1,187 +1,135 @@
-console.log("YAMPI: layout.js cargado correctamente");
+/* Yampi: menu por espacio real. No clona enlaces ni modifica permisos. */
+(() => {
+  'use strict';
+  document.addEventListener('DOMContentLoaded', () => {
+    const nav = document.getElementById('nav');
+    const brand = nav?.querySelector('.yampi-nav-brand');
+    const primary = document.getElementById('yampiPrimaryNav');
+    const actions = nav?.querySelector('.yampi-priority-actions');
+    const moreWrap = document.getElementById('yampiMoreWrap');
+    const moreToggle = document.getElementById('yampiMenuToggle');
+    const moreMenu = document.getElementById('yampiMenu');
+    const backdrop = document.getElementById('yampiNavBackdrop');
+    const isPhone = () => window.matchMedia('(max-width: 767px)').matches;
+    const profileToggle = document.getElementById('yampiProfileToggle');
+    const profileMenu = document.getElementById('yampiProfileMenu');
+    const controlsToggle = document.getElementById('yampiControlsToggle');
+    const controlsMenu = document.getElementById('yampiControlsMenu');
+    if (!nav || !brand || !primary || !actions || !moreWrap || !moreToggle || !moreMenu) return;
 
-document.addEventListener("DOMContentLoaded", function () {
+    // Los elementos llegan del servidor filtrados por rol. Mover, nunca clonar.
+    const items = Array.from(primary.children);
+    let pending = false;
+    const setOpen = (button, panel, open) => {
+      if (!button || !panel) return;
+      panel.hidden = !open;
+      button.setAttribute('aria-expanded', String(open));
+    };
+    const setMobileOverlay = open => {
+      if (backdrop) backdrop.hidden = !open;
+      document.body.classList.toggle('yampi-mobile-nav-open', Boolean(open && isPhone()));
+    };
+    const closeMore = () => {
+      setOpen(moreToggle, moreMenu, false);
+      setMobileOverlay(false);
+    };
+    const closeProfile = () => setOpen(profileToggle, profileMenu, false);
+    const closeControls = () => setOpen(controlsToggle, controlsMenu, false);
+    const closeAll = () => { closeControls(); closeMore(); closeProfile(); };
+    const value = s => parseFloat(s) || 0;
+    const widthWithMargins = element => {
+      const style = getComputedStyle(element);
+      return element.getBoundingClientRect().width + value(style.marginLeft) + value(style.marginRight);
+    };
+    const primaryWidth = () => {
+      const gap = value(getComputedStyle(primary).columnGap);
+      const children = Array.from(primary.children);
+      return children.reduce((sum, child) => sum + widthWithMargins(child), 0)
+        + Math.max(0, children.length - 1) * gap;
+    };
+    const availableWidth = () => {
+      const style = getComputedStyle(nav);
+      const contentWidth = nav.clientWidth - value(style.paddingLeft) - value(style.paddingRight);
+      const gap = value(style.columnGap);
+      // margin-left:auto de acciones es espacio flexible, NO ancho reservado.
+      return Math.max(0, contentWidth - brand.getBoundingClientRect().width - actions.getBoundingClientRect().width - gap * 2 - 6);
+    };
 
-    // ==========================================
-    // ELEMENTOS DEL MENU
-    // ==========================================
+    function relayout() {
+      closeAll();
+      // Empezar siempre con el estado original para que el menu no quede atascado.
+      moreWrap.hidden = true;
+      items.forEach(item => primary.appendChild(item));
 
-    const nav = document.getElementById("nav");
-    const toggle = document.getElementById("yampiMenuToggle");
-    const menu = document.getElementById("yampiMenu");
-    const backdrop = document.getElementById("yampiMenuBackdrop");
+      // En telefono siempre hay hamburguesa y todos los accesos van al lateral.
+      // Las opciones ya llegan del servidor filtradas segun el rol y los permisos.
+      if (isPhone()) {
+        items.forEach(item => moreMenu.appendChild(item));
+        moreWrap.hidden = false;
+        return;
+      }
 
-    if (!nav || !toggle || !menu || !backdrop) return;
-
-    const mobile = window.matchMedia("(max-width: 1250px)");
-
-    let previo = null;
-
-    // ==========================================
-    // CERRAR MENU
-    // ==========================================
-
-    function cerrar() {
-
-        menu.classList.remove("yampi-menu-open");
-
-        document.body.classList.remove("yampi-menu-open");
-
-        toggle.setAttribute("aria-expanded", "false");
-        toggle.setAttribute("aria-label", "Abrir menu");
-
-        toggle.querySelector("i").className = "bi bi-list";
-
-        backdrop.hidden = true;
-
-        menu.inert = mobile.matches;
-
-        if (previo && mobile.matches) {
-            previo.focus();
-        }
+      // En escritorio y laptop conservar el overflow inteligente actual.
+      if (primaryWidth() <= availableWidth()) return;
+      moreWrap.hidden = false; // Ahora el calculo ya reserva espacio para la hamburguesa.
+      for (let i = items.length - 1; i >= 0 && primaryWidth() > availableWidth(); i--) {
+        moreMenu.prepend(items[i]);
+      }
+      if (!moreMenu.children.length) moreWrap.hidden = true;
     }
+    const schedule = () => {
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(() => { pending = false; relayout(); });
+    };
 
-    // ==========================================
-    // ABRIR MENU
-    // ==========================================
-
-    function abrir() {
-
-        previo = document.activeElement;
-
-        menu.inert = false;
-
-        menu.classList.add("yampi-menu-open");
-
-        document.body.classList.add("yampi-menu-open");
-
-        toggle.setAttribute("aria-expanded", "true");
-        toggle.setAttribute("aria-label", "Cerrar menu");
-
-        toggle.querySelector("i").className = "bi bi-x-lg";
-
-        backdrop.hidden = false;
-
-        const primero = menu.querySelector(
-            "a:not(.dropdown-toggle)"
-        );
-
-        primero?.focus();
+    moreToggle.addEventListener('click', e => {
+      e.stopPropagation();
+      const open = moreMenu.hidden;
+      closeAll();
+      setOpen(moreToggle, moreMenu, open);
+      if (isPhone()) setMobileOverlay(open);
+    });
+    backdrop?.addEventListener('click', closeAll);
+    profileToggle?.addEventListener('click', e => {
+      e.stopPropagation();
+      const open = profileMenu.hidden;
+      closeAll();
+      setOpen(profileToggle, profileMenu, open);
+    });
+    controlsToggle?.addEventListener('click', e => {
+      e.stopPropagation();
+      const open = controlsMenu.hidden;
+      closeControls();
+      closeProfile();
+      // No cerrar hamburguesa si este submenu esta dentro de ella.
+      if (!controlsToggle.closest('#yampiMenu')) closeMore();
+      setOpen(controlsToggle, controlsMenu, open);
+    });
+    document.addEventListener('click', e => {
+      if (!(e.target instanceof Element)) return;
+      if (!e.target.closest('.yampi-more-wrap')) closeMore();
+      if (!e.target.closest('.yampi-profile-slot')) closeProfile();
+      if (!e.target.closest('.yampi-controls-item')) closeControls();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      const focus = !controlsMenu?.hidden ? controlsToggle
+        : !moreMenu.hidden ? moreToggle
+        : !profileMenu?.hidden ? profileToggle : null;
+      closeAll();
+      focus?.focus();
+    });
+    moreMenu.addEventListener('click', e => {
+      if (e.target.closest('a')) closeAll();
+    });
+    window.addEventListener('resize', schedule, {passive:true});
+    window.addEventListener('pageshow', schedule);
+    if (document.fonts?.ready) document.fonts.ready.then(schedule);
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver(schedule);
+      observer.observe(nav);
     }
-
-    // ==========================================
-    // BOTON HAMBURGUESA
-    // ==========================================
-
-    toggle.addEventListener("click", function () {
-
-        if (menu.classList.contains("yampi-menu-open")) {
-            cerrar();
-        } else {
-            abrir();
-        }
-
-    });
-
-    // ==========================================
-    // CERRAR AL TOCAR FUERA
-    // ==========================================
-
-    backdrop.addEventListener("click", cerrar);
-
-    // ==========================================
-    // CONTROL DEL TECLADO
-    // ==========================================
-
-    document.addEventListener("keydown", function (e) {
-
-        if (
-            e.key === "Escape" &&
-            menu.classList.contains("yampi-menu-open")
-        ) {
-            cerrar();
-        }
-
-        if (
-            e.key !== "Tab" ||
-            !menu.classList.contains("yampi-menu-open")
-        ) {
-            return;
-        }
-
-        const elementos = [
-            ...menu.querySelectorAll(
-                'a[href], button:not([disabled])'
-            )
-        ].filter(el =>
-            el.getClientRects().length &&
-            !el.closest(".dropdown-menu:not(.show)")
-        );
-
-        if (!elementos.length) return;
-
-        const primero = elementos[0];
-        const ultimo = elementos[elementos.length - 1];
-
-        if (e.shiftKey && document.activeElement === primero) {
-
-            e.preventDefault();
-            ultimo.focus();
-
-        } else if (
-            !e.shiftKey &&
-            document.activeElement === ultimo
-        ) {
-
-            e.preventDefault();
-            primero.focus();
-
-        }
-
-    });
-
-    // ==========================================
-    // CERRAR AL SELECCIONAR UNA OPCION
-    // ==========================================
-
-    menu.addEventListener("click", function (e) {
-
-        const enlace = e.target.closest(
-            'a:not(.dropdown-toggle):not([data-bs-toggle="dropdown"])'
-        );
-
-        if (enlace) {
-            cerrar();
-        }
-
-    });
-
-    // ==========================================
-    // CAMBIO DE TAMANO DE PANTALLA
-    // ==========================================
-
-    function cambioPantalla() {
-
-        if (!mobile.matches) {
-
-            cerrar();
-            menu.inert = false;
-
-        } else if (
-            !menu.classList.contains("yampi-menu-open")
-        ) {
-
-            menu.inert = true;
-
-        }
-    }
-
-    mobile.addEventListener("change", cambioPantalla);
-
-    // ==========================================
-    // INICIALIZACION
-    // ==========================================
-
-    cambioPantalla();
-
-});
+    relayout();
+  });
+})();

@@ -910,3 +910,13 @@
         animation-duration: .01ms !important;
     }
 }
+
+/* Catalogo de permisos compatible por rol */
+.roles-pista { color: #aaa; font-size: 13px; line-height: 1.6; margin: 10px 0 15px; }
+.roles-pista strong { color: #d4af37; }
+.roles-permisos-grupo { color: #d4af37; font-size: 13px; font-weight: 700;
+    letter-spacing: .4px; margin: 20px 0 10px; padding-bottom: 8px;
+    border-bottom: 1px solid #404040; }
+.roles-permiso-requisito { display: block; margin-top: 5px; color: #b5b5b5;
+    font-size: 11px; line-height: 1.5; }
+.roles-permisos-vacio { padding: 20px; color: #bbb; text-align: center; }

@@ -33,12 +33,6 @@ builder.Services.AddDbContext<YampiBarbershopContext>(options =>
 
 var app = builder.Build();
 
-if (args.Contains("--migrate-passwords", StringComparer.OrdinalIgnoreCase))
-{
-    await MigrarContrasenas.EjecutarAsync(app.Services);
-    return;
-}
-
 // ERRORES
 if (!app.Environment.IsDevelopment())
 {
@@ -59,5 +53,56 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=YampiBarberShop}/{action=Index}/{id?}");
+
+
+app.UseStatusCodePages(async context =>
+{
+    var http = context.HttpContext;
+
+    if (http.Response.StatusCode != 403 ||
+        !HttpMethods.IsGet(http.Request.Method))
+    {
+        return;
+    }
+
+    int? idUsuario = http.Session.GetInt32("IdUsuario");
+    string? rol = http.Session.GetString("Rol");
+
+    string destino;
+
+    if (!idUsuario.HasValue)
+    {
+        // Usuario sin iniciar sesion
+        destino = "/Home/Index";
+    }
+    else if (string.Equals(rol, "Cliente",
+        StringComparison.OrdinalIgnoreCase))
+    {
+        // Cliente: sus citas
+        destino = "/Citas/MisCitas";
+    }
+    else if (string.Equals(rol, "Barbero",
+        StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(rol, "Administrador",
+        StringComparison.OrdinalIgnoreCase))
+    {
+        // Barbero y administrador: Dashboard
+        destino = "/Dashboard/Index";
+    }
+    else
+    {
+        destino = "/Home/Index";
+    }
+
+    // Evitar bucles de redireccion
+    if (!http.Request.Path.Equals(
+        destino, StringComparison.OrdinalIgnoreCase))
+    {
+        http.Response.Redirect(destino);
+    }
+
+    await Task.CompletedTask;
+});
+
 
 app.Run();

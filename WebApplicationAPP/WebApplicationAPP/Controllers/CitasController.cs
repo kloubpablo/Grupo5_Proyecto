@@ -1,452 +1,488 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using WebApplicationAPP.Models;
 using WebApplicationAPP.Helpers;
+using WebApplicationAPP.Services;
+
 namespace WebApplicationAPP.Controllers
 {
+    // La pagina unificada sirve a Administrador y Cliente. Cada consulta queda
+    // acotada en el servidor, incluso cuando se llama directamente a una URL.
     public class CitasController : Controller
     {
         private readonly YampiBarbershopContext _context;
-        public CitasController(YampiBarbershopContext context)
+
+        public CitasController(YampiBarbershopContext context) => _context = context;
+
+        private Usuario? UsuarioActual()
         {
-            _context = context;
+            int? id = HttpContext.Session.GetInt32("IdUsuario");
+            if (!id.HasValue) return null;
+            return _context.Usuarios.AsNoTracking()
+                .Include(u => u.IdRolNavigation)
+                .FirstOrDefault(u => u.IdUsuario == id.Value && u.Estado && !u.ContraTemp && u.IdRolNavigation.Estado);
         }
-        // PERMISOS CENTRALIZADO
-        private bool TienePermiso(string permiso)
+
+        private HashSet<string>? _permisosActuales;
+
+        private bool Permiso(Usuario usuario, string clave)
         {
-            var rol = HttpContext.Session.GetString("Rol") ?? "";
-            return PermisosHelper.TienePermiso(_context, rol, permiso);
+            if (EsAdmin(usuario)) return true;
+            // Una sola politica centralizada para Roles y todas las acciones.
+            _permisosActuales ??= PermisosHelper.ObtenerPermisos(_context, usuario);
+            return _permisosActuales.Contains(clave);
         }
-        // LISTA GENERAL DE CITAS
+
+        private static bool EsAdmin(Usuario usuario) =>
+            usuario.IdRolNavigation.Nombre == "Administrador";
+
+        private static bool EsCliente(Usuario usuario) =>
+            usuario.IdRolNavigation.Nombre == "Cliente";
+
+        private static bool EsBarbero(Usuario usuario) =>
+            usuario.IdRolNavigation.Nombre == "Barbero";
+
+        private IActionResult SinAcceso(Usuario? usuario) =>
+            usuario == null ? RedirectToAction("Index", "Seguridad") : StatusCode(403);
+
+        // No usar nombres: id_usuario es la unica identidad del propietario.
+        private int? ClienteActualId(Usuario usuario) => _context.Clientes
+            .Where(c => c.IdUsuario == usuario.IdUsuario)
+            .Select(c => (int?)c.IdCliente)
+            .FirstOrDefault();
+
+        private bool PuedeVerPortal(Usuario u) => EsAdmin(u) ||
+            ((EsCliente(u) || EsBarbero(u)) &&
+             (Permiso(u, "Citas/MisCitas") ||
+              Permiso(u, "Citas/Crear") ||
+              Permiso(u, "Citas/HorariosDisponibles")));
+
+        private bool PuedeCrear(Usuario u) => EsAdmin(u) ||
+            ((EsCliente(u) || EsBarbero(u)) && Permiso(u, "Citas/Crear"));
+
+        private bool PuedeHorarios(Usuario u) => EsAdmin(u) ||
+            ((EsCliente(u) || EsBarbero(u)) &&
+             (Permiso(u, "Citas/HorariosDisponibles") || Permiso(u, "Citas/Crear")));
+
+        private bool PuedeMisCitas(Usuario u) => EsAdmin(u) ||
+            ((EsCliente(u) || EsBarbero(u)) && Permiso(u, "Citas/MisCitas"));
+
+        private bool PuedeEditar(Usuario u) => EsAdmin(u) ||
+            ((EsCliente(u) || EsBarbero(u)) && Permiso(u, "Citas/Editar"));
+
+        private bool PuedeCancelar(Usuario u) => EsAdmin(u) ||
+            ((EsCliente(u) || EsBarbero(u)) && Permiso(u, "Citas/Cancelar"));
+
+        // UNICA PAGINA: administrador todas; cliente solo las suyas.
+        [HttpGet]
         public IActionResult Index(int? editarId, DateOnly? fechaHorarios)
         {
-            if (!TienePermiso("Citas/Index"))
+            var usuario = UsuarioActual();
+            if (usuario == null || !PuedeVerPortal(usuario)) return SinAcceso(usuario);
+
+            bool admin = EsAdmin(usuario);
+            bool barbero = EsBarbero(usuario);
+            int? clienteId = EsCliente(usuario) ? ClienteActualId(usuario) : null;
+            var consulta = _context.Citas.AsNoTracking()
+                .Include(c => c.IdClienteNavigation).AsQueryable();
+
+            if (barbero)
             {
-                return RedirectToAction("Index", "Dashboard");
+                // El barbero nunca puede leer la agenda de otro barbero.
+                consulta = consulta.Where(c => c.IdBarbero == usuario.IdUsuario);
             }
-            var citas = _context.Citas
-                .Include(c => c.IdClienteNavigation)
-                .OrderBy(c => c.Fecha)
-                .ThenBy(c => c.Hora)
-                .ToList();
-            // EDITAR
-            if (editarId.HasValue)
+            else if (!admin)
             {
-                var citaEditar = _context.Citas
-                    .FirstOrDefault(c => c.IdCita == editarId.Value);
-                if (citaEditar != null)
-                {
+                // Un cliente solo consulta sus propias citas vinculadas por ID.
+                consulta = clienteId.HasValue
+                    ? consulta.Where(c => c.IdCliente == clienteId.Value)
+                    : consulta.Where(c => false);
+            }
+
+            var citas = PuedeMisCitas(usuario)
+                ? consulta.OrderBy(c => c.Fecha).ThenBy(c => c.Hora).ToList()
+                : new List<Cita>();
+
+            ViewBag.EsAdministrador = admin;
+            ViewBag.EsBarbero = barbero;
+            ViewBag.EsCliente = EsCliente(usuario);
+            ViewBag.PuedeCrear = PuedeCrear(usuario);
+            ViewBag.PuedeHorarios = PuedeHorarios(usuario);
+            ViewBag.PuedeMisCitas = PuedeMisCitas(usuario);
+            ViewBag.PuedeEditar = PuedeEditar(usuario);
+            ViewBag.PuedeCancelar = PuedeCancelar(usuario);
+            ViewBag.PuedeRecibir = EsAdmin(usuario) ||
+                (EsBarbero(usuario) && Permiso(usuario, "Atencion/RegistrarDesdeCita"));
+            ViewBag.SinVinculacion = EsCliente(usuario) && !clienteId.HasValue;
+
+            // Solo el administrador y los clientes pueden escoger cualquier barbero.
+            // El barbero autorizado para crear reservas solo se puede elegir a si mismo.
+            var barberosConsulta = _context.Usuarios.AsNoTracking()
+                .Where(u => u.IdRolNavigation.Nombre == "Barbero" &&
+                    u.IdRolNavigation.Estado && u.Estado && !u.ContraTemp);
+            if (barbero)
+                barberosConsulta = barberosConsulta.Where(u => u.IdUsuario == usuario.IdUsuario);
+            ViewBag.Barberos = barberosConsulta.OrderBy(u => u.Nombre).ToList();
+
+            if (editarId.HasValue && PuedeEditar(usuario))
+            {
+                var citaEditar = consulta.FirstOrDefault(c => c.IdCita == editarId.Value);
+                if (citaEditar != null && citaEditar.Estado == "Activa")
                     ViewBag.CitaEditar = citaEditar;
-                    ViewBag.Barberos = _context.Usuarios
-                        .Where(u => u.IdRol == 2)
-                        .ToList();
-                }
             }
-            // HORARIOS
-            if (fechaHorarios.HasValue)
+
+            if (fechaHorarios.HasValue && PuedeHorarios(usuario))
             {
                 ViewBag.FechaHorarios = fechaHorarios.Value;
-                ViewBag.Horarios = _context.Citas
-                    .Where(c => c.Fecha == fechaHorarios.Value)
-                    .OrderBy(c => c.Hora)
-                    .ToList();
+                ViewBag.Disponibilidades = ObtenerDisponibilidad(
+                    fechaHorarios.Value, barbero ? usuario.IdUsuario : null);
             }
-            // BARBEROS PARA CREAR
-            ViewBag.Barberos = _context.Usuarios
-                .Where(u => u.IdRol == 2)
-                .ToList();
             return View(citas);
         }
-        // MIS CITAS
-        public IActionResult MisCitas()
-        {
-            if (!TienePermiso("Citas/MisCitas"))
-            {
-                return RedirectToAction("Index", "Dashboard");
-            }
-            var usuario = HttpContext.Session.GetString("NombreUsuario") ?? "";
-            var citas = _context.Citas
-                .Include(c => c.IdClienteNavigation)
-                .Where(c => c.IdClienteNavigation.Nombre == usuario)
-                .OrderBy(c => c.Fecha)
-                .ThenBy(c => c.Hora)
-                .ToList();
-            return View(citas);
-        }
-        public IActionResult test()
-        {
-            return View();
-        }
+
+        // Compatibilidad de enlaces antiguos, sin una segunda vista.
+        [HttpGet]
+        public IActionResult MisCitas() => RedirectToAction(nameof(Index));
+
         [HttpGet]
         public IActionResult Crear()
         {
-            if (!TienePermiso("Citas/Crear"))
-                return RedirectToAction("MisCitas", "Citas");
-
-            ViewBag.Barberos = _context.Usuarios
-                .Where(u => u.IdRol == 2 && u.Estado)
-                .ToList();
-
-            return View();
+            var u = UsuarioActual();
+            return u != null && PuedeCrear(u) ? RedirectToAction(nameof(Index)) : SinAcceso(u);
         }
-        // CREAR CITA
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Crear(
-    DateOnly fecha,
-    TimeOnly hora,
-    string barbero)
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Crear(DateOnly fecha, TimeOnly hora, int idBarbero, int? idCliente)
         {
-            if (!TienePermiso("Citas/Crear"))
+            var u = UsuarioActual();
+            if (u == null || !PuedeCrear(u)) return SinAcceso(u);
+
+            var barbero = AgendaBarberoService.BuscarBarbero(_context, idBarbero);
+            if (barbero == null || !AgendaBarberoService.EsHorarioValido(fecha, hora))
             {
-                return RedirectToAction("Index", "Dashboard");
+                TempData["ErrorCita"] = "Selecciona un barbero y un turno futuro habil (7:00 a 20:30).";
+                return RedirectToAction(nameof(Index));
             }
 
-            // Validar campos obligatorios
-            if (fecha == default ||
-                hora == default ||
-                string.IsNullOrWhiteSpace(barbero))
-            {
-                TempData["ErrorCita"] =
-                    "Debe completar todos los campos.";
-                TempData["SeccionCita"] = "crear";
-                return RedirectToAction("Index");
-            }
-            barbero = barbero.Trim();
-            // Validar hora de Costa Rica
-            if (HorarioInvalido(fecha, hora))
-            {
-                TempData["ErrorCita"] =
-                    "Solo se permiten citas de lunes a sabado, de 7:00 AM a 8:30 PM, " +
-                    "en intervalos de 30 minutos y horas futuras de Costa Rica.";
-                TempData["SeccionCita"] = "crear";
-                return RedirectToAction("Index");
-            }
-            // Verificar que el barbero este activo
-            bool barberoActivo = _context.Usuarios.Any(u =>
-                u.IdRol == 2 &&
-                u.Estado &&
-                u.Nombre == barbero
-            );
-            if (!barberoActivo)
-            {
-                TempData["ErrorCita"] =
-                    "El barbero seleccionado no esta disponible.";
-                TempData["SeccionCita"] = "crear";
-                return RedirectToAction("Index");
-            }
-            // Mantener la comprobacion y el guardado en la misma transaccion.
-            using var transaccion = _context.Database.BeginTransaction(
-                System.Data.IsolationLevel.Serializable);
-            // Evitar horarios duplicados o bloqueados
-            if (HorarioOcupado(barbero, fecha, hora))
-            {
-                TempData["ErrorCita"] =
-                    "Este barbero ya tiene una cita o bloqueo " +
-                    "en la fecha y hora seleccionadas.";
-                TempData["SeccionCita"] = "crear";
-                return RedirectToAction("Index");
-            }
-            // Obtener cliente desde la sesion
-            var nombreCliente =
-                HttpContext.Session.GetString("NombreUsuario") ?? "";
-            if (string.IsNullOrWhiteSpace(nombreCliente))
-            {
-                return RedirectToAction("Index", "Seguridad");
-            }
-            var clienteExistente = _context.Clientes
-                .FirstOrDefault(c => c.Nombre == nombreCliente);
-            // Crear cliente si no existe
-            if (clienteExistente == null)
-            {
-                clienteExistente = new Cliente
-                {
-                    Nombre = nombreCliente,
-                    Telefono = "00000000",
-                    FechaRegistro = AhoraCostaRica()
-                };
-                _context.Clientes.Add(clienteExistente);
-                _context.SaveChanges();
-            }
-            // Crear cita
-            var nuevaCita = new Cita
-            {
-                IdCliente = clienteExistente.IdCliente,
-                Fecha = fecha,
-                Hora = hora,
-                Barbero = barbero,
-                Estado = "Activa"
-            };
-            _context.Citas.Add(nuevaCita);
-            _context.SaveChanges();
-            transaccion.Commit();
+            // Administrador y barbero autorizado seleccionan cliente existente;
+            // el cliente autenticado solo puede reservar a su propio nombre.
+            bool admin = EsAdmin(u);
+            bool barberoAutorizado = EsBarbero(u);
+            if (barberoAutorizado && idBarbero != u.IdUsuario)
+                return StatusCode(403);
 
-            TempData["MensajeCita"] =
-                "Cita creada correctamente.";
-
-            if (TienePermiso("Citas/Index"))
+            if ((admin || barberoAutorizado) &&
+                (!idCliente.HasValue || !_context.Clientes.Any(c => c.IdCliente == idCliente.Value)))
             {
-                return RedirectToAction("Index");
+                TempData["ErrorCita"] = "Selecciona el cliente para la reserva administrativa.";
+                return RedirectToAction(nameof(Index));
             }
-
-            return RedirectToAction("MisCitas");
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Editar(Cita cita)
-        {
-            if (!TienePermiso("Citas/Crear"))
-            {
-                return RedirectToAction("Index", "Dashboard");
-            }
-            // Buscar cita original
-            var citaDB = _context.Citas
-                .FirstOrDefault(c => c.IdCita == cita.IdCita);
-            if (citaDB == null)
-            {
-                TempData["ErrorCita"] =
-                    "No se encontro la cita seleccionada.";
-                return RedirectToAction("Index");
-            }
-            // Validar campos
-            if (cita.Fecha == default ||
-                cita.Hora == default ||
-                string.IsNullOrWhiteSpace(cita.Barbero))
-            {
-                TempData["ErrorCita"] =
-                    "Debe completar todos los campos.";
-                TempData["SeccionCita"] = "editar";
-                TempData["EditarId"] = cita.IdCita;
-                return RedirectToAction("Index");
-            }
-            string barbero = cita.Barbero.Trim();
-            // Validar hora de Costa Rica
-            if (HorarioInvalido(cita.Fecha, cita.Hora))
-            {
-                TempData["ErrorCita"] =
-                    "Solo se permiten citas de lunes a sabado, de 7:00 AM a 8:30 PM, " +
-                    "en intervalos de 30 minutos y horas futuras de Costa Rica.";
-                TempData["SeccionCita"] = "editar";
-                TempData["EditarId"] = cita.IdCita;
-                return RedirectToAction("Index");
-            }
-            // Verificar que el barbero este activo
-            bool barberoActivo = _context.Usuarios.Any(u =>
-                u.IdRol == 2 &&
-                u.Estado &&
-                u.Nombre == barbero
-            );
-            if (!barberoActivo)
-            {
-                TempData["ErrorCita"] =
-                    "El barbero seleccionado no esta disponible.";
-                TempData["SeccionCita"] = "editar";
-                TempData["EditarId"] = cita.IdCita;
-                return RedirectToAction("Index");
-            }
-            // Mantener la comprobacion y el guardado en la misma transaccion.
-            using var transaccion = _context.Database.BeginTransaction(
-                System.Data.IsolationLevel.Serializable);
-            // Validar conflicto, excluyendo esta misma cita
-            if (HorarioOcupado(
-                barbero,
-                cita.Fecha,
-                cita.Hora,
-                cita.IdCita))
-            {
-                TempData["ErrorCita"] =
-                    "Este barbero ya tiene una cita o bloqueo " +
-                    "en ese horario.";
-                TempData["SeccionCita"] = "editar";
-                TempData["EditarId"] = cita.IdCita;
-                return RedirectToAction("Index");
-            }
-            // Actualizar solamente los campos editables
-            citaDB.Fecha = cita.Fecha;
-            citaDB.Hora = cita.Hora;
-            citaDB.Barbero = barbero;
-            _context.SaveChanges();
-            transaccion.Commit();
-            TempData["MensajeCita"] =
-                "Cita actualizada correctamente.";
-            TempData["SeccionCita"] = "agenda";
-            return RedirectToAction("Index");
-        }
-        // CANCELAR CITA
-        public IActionResult Cancelar(int id)
-        {
-            if (!TienePermiso("Citas/Index") && !TienePermiso("Citas/MisCitas"))
-            {
-                return RedirectToAction("Index", "Dashboard");
-            }
-            var cita = _context.Citas
-                .Include(c => c.IdClienteNavigation)
-                .FirstOrDefault(c => c.IdCita == id);
-            if (cita != null)
-            {
-                var usuario = HttpContext.Session.GetString("NombreUsuario") ?? "";
-                if (TienePermiso("Citas/MisCitas") &&
-                    !TienePermiso("Citas/Index"))
-                {
-                    if (cita.IdClienteNavigation.Nombre != usuario)
-                    {
-                        return RedirectToAction("MisCitas");
-                    }
-                }
-                cita.Estado = "Cancelada";
-                _context.SaveChanges();
-            }
-            if (HttpContext.Session.GetString("Rol") == "Cliente")
-                return RedirectToAction("MisCitas");
-
-            return RedirectToAction("Index");
-        }
-        // BLOQUEAR HORARIO
-        public IActionResult Bloquear(int id)
-        {
-            if (!TienePermiso("Citas/Crear"))
-            {
-                return RedirectToAction("Index", "Dashboard");
-            }
-            var cita = _context.Citas
-                .FirstOrDefault(c => c.IdCita == id);
-            if (cita != null)
-            {
-                cita.Estado = "Bloqueada";
-                _context.SaveChanges();
-            }
-            return RedirectToAction("Index");
-        }
-        // HORARIOS DISPONIBLES
-        [HttpPost]
-        public IActionResult HorariosDisponibles(DateOnly fecha)
-        {
-            if (!TienePermiso("Citas/Crear"))
-            {
-                return RedirectToAction("Index", "Dashboard");
-            }
-            return RedirectToAction(
-                "Index",
-                new { fechaHorarios = fecha }
-            );
-        }
-        private static DateTime AhoraCostaRica()
-        {
-            // Obtener la hora real de Costa Rica
-            TimeZoneInfo zona;
             try
             {
-                zona = TimeZoneInfo.FindSystemTimeZoneById(
-                    "America/Costa_Rica"
-                );
-            }
-            catch (TimeZoneNotFoundException)
-            {
-                zona = TimeZoneInfo.FindSystemTimeZoneById(
-                    "Central America Standard Time"
-                );
-            }
-            return TimeZoneInfo.ConvertTimeFromUtc(
-                DateTime.UtcNow,
-                zona
-            );
-        }
-        // HORARIO DE ATENCION Y DURACION FIJA DE 30 MINUTOS
-        private static bool HorarioInvalido(DateOnly fecha, TimeOnly hora)
-        {
-            var ahora = AhoraCostaRica();
-            var hoy = DateOnly.FromDateTime(ahora);
-            // Los domingos la barberia permanece cerrada.
-            if (fecha == default || fecha.DayOfWeek == DayOfWeek.Sunday)
-                return true;
-            // Solo se permiten inicios cada media hora.
-            if (hora.Minute != 0 && hora.Minute != 30)
-                return true;
-            // Desde las 7:00 hasta las 20:30 inclusive.
-            // La ultima cita termina a las 21:00.
-            if (hora < new TimeOnly(7, 0) || hora > new TimeOnly(20, 30))
-                return true;
-            if (fecha < hoy)
-                return true;
-            // Bloquear la hora actual completa, como solicita el negocio.
-            // Por ejemplo: 14:09 bloquea 14:00 y 14:30.
-            if (fecha == hoy && hora.Hour <= ahora.Hour)
-                return true;
-            return false;
-        }
-        // DETECTAR INTERVALOS QUE SE SUPERPONEN
-        private bool HorarioOcupado(
-            string barbero,
-            DateOnly fecha,
-            TimeOnly hora,
-            int? excluirId = null)
-        {
-            string nombre = barbero.Trim();
-            // Consultar solo las citas relevantes del mismo dia y barbero.
-            var horasRegistradas = _context.Citas
-                .Where(c => c.Fecha == fecha &&
-                    c.Barbero != null &&
-                    c.Barbero.Trim() == nombre &&
-                    (c.Estado == "Activa" || c.Estado == "Bloqueada") &&
-                    (!excluirId.HasValue || c.IdCita != excluirId.Value))
-                .Select(c => c.Hora)
-                .ToList();
-            int nuevoInicio = hora.Hour * 60 + hora.Minute;
-            int nuevoFin = nuevoInicio + 30;
-            // Se considera que una cita dura 30 minutos.
-            // Tambien protege contra citas antiguas iniciadas a :15 o :45.
-            return horasRegistradas.Any(h =>
-            {
-                int inicio = h.Hour * 60 + h.Minute;
-                int fin = inicio + 30;
-                return inicio < nuevoFin && nuevoInicio < fin;
-            });
-        }
-        // ==========================================
-        // CONSULTAR HORARIOS OCUPADOS
-        // ==========================================
-        [HttpGet]
-        public IActionResult HorariosOcupados(
-            string barbero,
-            DateOnly fecha,
-            int? excluirId = null)
-        {
-            if (!TienePermiso("Citas/Crear"))
-            {
-                return Forbid();
-            }
-            if (string.IsNullOrWhiteSpace(barbero) ||
-                fecha == default)
-            {
-                return BadRequest(new
+                using var tx = _context.Database.BeginTransaction(IsolationLevel.Serializable);
+                if (AgendaBarberoService.Ocupado(_context, barbero.IdUsuario, barbero.Nombre, fecha, hora))
                 {
-                    error = "Debe seleccionar barbero y fecha."
+                    TempData["ErrorCita"] = "Ese turno ya esta ocupado.";
+                    return RedirectToAction(nameof(Index));
+                }
+                Cliente? cliente = null;
+                if (EsCliente(u))
+                {
+                    cliente = _context.Clientes.FirstOrDefault(c => c.IdUsuario == u.IdUsuario);
+                    if (cliente == null)
+                    {
+                        cliente = new Cliente
+                        {
+                            IdUsuario = u.IdUsuario,
+                            Nombre = u.Nombre,
+                            Email = u.CorreoElectronico,
+                            Telefono = "00000000",
+                            FechaRegistro = AgendaBarberoService.AhoraCostaRica()
+                        };
+                        _context.Clientes.Add(cliente);
+                        _context.SaveChanges();
+                    }
+                }
+                _context.Citas.Add(new Cita
+                {
+                    IdCliente = (admin || barberoAutorizado) ? idCliente!.Value : cliente!.IdCliente,
+                    IdBarbero = barbero.IdUsuario,
+                    Fecha = fecha,
+                    Hora = hora,
+                    Barbero = barbero.Nombre,
+                    Estado = "Activa"
                 });
+                _context.SaveChanges();
+                tx.Commit();
+                TempData["MensajeCita"] = "Cita creada; ahora aparece en la agenda del barbero.";
             }
-            string nombre = barbero.Trim();
-            var horas = _context.Citas
-                .AsNoTracking()
-                .Where(c =>
-                    c.Fecha == fecha &&
-                    c.Barbero != null &&
-                    c.Barbero.Trim() == nombre &&
-                    (
-                        c.Estado == "Activa" ||
-                        c.Estado == "Bloqueada"
-                    ) &&
-                    (
-                        !excluirId.HasValue ||
-                        c.IdCita != excluirId.Value
-                    )
-                )
-                .Select(c => c.Hora)
-                .ToList();
-            return Json(new
+            catch (DbUpdateException)
             {
-                horasOcupadas = horas
-                    .Select(h => h.ToString("HH:mm"))
-                    .ToList()
-            });
+                TempData["ErrorCita"] = "El turno se reservo simultaneamente o los datos ya cambiaron.";
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Editar(Cita cita)
+        {
+            var u = UsuarioActual();
+            if (u == null || !PuedeEditar(u)) return SinAcceso(u);
+            bool admin = EsAdmin(u);
+            bool barberoActual = EsBarbero(u);
+            int? clienteId = (!admin && !barberoActual) ? ClienteActualId(u) : null;
+            using var tx = _context.Database.BeginTransaction(IsolationLevel.Serializable);
+            var original = _context.Citas.FirstOrDefault(c => c.IdCita == cita.IdCita);
+            if (original == null) return NotFound();
+            if (!admin && (barberoActual
+                ? original.IdBarbero != u.IdUsuario
+                : !clienteId.HasValue || original.IdCliente != clienteId.Value)) return StatusCode(403);
+            // Un barbero no puede transferir su cita a otro barbero.
+            if (barberoActual && cita.IdBarbero != u.IdUsuario) return StatusCode(403);
+            if (original.Estado != "Activa" || _context.Atencions.Any(a => a.IdCita == original.IdCita))
+                return BadRequest("Una cita recibida o no activa no puede editarse.");
+
+            var barbero = AgendaBarberoService.BuscarBarbero(_context, cita.IdBarbero ?? 0);
+            if (barbero == null || !AgendaBarberoService.EsHorarioValido(cita.Fecha, cita.Hora))
+            {
+                TempData["ErrorCita"] = "La fecha, hora o barbero no es valido.";
+                return RedirectToAction(nameof(Index), new { editarId = cita.IdCita });
+            }
+            try
+            {
+                if (AgendaBarberoService.Ocupado(_context, barbero.IdUsuario, barbero.Nombre,
+                    cita.Fecha, cita.Hora, original.IdCita))
+                {
+                    TempData["ErrorCita"] = "El horario seleccionado esta ocupado.";
+                    return RedirectToAction(nameof(Index), new { editarId = cita.IdCita });
+                }
+                // Propietario, estado y cliente no se reciben del formulario.
+                original.Fecha = cita.Fecha;
+                original.Hora = cita.Hora;
+                original.Barbero = barbero.Nombre;
+                original.IdBarbero = barbero.IdUsuario;
+                _context.SaveChanges();
+                tx.Commit();
+                TempData["MensajeCita"] = "Cita actualizada correctamente.";
+            }
+            catch (DbUpdateException)
+            {
+                TempData["ErrorCita"] = "El turno ya no esta disponible.";
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Cancelar(int id)
+        {
+            var u = UsuarioActual();
+            if (u == null || !PuedeCancelar(u)) return SinAcceso(u);
+            using var tx = _context.Database.BeginTransaction(IsolationLevel.Serializable);
+            var cita = _context.Citas.FirstOrDefault(c => c.IdCita == id);
+            if (cita == null) return NotFound();
+            if (!EsAdmin(u) && (EsBarbero(u)
+                ? cita.IdBarbero != u.IdUsuario
+                : cita.IdCliente != ClienteActualId(u))) return StatusCode(403);
+            if (cita.Estado != "Activa") return BadRequest("Solo se pueden cancelar citas activas.");
+            if (_context.Atencions.Any(a => a.IdCita == id)) return BadRequest("No se puede cancelar una cita cuyo cliente ya fue recibido.");
+            cita.Estado = "Cancelada";
+            _context.SaveChanges();
+            tx.Commit();
+            TempData["MensajeCita"] = "Cita cancelada correctamente.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Bloquear(int id)
+        {
+            var u = UsuarioActual();
+            if (u == null || !EsAdmin(u)) return SinAcceso(u);
+            using var tx = _context.Database.BeginTransaction(IsolationLevel.Serializable);
+            var cita = _context.Citas.FirstOrDefault(c => c.IdCita == id);
+            if (cita == null) return NotFound();
+            if (cita.Estado != "Activa") return BadRequest("Solo pueden bloquearse citas activas.");
+            if (_context.Atencions.Any(a => a.IdCita == id)) return BadRequest("La cita ya ingreso a Atencion.");
+            cita.Estado = "Bloqueada";
+            _context.SaveChanges();
+            tx.Commit();
+            TempData["MensajeCita"] = "Cita bloqueada correctamente.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult HorariosDisponibles(DateOnly fecha)
+        {
+            var u = UsuarioActual();
+            if (u == null || !PuedeHorarios(u)) return SinAcceso(u);
+            if (fecha == default) return BadRequest("Debes seleccionar una fecha.");
+            return RedirectToAction(nameof(Index), new { fechaHorarios = fecha });
+        }
+
+        // Horarios por id de barbero; nunca por nombre como identidad.
+        [HttpGet]
+        public IActionResult HorariosOcupados(int idBarbero, DateOnly fecha, int? excluirId = null)
+        {
+            var u = UsuarioActual();
+            if (u == null || (!PuedeCrear(u) && !PuedeEditar(u))) return SinAcceso(u);
+            if (EsBarbero(u) && idBarbero != u.IdUsuario)
+                return StatusCode(403);
+            var barber = AgendaBarberoService.BuscarBarbero(_context, idBarbero);
+            if (barber == null || fecha == default)
+                return BadRequest(new { error = "Selecciona barbero y fecha." });
+
+            if (excluirId.HasValue)
+            {
+                bool permitido = PuedeEditar(u) && _context.Citas.Any(c =>
+                    c.IdCita == excluirId && c.Estado == "Activa" &&
+                    (EsAdmin(u) || (EsBarbero(u)
+                        ? c.IdBarbero == u.IdUsuario
+                        : c.IdCliente == ClienteActualId(u))));
+                if (!permitido) excluirId = null;
+            }
+            var horas = _context.Citas.AsNoTracking()
+                .Where(c => c.Fecha == fecha &&
+                    (c.Estado == "Activa" || c.Estado == "Bloqueada") &&
+                    (c.IdBarbero == barber.IdUsuario ||
+                        (c.IdBarbero == null && c.Barbero == barber.Nombre)) &&
+                    (!excluirId.HasValue || c.IdCita != excluirId.Value))
+                .Select(c => c.Hora).ToList();
+            return Json(new { horasOcupadas = horas.Select(h => h.ToString("HH:mm")).ToList() });
+        }
+
+        private List<DisponibilidadDiaVM> ObtenerDisponibilidad(DateOnly fecha, int? soloBarberoId = null)
+        {
+            var barberosQuery = _context.Usuarios.AsNoTracking()
+                .Where(b => b.Estado && !b.ContraTemp && b.IdRolNavigation.Estado &&
+                    b.IdRolNavigation.Nombre == "Barbero");
+            if (soloBarberoId.HasValue)
+                barberosQuery = barberosQuery.Where(b => b.IdUsuario == soloBarberoId.Value);
+            var barberos = barberosQuery
+                .Select(b => new { b.IdUsuario, b.Nombre }).OrderBy(b => b.Nombre).ToList();
+            var ocupadas = _context.Citas.AsNoTracking()
+                .Where(c => c.Fecha == fecha && (c.Estado == "Activa" || c.Estado == "Bloqueada"))
+                .Select(c => new { c.IdBarbero, c.Barbero, c.Hora }).ToList();
+
+            return barberos.Select(b => new DisponibilidadDiaVM
+            {
+                IdBarbero = b.IdUsuario,
+                Barbero = b.Nombre,
+                HorasDisponibles = Enumerable.Range(0, 28)
+                    .Select(i => new TimeOnly(7, 0).AddMinutes(i * 30))
+                    .Where(h => AgendaBarberoService.EsHorarioValido(fecha, h) &&
+                        !ocupadas.Any(c => c.Hora == h &&
+                            (c.IdBarbero == b.IdUsuario ||
+                             (c.IdBarbero == null && c.Barbero == b.Nombre))))
+                    .Select(h => h.ToString("HH:mm")).ToList()
+            }).ToList();
+        }
+  
+        // Busqueda limitada: no se envian todos los clientes al navegador.
+        // Solo administrador o barbero con permiso Citas/Crear.
+        [HttpGet]
+        public IActionResult BuscarClientes(string? q)
+        {
+            var usuario = UsuarioActual();
+            if (usuario == null || !PuedeCrear(usuario) || EsCliente(usuario))
+                return SinAcceso(usuario);
+
+            q = (q ?? string.Empty).Trim();
+            if (q.Length < 2) return Json(Array.Empty<object>());
+            if (q.Length > 100) return BadRequest(new { mensaje = "Busqueda demasiado larga." });
+
+            var consulta = _context.Clientes.AsNoTracking().AsQueryable();
+            if (int.TryParse(q, out int numero))
+            {
+                consulta = consulta.Where(c =>
+                    c.IdCliente == numero || c.Nombre.Contains(q) || c.Telefono.Contains(q));
+            }
+            else
+            {
+                consulta = consulta.Where(c => c.Nombre.Contains(q) || c.Telefono.Contains(q));
+            }
+
+            var clientes = consulta
+                .OrderBy(c => c.Nombre)
+                .ThenBy(c => c.IdCliente)
+                .Take(10)
+                .Select(c => new
+                {
+                    id = c.IdCliente,
+                    nombre = c.Nombre,
+                    telefono = c.Telefono
+                }).ToList();
+
+            return Json(clientes);
+        }
+
+        // DTO exclusivo para el registro rapido; no admite IdUsuario ni otros campos.
+        public sealed class ClienteRapidoDto
+        {
+            public string? Nombre { get; set; }
+            public string? Telefono { get; set; }
+            public string? Email { get; set; }
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult RegistrarClienteRapido([FromBody] ClienteRapidoDto? datos)
+        {
+            var usuario = UsuarioActual();
+            if (usuario == null || !PuedeCrear(usuario) || EsCliente(usuario))
+                return SinAcceso(usuario);
+
+            if (datos == null)
+                return BadRequest(new { mensaje = "No se recibieron datos." });
+
+            string nombre = (datos.Nombre ?? string.Empty).Trim();
+            string telefono = (datos.Telefono ?? string.Empty).Trim();
+            string correo = (datos.Email ?? string.Empty).Trim();
+
+            if (nombre.Length < 3 || nombre.Length > 100)
+                return BadRequest(new { mensaje = "El nombre debe tener entre 3 y 100 caracteres." });
+
+            if (telefono.Length > 20 ||
+                !System.Text.RegularExpressions.Regex.IsMatch(telefono, @"^[0-9+()\s-]+$") ||
+                System.Text.RegularExpressions.Regex.Replace(telefono, @"\D", "").Length < 8)
+                return BadRequest(new { mensaje = "Ingresa un telefono valido." });
+
+            if (correo.Length > 100 ||
+                (correo.Length > 0 &&
+                 !new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(correo)))
+                return BadRequest(new { mensaje = "Ingresa un correo valido." });
+
+            // Normalizar al menos formatos frecuentes: 8888-8888 / 88888888.
+            string numeroComparacion = telefono.Replace(" ", "").Replace("-", "")
+                .Replace("(", "").Replace(")", "");
+
+            bool telefonoExiste = _context.Clientes.Any(c =>
+                c.Telefono.Replace(" ", "").Replace("-", "")
+                    .Replace("(", "").Replace(")", "") == numeroComparacion);
+            bool correoExiste = correo.Length > 0 && _context.Clientes.Any(c => c.Email == correo);
+
+            if (telefonoExiste || correoExiste)
+                return Conflict(new { mensaje = "Ya existe un cliente con ese telefono o correo. Buscalo antes de registrar otro." });
+
+            var nuevo = new Cliente
+            {
+                Nombre = nombre,
+                Telefono = telefono,
+                Email = correo.Length == 0 ? null : correo,
+                FechaRegistro = AgendaBarberoService.AhoraCostaRica()
+            };
+
+            try
+            {
+                _context.Clientes.Add(nuevo);
+                _context.SaveChanges();
+                return Json(new { id = nuevo.IdCliente, nombre = nuevo.Nombre, telefono = nuevo.Telefono });
+            }
+            catch (DbUpdateException)
+            {
+                return Conflict(new { mensaje = "No se pudo registrar el cliente. Verifica que no exista ya." });
+            }
         }
     }
 }

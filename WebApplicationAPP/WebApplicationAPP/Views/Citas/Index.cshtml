@@ -3,6 +3,15 @@
 @{
 
     ViewData["Title"] = "Citas";
+    bool esAdministrador = ViewBag.EsAdministrador is bool && (bool)ViewBag.EsAdministrador;
+    bool esCliente = ViewBag.EsCliente is bool && (bool)ViewBag.EsCliente;
+    bool esBarbero = ViewBag.EsBarbero is bool && (bool)ViewBag.EsBarbero;
+    bool puedeCrear = ViewBag.PuedeCrear is bool && (bool)ViewBag.PuedeCrear;
+    bool puedeHorarios = ViewBag.PuedeHorarios is bool && (bool)ViewBag.PuedeHorarios;
+    bool puedeMisCitas = ViewBag.PuedeMisCitas is bool && (bool)ViewBag.PuedeMisCitas;
+    bool puedeEditar = ViewBag.PuedeEditar is bool && (bool)ViewBag.PuedeEditar;
+    bool puedeCancelar = ViewBag.PuedeCancelar is bool && (bool)ViewBag.PuedeCancelar;
+    bool puedeRecibir = ViewBag.PuedeRecibir is bool && (bool)ViewBag.PuedeRecibir;
 
     var horarios = ViewBag.Horarios as List<WebApplicationAPP.Models.Cita>;
 
@@ -26,7 +35,7 @@
 
     var citasHistorial = Model
 
-        .Where(c => c.Estado == "Cancelada" || c.Estado == "Bloqueada")
+        .Where(c => c.Estado == "Cancelada" || c.Estado == "Bloqueada" || c.Estado == "Finalizada")
 
         .OrderByDescending(c => c.Fecha)
 
@@ -37,6 +46,7 @@
 }
 
 <link rel="stylesheet" href="~/css/citas.css" />
+<link rel="stylesheet" href="~/css/clientes-buscador.css" asp-append-version="true" />
 
 <div class="citas-page">
 
@@ -66,7 +76,9 @@
 
             <p class="page-description">
 
-                Administra las citas, horarios y agenda de Yampi Barbershop.
+                @(esCliente ? "Agenda tus citas y consulta tus horarios disponibles e historial." :
+                    esBarbero ? "Crea reservas para tus clientes y consulta tus horarios disponibles." :
+                    "Administra las citas, horarios y agenda de Yampi BarberShop.")
 
             </p>
 
@@ -134,6 +146,17 @@
 
     }
 
+    @if (esCliente && ViewBag.SinVinculacion is bool && (bool)ViewBag.SinVinculacion)
+    {
+        <div class="alert-custom alert-error-custom">
+            <div class="alert-icon"><i class="bi bi-info-circle"></i></div>
+            <div>
+                <strong>Tu cuenta aun no tiene historial vinculado</strong>
+                <span>Si tenias citas anteriores, solicita a administracion verificar la vinculacion de tu cuenta. Tus futuras reservas apareceran aqui.</span>
+            </div>
+        </div>
+    }
+
     <!-- =========================
 
          RESUMEN
@@ -196,6 +219,8 @@
 
         </div>
 
+        @if (esAdministrador)
+        {
         <div class="stat-card">
 
             <div class="stat-icon">
@@ -217,6 +242,7 @@
             </div>
 
         </div>
+        }
 
     </section>
 
@@ -226,10 +252,14 @@
 
     ========================== -->
 
+    @if (puedeCrear || puedeHorarios)
+    {
     <section class="top-sections-grid">
 
         <!-- CREAR CITA -->
 
+        @if (puedeCrear)
+        {
         <div class="content-card create-card">
 
             <div class="card-header">
@@ -257,6 +287,72 @@
             </div>
 
             <form asp-action="Crear" asp-controller="Citas" method="post" id="formCrearCita">
+                @if (esAdministrador || esBarbero)
+                {
+                    <div class="form-section selector-cliente" id="seccionBuscarCliente"
+                         data-buscar-url="@Url.Action("BuscarClientes", "Citas")"
+                         data-registrar-url="@Url.Action("RegistrarClienteRapido", "Citas")">
+                        <div class="section-title">
+                            <span class="step-number"><i class="bi bi-person"></i></span>
+                            <div>
+                                <strong>Cliente de la reserva</strong>
+                                <small>Busca por nombre, telefono o identificador.</small>
+                            </div>
+                        </div>
+
+                        <div class="cliente-buscador">
+                            <label for="buscarCliente">Buscar cliente</label>
+                            <div id="clienteZonaBusqueda" class="cliente-input-wrapper">
+                                <i class="bi bi-search" aria-hidden="true"></i>
+                                <input type="search" id="buscarCliente" class="cliente-input"
+                                       placeholder="Nombre, telefono o ID..."
+                                       autocomplete="off" aria-controls="resultadosClientes"
+                                       aria-expanded="false" aria-describedby="estadoBusquedaClientes" />
+                            </div>
+                            <input type="hidden" id="clienteSeleccionadoId" name="idCliente" value="" />
+                            <div id="estadoBusquedaClientes" class="cliente-estado"
+                                 role="status" aria-live="polite">Escribe al menos 2 caracteres.</div>
+                            <div id="resultadosClientes" class="cliente-resultados"
+                                 role="group" aria-label="Resultados de clientes" hidden></div>
+
+                            <div id="clienteSeleccionado" class="cliente-seleccionado" hidden>
+                                <span class="cliente-avatar" aria-hidden="true"><i class="bi bi-person-check"></i></span>
+                                <span class="cliente-seleccionado-info">
+                                    <strong id="clienteNombreSeleccionado"></strong>
+                                    <small id="clienteTelefonoSeleccionado"></small>
+                                </span>
+                                <button type="button" id="cambiarCliente" class="cliente-cambiar">Cambiar</button>
+                            </div>
+
+                            <button type="button" id="mostrarRegistroCliente" class="cliente-btn-nuevo">
+                                <i class="bi bi-person-plus" aria-hidden="true"></i> Registrar cliente nuevo
+                            </button>
+
+                            <div id="registroRapidoCliente" class="cliente-registro" hidden>
+                                <h3><i class="bi bi-person-plus" aria-hidden="true"></i> Nuevo cliente</h3>
+                                <label for="nuevoClienteNombre">Nombre completo</label>
+                                <input type="text" id="nuevoClienteNombre" maxlength="100" autocomplete="name"
+                                       placeholder="Nombre del cliente" />
+                                <label for="nuevoClienteTelefono">Telefono</label>
+                                <input type="tel" id="nuevoClienteTelefono" maxlength="20" autocomplete="tel"
+                                       placeholder="8888-8888" />
+                                <label for="nuevoClienteEmail">Correo electronico (opcional)</label>
+                                <input type="email" id="nuevoClienteEmail" maxlength="100" autocomplete="email"
+                                       placeholder="cliente@correo.com" />
+                                <div id="errorNuevoCliente" class="cliente-error" role="alert" hidden></div>
+                                <div class="cliente-registro-acciones">
+                                    <button type="button" id="guardarNuevoCliente" class="cliente-btn-guardar">
+                                        <i class="bi bi-check-lg" aria-hidden="true"></i> Guardar cliente
+                                    </button>
+                                    <button type="button" id="cancelarNuevoCliente" class="cliente-btn-cancelar">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
 
                 <div class="form-section">
 
@@ -286,7 +382,7 @@
 
                                 <label class="barber-option">
 
-                                    <input type="radio" name="barbero" value="@barbero.Nombre" required />
+                                    <input type="radio" name="idBarbero" value="@barbero.IdUsuario" required />
 
                                     <div class="barber-option-content">
 
@@ -616,7 +712,12 @@
 
         </div>
 
+        }
+
         <!-- HORARIOS -->
+
+        @if (puedeHorarios)
+        {
 
         <div class="content-card schedule-card">
 
@@ -636,7 +737,7 @@
 
                     <p>
 
-                        Consulta las citas ocupadas para una fecha.
+                        Consulta los espacios libres por barbero y fecha.
 
                     </p>
 
@@ -782,62 +883,41 @@
 
                         </div>
 
-                        @if (horarios != null && horarios.Any())
-
-                        {
-
-                            <div class="occupied-list">
-
-                                @foreach (var horario in horarios)
-
-                                {
-
-                                    <div class="occupied-item">
-
-                                        <div class="occupied-time">
-
-                                            <i class="bi bi-clock"></i>
-
-                                            @horario.Hora.ToString("HH:mm")
-
-                                        </div>
-
-                                        <div class="occupied-info">
-
-                                            <strong>@horario.Barbero</strong>
-
-                                            <span>Horario ocupado</span>
-
-                                        </div>
-
-                                        <span class="occupied-status">Ocupado</span>
-
-                                    </div>
-
-                                }
-
-                            </div>
-
+                        @{
+                            var disponibilidades = ViewBag.Disponibilidades as List<WebApplicationAPP.Models.DisponibilidadDiaVM>
+                                ?? new List<WebApplicationAPP.Models.DisponibilidadDiaVM>();
                         }
-
-                        else
-
+                        @if (disponibilidades.Any())
                         {
-
-                            <div class="schedule-empty">
-
-                                <div class="schedule-empty-icon">
-
-                                    <i class="bi bi-check2-circle"></i>
-
-                                </div>
-
-                                <strong>No hay citas registradas</strong>
-
-                                <span>No existen horarios ocupados para esta fecha.</span>
-
+                            <div class="disponibilidad-grupos">
+                                @foreach (var disp in disponibilidades)
+                                {
+                                    <div class="disponibilidad-grupo">
+                                        <strong><i class="bi bi-person-badge"></i> @disp.Barbero</strong>
+                                        @if (disp.HorasDisponibles.Any())
+                                        {
+                                            <div class="disponibilidad-horas">
+                                                @foreach (var libre in disp.HorasDisponibles)
+                                                {
+                                                    <span class="hora-libre"><i class="bi bi-check-circle"></i> @libre</span>
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <p class="disponibilidad-vacia">No tiene espacios disponibles en esa fecha.</p>
+                                        }
+                                    </div>
+                                }
                             </div>
-
+                        }
+                        else
+                        {
+                            <div class="schedule-empty">
+                                <div class="schedule-empty-icon"><i class="bi bi-calendar-x"></i></div>
+                                <strong>No hay horarios disponibles</strong>
+                                <span>Selecciona otro dia de lunes a sabado.</span>
+                            </div>
                         }
 
                     </div>
@@ -848,7 +928,9 @@
 
         </div>
 
+        }
     </section>
+    }
 
     <!-- ==========================================
 
@@ -856,6 +938,8 @@
 
     ========================================== -->
 
+    @if ((esAdministrador || esBarbero) && puedeMisCitas)
+    {
     <section class="content-card agenda-card">
 
         <!-- ENCABEZADO -->
@@ -1066,16 +1150,22 @@
 
                                         <!-- ATENDER -->
 
-                                        <a href="/Atencion/RegistrarDesdeCita/@c.IdCita" class="table-action action-attend"
-
-                                           title="Atender" aria-label="Atender cita">
-
-                                            <i class="bi bi-scissors"></i>
-
-                                        </a>
+                                        @if (puedeRecibir)
+                                        {
+                                        <form method="post" asp-controller="Atencion" asp-action="RegistrarDesdeCita"
+                                              class="citas-inline-form" asp-antiforgery="true">
+                                            <input type="hidden" name="id" value="@c.IdCita" />
+                                            <button type="submit" class="table-action action-attend"
+                                                    title="Registrar llegada" aria-label="Registrar llegada">
+                                                <i class="bi bi-scissors"></i>
+                                            </button>
+                                        </form>
+                                        }
 
                                         <!-- EDITAR -->
 
+                                        @if (puedeEditar)
+                                        {
                                         <button type="button" class="table-action action-edit btn-abrir-editar" title="Editar"
 
                                                 aria-label="Editar cita" data-id="@c.IdCita" data-cliente-id="@c.IdCliente"
@@ -1084,31 +1174,32 @@
 
                                                 data-fecha="@c.Fecha.ToString("yyyy-MM-dd")" data-hora="@c.Hora.ToString("HH\\\\:mm")"
 
-                                                data-barbero="@c.Barbero">
+                                                data-barbero="@c.Barbero" data-barbero-id="@c.IdBarbero">
 
                                             <i class="bi bi-pencil"></i>
 
                                         </button>
+                                        }
 
                                         <!-- BLOQUEAR -->
 
-                                        <a href="/Citas/Bloquear/@c.IdCita" class="table-action action-block" title="Bloquear"
-
-                                           aria-label="Bloquear cita">
-
-                                            <i class="bi bi-lock"></i>
-
-                                        </a>
+                                        @if (esAdministrador)
+                                        {
+                                        <form asp-controller="Citas" asp-action="Bloquear" method="post" asp-antiforgery="true" class="citas-inline-form" onsubmit="return confirm('¿Bloquear esta cita?');">
+                                            <input type="hidden" name="id" value="@c.IdCita" />
+                                            <button type="submit" class="table-action action-block" title="Bloquear cita" aria-label="Bloquear cita"><i class="bi bi-lock"></i></button>
+                                        </form>
+                                        }
 
                                         <!-- CANCELAR -->
 
-                                        <a href="/Citas/Cancelar/@c.IdCita" class="table-action action-cancel" title="Cancelar"
-
-                                           aria-label="Cancelar cita">
-
-                                            <i class="bi bi-x-lg"></i>
-
-                                        </a>
+                                        @if (puedeCancelar)
+                                        {
+                                        <form asp-controller="Citas" asp-action="Cancelar" method="post" asp-antiforgery="true" class="citas-inline-form" onsubmit="return confirm('¿Cancelar esta cita?');">
+                                            <input type="hidden" name="id" value="@c.IdCita" />
+                                            <button type="submit" class="table-action action-cancel" title="Cancelar cita" aria-label="Cancelar cita"><i class="bi bi-x-lg"></i></button>
+                                        </form>
+                                        }
 
                                     </div>
 
@@ -1270,16 +1361,22 @@
 
                                     <!-- ATENDER -->
 
-                                    <a href="/Atencion/RegistrarDesdeCita/@c.IdCita" class="table-action action-attend"
-
-                                       title="Atender" aria-label="Atender cita">
-
-                                        <i class="bi bi-scissors"></i>
-
-                                    </a>
+                                    @if (puedeRecibir)
+                                    {
+                                    <form method="post" asp-controller="Atencion" asp-action="RegistrarDesdeCita"
+                                              class="citas-inline-form" asp-antiforgery="true">
+                                            <input type="hidden" name="id" value="@c.IdCita" />
+                                            <button type="submit" class="table-action action-attend"
+                                                    title="Registrar llegada" aria-label="Registrar llegada">
+                                                <i class="bi bi-scissors"></i>
+                                            </button>
+                                        </form>
+                                    }
 
                                     <!-- EDITAR -->
 
+                                    @if (puedeEditar)
+                                    {
                                     <button type="button" class="table-action action-edit btn-abrir-editar" title="Editar"
 
                                             aria-label="Editar cita" data-id="@c.IdCita" data-cliente-id="@c.IdCliente"
@@ -1288,31 +1385,32 @@
 
                                             data-fecha="@c.Fecha.ToString("yyyy-MM-dd")" data-hora="@c.Hora.ToString("HH\\\\:mm")"
 
-                                            data-barbero="@c.Barbero">
+                                            data-barbero="@c.Barbero" data-barbero-id="@c.IdBarbero">
 
                                         <i class="bi bi-pencil"></i>
 
                                     </button>
+                                    }
 
                                     <!-- BLOQUEAR -->
 
-                                    <a href="/Citas/Bloquear/@c.IdCita" class="table-action action-block" title="Bloquear"
-
-                                       aria-label="Bloquear cita">
-
-                                        <i class="bi bi-lock"></i>
-
-                                    </a>
+                                    @if (esAdministrador)
+                                    {
+                                    <form asp-controller="Citas" asp-action="Bloquear" method="post" asp-antiforgery="true" class="citas-inline-form" onsubmit="return confirm('¿Bloquear esta cita?');">
+                                            <input type="hidden" name="id" value="@c.IdCita" />
+                                            <button type="submit" class="table-action action-block" title="Bloquear cita" aria-label="Bloquear cita"><i class="bi bi-lock"></i></button>
+                                        </form>
+                                    }
 
                                     <!-- CANCELAR -->
 
-                                    <a href="/Citas/Cancelar/@c.IdCita" class="table-action action-cancel" title="Cancelar"
-
-                                       aria-label="Cancelar cita">
-
-                                        <i class="bi bi-x-lg"></i>
-
-                                    </a>
+                                    @if (puedeCancelar)
+                                    {
+                                    <form asp-controller="Citas" asp-action="Cancelar" method="post" asp-antiforgery="true" class="citas-inline-form" onsubmit="return confirm('¿Cancelar esta cita?');">
+                                            <input type="hidden" name="id" value="@c.IdCita" />
+                                            <button type="submit" class="table-action action-cancel" title="Cancelar cita" aria-label="Cancelar cita"><i class="bi bi-x-lg"></i></button>
+                                        </form>
+                                    }
 
                                 </div>
 
@@ -1355,6 +1453,8 @@
         }
 
     </section>
+
+    }
 
     <!-- *=========================*
 
@@ -1446,6 +1546,8 @@
 
     }
 
+    @if (esAdministrador || puedeEditar)
+    {
     <div class="edit-drawer-container closed" id="editDrawerContainer">
 
         <section class="content-card edit-card">
@@ -1526,11 +1628,11 @@
 
                             {
 
-                                bool isSelected = (barbero.Nombre == barberoEdit);
+                                bool isSelected = (barbero.IdUsuario == citaEditar?.IdBarbero);
 
                                 <label class="barber-option">
 
-                                    <input type="radio" name="Barbero" value="@barbero.Nombre" @(isSelected ? "checked" : "")*
+                                    <input type="radio" name="IdBarbero" value="@barbero.IdUsuario" checked="@isSelected"
 
                                            required />
 
@@ -1770,6 +1872,73 @@
 
     =*=========================* -->
 
+    }
+
+    @if (esCliente && puedeMisCitas)
+    {
+        <section class="content-card agenda-card cliente-agenda">
+            <div class="card-header">
+                <div>
+                    <span class="card-kicker">TU AGENDA</span>
+                    <h2><i class="bi bi-calendar-check"></i> Mis citas activas</h2>
+                    <p>Estas reservas pertenecen exclusivamente a tu cuenta.</p>
+                </div>
+                <div class="agenda-count"><span>@citasActivas.Count</span><small>activas</small></div>
+            </div>
+            @if (citasActivas.Any())
+            {
+                <div class="cliente-citas-grid">
+                    @foreach (var cita in citasActivas)
+                    {
+                        <article class="cliente-cita-card">
+                            <div class="cliente-cita-cabecera">
+                                <span class="status status-active"><span></span> Activa</span>
+                                <strong>#@cita.IdCita</strong>
+                            </div>
+                            <h3><i class="bi bi-calendar3"></i> @cita.Fecha.ToString("dd/MM/yyyy")</h3>
+                            <p><i class="bi bi-clock"></i> @cita.Hora.ToString("HH:mm")</p>
+                            <p><i class="bi bi-scissors"></i> @cita.Barbero</p>
+                            <div class="cliente-cita-acciones">
+                                @if (puedeEditar)
+                                {
+                                    <button type="button" class="table-action action-edit btn-abrir-editar"
+                                        title="Editar mi cita" aria-label="Editar cita"
+                                        data-id="@cita.IdCita" data-cliente-id="@cita.IdCliente"
+                                        data-cliente-nombre="@(cita.IdClienteNavigation?.Nombre ?? "")"
+                                        data-fecha="@cita.Fecha.ToString("yyyy-MM-dd")"
+                                        data-hora="@cita.Hora.ToString("HH:mm")"
+                                        data-barbero="@cita.Barbero" data-barbero-id="@cita.IdBarbero">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </button>
+                                }
+                                @if (puedeCancelar)
+                                {
+                                    <form asp-controller="Citas" asp-action="Cancelar" method="post" asp-antiforgery="true" class="citas-inline-form"
+                                          onsubmit="return confirm('¿Cancelar esta cita?');">
+                                        <input type="hidden" name="id" value="@cita.IdCita" />
+                                        <button type="submit" class="table-action action-cancel" title="Cancelar mi cita">
+                                            <i class="bi bi-x-lg"></i> Cancelar
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="bi bi-calendar-x"></i></div>
+                    <h3>No tienes citas activas</h3>
+                    <p>Puedes reservar una cita usando el formulario de arriba.</p>
+                </div>
+            }
+        </section>
+    }
+
+    @if (esAdministrador || puedeMisCitas)
+    {
     <section class="content-card history-card">
 
         <div class="card-header">
@@ -1782,13 +1951,13 @@
 
                     <i class="bi bi-clock-history"></i>
 
-                    Historial de citas
+                    @(esCliente ? "Mi historial de citas" : "Historial de citas")
 
                 </h2>
 
                 <p>
 
-                    Citas canceladas y bloqueadas.
+                    @(esCliente ? "Tus citas finalizadas y canceladas." : "Citas finalizadas, canceladas y bloqueadas.")
 
                 </p>
 
@@ -1892,6 +2061,10 @@
 
                             }
 
+                            else if (c.Estado == "Finalizada")
+                            {
+                                <span class="status status-finalizada"><span></span> Finalizada</span>
+                            }
                             else
 
                             {
@@ -1952,7 +2125,7 @@
 
                 <p>
 
-                    Todavia no existen citas canceladas o bloqueadas.
+                    No existen citas finalizadas o canceladas.
 
                 </p>
 
@@ -1961,6 +2134,10 @@
         }
 
     </section>
+
+    }
+
+    <script src="~/js/clientes-buscador.js" asp-append-version="true"></script>
 
     <script src="~/js/citas.js"
 

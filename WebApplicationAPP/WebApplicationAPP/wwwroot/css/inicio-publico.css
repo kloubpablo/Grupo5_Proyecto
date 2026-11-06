@@ -335,3 +335,25 @@ body.yp-body #publicoMain { flex: 1 0 auto; min-width: 0; }
     .yp-brand-symbol { width: 37px; height: 37px; font-size: 19px; }
     .yp-whatsapp-float i { font-size: 26px; }
 }
+
+/* Centrar botones de la portada en telefono */
+@media (max-width: 550px) {
+
+    .yp-hero-actions {
+        width: min(100%, 330px);
+        max-width: none;
+        margin-left: auto;
+        margin-right: auto;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .yp-hero-actions .yp-btn {
+        width: 100%;
+        margin: 0;
+        justify-content: center;
+        text-align: center;
+    }
+}
+

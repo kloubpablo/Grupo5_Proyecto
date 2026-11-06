@@ -10,7 +10,7 @@ public partial class YampiBarbershopContext : DbContext
     {
     }
 
-    public YampiBarbershopContext(DbContextOptions<YampiBarbershopContext> options) 
+    public YampiBarbershopContext(DbContextOptions<YampiBarbershopContext> options)
         : base(options)
     {
     }
@@ -132,6 +132,12 @@ public partial class YampiBarbershopContext : DbContext
             entity.Property(e => e.HoraInicio).HasColumnName("hora_inicio");
             entity.Property(e => e.IdCita).HasColumnName("id_cita");
             entity.Property(e => e.IdCliente).HasColumnName("id_cliente");
+            entity.Property(e => e.IdBarbero).HasColumnName("id_barbero");
+            entity.HasOne(e => e.BarberoUsuario).WithMany()
+                .HasForeignKey(e => e.IdBarbero)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_atencion_barbero");
+            entity.HasIndex(e => e.IdCita).IsUnique();
 
             entity.HasOne(d => d.IdCitaNavigation).WithMany(p => p.Atencions)
                 .HasForeignKey(d => d.IdCita)
@@ -173,6 +179,7 @@ public partial class YampiBarbershopContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("fecha");
             entity.Property(e => e.IdPago).HasColumnName("id_pago");
+
         });
 
         modelBuilder.Entity<Cita>(entity =>
@@ -193,6 +200,11 @@ public partial class YampiBarbershopContext : DbContext
             entity.Property(e => e.Fecha).HasColumnName("fecha");
             entity.Property(e => e.Hora).HasColumnName("hora");
             entity.Property(e => e.IdCliente).HasColumnName("id_cliente");
+            entity.Property(e => e.IdBarbero).HasColumnName("id_barbero");
+            entity.HasOne(e => e.BarberoUsuario).WithMany()
+                .HasForeignKey(e => e.IdBarbero)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_citas_barbero");
 
             entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Cita)
                 .HasForeignKey(d => d.IdCliente)
@@ -203,6 +215,14 @@ public partial class YampiBarbershopContext : DbContext
         modelBuilder.Entity<Cliente>(entity =>
         {
             entity.HasKey(e => e.IdCliente).HasName("PK__Clientes__677F38F5C6D7EA4B");
+
+            // Relacion confiable usuario-cliente (no comparar nombres).
+            entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
+            entity.HasIndex(e => e.IdUsuario).IsUnique();
+            entity.HasOne(e => e.Usuario).WithOne()
+                .HasForeignKey<Cliente>(e => e.IdUsuario)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_clientes_usuarios");
 
             entity.ToTable(tb => tb.HasTrigger("trg_BitacoraClientes"));
 
@@ -236,9 +256,25 @@ public partial class YampiBarbershopContext : DbContext
                     tb.HasTrigger("trg_ValidarMontoPago");
                 });
 
-            entity.Property(e => e.IdPago).HasColumnName("id_pago");
-            entity.Property(e => e.Fecha).HasColumnName("fecha");
-            entity.Property(e => e.IdCliente).HasColumnName("id_cliente");
+
+            entity.Property(e => e.IdPago)
+                .HasColumnName("id_pago");
+
+            entity.Property(e => e.Fecha)
+                .HasColumnName("fecha");
+
+            entity.Property(e => e.IdCliente)
+                .HasColumnName("id_cliente");
+
+            entity.Property(e => e.Cerrado)
+                .HasColumnName("cerrado");
+
+            entity.Property(e => e.IdAtencion).HasColumnName("id_atencion");
+            entity.HasIndex(e => e.IdAtencion).IsUnique();
+            entity.HasOne(e => e.Atencion).WithOne()
+                .HasForeignKey<Pago>(e => e.IdAtencion)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_pagos_atencion");
             entity.Property(e => e.Metodo)
                 .HasMaxLength(20)
                 .IsUnicode(false)
