@@ -104,6 +104,24 @@ namespace WebApplicationAPP.Controllers
                 ? consulta.OrderBy(c => c.Fecha).ThenBy(c => c.Hora).ToList()
                 : new List<Cita>();
 
+
+            // Obtener los ID de las citas visibles
+            var idsCitas = citas.Select(c => c.IdCita).ToList();
+
+            // Identificar citas que ya fueron recibidas
+
+            var citasRecibidas = _context.Atencions
+                .AsNoTracking()
+                .Where(a => a.IdCita.HasValue &&
+                            idsCitas.Contains(a.IdCita.GetValueOrDefault()))
+                .Select(a => a.IdCita.GetValueOrDefault())
+                .ToHashSet();
+
+
+            // Enviar la informacion a la vista
+            ViewBag.CitasRecibidas = citasRecibidas;
+
+
             ViewBag.EsAdministrador = admin;
             ViewBag.EsBarbero = barbero;
             ViewBag.EsCliente = EsCliente(usuario);
@@ -128,8 +146,14 @@ namespace WebApplicationAPP.Controllers
             if (editarId.HasValue && PuedeEditar(usuario))
             {
                 var citaEditar = consulta.FirstOrDefault(c => c.IdCita == editarId.Value);
-                if (citaEditar != null && citaEditar.Estado == "Activa")
+
+                if (citaEditar != null &&
+                    citaEditar.Estado == "Activa" &&
+                    !citasRecibidas.Contains(citaEditar.IdCita))
+                {
                     ViewBag.CitaEditar = citaEditar;
+                }
+
             }
 
             if (fechaHorarios.HasValue && PuedeHorarios(usuario))
@@ -240,8 +264,23 @@ namespace WebApplicationAPP.Controllers
                 : !clienteId.HasValue || original.IdCliente != clienteId.Value)) return StatusCode(403);
             // Un barbero no puede transferir su cita a otro barbero.
             if (barberoActual && cita.IdBarbero != u.IdUsuario) return StatusCode(403);
-            if (original.Estado != "Activa" || _context.Atencions.Any(a => a.IdCita == original.IdCita))
-                return BadRequest("Una cita recibida o no activa no puede editarse.");
+
+            if (original.Estado != "Activa")
+            {
+                TempData["ErrorCita"] =
+                    "Solo se pueden editar citas activas.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (_context.Atencions.Any(a => a.IdCita == original.IdCita))
+            {
+                TempData["ErrorCita"] =
+                    "No puedes editar esta cita porque el barbero ya recibio al cliente.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
 
             var barbero = AgendaBarberoService.BuscarBarbero(_context, cita.IdBarbero ?? 0);
             if (barbero == null || !AgendaBarberoService.EsHorarioValido(cita.Fecha, cita.Hora))
@@ -285,8 +324,23 @@ namespace WebApplicationAPP.Controllers
             if (!EsAdmin(u) && (EsBarbero(u)
                 ? cita.IdBarbero != u.IdUsuario
                 : cita.IdCliente != ClienteActualId(u))) return StatusCode(403);
-            if (cita.Estado != "Activa") return BadRequest("Solo se pueden cancelar citas activas.");
-            if (_context.Atencions.Any(a => a.IdCita == id)) return BadRequest("No se puede cancelar una cita cuyo cliente ya fue recibido.");
+
+            if (cita.Estado != "Activa")
+            {
+                TempData["ErrorCita"] =
+                    "Solo se pueden cancelar citas activas.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (_context.Atencions.Any(a => a.IdCita == id))
+            {
+                TempData["ErrorCita"] =
+                    "No puedes cancelar esta cita porque el cliente ya fue recibido.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
             cita.Estado = "Cancelada";
             _context.SaveChanges();
             tx.Commit();
@@ -303,8 +357,23 @@ namespace WebApplicationAPP.Controllers
             using var tx = _context.Database.BeginTransaction(IsolationLevel.Serializable);
             var cita = _context.Citas.FirstOrDefault(c => c.IdCita == id);
             if (cita == null) return NotFound();
-            if (cita.Estado != "Activa") return BadRequest("Solo pueden bloquearse citas activas.");
-            if (_context.Atencions.Any(a => a.IdCita == id)) return BadRequest("La cita ya ingreso a Atencion.");
+
+            if (cita.Estado != "Activa")
+            {
+                TempData["ErrorCita"] =
+                    "Solo se pueden bloquear citas activas.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (_context.Atencions.Any(a => a.IdCita == id))
+            {
+                TempData["ErrorCita"] =
+                    "No puedes bloquear esta cita porque ya ingreso al modulo de Atencion.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
             cita.Estado = "Bloqueada";
             _context.SaveChanges();
             tx.Commit();
@@ -379,7 +448,7 @@ namespace WebApplicationAPP.Controllers
                     .Select(h => h.ToString("HH:mm")).ToList()
             }).ToList();
         }
-  
+
         // Busqueda limitada: no se envian todos los clientes al navegador.
         // Solo administrador o barbero con permiso Citas/Crear.
         [HttpGet]

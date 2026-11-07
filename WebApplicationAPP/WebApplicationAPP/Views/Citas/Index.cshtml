@@ -1,4 +1,4 @@
-@model List<WebApplicationAPP.Models.Cita>
+﻿@model List<WebApplicationAPP.Models.Cita>
 
 @{
 
@@ -11,6 +11,11 @@
     bool puedeMisCitas = ViewBag.PuedeMisCitas is bool && (bool)ViewBag.PuedeMisCitas;
     bool puedeEditar = ViewBag.PuedeEditar is bool && (bool)ViewBag.PuedeEditar;
     bool puedeCancelar = ViewBag.PuedeCancelar is bool && (bool)ViewBag.PuedeCancelar;
+    
+    var citasRecibidas =
+    ViewBag.CitasRecibidas as HashSet<int>
+    ?? new HashSet<int>();
+
     bool puedeRecibir = ViewBag.PuedeRecibir is bool && (bool)ViewBag.PuedeRecibir;
 
     var horarios = ViewBag.Horarios as List<WebApplicationAPP.Models.Cita>;
@@ -1164,7 +1169,7 @@
 
                                         <!-- EDITAR -->
 
-                                        @if (puedeEditar)
+                                        @if (puedeEditar && !citasRecibidas.Contains(c.IdCita))
                                         {
                                         <button type="button" class="table-action action-edit btn-abrir-editar" title="Editar"
 
@@ -1183,7 +1188,7 @@
 
                                         <!-- BLOQUEAR -->
 
-                                        @if (esAdministrador)
+                                        @if (esAdministrador && !citasRecibidas.Contains(c.IdCita))
                                         {
                                         <form asp-controller="Citas" asp-action="Bloquear" method="post" asp-antiforgery="true" class="citas-inline-form" onsubmit="return confirm('¿Bloquear esta cita?');">
                                             <input type="hidden" name="id" value="@c.IdCita" />
@@ -1193,7 +1198,7 @@
 
                                         <!-- CANCELAR -->
 
-                                        @if (puedeCancelar)
+                                        @if (puedeCancelar && !citasRecibidas.Contains(c.IdCita))
                                         {
                                         <form asp-controller="Citas" asp-action="Cancelar" method="post" asp-antiforgery="true" class="citas-inline-form" onsubmit="return confirm('¿Cancelar esta cita?');">
                                             <input type="hidden" name="id" value="@c.IdCita" />
@@ -1361,7 +1366,7 @@
 
                                     <!-- ATENDER -->
 
-                                    @if (puedeRecibir)
+                                    @if (puedeRecibir && !citasRecibidas.Contains(c.IdCita))
                                     {
                                     <form method="post" asp-controller="Atencion" asp-action="RegistrarDesdeCita"
                                               class="citas-inline-form" asp-antiforgery="true">
@@ -1899,7 +1904,7 @@
                             <p><i class="bi bi-clock"></i> @cita.Hora.ToString("HH:mm")</p>
                             <p><i class="bi bi-scissors"></i> @cita.Barbero</p>
                             <div class="cliente-cita-acciones">
-                                @if (puedeEditar)
+                                @if (puedeEditar && !citasRecibidas.Contains(cita.IdCita))
                                 {
                                     <button type="button" class="table-action action-edit btn-abrir-editar"
                                         title="Editar mi cita" aria-label="Editar cita"
@@ -1911,7 +1916,7 @@
                                         <i class="bi bi-pencil"></i> Editar
                                     </button>
                                 }
-                                @if (puedeCancelar)
+                                @if (puedeCancelar && !citasRecibidas.Contains(cita.IdCita))
                                 {
                                     <form asp-controller="Citas" asp-action="Cancelar" method="post" asp-antiforgery="true" class="citas-inline-form"
                                           onsubmit="return confirm('¿Cancelar esta cita?');">

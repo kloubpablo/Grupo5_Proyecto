@@ -239,45 +239,98 @@ public class AtencionController : Controller
     }
 
     // POST, nunca GET: una visita a un enlace no puede iniciar un servicio.
+
     [HttpPost, ValidateAntiForgeryToken]
     public IActionResult Iniciar(int id)
     {
         var u = Actual();
-        if (u == null || !Permiso(u, "Atencion/Iniciar")) return SinAcceso(u);
-        using var tx = _db.Database.BeginTransaction(IsolationLevel.Serializable);
-        var atencion = _db.Atencions.Include(a => a.IdCitaNavigation)
+
+        if (u == null || !Permiso(u, "Atencion/Iniciar"))
+            return SinAcceso(u);
+
+        using var tx = _db.Database.BeginTransaction(
+            IsolationLevel.Serializable);
+
+        var atencion = _db.Atencions
+            .Include(a => a.IdCitaNavigation)
             .FirstOrDefault(a => a.IdAtencion == id);
-        if (atencion == null) return NotFound();
-        if (!AgendaBarberoService.PuedeGestionar(u, atencion.IdBarbero)) return StatusCode(403);
-        if (atencion.Estado != "En espera") return BadRequest("La atencion no esta en espera.");
+
+        if (atencion == null)
+            return NotFound();
+
+        if (!AgendaBarberoService.PuedeGestionar(
+            u, atencion.IdBarbero))
+            return StatusCode(403);
+
+        // Validar que la atencion este en espera
+        if (atencion.Estado != "En espera")
+        {
+            TempData["ErrorAtencion"] =
+                "Esta atencion no se encuentra en espera.";
+
+            return RedirectToAction(nameof(Index));
+        }
 
         var ahora = AgendaBarberoService.AhoraCostaRica();
+        var hoy = DateOnly.FromDateTime(ahora);
+
+        // Validar estado y fecha, pero permitir
+        // iniciar antes de la hora programada.
         if (atencion.IdCitaNavigation != null)
         {
             var cita = atencion.IdCitaNavigation;
-            if (cita.Estado != "Activa" || cita.Fecha != DateOnly.FromDateTime(ahora) ||
-                cita.Fecha.ToDateTime(cita.Hora) > ahora)
-                return BadRequest("El servicio solo puede comenzar cuando llega su turno.");
+
+            if (cita.Estado != "Activa")
+            {
+                TempData["ErrorAtencion"] =
+                    "La cita no se encuentra activa.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (cita.Fecha != hoy)
+            {
+                TempData["ErrorAtencion"] =
+                    "Solo puedes iniciar citas del dia de hoy.";
+
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         try
         {
-            if (atencion.IdBarbero.HasValue && _db.Atencions.Any(a =>
-                a.IdBarbero == atencion.IdBarbero && a.IdAtencion != atencion.IdAtencion &&
-                a.Estado == "En servicio"))
-                return BadRequest("El barbero ya tiene una atencion en servicio.");
+            // Verificar que el barbero este libre
+            if (atencion.IdBarbero.HasValue &&
+                _db.Atencions.Any(a =>
+                    a.IdBarbero == atencion.IdBarbero &&
+                    a.IdAtencion != atencion.IdAtencion &&
+                    a.Estado == "En servicio"))
+            {
+                TempData["ErrorAtencion"] =
+                    "El barbero ya tiene una atencion en servicio.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Iniciar la atencion
             atencion.Estado = "En servicio";
             atencion.HoraInicio = TimeOnly.FromDateTime(ahora);
+
             _db.SaveChanges();
             tx.Commit();
-            TempData["ExitoAtencion"] = "Atencion iniciada.";
+
+            TempData["ExitoAtencion"] =
+                "Atencion iniciada correctamente.";
         }
         catch (DbUpdateException)
         {
-            TempData["ErrorAtencion"] = "No se pudo iniciar: revisa si el barbero ya esta ocupado.";
+            TempData["ErrorAtencion"] =
+                "No se pudo iniciar la atencion. Intenta nuevamente.";
         }
+
         return RedirectToAction(nameof(Index));
     }
+
 
     // GET compatible: solo muestra el formulario de cobro, no modifica datos.
     [HttpGet]
